@@ -14,10 +14,18 @@ services:
     plan: free
     healthCheckPath: /api/actuator/health
     envVars:
-      - key: SPRING_DATASOURCE_URL
+      - key: DB_HOST
         fromDatabase:
           name: travelai-db
-          property: connectionString
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: travelai-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: travelai-db
+          property: database
       - key: DB_USERNAME
         fromDatabase:
           name: travelai-db
