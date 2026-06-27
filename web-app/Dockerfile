@@ -11,9 +11,8 @@ RUN npm run build -- --configuration production
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
 COPY --from=builder /app/dist/travel-ai/browser /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf.template
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
-# envsubst sostituisce $BACKEND_URL nel config prima di avviare nginx
-CMD ["/bin/sh", "-c", "envsubst '$BACKEND_URL' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+CMD ["nginx", "-g", "daemon off;"]
