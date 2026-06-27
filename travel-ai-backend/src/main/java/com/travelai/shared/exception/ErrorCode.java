@@ -10,10 +10,15 @@ public enum ErrorCode {
     VALIDATION_ERROR("Validation error"),
     PARTNER_NOT_FOUND("Partner not found"),
     BOOKING_NOT_FOUND("Booking not found"),
+    PAYMENT_NOT_FOUND("Payment not found"),
     PAYMENT_FAILED("Payment failed"),
     AVAILABILITY_UNAVAILABLE("Availability unavailable"),
     PROPOSAL_NOT_FOUND("Proposal not found"),
     REQUEST_NOT_FOUND("Request not found"),
+    HOTEL_NOT_FOUND("Hotel not found"),
+    RESTAURANT_NOT_FOUND("Restaurant not found"),
+    FLIGHT_NOT_FOUND("Flight not found"),
+    WAITLIST_NOT_FOUND("Waitlist entry not found"),
     INTERNAL_ERROR("Internal server error");
 
     private final String message;
