@@ -1,0 +1,100 @@
+<section id="hero" aria-labelledby="hero-heading">
+  <div class="hero-bg" aria-hidden="true"></div>
+
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-eyebrow reveal">
+        <div class="hero-eyebrow-line" aria-hidden="true"></div>
+        <span class="hero-eyebrow-text">AI-Powered Travel Planning</span>
+      </div>
+
+      <h1 id="hero-heading" class="hero-title reveal reveal-delay-1">
+        Journey beyond<br>the <em>ordinary</em>
+      </h1>
+
+      <p class="hero-subtitle reveal reveal-delay-2">
+        Tell our AI where you want to go — and it will craft a perfect itinerary,
+        discover hidden gems, and handle every detail of your dream trip.
+      </p>
+
+      <div class="hero-search reveal reveal-delay-3">
+        <div class="search-box" role="search" [class.active]="showSuggestions()">
+          <div class="search-input-row">
+            <span class="search-icon" aria-hidden="true">✦</span>
+            <input
+              type="text"
+              class="search-input"
+              [value]="searchQuery()"
+              (input)="onInput($any($event.target).value)"
+              (focus)="onFocus()"
+              (blur)="onBlur()"
+              placeholder="Where do you want to go? Try &quot;10 days in Japan&quot;…"
+              autocomplete="off"
+              aria-label="Search destinations"
+            >
+            <button class="search-submit" (click)="planTrip()" [disabled]="isPlanning()" aria-label="Plan my trip">
+              {{ isPlanning() ? 'Planning…' : 'Plan my trip →' }}
+            </button>
+          </div>
+
+          @if (showSuggestions()) {
+            <div class="search-suggestions" role="listbox" aria-label="Suggestions">
+              @for (s of suggestions; track s.value) {
+                <div class="suggestion-item" role="option" tabindex="0" (click)="selectSuggestion(s)" (keydown.enter)="selectSuggestion(s)">
+                  <span class="suggestion-icon" aria-hidden="true">{{ s.icon }}</span>
+                  <span class="suggestion-text"><strong>{{ s.bold }}</strong> — {{ s.label }}</span>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="hero-quick-picks reveal reveal-delay-4" role="list" aria-label="Popular searches">
+        @for (p of quickPicks; track p.dest) {
+          <button class="quick-pick" role="listitem" (click)="setQuickPick(p.dest)">{{ p.label }}</button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating destination cards -->
+  <div class="hero-floating" aria-hidden="true">
+    <div class="float-card">
+      <div class="dest-card-visual dest-bg-santorini">
+        <div class="float-glow" style="width:200px;height:200px;background:#4080c0;top:20%;left:20%;opacity:.4"></div>
+      </div>
+      <div class="float-card-overlay"></div>
+      <div class="float-card-badge">✦ AI Pick</div>
+      <div class="float-card-info">
+        <div class="float-card-name">Santorini</div>
+        <div class="float-card-meta">🇬🇷 Greece &nbsp;·&nbsp; 7 days</div>
+      </div>
+    </div>
+    <div class="float-card">
+      <div class="dest-card-visual dest-bg-tokyo">
+        <div class="float-glow" style="width:160px;height:160px;background:#c80032;top:30%;left:30%;opacity:.5"></div>
+      </div>
+      <div class="float-card-overlay"></div>
+      <div class="float-card-info">
+        <div class="float-card-name">Tokyo</div>
+        <div class="float-card-meta">🇯🇵 Japan</div>
+      </div>
+    </div>
+    <div class="float-card">
+      <div class="dest-card-visual dest-bg-bali">
+        <div class="float-glow" style="width:140px;height:140px;background:#608040;top:40%;left:20%;opacity:.5"></div>
+      </div>
+      <div class="float-card-overlay"></div>
+      <div class="float-card-info">
+        <div class="float-card-name">Bali</div>
+        <div class="float-card-meta">🇮🇩 Indonesia</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll" aria-hidden="true">
+    <div class="hero-scroll-line"></div>
+    <span class="hero-scroll-text">Scroll to explore</span>
+  </div>
+</section>

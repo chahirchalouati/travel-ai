@@ -1,0 +1,39 @@
+<footer aria-label="Site footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="nav-logo" aria-label="TravelAI home">
+          <div class="nav-logo-mark" aria-hidden="true">✦</div>
+          <span class="nav-logo-text">Travel<span>AI</span></span>
+        </a>
+        <p>Intelligent travel planning powered by AI. Discover the world smarter, travel deeper, and experience more.</p>
+        <div class="footer-socials">
+          @for (s of socials; track s.label) {
+            <a href="#" class="social-icon" [attr.aria-label]="s.label">{{ s.icon }}</a>
+          }
+        </div>
+      </div>
+
+      @for (col of columns; track col.title) {
+        <div>
+          <div class="footer-col-title">{{ col.title }}</div>
+          <ul class="footer-links" role="list">
+            @for (link of col.links; track link.label) {
+              <li><a [href]="link.href">{{ link.label }}</a></li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+
+    <div class="footer-bottom">
+      <p>© {{ year }} TravelAI. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Cookies</a>
+        <a href="#">Accessibility</a>
+      </div>
+    </div>
+  </div>
+</footer>

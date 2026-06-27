@@ -1,0 +1,81 @@
+<section id="features" aria-labelledby="features-heading">
+  <div class="container">
+    <div class="features-layout">
+      <div>
+        <div class="section-header reveal">
+          <div class="section-eyebrow no-before">
+            <span class="eyebrow-line"></span>
+            How it works
+          </div>
+          <h2 class="section-title" id="features-heading">
+            Travel smarter with<br><em>AI at your side</em>
+          </h2>
+          <p class="section-subtitle">
+            From first inspiration to final booking, TravelAI handles the complexity —
+            so you can focus on the experience.
+          </p>
+        </div>
+
+        <div class="features-list">
+          @for (feature of features; track feature.title; let i = $index) {
+            <div
+              class="feature-item reveal"
+              [class]="'reveal-delay-' + (i + 1)"
+              [class.active]="activeFeature() === i"
+              (click)="selectFeature(i)"
+              (keydown.enter)="selectFeature(i)"
+              role="button"
+              tabindex="0"
+            >
+              <div class="feature-icon" aria-hidden="true">{{ feature.icon }}</div>
+              <div class="feature-body">
+                <div class="feature-title">{{ feature.title }}</div>
+                <div class="feature-desc">{{ feature.desc }}</div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- AI Chat Mockup -->
+      <div class="features-visual reveal reveal-delay-2">
+        <div class="features-mockup">
+          <div class="mockup-header">
+            <div class="mockup-dot"></div>
+            <div class="mockup-dot"></div>
+            <div class="mockup-dot"></div>
+            <span class="mockup-title">TravelAI — Your Trip Planner</span>
+          </div>
+          <div class="mockup-body">
+            <div class="chat-messages">
+              @for (msg of messages; track $index) {
+                <div class="chat-msg" [class.user]="msg.role === 'user'" [class.ai-msg]="msg.role === 'ai'">
+                  <div class="chat-avatar" [class.ai-av]="msg.role === 'ai'" [class.user-av]="msg.role === 'user'" aria-hidden="true">
+                    {{ msg.role === 'ai' ? '✦' : 'Y' }}
+                  </div>
+                  <div class="chat-bubble">{{ msg.text }}</div>
+                </div>
+              }
+              @if (isTyping()) {
+                <div class="chat-msg ai-msg">
+                  <div class="chat-avatar ai-av" aria-hidden="true">✦</div>
+                  <div class="chat-bubble">
+                    <div class="chat-typing" aria-label="AI is typing">
+                      <div class="typing-dot"></div>
+                      <div class="typing-dot"></div>
+                      <div class="typing-dot"></div>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+            <div class="chat-input-row">
+              <input type="text" placeholder="Ask about your trip…" aria-label="Type your message">
+              <button class="chat-send" aria-label="Send">→</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

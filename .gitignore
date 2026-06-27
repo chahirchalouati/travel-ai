@@ -1,0 +1,17 @@
+# Backend
+travel-ai-backend/target/
+travel-ai-backend/.env
+
+# Frontend
+web-app/node_modules/
+web-app/dist/
+web-app/.env
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+
+# Secrets
+.env
+*.env.local

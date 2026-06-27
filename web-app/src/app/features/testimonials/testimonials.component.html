@@ -1,0 +1,34 @@
+<section id="testimonials" aria-labelledby="testimonials-heading">
+  <div class="container">
+    <div class="section-header centered reveal">
+      <div class="section-eyebrow">Traveller stories</div>
+      <h2 class="section-title" id="testimonials-heading">
+        From the road to <em>the world</em>
+      </h2>
+      <p class="section-subtitle">
+        Millions of travellers trust TravelAI to plan their adventures. Here's what they say.
+      </p>
+    </div>
+
+    <div class="testimonials-grid">
+      @for (t of testimonials; track t.name; let i = $index) {
+        <div class="testimonial-card glass reveal" [class]="'reveal-delay-' + (i + 1)">
+          <div class="testimonial-stars" [attr.aria-label]="'5 out of 5 stars'">
+            <span class="star">★</span><span class="star">★</span>
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+          <p class="testimonial-quote">{{ t.quote }}</p>
+          <div class="testimonial-author">
+            <div class="author-avatar" [style.background]="t.avatarGradient" aria-hidden="true">
+              {{ t.initial }}
+            </div>
+            <div>
+              <div class="author-name">{{ t.name }}</div>
+              <div class="author-role">{{ t.role }}</div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

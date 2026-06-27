@@ -1,0 +1,58 @@
+databases:
+  - name: travelai-db
+    databaseName: travelai
+    user: travelai
+    plan: free
+
+services:
+  # Backend - Spring Boot
+  - type: web
+    name: travel-ai-backend
+    runtime: docker
+    dockerfilePath: ./travel-ai-backend/Dockerfile
+    dockerContext: ./travel-ai-backend
+    plan: free
+    healthCheckPath: /api/actuator/health
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: travelai-db
+          property: connectionString
+      - key: DB_USERNAME
+        fromDatabase:
+          name: travelai-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: travelai-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: REDIS_HOST
+        sync: false
+      - key: REDIS_PASSWORD
+        sync: false
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+
+  # Frontend - Angular + Nginx
+  - type: web
+    name: travel-ai-frontend
+    runtime: docker
+    dockerfilePath: ./web-app/Dockerfile
+    dockerContext: ./web-app
+    plan: free
+    envVars:
+      - key: BACKEND_URL
+        fromService:
+          name: travel-ai-backend
+          type: web
+          property: host

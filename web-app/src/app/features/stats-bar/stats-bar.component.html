@@ -1,0 +1,12 @@
+<section id="stats" aria-label="Key statistics">
+  <div class="container">
+    <div class="stats-grid">
+      @for (stat of stats; track stat.label; let i = $index) {
+        <div class="stat-item reveal" [class]="'reveal-delay-' + i">
+          <div class="stat-value">{{ stat.display }}</div>
+          <div class="stat-label">{{ stat.label }}</div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

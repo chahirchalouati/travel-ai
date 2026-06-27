@@ -1,0 +1,106 @@
+spring:
+  application:
+    name: travel-ai-backend
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/travelai
+    username: ${DB_USERNAME:travelai}
+    password: ${DB_PASSWORD:travelai}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        default_schema: public
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:}
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.7
+          max-tokens: 2048
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+security:
+  jwt:
+    secret: ${JWT_SECRET:change-me-in-production-min-256-bit-secret-key}
+    expiration-ms: 86400000        # 24h
+    refresh-expiration-ms: 604800000 # 7d
+
+travel-ai:
+  booking:
+    budget-tolerance-pct: 10       # proposals allowed up to budget +10%
+    min-hotels-pilot: 10
+    min-restaurants-pilot: 10
+  ai:
+    rate-limit-per-minute: 60
+    max-proposals: 3
+    agents:
+      timeout-ms: 10000
+  payment:
+    stripe:
+      secret-key: ${STRIPE_SECRET_KEY:}
+      webhook-secret: ${STRIPE_WEBHOOK_SECRET:}
+    klarna:
+      api-key: ${KLARNA_API_KEY:}
+    commission:
+      hotel-pct: 10
+      other-pct: 3
+  concierge:
+    activation-days-before-departure: 3
+  notification:
+    from-email: noreply@travelai.com
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,modulith
+  endpoint:
+    health:
+      show-details: when-authorized
+
+logging:
+  level:
+    com.travelai: DEBUG
+    org.springframework.modulith: INFO
+    org.springframework.security: INFO
+    org.hibernate.SQL: DEBUG

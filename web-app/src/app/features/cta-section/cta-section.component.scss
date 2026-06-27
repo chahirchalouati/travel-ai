@@ -1,0 +1,60 @@
+:host { display: block; }
+
+section {
+  position: relative;
+  z-index: 2;
+  padding: clamp(4rem, 6rem, 9rem) 0;
+}
+
+.cta-card {
+  border-radius: var(--r-xl);
+  padding: clamp(3rem, 5rem, 6rem) clamp(2rem, 5%, 5rem);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.cta-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 80% at 50% 50%, rgba(30,55,120,.6) 0%, transparent 70%),
+    linear-gradient(135deg, rgba(15,15,35,.9) 0%, rgba(30,20,50,.9) 100%);
+}
+
+.cta-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.cta-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cta-subtitle {
+  text-align: center;
+  margin-inline: auto;
+  margin-bottom: 2rem;
+}
+
+.cta-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.cta-note {
+  margin-top: 1.25rem;
+  font-size: .78rem;
+  color: var(--text-muted);
+}

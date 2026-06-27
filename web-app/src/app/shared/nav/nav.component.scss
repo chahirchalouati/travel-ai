@@ -1,0 +1,125 @@
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 1.1rem 0;
+  transition: background .4s, padding .4s;
+
+  &.scrolled {
+    background: rgba(7,7,15,.82);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--glass-border);
+    padding: .75rem 0;
+  }
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  text-decoration: none;
+}
+
+.nav-logo-mark {
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--gold) 0%, #8a5a14 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  box-shadow: 0 0 20px var(--gold-glow);
+}
+
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: -.01em;
+  span { color: var(--gold); }
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  list-style: none;
+
+  a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: .88rem;
+    transition: color .2s;
+    &:hover { color: var(--text-primary); }
+  }
+}
+
+.nav-cta {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+}
+
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: .4rem;
+  background: none;
+  border: none;
+  span {
+    display: block;
+    width: 22px; height: 2px;
+    background: var(--text-secondary);
+    border-radius: 2px;
+    transition: all .3s;
+  }
+}
+
+.nav-mobile-menu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: rgba(7,7,15,.95);
+  backdrop-filter: blur(24px);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+
+  &.open { display: flex; }
+
+  a {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color .2s;
+    &:hover { color: var(--text-primary); }
+  }
+}
+
+.nav-mobile-close {
+  position: absolute;
+  top: 1.5rem; right: 1.5rem;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .nav-links, .nav-cta .btn-ghost { display: none; }
+  .nav-hamburger { display: flex; }
+}

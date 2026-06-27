@@ -1,0 +1,66 @@
+<section id="destinations" aria-labelledby="destinations-heading">
+  <div class="container">
+    <div class="dest-header-row">
+      <div class="section-header reveal" style="margin-bottom:0">
+        <div class="section-eyebrow no-before">
+          <span class="eyebrow-line"></span>
+          Explore the world
+        </div>
+        <h2 class="section-title" id="destinations-heading">Top <em>destinations</em></h2>
+      </div>
+
+      <div class="dest-filters reveal">
+        @for (f of filters; track f.id) {
+          <button
+            class="filter-btn"
+            [class.active]="activeFilter() === f.id"
+            (click)="setFilter(f.id)"
+          >{{ f.label }}</button>
+        }
+      </div>
+    </div>
+
+    <div class="dest-grid">
+      @for (dest of visibleDestinations; track dest.id; let i = $index) {
+        <article
+          class="dest-card reveal"
+          [class]="'reveal-delay-' + (i % 4)"
+          [class.featured]="dest.featured"
+        >
+          <div class="dest-card-img-wrap">
+            <div class="dest-card-visual" [class]="dest.bgClass">
+              @for (g of dest.glows; track $index) {
+                <div [ngStyle]="getGlowStyle(g)"></div>
+              }
+            </div>
+          </div>
+          <div class="dest-card-overlay"></div>
+
+          @if (dest.featured) {
+            <div class="dest-card-ai-badge">✦ AI Recommended</div>
+          }
+
+          <div class="dest-card-rating">
+            <span class="star">★</span> {{ dest.rating }}
+          </div>
+
+          <div class="dest-card-content">
+            <div class="dest-card-tags">
+              @for (tag of dest.tags; track tag) {
+                <span class="dest-card-tag">{{ tag }}</span>
+              }
+            </div>
+            <div class="dest-card-name">{{ dest.name }}, {{ dest.country }}</div>
+            <div class="dest-card-meta">
+              @if (dest.bestTime) {
+                <div class="dest-meta-item">📅 Best: {{ dest.bestTime }}</div>
+              }
+              <div class="dest-meta-item">✈️ From {{ dest.price }}</div>
+              <div class="dest-meta-item">⏱ {{ dest.days }}</div>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>
