@@ -188,3 +188,107 @@ export interface PaymentResponse {
   paidAt: string;
   createdAt: string;
 }
+
+// Destination models
+export interface DestinationResponse {
+  id: string;
+  name: string;
+  country: string;
+  continent: string;
+  description: string;
+  imageUrl: string;
+  galleryUrls: string;
+  tags: string;
+  climate: string;
+  bestMonths: string;
+  avgDailyCost: number;
+  currency: string;
+  language: string;
+  popularityScore: number;
+  featured: boolean;
+}
+
+export interface DestinationGuide {
+  destinationId: string;
+  name: string;
+  guide: string;
+  topAttractions: string;
+  foodRecommendations: string;
+  travelTips: string;
+}
+
+// Review models
+export interface ReviewResponse {
+  id: string;
+  userId: string;
+  userFirstName: string;
+  targetType: string;
+  targetId: string;
+  rating: number;
+  title: string;
+  content: string;
+  photoUrls: string;
+  helpfulCount: number;
+  verified: boolean;
+  createdAt: string;
+}
+
+export interface ReviewSummary {
+  targetType: string;
+  targetId: string;
+  averageRating: number;
+  totalReviews: number;
+  aiSummary: string;
+}
+
+export interface CreateReviewRequest {
+  targetType: string;
+  targetId: string;
+  rating: number;
+  title: string;
+  content: string;
+  photoUrls?: string;
+}
+
+// Chat models
+export interface ChatRequest {
+  conversationId: string | null;
+  message: string;
+}
+
+export interface ChatResponse {
+  conversationId: string;
+  title: string;
+  reply: string;
+  timestamp: string;
+}
+
+export interface ConversationResponse {
+  id: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MessageResponse {
+  id: string;
+  role: string;
+  content: string;
+  createdAt: string;
+}
+
+export interface ConversationDetailResponse {
+  id: string;
+  title: string;
+  messages: MessageResponse[];
+  createdAt: string;
+}
+
+// Page wrapper for paginated responses
+export interface PageWrapper<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}
