@@ -19,6 +19,9 @@ public enum ErrorCode {
     RESTAURANT_NOT_FOUND("Restaurant not found"),
     FLIGHT_NOT_FOUND("Flight not found"),
     WAITLIST_NOT_FOUND("Waitlist entry not found"),
+    DESTINATION_NOT_FOUND("Destination not found"),
+    REVIEW_NOT_FOUND("Review not found"),
+    REVIEW_ALREADY_EXISTS("You have already reviewed this item"),
     INTERNAL_ERROR("Internal server error");
 
     private final String message;

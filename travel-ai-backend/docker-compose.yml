@@ -36,6 +36,15 @@ services:
       - "1025:1025"
       - "8025:8025"
 
+  ollama:
+    image: ollama/ollama:latest
+    container_name: travelai-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+
   app:
     build:
       context: .
@@ -54,10 +63,12 @@ services:
       SPRING_MAIL_HOST: mailpit
       SPRING_MAIL_PORT: 1025
       JWT_SECRET: ${JWT_SECRET:-change-me-in-production-min-32-chars!!}
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-sk-dummy-for-local-dev}
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.2}
     ports:
       - "8080:8080"
     restart: unless-stopped
 
 volumes:
   postgres_data:
+  ollama_data:
