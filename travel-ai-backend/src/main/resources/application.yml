@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
   application:
     name: travel-ai-backend
 
@@ -70,8 +72,6 @@ spring:
 
 server:
   port: 8080
-  servlet:
-    context-path: /api
 
 security:
   jwt:

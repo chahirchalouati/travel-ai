@@ -1,0 +1,5 @@
+web-app/node_modules
+web-app/dist
+travel-ai-backend/target
+.git
+docs

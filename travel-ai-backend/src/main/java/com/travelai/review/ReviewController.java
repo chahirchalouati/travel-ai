@@ -26,8 +26,10 @@ public class ReviewController {
     public ApiResponse<ReviewResponse> createReview(
             @AuthenticationPrincipal UserDetails user,
             @RequestBody CreateReviewRequest req) {
-        UUID userId = ((User) user).getId();
-        return ApiResponse.ok(reviewService.createReview(userId, req));
+        if (!(user instanceof User travelUser)) {
+            throw new IllegalStateException("Unexpected principal type: " + user.getClass().getName());
+        }
+        return ApiResponse.ok(reviewService.createReview(travelUser.getId(), req));
     }
 
     @GetMapping("/target/{targetType}/{targetId}")

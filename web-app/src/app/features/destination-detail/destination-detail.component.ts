@@ -309,12 +309,18 @@ const MONTH_NAMES = [
                   font-size: 15px; color: #545454; line-height: 1.65; margin: 0 0 20px;
                 "
               >Get a personalized AI-generated travel guide with top attractions, food recommendations, and insider travel tips.</p>
+              @if (guideError()) {
+                <p style="font-size: 14px; color: #E04A2F; margin: 0 0 16px; display: flex; align-items: center; gap: 6px;">
+                  <span class="ms" style="font-size: 16px;">error_outline</span>
+                  {{ guideError() }}
+                </p>
+              }
               <button
                 (click)="generateGuide()"
                 class="btn-primary"
               >
                 <span class="ms" style="font-size: 20px;">auto_awesome</span>
-                Generate AI Guide
+                {{ guideError() ? 'Retry' : 'Generate AI Guide' }}
               </button>
             }
 
@@ -657,6 +663,7 @@ export class DestinationDetailComponent implements OnInit {
   readonly reviewSummary = signal<ReviewSummary | null>(null);
   readonly guide = signal<DestinationGuide | null>(null);
   readonly guideLoading = signal(false);
+  readonly guideError = signal<string | null>(null);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -685,12 +692,16 @@ export class DestinationDetailComponent implements OnInit {
     const id = this.destination()?.id;
     if (!id) return;
     this.guideLoading.set(true);
+    this.guideError.set(null);
     this.destinationService.getGuide(id).subscribe({
       next: (guide) => {
         this.guide.set(guide);
         this.guideLoading.set(false);
       },
-      error: () => this.guideLoading.set(false),
+      error: () => {
+        this.guideLoading.set(false);
+        this.guideError.set('Could not generate the guide. Please try again.');
+      },
     });
   }
 

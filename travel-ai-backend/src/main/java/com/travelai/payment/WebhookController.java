@@ -1,5 +1,7 @@
 package com.travelai.payment;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -12,56 +14,44 @@ import org.springframework.web.bind.annotation.*;
 public class WebhookController {
 
     private final PaymentService paymentService;
+    private final ObjectMapper objectMapper;
 
     @PostMapping("/stripe")
     public ResponseEntity<Void> stripeWebhook(
             @RequestBody String rawBody,
             @RequestHeader(value = "Stripe-Signature", required = false) String signature) {
-        String eventType = extractStripeEventType(rawBody);
-        String ref = extractStripeRef(rawBody);
-        paymentService.handleWebhook(PaymentGateway.STRIPE, rawBody, eventType, ref);
+        try {
+            JsonNode node = objectMapper.readTree(rawBody);
+            String eventType = node.path("type").asText("charge.succeeded");
+            String ref = node.path("id").asText("unknown");
+            paymentService.handleWebhook(PaymentGateway.STRIPE, rawBody, eventType, ref);
+        } catch (Exception e) {
+            log.warn("Failed to parse Stripe webhook body: {}", e.getMessage());
+        }
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/paypal")
     public ResponseEntity<Void> paypalWebhook(@RequestBody String rawBody) {
-        paymentService.handleWebhook(PaymentGateway.PAYPAL, rawBody, "PAYMENT_SALE_COMPLETED", extractPaypalRef(rawBody));
+        try {
+            JsonNode node = objectMapper.readTree(rawBody);
+            String ref = node.path("id").asText("unknown");
+            paymentService.handleWebhook(PaymentGateway.PAYPAL, rawBody, "PAYMENT_SALE_COMPLETED", ref);
+        } catch (Exception e) {
+            log.warn("Failed to parse PayPal webhook body: {}", e.getMessage());
+        }
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/klarna")
     public ResponseEntity<Void> klarnaWebhook(@RequestBody String rawBody) {
-        paymentService.handleWebhook(PaymentGateway.KLARNA, rawBody, "payment.completed", extractKlarnaRef(rawBody));
-        return ResponseEntity.ok().build();
-    }
-
-    private String extractStripeEventType(String body) {
-        return extractJsonField(body, "type", "charge.succeeded");
-    }
-
-    private String extractStripeRef(String body) {
-        return extractJsonField(body, "id", "unknown");
-    }
-
-    private String extractPaypalRef(String body) {
-        return extractJsonField(body, "id", "unknown");
-    }
-
-    private String extractKlarnaRef(String body) {
-        return extractJsonField(body, "order_id", "unknown");
-    }
-
-    private String extractJsonField(String json, String field, String defaultValue) {
         try {
-            String marker = "\"" + field + "\"";
-            int idx = json.indexOf(marker);
-            if (idx < 0) return defaultValue;
-            int colon = json.indexOf(':', idx);
-            int start = json.indexOf('"', colon) + 1;
-            int end = json.indexOf('"', start);
-            return json.substring(start, end);
+            JsonNode node = objectMapper.readTree(rawBody);
+            String ref = node.path("order_id").asText("unknown");
+            paymentService.handleWebhook(PaymentGateway.KLARNA, rawBody, "payment.completed", ref);
         } catch (Exception e) {
-            return defaultValue;
+            log.warn("Failed to parse Klarna webhook body: {}", e.getMessage());
         }
+        return ResponseEntity.ok().build();
     }
 }

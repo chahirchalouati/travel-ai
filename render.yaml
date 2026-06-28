@@ -10,9 +10,9 @@ services:
     name: travel-ai-backend
     runtime: docker
     dockerfilePath: ./travel-ai-backend/Dockerfile
-    dockerContext: ./travel-ai-backend
+    dockerContext: .
     plan: free
-    healthCheckPath: /api/actuator/health
+    healthCheckPath: /actuator/health
     envVars:
       - key: DB_HOST
         fromDatabase:
@@ -34,6 +34,8 @@ services:
         fromDatabase:
           name: travelai-db
           property: password
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
       - key: JWT_SECRET
         generateValue: true
       - key: OPENAI_API_KEY
@@ -50,17 +52,3 @@ services:
         sync: false
       - key: STRIPE_WEBHOOK_SECRET
         sync: false
-
-  # Frontend - Angular + Nginx
-  - type: web
-    name: travel-ai-frontend
-    runtime: docker
-    dockerfilePath: ./web-app/Dockerfile
-    dockerContext: ./web-app
-    plan: free
-    envVars:
-      - key: BACKEND_URL
-        fromService:
-          name: travel-ai-backend
-          type: web
-          property: host
