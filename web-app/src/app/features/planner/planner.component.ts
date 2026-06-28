@@ -735,7 +735,11 @@ export class PlannerComponent implements OnDestroy {
         hotelAmount: sel.hp,
         restaurantAmount: sel.rp,
         flightAmount: sel.fp,
-        travelers: [{ firstName: 'Marco', lastName: 'Bianchi', primary: true }],
+        travelers: [{
+          firstName: this.authService.currentUser()?.firstName ?? 'Traveler',
+          lastName: this.authService.currentUser()?.lastName ?? '',
+          primary: true,
+        }],
       }).subscribe({
         next: booking => this.currentBookingId.set(booking.id),
         error: () => { /* continue with demo flow */ }

@@ -234,33 +234,97 @@ interface ChatMsg {
         </div>
 
         <div class="input-area">
-          <div class="input-row">
-            <button class="attach-btn" aria-label="Attach" disabled>
-              <span class="ms">attach_file</span>
+          @if (!authService.isAuthenticated()) {
+            <button class="auth-prompt-bar" (click)="showAuthModal.set(true)">
+              <span class="ms">lock</span>
+              <span>Sign in to start chatting with your AI travel concierge</span>
+              <span class="ms">arrow_forward</span>
             </button>
-            <textarea
-              class="chat-input"
-              [ngModel]="inputText()"
-              (ngModelChange)="inputText.set($event)"
-              (keydown)="onKeydown($event)"
-              placeholder="Ask about destinations, hotels, restaurants, itineraries..."
-              rows="1"
-            ></textarea>
-            <button
-              class="send-btn"
-              (click)="send()"
-              [disabled]="!inputText().trim() || isTyping()"
-              aria-label="Send message"
-            >
-              <span class="ms">{{ isTyping() ? 'stop' : 'arrow_upward' }}</span>
-            </button>
-          </div>
-          <p class="input-hint">
-            TravelAI searches real data from our hotels, restaurants & destinations database
-          </p>
+          } @else {
+            <div class="input-row">
+              <button class="attach-btn" aria-label="Attach" disabled>
+                <span class="ms">attach_file</span>
+              </button>
+              <textarea
+                class="chat-input"
+                [ngModel]="inputText()"
+                (ngModelChange)="inputText.set($event)"
+                (keydown)="onKeydown($event)"
+                placeholder="Ask about destinations, hotels, restaurants, itineraries..."
+                rows="1"
+              ></textarea>
+              <button
+                class="send-btn"
+                (click)="send()"
+                [disabled]="!inputText().trim() || isTyping()"
+                aria-label="Send message"
+              >
+                <span class="ms">{{ isTyping() ? 'stop' : 'arrow_upward' }}</span>
+              </button>
+            </div>
+            <p class="input-hint">
+              TravelAI searches real data from our hotels, restaurants & destinations database
+            </p>
+          }
         </div>
       </main>
     </div>
+
+    <!-- Auth Modal -->
+    @if (showAuthModal()) {
+      <div class="auth-backdrop" role="dialog" aria-modal="true">
+        <div class="auth-card">
+          <button class="ms auth-close" (click)="closeAuthModal()" type="button">close</button>
+
+          <div class="auth-logo">
+            <div class="auth-logo-icon">
+              <span class="ms">travel_explore</span>
+            </div>
+            <span class="auth-logo-name">TravelAI</span>
+          </div>
+
+          <div class="auth-tabs">
+            <button class="auth-tab" [class.active]="authMode() === 'login'" (click)="authMode.set('login')" type="button">Sign in</button>
+            <button class="auth-tab" [class.active]="authMode() === 'register'" (click)="authMode.set('register')" type="button">Register</button>
+          </div>
+
+          @if (authErrorMsg) {
+            <div class="auth-error" role="alert">{{ authErrorMsg }}</div>
+          }
+
+          @if (authMode() === 'register') {
+            <div class="auth-names">
+              <div class="auth-field">
+                <label>First name</label>
+                <input [(ngModel)]="authFirstNameVal" placeholder="John">
+              </div>
+              <div class="auth-field">
+                <label>Last name</label>
+                <input [(ngModel)]="authLastNameVal" placeholder="Doe">
+              </div>
+            </div>
+          }
+
+          <div class="auth-field">
+            <label>Email</label>
+            <input [(ngModel)]="authEmailVal" type="email" placeholder="email@example.com">
+          </div>
+
+          <div class="auth-field auth-field--last">
+            <label>Password</label>
+            <input [(ngModel)]="authPasswordVal" type="password" placeholder="At least 8 characters">
+          </div>
+
+          <button class="auth-submit" (click)="authMode() === 'login' ? loginAuth() : registerAuth()" [disabled]="authLoadingState" type="button">
+            @if (authLoadingState) {
+              Loading...
+            } @else {
+              {{ authMode() === 'login' ? 'Sign in' : 'Create account' }}
+            }
+          </button>
+        </div>
+      </div>
+    }
   `,
   styles: [`
     :host {
@@ -1060,11 +1124,208 @@ interface ChatMsg {
     }
 
     /* ── Responsive ── */
+    /* ── Auth prompt bar ── */
+    .auth-prompt-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px 20px;
+      background: linear-gradient(135deg, var(--brand-light, #FFF0ED), #fff);
+      border: 1px solid var(--brand, #E04A2F);
+      border-radius: 14px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--brand, #E04A2F);
+      cursor: pointer;
+      transition: background 200ms ease, box-shadow 200ms ease;
+    }
+
+    .auth-prompt-bar:hover {
+      background: var(--brand-light, #FFF0ED);
+      box-shadow: 0 2px 12px rgba(224, 74, 47, 0.12);
+    }
+
+    .auth-prompt-bar .ms:first-child { font-size: 20px; }
+    .auth-prompt-bar .ms:last-child { margin-left: auto; font-size: 18px; }
+
+    /* ── Auth Modal ── */
+    .auth-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .auth-card {
+      width: 420px;
+      background: #ffffff;
+      border: 1px solid var(--border, #e0e0e0);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      position: relative;
+    }
+
+    .auth-close {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      cursor: pointer;
+      font-size: 22px;
+      color: var(--text-tertiary, #8a8a8a);
+      background: none;
+      border: none;
+      padding: 0;
+      transition: color 150ms ease;
+    }
+
+    .auth-close:hover { color: var(--text-primary, #1a1a1a); }
+
+    .auth-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .auth-logo-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--brand, #E04A2F);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .auth-logo-icon .ms { font-size: 22px; }
+
+    .auth-logo-name {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-primary, #1a1a1a);
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: 4px;
+      background: #f5f5f5;
+      border-radius: 8px;
+      padding: 4px;
+      margin-bottom: 22px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      text-align: center;
+      padding: 9px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13.5px;
+      font-weight: 600;
+      font-family: inherit;
+      transition: all 150ms ease;
+      color: var(--text-secondary, #545454);
+      border: none;
+      background: none;
+    }
+
+    .auth-tab.active {
+      background: #ffffff;
+      color: var(--text-primary, #1a1a1a);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    .auth-error {
+      margin-bottom: 16px;
+      padding: 10px 14px;
+      background: var(--brand-light, #FFF0ED);
+      border: 1px solid #f0c4b8;
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--brand, #E04A2F);
+      font-weight: 600;
+    }
+
+    .auth-field {
+      margin-bottom: 14px;
+    }
+
+    .auth-field label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary, #545454);
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .auth-field input {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid var(--border, #e0e0e0);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      color: var(--text-primary, #1a1a1a);
+      background: #ffffff;
+      transition: border-color 150ms ease, box-shadow 150ms ease;
+    }
+
+    .auth-field input:focus {
+      border-color: var(--brand, #E04A2F);
+      box-shadow: 0 0 0 3px rgba(224, 74, 47, 0.1);
+    }
+
+    .auth-field input::placeholder {
+      color: var(--text-tertiary, #8a8a8a);
+    }
+
+    .auth-field--last { margin-bottom: 22px; }
+
+    .auth-names {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .auth-names .auth-field {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    .auth-submit {
+      width: 100%;
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      background: var(--brand, #E04A2F);
+      color: #fff;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 13px;
+      border-radius: 8px;
+      transition: background 150ms ease;
+    }
+
+    .auth-submit:hover { background: var(--brand-hover, #c93d25); }
+    .auth-submit:disabled { opacity: 0.6; cursor: default; }
+
     @media (max-width: 768px) {
       .message-content-wrap { max-width: 88%; }
       .welcome-heading { font-size: 22px; }
       .messages-area { padding: 16px; }
       .input-area { padding: 10px 16px 14px; }
+      .auth-card { width: 100%; max-width: 420px; padding: 24px; }
     }
   `]
 })
@@ -1079,6 +1340,16 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   isTyping = signal(false);
   conversationTitle = signal('New Conversation');
   sidebarOpen = signal(false);
+
+  // Auth modal state
+  showAuthModal = signal(false);
+  authMode = signal<'login' | 'register'>('login');
+  authEmailVal = '';
+  authPasswordVal = '';
+  authFirstNameVal = '';
+  authLastNameVal = '';
+  authErrorMsg = '';
+  authLoadingState = false;
 
   readonly suggestionCards = [
     { icon: 'luggage', label: 'Plan a trip', text: 'Plan a week in Bali under $2000' },
@@ -1132,6 +1403,11 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   send(): void {
     const text = this.inputText().trim();
     if (!text || this.isTyping()) return;
+
+    if (!this.authService.isAuthenticated()) {
+      this.showAuthModal.set(true);
+      return;
+    }
 
     this.messages.update(msgs => [...msgs, { role: 'user', content: text }]);
     this.inputText.set('');
@@ -1243,6 +1519,62 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     if (diffDays < 7) return `${diffDays}d ago`;
 
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+
+  loginAuth(): void {
+    if (!this.authEmailVal || !this.authPasswordVal) {
+      this.authErrorMsg = 'Enter your email and password.';
+      return;
+    }
+    this.authLoadingState = true;
+    this.authErrorMsg = '';
+    this.authService.login({ email: this.authEmailVal, password: this.authPasswordVal }).subscribe({
+      next: () => {
+        this.authLoadingState = false;
+        this.showAuthModal.set(false);
+        this.authEmailVal = '';
+        this.authPasswordVal = '';
+        this.loadConversations();
+      },
+      error: () => {
+        this.authLoadingState = false;
+        this.authErrorMsg = 'Invalid credentials.';
+      }
+    });
+  }
+
+  registerAuth(): void {
+    if (!this.authFirstNameVal || !this.authLastNameVal || !this.authEmailVal || !this.authPasswordVal) {
+      this.authErrorMsg = 'Please fill in all fields.';
+      return;
+    }
+    this.authLoadingState = true;
+    this.authErrorMsg = '';
+    this.authService.register({
+      email: this.authEmailVal,
+      password: this.authPasswordVal,
+      firstName: this.authFirstNameVal,
+      lastName: this.authLastNameVal,
+    }).subscribe({
+      next: () => {
+        this.authLoadingState = false;
+        this.showAuthModal.set(false);
+        this.authEmailVal = '';
+        this.authPasswordVal = '';
+        this.authFirstNameVal = '';
+        this.authLastNameVal = '';
+        this.loadConversations();
+      },
+      error: (err: any) => {
+        this.authLoadingState = false;
+        this.authErrorMsg = err?.error?.error ?? 'Registration failed.';
+      }
+    });
+  }
+
+  closeAuthModal(): void {
+    this.showAuthModal.set(false);
+    this.authErrorMsg = '';
   }
 
   private mapAttachments(raw: ChatEntityAttachment[] | null | undefined): EntityAttachment[] {

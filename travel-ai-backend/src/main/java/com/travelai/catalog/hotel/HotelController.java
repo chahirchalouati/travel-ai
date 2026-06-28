@@ -29,11 +29,11 @@ public class HotelController {
     }
 
     @GetMapping("/{id}/availability")
-    public Boolean checkAvailability(
+    public ApiResponse<Boolean> checkAvailability(
             @PathVariable UUID id,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
             @RequestParam(defaultValue = "1") int guests) {
-        return hotelService.checkAvailability(id, from, to, guests);
+        return ApiResponse.ok(hotelService.checkAvailability(id, from, to, guests));
     }
 }

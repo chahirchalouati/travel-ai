@@ -24,6 +24,17 @@ export interface AuthResponse {
   role: string;
 }
 
+export interface UserProfileResponse {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone: string | null;
+  role: string;
+  emailVerified: boolean;
+  createdAt: string;
+}
+
 export type DateMode = 'FIXED' | 'FLEXIBLE';
 export type SpendingPriority = 'FOOD' | 'STAY' | 'BALANCED';
 export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED';

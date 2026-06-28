@@ -58,6 +58,7 @@ public class BookingService {
                 traveler.setDocumentNumber(t.documentNumber());
                 traveler.setPrimary(t.primary());
                 travelerRepository.save(traveler);
+                saved.getTravelers().add(traveler);
             }
         }
 
@@ -111,7 +112,7 @@ public class BookingService {
     }
 
     private BookingResponse toResponse(Booking b) {
-        List<TravelerResponse> travelers = travelerRepository.findByBookingId(b.getId()).stream()
+        List<TravelerResponse> travelers = b.getTravelers().stream()
                 .map(t -> new TravelerResponse(
                         t.getId(),
                         t.getFirstName(),
