@@ -20,31 +20,27 @@ const MONTH_NAMES = [
   standalone: true,
   imports: [CommonModule],
   template: `
-    <!-- Back navigation -->
-    <button
-      (click)="goBack()"
-      style="
-        position: fixed; top: 24px; left: 24px; z-index: 50;
-        display: inline-flex; align-items: center; gap: 6px;
-        background: rgba(36, 28, 21, 0.65); backdrop-filter: blur(12px);
-        color: #EFE8DC; border: none; border-radius: 40px;
-        padding: 10px 20px 10px 14px; font-family: 'Hanken Grotesk', sans-serif;
-        font-size: 14px; font-weight: 600; cursor: pointer;
-        transition: background 300ms ease;
-      "
-      (mouseenter)="$any($event.currentTarget).style.background='rgba(36,28,21,0.85)'"
-      (mouseleave)="$any($event.currentTarget).style.background='rgba(36,28,21,0.65)'"
-    >
-      <span class="ms" style="font-size: 18px;">arrow_back</span>
-      Back
-    </button>
-
     @if (destination(); as dest) {
+      <!-- Back navigation -->
+      <nav
+        style="
+          padding: 16px 32px; max-width: 1200px; margin: 0 auto;
+        "
+      >
+        <button
+          (click)="goBack()"
+          class="back-link"
+        >
+          <span class="ms" style="font-size: 18px;">arrow_back</span>
+          Back to destinations
+        </button>
+      </nav>
+
       <!-- HERO BANNER -->
       <section
         style="
-          position: relative; width: 100%; min-height: 400px;
-          overflow: hidden; display: flex; align-items: flex-end;
+          position: relative; width: 100%; max-height: 400px; height: 400px;
+          overflow: hidden;
         "
       >
         <img
@@ -56,92 +52,72 @@ const MONTH_NAMES = [
           "
           loading="eager"
           fetchpriority="high"
+          width="1200"
+          height="400"
         />
         <div
           style="
             position: absolute; inset: 0;
             background: linear-gradient(
               to top,
-              rgba(36, 28, 21, 0.92) 0%,
-              rgba(36, 28, 21, 0.45) 45%,
-              rgba(36, 28, 21, 0.08) 100%
+              #ffffff 0%,
+              rgba(255, 255, 255, 0.6) 30%,
+              rgba(255, 255, 255, 0) 60%
             );
           "
         ></div>
-
         <div
           style="
-            position: relative; z-index: 2; width: 100%;
-            max-width: 1200px; margin: 0 auto;
-            padding: 64px 32px 40px;
+            position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+            max-width: 1200px; margin: 0 auto; padding: 0 32px 32px;
           "
         >
-          <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
-            @for (tag of getTags(); track tag) {
-              <span
-                style="
-                  background: rgba(217, 105, 76, 0.2); border: 1px solid rgba(217, 105, 76, 0.4);
-                  color: #EFE8DC; padding: 4px 14px; border-radius: 100px;
-                  font-family: 'Hanken Grotesk', sans-serif; font-size: 12px;
-                  font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
-                "
-              >{{ tag }}</span>
-            }
-          </div>
-
           <h1
             style="
-              font-family: 'Instrument Serif', serif; font-size: clamp(2.5rem, 1.5rem + 4vw, 4.5rem);
-              color: #EFE8DC; margin: 0 0 6px; line-height: 1.05; font-weight: 400;
+              font-family: 'Hanken Grotesk', sans-serif;
+              font-size: clamp(2rem, 1.2rem + 3.5vw, 3.5rem);
+              color: #1a1a1a; margin: 0; line-height: 1.1; font-weight: 800;
             "
           >{{ dest.name }}</h1>
           <p
             style="
-              font-family: 'Hanken Grotesk', sans-serif; font-size: 18px;
-              color: rgba(239, 232, 220, 0.7); margin: 0 0 28px; font-weight: 400;
+              font-family: 'Hanken Grotesk', sans-serif; font-size: 16px;
+              color: #545454; margin: 6px 0 0; font-weight: 500;
             "
           >{{ dest.country }} &middot; {{ dest.continent }}</p>
+        </div>
+      </section>
 
-          <!-- Quick stats row -->
-          <div
-            style="
-              display: flex; flex-wrap: wrap; gap: 24px;
-              padding: 18px 24px; border-radius: 14px;
-              background: rgba(239, 232, 220, 0.08); backdrop-filter: blur(8px);
-              border: 1px solid rgba(239, 232, 220, 0.1);
-            "
-          >
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="ms" style="font-size: 20px; color: #D9694C;">payments</span>
-              <div>
-                <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 11px; color: rgba(239,232,220,0.5); text-transform: uppercase; letter-spacing: 0.8px;">Avg Daily Cost</div>
-                <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 16px; color: #EFE8DC; font-weight: 600;">{{ dest.avgDailyCost | currency:dest.currency:'symbol':'1.0-0' }}</div>
-              </div>
-            </div>
-            <div style="width: 1px; background: rgba(239,232,220,0.15); align-self: stretch;"></div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="ms" style="font-size: 20px; color: #D9694C;">thermostat</span>
-              <div>
-                <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 11px; color: rgba(239,232,220,0.5); text-transform: uppercase; letter-spacing: 0.8px;">Climate</div>
-                <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 16px; color: #EFE8DC; font-weight: 600;">{{ dest.climate }}</div>
-              </div>
-            </div>
-            <div style="width: 1px; background: rgba(239,232,220,0.15); align-self: stretch;"></div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="ms" style="font-size: 20px; color: #D9694C;">translate</span>
-              <div>
-                <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 11px; color: rgba(239,232,220,0.5); text-transform: uppercase; letter-spacing: 0.8px;">Language</div>
-                <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 16px; color: #EFE8DC; font-weight: 600;">{{ dest.language }}</div>
-              </div>
-            </div>
-            <div style="width: 1px; background: rgba(239,232,220,0.15); align-self: stretch;"></div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="ms" style="font-size: 20px; color: #D9694C;">monetization_on</span>
-              <div>
-                <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 11px; color: rgba(239,232,220,0.5); text-transform: uppercase; letter-spacing: 0.8px;">Currency</div>
-                <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 16px; color: #EFE8DC; font-weight: 600;">{{ dest.currency }}</div>
-              </div>
-            </div>
+      <!-- Quick Stats Bar -->
+      <section
+        style="
+          background: #f7f7f7; border-top: 1px solid #efefef; border-bottom: 1px solid #efefef;
+        "
+      >
+        <div
+          style="
+            max-width: 1200px; margin: 0 auto; padding: 16px 32px;
+            display: flex; flex-wrap: wrap; gap: 32px; align-items: center;
+          "
+        >
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="ms" style="font-size: 20px; color: #00856A;">payments</span>
+            <span style="font-family: 'Hanken Grotesk', sans-serif; font-size: 14px; color: #1a1a1a; font-weight: 600;">{{ dest.avgDailyCost | currency:dest.currency:'symbol':'1.0-0' }}/day avg</span>
+          </div>
+          <div style="width: 1px; height: 20px; background: #e0e0e0;"></div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="ms" style="font-size: 20px; color: #00856A;">thermostat</span>
+            <span style="font-family: 'Hanken Grotesk', sans-serif; font-size: 14px; color: #1a1a1a; font-weight: 600;">{{ dest.climate }} climate</span>
+          </div>
+          <div style="width: 1px; height: 20px; background: #e0e0e0;"></div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="ms" style="font-size: 20px; color: #00856A;">translate</span>
+            <span style="font-family: 'Hanken Grotesk', sans-serif; font-size: 14px; color: #1a1a1a; font-weight: 600;">{{ dest.language }}</span>
+          </div>
+          <div style="width: 1px; height: 20px; background: #e0e0e0;"></div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="ms" style="font-size: 20px; color: #00856A;">monetization_on</span>
+            <span style="font-family: 'Hanken Grotesk', sans-serif; font-size: 14px; color: #1a1a1a; font-weight: 600;">{{ dest.currency }}</span>
           </div>
         </div>
       </section>
@@ -149,46 +125,34 @@ const MONTH_NAMES = [
       <!-- CONTENT GRID -->
       <div
         style="
-          max-width: 1200px; margin: 0 auto; padding: 40px 32px 80px;
-          display: grid; grid-template-columns: 2fr 1fr; gap: 28px;
+          max-width: 1200px; margin: 0 auto; padding: 32px 32px 80px;
+          display: grid; grid-template-columns: 65fr 35fr; gap: 32px;
           align-items: start;
         "
       >
         <!-- LEFT COLUMN -->
-        <div style="display: flex; flex-direction: column; gap: 32px;">
+        <div style="display: flex; flex-direction: column; gap: 24px;">
 
           <!-- Overview -->
-          <section
-            style="
-              background: #fff; border: 1px solid #EADFCD; border-radius: 18px;
-              padding: 36px; overflow: hidden;
-            "
-          >
-            <h2
-              style="
-                font-family: 'Instrument Serif', serif; font-size: 28px;
-                color: #241C15; margin: 0 0 20px; font-weight: 400;
-              "
-            >Overview</h2>
+          <section class="content-card">
+            <h2 class="section-heading">Overview</h2>
             <p
               style="
-                font-family: 'Hanken Grotesk', sans-serif; font-size: 16px;
-                color: #4A3F35; line-height: 1.7; margin: 0 0 28px;
+                font-size: 15px; color: #545454; line-height: 1.75; margin: 0 0 24px;
               "
             >{{ dest.description }}</p>
 
             <div
               style="
-                background: #FAF6F0; border-radius: 14px; padding: 24px;
-                border: 1px solid #EADFCD;
+                background: #f7f7f7; border-radius: 10px; padding: 20px;
               "
             >
-              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-                <span class="ms" style="font-size: 22px; color: #D9694C;">calendar_month</span>
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                <span class="ms" style="font-size: 20px; color: #E04A2F;">calendar_month</span>
                 <h3
                   style="
-                    font-family: 'Instrument Serif', serif; font-size: 20px;
-                    color: #241C15; margin: 0; font-weight: 400;
+                    font-family: 'Hanken Grotesk', sans-serif; font-size: 15px;
+                    color: #1a1a1a; margin: 0; font-weight: 700;
                   "
                 >Best Time to Visit</h3>
               </div>
@@ -196,162 +160,129 @@ const MONTH_NAMES = [
                 @for (month of getMonthList(); track month) {
                   <span
                     style="
-                      background: rgba(217, 105, 76, 0.12); color: #D9694C;
-                      padding: 6px 16px; border-radius: 100px;
+                      background: #FFF0ED; color: #E04A2F;
+                      padding: 5px 14px; border-radius: 100px;
                       font-family: 'Hanken Grotesk', sans-serif; font-size: 13px;
                       font-weight: 600;
                     "
                   >{{ month }}</span>
                 }
               </div>
-              <div style="display: flex; align-items: center; gap: 8px; margin-top: 16px;">
-                <span class="ms" style="font-size: 18px; color: #8A7E72;">thermostat</span>
-                <span
-                  style="
-                    font-family: 'Hanken Grotesk', sans-serif; font-size: 14px;
-                    color: #8A7E72;
-                  "
-                >{{ dest.climate }} climate</span>
-              </div>
             </div>
           </section>
 
           <!-- Reviews -->
-          <section
-            style="
-              background: #fff; border: 1px solid #EADFCD; border-radius: 18px;
-              padding: 36px; overflow: hidden;
-            "
-          >
-            <h2
-              style="
-                font-family: 'Instrument Serif', serif; font-size: 28px;
-                color: #241C15; margin: 0 0 24px; font-weight: 400;
-              "
-            >Reviews</h2>
+          <section class="content-card">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+              <h2 class="section-heading" style="margin-bottom: 0;">Traveler Reviews</h2>
+              @if (reviewSummary(); as summary) {
+                <span style="font-size: 14px; color: #8a8a8a;">{{ summary.totalReviews }} reviews</span>
+              }
+            </div>
 
             @if (reviewSummary(); as summary) {
               <div
                 style="
-                  display: flex; align-items: center; gap: 24px;
-                  background: #FAF6F0; border-radius: 14px; padding: 24px;
-                  border: 1px solid #EADFCD; margin-bottom: 28px;
+                  display: flex; align-items: flex-start; gap: 20px;
+                  background: #E6F5F0; border-radius: 10px; padding: 20px;
+                  border-left: 4px solid #00856A; margin-bottom: 24px;
                 "
               >
-                <div style="text-align: center; min-width: 80px;">
-                  <div
-                    style="
-                      font-family: 'Instrument Serif', serif; font-size: 48px;
-                      color: #241C15; line-height: 1;
-                    "
-                  >{{ summary.averageRating | number:'1.1-1' }}</div>
-                  <div style="display: flex; justify-content: center; gap: 2px; margin: 6px 0;">
-                    @for (star of getStars(summary.averageRating); track $index) {
-                      <span style="font-size: 16px; color: {{ star ? '#D9694C' : '#E4D8C6' }};">&#9733;</span>
-                    }
-                  </div>
-                  <div
-                    style="
-                      font-family: 'Hanken Grotesk', sans-serif; font-size: 13px;
-                      color: #8A7E72;
-                    "
-                  >{{ summary.totalReviews }} reviews</div>
+                <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+                  <span class="ms" style="font-size: 22px; color: #00856A;">auto_awesome</span>
                 </div>
-                <div style="width: 1px; background: #EADFCD; align-self: stretch;"></div>
-                <p
-                  style="
-                    font-family: 'Hanken Grotesk', sans-serif; font-size: 15px;
-                    color: #4A3F35; line-height: 1.6; margin: 0; flex: 1;
-                  "
-                >{{ summary.aiSummary }}</p>
+                <div style="flex: 1;">
+                  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    <span style="font-family: 'Hanken Grotesk', sans-serif; font-size: 12px; color: #00856A; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">AI Summary</span>
+                    <span style="font-family: 'Hanken Grotesk', sans-serif; font-size: 22px; color: #1a1a1a; font-weight: 800;">{{ summary.averageRating | number:'1.1-1' }}</span>
+                    <div style="display: flex; gap: 1px;">
+                      @for (star of getStars(summary.averageRating); track $index) {
+                        <span style="font-size: 14px; color: {{ star ? '#F5A623' : '#e0e0e0' }};">&#9733;</span>
+                      }
+                    </div>
+                  </div>
+                  <p
+                    style="
+                      font-size: 14px; color: #545454; line-height: 1.65; margin: 0;
+                    "
+                  >{{ summary.aiSummary }}</p>
+                </div>
               </div>
             } @else {
               <div
                 style="
-                  background: #FAF6F0; border-radius: 14px; padding: 32px;
-                  border: 1px solid #EADFCD; text-align: center; margin-bottom: 28px;
+                  background: #f7f7f7; border-radius: 10px; padding: 32px;
+                  text-align: center; margin-bottom: 24px;
                 "
               >
-                <span class="ms" style="font-size: 36px; color: #E4D8C6; display: block; margin-bottom: 8px;">rate_review</span>
+                <span class="ms" style="font-size: 36px; color: #e0e0e0; display: block; margin-bottom: 8px;">rate_review</span>
                 <p
                   style="
-                    font-family: 'Hanken Grotesk', sans-serif; font-size: 15px;
-                    color: #8A7E72; margin: 0;
+                    font-size: 15px; color: #8a8a8a; margin: 0;
                   "
                 >No reviews yet. Be the first to share your experience.</p>
               </div>
             }
 
             @if (reviews().length > 0) {
-              <div style="display: flex; flex-direction: column; gap: 20px;">
+              <div style="display: flex; flex-direction: column; gap: 16px;">
                 @for (review of reviews(); track review.id) {
                   <article
                     style="
-                      border: 1px solid #EADFCD; border-radius: 14px; padding: 24px;
-                      transition: box-shadow 300ms ease;
+                      background: #ffffff;
+                      border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px;
                     "
                   >
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-                      <div>
-                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                      <div style="display: flex; align-items: center; gap: 10px;">
+                        <div
+                          style="
+                            width: 36px; height: 36px; border-radius: 50%;
+                            background: #f0f0f0;
+                            display: flex; align-items: center; justify-content: center;
+                            font-family: 'Hanken Grotesk', sans-serif; font-size: 14px;
+                            color: #E04A2F; font-weight: 700;
+                          "
+                        >{{ review.userFirstName.charAt(0) }}</div>
+                        <div>
                           <div
                             style="
-                              width: 36px; height: 36px; border-radius: 50%;
-                              background: linear-gradient(135deg, #D9694C, #C45A3E);
-                              display: flex; align-items: center; justify-content: center;
-                              font-family: 'Hanken Grotesk', sans-serif; font-size: 14px;
-                              color: #EFE8DC; font-weight: 700;
+                              font-size: 14px; color: #1a1a1a; font-weight: 600;
                             "
-                          >{{ review.userFirstName.charAt(0) }}</div>
-                          <div>
-                            <div
-                              style="
-                                font-family: 'Hanken Grotesk', sans-serif; font-size: 15px;
-                                color: #241C15; font-weight: 600;
-                              "
-                            >{{ review.userFirstName }}</div>
-                            <div
-                              style="
-                                font-family: 'Hanken Grotesk', sans-serif; font-size: 12px;
-                                color: #8A7E72;
-                              "
-                            >{{ review.createdAt | date:'mediumDate' }}</div>
-                          </div>
+                          >{{ review.userFirstName }}</div>
+                          <div
+                            style="
+                              font-size: 12px; color: #8a8a8a;
+                            "
+                          >{{ review.createdAt | date:'mediumDate' }}</div>
                         </div>
                       </div>
-                      <div style="display: flex; gap: 2px;">
-                        @for (star of getStars(review.rating); track $index) {
-                          <span style="font-size: 14px; color: {{ star ? '#D9694C' : '#E4D8C6' }};">&#9733;</span>
-                        }
+                      <div style="display: flex; align-items: center; gap: 6px;">
+                        <div style="display: flex; gap: 1px;">
+                          @for (star of getStars(review.rating); track $index) {
+                            <span style="font-size: 14px; color: {{ star ? '#F5A623' : '#e0e0e0' }};">&#9733;</span>
+                          }
+                        </div>
+                        <span style="font-size: 14px; color: #1a1a1a; font-weight: 700;">{{ review.rating }}.0</span>
                       </div>
                     </div>
                     @if (review.title) {
                       <h4
                         style="
-                          font-family: 'Hanken Grotesk', sans-serif; font-size: 16px;
-                          color: #241C15; font-weight: 600; margin: 0 0 8px;
+                          font-size: 15px; color: #1a1a1a; font-weight: 700; margin: 0 0 6px;
                         "
                       >{{ review.title }}</h4>
                     }
                     <p
                       style="
-                        font-family: 'Hanken Grotesk', sans-serif; font-size: 14px;
-                        color: #4A3F35; line-height: 1.65; margin: 0 0 14px;
+                        font-size: 14px; color: #545454; line-height: 1.65; margin: 0 0 12px;
                       "
                     >{{ review.content }}</p>
                     <button
                       (click)="markHelpful(review.id)"
-                      style="
-                        display: inline-flex; align-items: center; gap: 6px;
-                        background: none; border: 1px solid #EADFCD; border-radius: 100px;
-                        padding: 6px 14px; cursor: pointer;
-                        font-family: 'Hanken Grotesk', sans-serif; font-size: 13px;
-                        color: #8A7E72; transition: all 200ms ease;
-                      "
-                      (mouseenter)="$any($event.currentTarget).style.borderColor='#D9694C';$any($event.currentTarget).style.color='#D9694C'"
-                      (mouseleave)="$any($event.currentTarget).style.borderColor='#EADFCD';$any($event.currentTarget).style.color='#8A7E72'"
+                      class="helpful-btn"
                     >
-                      <span class="ms" style="font-size: 16px;">thumb_up</span>
+                      <span class="ms" style="font-size: 15px;">thumb_up</span>
                       Helpful ({{ review.helpfulCount }})
                     </button>
                   </article>
@@ -361,49 +292,26 @@ const MONTH_NAMES = [
           </section>
 
           <!-- AI Travel Guide -->
-          <section
-            style="
-              border-radius: 18px; padding: 36px; overflow: hidden;
-              border: 1px solid #EADFCD;
-            "
-            [style.background]="guide() ? 'linear-gradient(145deg, #FAF6F0 0%, #F5EDE0 50%, #FCF8F3 100%)' : '#fff'"
-          >
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+          <section class="content-card">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
               <span
                 class="ms"
                 style="
-                  font-size: 28px; color: #D9694C;
-                  background: rgba(217, 105, 76, 0.1); border-radius: 12px;
-                  padding: 8px;
+                  font-size: 24px; color: #E04A2F;
                 "
               >auto_awesome</span>
-              <h2
-                style="
-                  font-family: 'Instrument Serif', serif; font-size: 28px;
-                  color: #241C15; margin: 0; font-weight: 400;
-                "
-              >AI Travel Guide</h2>
+              <h2 class="section-heading" style="margin-bottom: 0;">AI Travel Guide</h2>
             </div>
 
             @if (!guide() && !guideLoading()) {
               <p
                 style="
-                  font-family: 'Hanken Grotesk', sans-serif; font-size: 15px;
-                  color: #8A7E72; line-height: 1.6; margin: 0 0 20px;
+                  font-size: 15px; color: #545454; line-height: 1.65; margin: 0 0 20px;
                 "
               >Get a personalized AI-generated travel guide with top attractions, food recommendations, and insider travel tips.</p>
               <button
                 (click)="generateGuide()"
-                style="
-                  display: inline-flex; align-items: center; gap: 8px;
-                  background: linear-gradient(135deg, #D9694C, #C45A3E);
-                  color: #EFE8DC; border: none; border-radius: 100px;
-                  padding: 14px 28px; font-family: 'Hanken Grotesk', sans-serif;
-                  font-size: 15px; font-weight: 600; cursor: pointer;
-                  transition: opacity 200ms ease;
-                "
-                (mouseenter)="$any($event.currentTarget).style.opacity='0.88'"
-                (mouseleave)="$any($event.currentTarget).style.opacity='1'"
+                class="btn-primary"
               >
                 <span class="ms" style="font-size: 20px;">auto_awesome</span>
                 Generate AI Guide
@@ -411,114 +319,50 @@ const MONTH_NAMES = [
             }
 
             @if (guideLoading()) {
-              <div
-                style="
-                  display: flex; flex-direction: column; align-items: center;
-                  justify-content: center; padding: 48px 0; gap: 16px;
-                "
-              >
-                <div
-                  style="
-                    width: 40px; height: 40px; border: 3px solid #EADFCD;
-                    border-top-color: #D9694C; border-radius: 50%;
-                    animation: spin 0.8s linear infinite;
-                  "
-                ></div>
-                <p
-                  style="
-                    font-family: 'Hanken Grotesk', sans-serif; font-size: 14px;
-                    color: #8A7E72; margin: 0;
-                  "
-                >Crafting your personalized guide...</p>
+              <div style="display: flex; flex-direction: column; gap: 16px; padding: 8px 0;">
+                <div class="shimmer-card" style="height: 80px; border-radius: 10px;"></div>
+                <div class="shimmer-card" style="height: 120px; border-radius: 10px;"></div>
+                <div class="shimmer-card" style="height: 100px; border-radius: 10px;"></div>
               </div>
             }
 
             @if (guide(); as g) {
-              <div style="display: flex; flex-direction: column; gap: 24px;">
+              <div style="display: flex; flex-direction: column; gap: 16px;">
                 @if (g.guide) {
                   <p
                     style="
-                      font-family: 'Hanken Grotesk', sans-serif; font-size: 15px;
-                      color: #4A3F35; line-height: 1.7; margin: 0;
+                      font-size: 15px; color: #545454; line-height: 1.75; margin: 0;
                     "
                   >{{ g.guide }}</p>
                 }
 
                 @if (g.topAttractions) {
-                  <div
-                    style="
-                      background: #fff; border-radius: 14px; padding: 24px;
-                      border: 1px solid #EADFCD;
-                    "
-                  >
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
-                      <span class="ms" style="font-size: 22px; color: #D9694C;">attractions</span>
-                      <h3
-                        style="
-                          font-family: 'Instrument Serif', serif; font-size: 20px;
-                          color: #241C15; margin: 0; font-weight: 400;
-                        "
-                      >Top Attractions</h3>
+                  <div class="guide-section-card">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                      <span class="ms" style="font-size: 22px; color: #E04A2F;">attractions</span>
+                      <h3 class="guide-section-title">Top Attractions</h3>
                     </div>
-                    <p
-                      style="
-                        font-family: 'Hanken Grotesk', sans-serif; font-size: 14px;
-                        color: #4A3F35; line-height: 1.7; margin: 0;
-                        white-space: pre-line;
-                      "
-                    >{{ g.topAttractions }}</p>
+                    <p class="guide-section-text">{{ g.topAttractions }}</p>
                   </div>
                 }
 
                 @if (g.foodRecommendations) {
-                  <div
-                    style="
-                      background: #fff; border-radius: 14px; padding: 24px;
-                      border: 1px solid #EADFCD;
-                    "
-                  >
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
-                      <span class="ms" style="font-size: 22px; color: #D9694C;">restaurant</span>
-                      <h3
-                        style="
-                          font-family: 'Instrument Serif', serif; font-size: 20px;
-                          color: #241C15; margin: 0; font-weight: 400;
-                        "
-                      >Food Recommendations</h3>
+                  <div class="guide-section-card">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                      <span class="ms" style="font-size: 22px; color: #E04A2F;">restaurant</span>
+                      <h3 class="guide-section-title">Food Recommendations</h3>
                     </div>
-                    <p
-                      style="
-                        font-family: 'Hanken Grotesk', sans-serif; font-size: 14px;
-                        color: #4A3F35; line-height: 1.7; margin: 0;
-                        white-space: pre-line;
-                      "
-                    >{{ g.foodRecommendations }}</p>
+                    <p class="guide-section-text">{{ g.foodRecommendations }}</p>
                   </div>
                 }
 
                 @if (g.travelTips) {
-                  <div
-                    style="
-                      background: #fff; border-radius: 14px; padding: 24px;
-                      border: 1px solid #EADFCD;
-                    "
-                  >
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
-                      <span class="ms" style="font-size: 22px; color: #D9694C;">lightbulb</span>
-                      <h3
-                        style="
-                          font-family: 'Instrument Serif', serif; font-size: 20px;
-                          color: #241C15; margin: 0; font-weight: 400;
-                        "
-                      >Travel Tips</h3>
+                  <div class="guide-section-card">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                      <span class="ms" style="font-size: 22px; color: #E04A2F;">lightbulb</span>
+                      <h3 class="guide-section-title">Travel Tips</h3>
                     </div>
-                    <p
-                      style="
-                        font-family: 'Hanken Grotesk', sans-serif; font-size: 14px;
-                        color: #4A3F35; line-height: 1.7; margin: 0;
-                        white-space: pre-line;
-                      "
-                    >{{ g.travelTips }}</p>
+                    <p class="guide-section-text">{{ g.travelTips }}</p>
                   </div>
                 }
               </div>
@@ -530,155 +374,92 @@ const MONTH_NAMES = [
         <aside style="display: flex; flex-direction: column; gap: 20px; position: sticky; top: 80px;">
 
           <!-- Quick Info Card -->
-          <div
-            style="
-              background: #fff; border: 1px solid #EADFCD; border-radius: 18px;
-              padding: 28px; overflow: hidden;
-            "
-          >
+          <div class="sidebar-card">
             <h3
               style="
-                font-family: 'Instrument Serif', serif; font-size: 22px;
-                color: #241C15; margin: 0 0 22px; font-weight: 400;
+                font-family: 'Hanken Grotesk', sans-serif; font-size: 18px;
+                color: #1a1a1a; margin: 0 0 18px; font-weight: 700;
               "
             >Quick Info</h3>
 
-            <div style="display: flex; flex-direction: column; gap: 18px;">
+            <div style="display: flex; flex-direction: column; gap: 14px;">
               <div style="display: flex; align-items: center; gap: 12px;">
-                <span
-                  class="ms"
-                  style="
-                    font-size: 20px; color: #D9694C;
-                    background: rgba(217, 105, 76, 0.1); border-radius: 10px;
-                    padding: 8px; line-height: 1;
-                  "
-                >payments</span>
+                <span class="ms" style="font-size: 20px; color: #00856A;">payments</span>
                 <div>
-                  <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 11px; color: #8A7E72; text-transform: uppercase; letter-spacing: 0.8px;">Avg Daily Cost</div>
-                  <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 16px; color: #241C15; font-weight: 600;">{{ dest.avgDailyCost | currency:dest.currency:'symbol':'1.0-0' }}</div>
+                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">Avg Daily Cost</div>
+                  <div style="font-size: 15px; color: #1a1a1a; font-weight: 700;">{{ dest.avgDailyCost | currency:dest.currency:'symbol':'1.0-0' }}</div>
                 </div>
               </div>
 
-              <div style="height: 1px; background: #EADFCD;"></div>
+              <div style="height: 1px; background: #efefef;"></div>
 
               <div style="display: flex; align-items: center; gap: 12px;">
-                <span
-                  class="ms"
-                  style="
-                    font-size: 20px; color: #D9694C;
-                    background: rgba(217, 105, 76, 0.1); border-radius: 10px;
-                    padding: 8px; line-height: 1;
-                  "
-                >thermostat</span>
+                <span class="ms" style="font-size: 20px; color: #00856A;">thermostat</span>
                 <div>
-                  <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 11px; color: #8A7E72; text-transform: uppercase; letter-spacing: 0.8px;">Climate</div>
-                  <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 16px; color: #241C15; font-weight: 600;">{{ dest.climate }}</div>
+                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">Climate</div>
+                  <div style="font-size: 15px; color: #1a1a1a; font-weight: 700;">{{ dest.climate }}</div>
                 </div>
               </div>
 
-              <div style="height: 1px; background: #EADFCD;"></div>
+              <div style="height: 1px; background: #efefef;"></div>
 
               <div style="display: flex; align-items: center; gap: 12px;">
-                <span
-                  class="ms"
-                  style="
-                    font-size: 20px; color: #D9694C;
-                    background: rgba(217, 105, 76, 0.1); border-radius: 10px;
-                    padding: 8px; line-height: 1;
-                  "
-                >translate</span>
+                <span class="ms" style="font-size: 20px; color: #00856A;">translate</span>
                 <div>
-                  <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 11px; color: #8A7E72; text-transform: uppercase; letter-spacing: 0.8px;">Language</div>
-                  <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 16px; color: #241C15; font-weight: 600;">{{ dest.language }}</div>
+                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">Language</div>
+                  <div style="font-size: 15px; color: #1a1a1a; font-weight: 700;">{{ dest.language }}</div>
                 </div>
               </div>
 
-              <div style="height: 1px; background: #EADFCD;"></div>
+              <div style="height: 1px; background: #efefef;"></div>
 
               <div style="display: flex; align-items: center; gap: 12px;">
-                <span
-                  class="ms"
-                  style="
-                    font-size: 20px; color: #D9694C;
-                    background: rgba(217, 105, 76, 0.1); border-radius: 10px;
-                    padding: 8px; line-height: 1;
-                  "
-                >monetization_on</span>
+                <span class="ms" style="font-size: 20px; color: #00856A;">monetization_on</span>
                 <div>
-                  <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 11px; color: #8A7E72; text-transform: uppercase; letter-spacing: 0.8px;">Currency</div>
-                  <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 16px; color: #241C15; font-weight: 600;">{{ dest.currency }}</div>
+                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">Currency</div>
+                  <div style="font-size: 15px; color: #1a1a1a; font-weight: 700;">{{ dest.currency }}</div>
                 </div>
               </div>
 
-              <div style="height: 1px; background: #EADFCD;"></div>
+              <div style="height: 1px; background: #efefef;"></div>
 
               <div style="display: flex; align-items: center; gap: 12px;">
-                <span
-                  class="ms"
-                  style="
-                    font-size: 20px; color: #D9694C;
-                    background: rgba(217, 105, 76, 0.1); border-radius: 10px;
-                    padding: 8px; line-height: 1;
-                  "
-                >calendar_month</span>
+                <span class="ms" style="font-size: 20px; color: #00856A;">calendar_month</span>
                 <div>
-                  <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 11px; color: #8A7E72; text-transform: uppercase; letter-spacing: 0.8px;">Best Months</div>
-                  <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 16px; color: #241C15; font-weight: 600;">{{ getMonthNames(dest.bestMonths) }}</div>
+                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">Best Months</div>
+                  <div style="font-size: 15px; color: #1a1a1a; font-weight: 700;">{{ getMonthNames(dest.bestMonths) }}</div>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Plan Trip CTA Card -->
-          <div
-            style="
-              background: linear-gradient(145deg, #241C15, #332720);
-              border: 1px solid rgba(217, 105, 76, 0.25); border-radius: 18px;
-              padding: 28px; overflow: hidden;
-            "
-          >
+          <div class="sidebar-card">
             <h3
               style="
-                font-family: 'Instrument Serif', serif; font-size: 22px;
-                color: #EFE8DC; margin: 0 0 8px; font-weight: 400;
+                font-family: 'Hanken Grotesk', sans-serif; font-size: 18px;
+                color: #1a1a1a; margin: 0 0 6px; font-weight: 700;
               "
             >Ready to explore?</h3>
             <p
               style="
-                font-family: 'Hanken Grotesk', sans-serif; font-size: 14px;
-                color: rgba(239, 232, 220, 0.6); margin: 0 0 22px; line-height: 1.5;
+                font-size: 14px; color: #545454; margin: 0 0 18px; line-height: 1.5;
               "
             >Let AI craft the perfect itinerary for {{ dest.name }}.</p>
 
             <div style="display: flex; flex-direction: column; gap: 10px;">
               <button
                 (click)="goToPlanner()"
-                style="
-                  display: flex; align-items: center; justify-content: center; gap: 8px;
-                  background: linear-gradient(135deg, #D9694C, #C45A3E);
-                  color: #EFE8DC; border: none; border-radius: 100px;
-                  padding: 14px 24px; font-family: 'Hanken Grotesk', sans-serif;
-                  font-size: 15px; font-weight: 600; cursor: pointer;
-                  transition: opacity 200ms ease; width: 100%;
-                "
-                (mouseenter)="$any($event.currentTarget).style.opacity='0.88'"
-                (mouseleave)="$any($event.currentTarget).style.opacity='1'"
+                class="btn-primary"
+                style="width: 100%; justify-content: center;"
               >
                 <span class="ms" style="font-size: 20px;">travel_explore</span>
-                Plan a trip to {{ dest.name }}
+                Plan a Trip
               </button>
               <button
                 (click)="goToChat()"
-                style="
-                  display: flex; align-items: center; justify-content: center; gap: 8px;
-                  background: transparent; color: #EFE8DC;
-                  border: 1px solid rgba(239, 232, 220, 0.2); border-radius: 100px;
-                  padding: 14px 24px; font-family: 'Hanken Grotesk', sans-serif;
-                  font-size: 15px; font-weight: 600; cursor: pointer;
-                  transition: all 200ms ease; width: 100%;
-                "
-                (mouseenter)="$any($event.currentTarget).style.borderColor='rgba(239,232,220,0.5)'"
-                (mouseleave)="$any($event.currentTarget).style.borderColor='rgba(239,232,220,0.2)'"
+                class="btn-outline"
+                style="width: 100%; justify-content: center;"
               >
                 <span class="ms" style="font-size: 20px;">chat</span>
                 Chat about {{ dest.name }}
@@ -689,22 +470,21 @@ const MONTH_NAMES = [
       </div>
     } @else {
       <!-- Loading skeleton -->
-      <div style="min-height: 100vh; background: #EFE8DC;">
+      <div style="min-height: 100vh; background: #ffffff;">
         <div
+          class="shimmer-card"
           style="
-            width: 100%; min-height: 400px;
-            background: linear-gradient(135deg, #E4D8C6, #EADFCD);
-            animation: pulse 1.5s ease-in-out infinite;
+            width: 100%; height: 400px;
           "
         ></div>
-        <div style="max-width: 1200px; margin: 40px auto; padding: 0 32px; display: grid; grid-template-columns: 2fr 1fr; gap: 28px;">
-          <div style="display: flex; flex-direction: column; gap: 32px;">
-            <div style="background: #fff; border-radius: 18px; height: 300px; animation: pulse 1.5s ease-in-out infinite;"></div>
-            <div style="background: #fff; border-radius: 18px; height: 200px; animation: pulse 1.5s ease-in-out infinite;"></div>
+        <div style="max-width: 1200px; margin: 32px auto; padding: 0 32px; display: grid; grid-template-columns: 65fr 35fr; gap: 32px;">
+          <div style="display: flex; flex-direction: column; gap: 24px;">
+            <div class="shimmer-card" style="border-radius: 10px; height: 300px;"></div>
+            <div class="shimmer-card" style="border-radius: 10px; height: 200px;"></div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 20px;">
-            <div style="background: #fff; border-radius: 18px; height: 350px; animation: pulse 1.5s ease-in-out infinite;"></div>
-            <div style="background: #fff; border-radius: 18px; height: 200px; animation: pulse 1.5s ease-in-out infinite;"></div>
+            <div class="shimmer-card" style="border-radius: 10px; height: 350px;"></div>
+            <div class="shimmer-card" style="border-radius: 10px; height: 200px;"></div>
           </div>
         </div>
       </div>
@@ -713,17 +493,150 @@ const MONTH_NAMES = [
   styles: [`
     :host {
       display: block;
-      background: #EFE8DC;
+      background: #ffffff;
       min-height: 100vh;
+      color: #1a1a1a;
+      font-family: 'Hanken Grotesk', sans-serif;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      color: #545454;
+      font-family: 'Hanken Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0;
+      transition: color 150ms ease;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
+    .back-link:hover {
+      color: #E04A2F;
+    }
+
+    .content-card {
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 28px;
+    }
+
+    .sidebar-card {
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .section-heading {
+      font-family: 'Hanken Grotesk', sans-serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      margin: 0 0 16px;
+      font-weight: 700;
+    }
+
+    .guide-section-card {
+      background: #f7f7f7;
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .guide-section-title {
+      font-family: 'Hanken Grotesk', sans-serif;
+      font-size: 16px;
+      color: #1a1a1a;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .guide-section-text {
+      font-size: 14px;
+      color: #545454;
+      line-height: 1.7;
+      margin: 0;
+      white-space: pre-line;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #E04A2F;
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 13px 24px;
+      font-family: 'Hanken Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 150ms ease;
+    }
+
+    .btn-primary:hover {
+      background: #c93d25;
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffff;
+      color: #E04A2F;
+      border: 1.5px solid #E04A2F;
+      border-radius: 10px;
+      padding: 12px 24px;
+      font-family: 'Hanken Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 150ms ease;
+    }
+
+    .btn-outline:hover {
+      background: #FFF0ED;
+    }
+
+    .helpful-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 100px;
+      padding: 5px 14px;
+      cursor: pointer;
+      font-family: 'Hanken Grotesk', sans-serif;
+      font-size: 13px;
+      color: #545454;
+      transition: border-color 150ms ease, color 150ms ease;
+    }
+
+    .helpful-btn:hover {
+      border-color: #E04A2F;
+      color: #E04A2F;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -400px 0; }
+      100% { background-position: 400px 0; }
+    }
+
+    .shimmer-card {
+      background: linear-gradient(
+        90deg,
+        #f0f0f0 25%,
+        #e0e0e0 50%,
+        #f0f0f0 75%
+      );
+      background-size: 800px 100%;
+      animation: shimmer 1.8s ease-in-out infinite;
     }
 
     @media (max-width: 768px) {

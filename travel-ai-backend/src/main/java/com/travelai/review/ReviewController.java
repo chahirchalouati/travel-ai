@@ -46,6 +46,13 @@ public class ReviewController {
         return ApiResponse.ok(reviewService.getReviewSummary(targetType, targetId));
     }
 
+    @GetMapping("/recent")
+    public ApiResponse<Page<ReviewResponse>> getRecentReviews(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size) {
+        return ApiResponse.ok(reviewService.getRecentReviews(page, size));
+    }
+
     @GetMapping("/user/{userId}")
     public ApiResponse<Page<ReviewResponse>> getReviewsByUser(
             @PathVariable UUID userId,

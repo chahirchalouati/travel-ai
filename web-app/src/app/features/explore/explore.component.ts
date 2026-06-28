@@ -13,7 +13,26 @@ interface ContinentCard {
   readonly destinationCount: number;
 }
 
+interface InterestTile {
+  readonly title: string;
+  readonly icon: string;
+  readonly tag: string;
+  readonly count: number;
+  readonly imageUrl: string;
+}
+
 const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', 'Luxury'] as const;
+
+const CATEGORY_FILTERS = ['All', 'Destinations', 'Hotels', 'Restaurants', 'Things to Do'] as const;
+
+const POPULAR_LINKS = ['Paris', 'Tokyo', 'Bali', 'New York', 'Rome'] as const;
+
+const INTEREST_TILES: readonly InterestTile[] = [
+  { title: 'Beaches & Islands', icon: 'beach_access', tag: 'Beach', count: 142, imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80' },
+  { title: 'City Breaks', icon: 'location_city', tag: 'Cultural', count: 98, imageUrl: 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=600&q=80' },
+  { title: 'Food & Wine', icon: 'restaurant', tag: 'Luxury', count: 76, imageUrl: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80' },
+  { title: 'Adventure', icon: 'hiking', tag: 'Adventure', count: 115, imageUrl: 'https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=600&q=80' },
+] as const;
 
 const CONTINENTS: readonly ContinentCard[] = [
   { name: 'Europe', imageUrl: 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=600&q=80', destinationCount: 47 },
@@ -29,30 +48,46 @@ const CONTINENTS: readonly ContinentCard[] = [
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <!-- HERO -->
+    <!-- HERO / SEARCH -->
     <section class="hero">
-      <div class="hero-overlay"></div>
       <div class="hero-content">
-        <p class="hero-eyebrow">Travel AI</p>
-        <h1 class="hero-headline">Discover Your Next Adventure</h1>
-        <p class="hero-subtitle">AI-powered travel planning, reviews, and personalized recommendations</p>
+        <h1 class="hero-headline">Where to next?</h1>
+        <p class="hero-subtitle">Discover destinations, read reviews, and plan with AI</p>
 
         <div class="search-bar">
           <span class="ms search-icon">search</span>
           <input
             type="text"
             class="search-input"
-            placeholder="Where do you want to go?"
+            placeholder="Search destinations, hotels, restaurants..."
             [ngModel]="searchQuery()"
             (ngModelChange)="searchQuery.set($event)"
             (keydown.enter)="search()"
           />
+          <button class="ask-ai-btn" (click)="goToChat()">
+            <span class="ms" style="font-size:16px">auto_awesome</span>
+            Ask AI
+          </button>
           <button class="search-btn" (click)="search()">Search</button>
         </div>
 
-        <div class="quick-filters">
-          @for (tag of quickFilters; track tag) {
-            <button class="filter-chip" (click)="filterByTag(tag)">{{ tag }}</button>
+        <div class="category-chips">
+          @for (cat of categoryFilters; track cat) {
+            <button
+              class="category-chip"
+              [class.category-chip--active]="cat === 'All'"
+              (click)="filterByTag(cat)"
+            >{{ cat }}</button>
+          }
+        </div>
+
+        <div class="popular-links">
+          <span class="popular-label">Popular:</span>
+          @for (link of popularLinks; track link; let last = $last) {
+            <button class="popular-link" (click)="filterByTag(link)">{{ link }}</button>
+            @if (!last) {
+              <span class="popular-dot">&middot;</span>
+            }
           }
         </div>
       </div>
@@ -60,37 +95,48 @@ const CONTINENTS: readonly ContinentCard[] = [
 
     <!-- FEATURED DESTINATIONS -->
     @if (featuredDestinations().length > 0) {
-      <section class="section featured-section">
+      <section class="section" aria-labelledby="featured-heading">
         <div class="section-header">
-          <h2 class="section-title">Featured Destinations</h2>
-          <p class="section-subtitle">Handpicked by our editorial team</p>
+          <div>
+            <h2 class="section-title" id="featured-heading">Top destinations travelers love</h2>
+          </div>
+          <button class="see-all-link" (click)="filterByTag('All')">See all
+            <span class="ms see-all-arrow">arrow_forward</span>
+          </button>
         </div>
-        <div class="bento-grid">
-          @for (dest of featuredDestinations(); track dest.id; let i = $index) {
-            <article
-              class="bento-card"
-              [class.bento-card--hero]="i === 0"
-              (click)="goToDestination(dest.id)"
-            >
-              <img
-                [src]="dest.imageUrl"
-                [alt]="dest.name"
-                class="bento-card__img"
-                loading="lazy"
-              />
-              <div class="bento-card__overlay"></div>
-              <div class="bento-card__content">
-                <div class="bento-card__tags">
+        <div class="featured-scroll">
+          @for (dest of featuredDestinations(); track dest.id) {
+            <article class="dest-card" (click)="goToDestination(dest.id)">
+              <div class="dest-card__img-wrap">
+                <img
+                  [src]="dest.imageUrl"
+                  [alt]="dest.name"
+                  class="dest-card__img"
+                  width="280"
+                  height="200"
+                  loading="lazy"
+                />
+              </div>
+              <div class="dest-card__body">
+                <h3 class="dest-card__name">{{ dest.name }}</h3>
+                <p class="dest-card__country">{{ dest.country }}</p>
+                <div class="dest-card__rating">
+                  <span class="rating-dots">
+                    <span class="rating-dot filled"></span>
+                    <span class="rating-dot filled"></span>
+                    <span class="rating-dot filled"></span>
+                    <span class="rating-dot filled"></span>
+                    <span class="rating-dot"></span>
+                  </span>
+                  <span class="rating-score">{{ (dest.popularityScore / 20) | number:'1.1-1' }}</span>
+                  <span class="rating-count">({{ dest.popularityScore * 24 | number:'1.0-0' }} reviews)</span>
+                </div>
+                <span class="dest-card__price">From {{ dest.avgDailyCost | currency:dest.currency:'symbol':'1.0-0' }}/night</span>
+                <div class="dest-card__tags">
                   @for (tag of parseTags(dest.tags); track tag) {
                     <span class="tag-pill">{{ tag }}</span>
                   }
                 </div>
-                <h3 class="bento-card__name">{{ dest.name }}</h3>
-                <p class="bento-card__country">{{ dest.country }}</p>
-                <span class="bento-card__price">
-                  <span class="ms" style="font-size: 16px;">payments</span>
-                  {{ dest.avgDailyCost | currency:dest.currency:'symbol':'1.0-0' }}/day
-                </span>
               </div>
             </article>
           }
@@ -100,29 +146,37 @@ const CONTINENTS: readonly ContinentCard[] = [
 
     <!-- TRENDING DESTINATIONS -->
     @if (trendingDestinations().length > 0) {
-      <section class="section trending-section">
+      <section class="section section--gray" aria-labelledby="trending-heading">
         <div class="section-header">
-          <h2 class="section-title">Trending Now</h2>
-          <p class="section-subtitle">Most popular destinations this season</p>
+          <div>
+            <h2 class="section-title" id="trending-heading">Trending right now</h2>
+          </div>
+          <button class="see-all-link" (click)="filterByTag('All')">See all
+            <span class="ms see-all-arrow">arrow_forward</span>
+          </button>
         </div>
         <div class="trending-scroll">
-          @for (dest of trendingDestinations(); track dest.id; let i = $index) {
+          @for (dest of trendingDestinations(); track dest.id) {
             <article class="trending-card" (click)="goToDestination(dest.id)">
-              <span class="trending-rank">#{{ i + 1 }}</span>
-              <img
-                [src]="dest.imageUrl"
-                [alt]="dest.name"
-                class="trending-card__img"
-                loading="lazy"
-              />
+              <div class="trending-card__img-wrap">
+                <img
+                  [src]="dest.imageUrl"
+                  [alt]="dest.name"
+                  class="trending-card__img"
+                  width="240"
+                  height="160"
+                  loading="lazy"
+                />
+              </div>
               <div class="trending-card__body">
                 <h4 class="trending-card__name">{{ dest.name }}</h4>
                 <p class="trending-card__country">{{ dest.country }}</p>
-                <div class="popularity-bar">
-                  <div
-                    class="popularity-bar__fill"
-                    [style.width.%]="dest.popularityScore"
-                  ></div>
+                <div class="trending-card__meta">
+                  <span class="trending-indicator">
+                    <span class="ms trending-arrow">trending_up</span>
+                    {{ dest.popularityScore }}% this month
+                  </span>
+                  <span class="trending-reviews">{{ dest.popularityScore * 24 | number:'1.0-0' }} reviews</span>
                 </div>
               </div>
             </article>
@@ -131,47 +185,65 @@ const CONTINENTS: readonly ContinentCard[] = [
       </section>
     }
 
-    <!-- AI CONCIERGE CTA -->
-    <section class="section cta-section">
-      <div class="cta-inner">
-        <div class="cta-text">
-          <span class="ms cta-icon">auto_awesome</span>
-          <h2 class="cta-headline">Plan your trip with AI</h2>
-          <p class="cta-body">
-            Chat with our AI travel concierge to plan the perfect trip,
-            or let the planner build a full itinerary tailored to your budget and style.
-          </p>
+    <!-- EXPLORE BY INTEREST -->
+    <section class="section" aria-labelledby="interest-heading">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title" id="interest-heading">Explore by interest</h2>
         </div>
-        <div class="cta-actions">
-          <button class="cta-btn cta-btn--primary" (click)="goToChat()">
-            <span class="ms" style="font-size: 20px;">chat</span>
-            Start a conversation
-          </button>
-          <button class="cta-btn cta-btn--secondary" (click)="goToPlanner()">
-            <span class="ms" style="font-size: 20px;">map</span>
-            Open trip planner
-          </button>
-        </div>
+      </div>
+      <div class="interest-grid">
+        @for (tile of interestTiles; track tile.title) {
+          <article class="interest-tile" (click)="filterByTag(tile.tag)">
+            <img
+              [src]="tile.imageUrl"
+              [alt]="tile.title"
+              class="interest-tile__img"
+              loading="lazy"
+            />
+            <div class="interest-tile__overlay"></div>
+            <div class="interest-tile__content">
+              <span class="ms interest-tile__icon">{{ tile.icon }}</span>
+              <h3 class="interest-tile__title">{{ tile.title }}</h3>
+              <p class="interest-tile__count">{{ tile.count }} destinations</p>
+            </div>
+          </article>
+        }
       </div>
     </section>
 
-    <!-- EXPLORE BY CONTINENT -->
-    <section class="section continent-section">
+    <!-- AI BANNER -->
+    <section class="ai-banner" aria-labelledby="ai-heading">
+      <div class="ai-banner__inner">
+        <span class="ms ai-banner__icon">auto_awesome</span>
+        <div class="ai-banner__text">
+          <strong id="ai-heading">New: AI Travel Planner</strong>
+          <span class="ai-banner__sep">&mdash;</span>
+          <span>Get a personalized itinerary in 2 minutes, tailored to your budget.</span>
+        </div>
+        <button class="ai-banner__cta" (click)="goToPlanner()">Try it free</button>
+      </div>
+    </section>
+
+    <!-- BROWSE BY REGION -->
+    <section class="section" aria-labelledby="region-heading">
       <div class="section-header">
-        <h2 class="section-title">Explore by Continent</h2>
-        <p class="section-subtitle">Find inspiration across the globe</p>
+        <div>
+          <h2 class="section-title" id="region-heading">Browse by region</h2>
+        </div>
       </div>
       <div class="continent-grid">
         @for (c of continents; track c.name) {
           <article class="continent-card" (click)="filterByContinent(c.name)">
-            <img
-              [src]="c.imageUrl"
-              [alt]="c.name"
-              class="continent-card__img"
-              loading="lazy"
-            />
-            <div class="continent-card__overlay"></div>
-            <div class="continent-card__content">
+            <div class="continent-card__visual">
+              <img
+                [src]="c.imageUrl"
+                [alt]="c.name"
+                class="continent-card__img"
+                loading="lazy"
+              />
+            </div>
+            <div class="continent-card__body">
               <h3 class="continent-card__name">{{ c.name }}</h3>
               <p class="continent-card__count">{{ c.destinationCount }} destinations</p>
             </div>
@@ -181,104 +253,89 @@ const CONTINENTS: readonly ContinentCard[] = [
     </section>
   `,
   styles: [`
-    /* ── Tokens ─────────────────────────────────────── */
+    /* ── Design Tokens ─────────────────────────────── */
     :host {
-      --bg: #EFE8DC;
-      --bg-card: #fff;
-      --border-card: #EADFCD;
-      --text: #241C15;
-      --text-muted: #6B5D4F;
-      --accent: #D9694C;
-      --accent-light: #FBEDE7;
-      --price: #2E7D67;
-      --heading: 'Instrument Serif', Georgia, serif;
-      --body: 'Hanken Grotesk', system-ui, sans-serif;
-      --radius-sm: 6px;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f7f7f7;
+      --bg-tertiary: #f0f0f0;
+      --brand: #E04A2F;
+      --brand-hover: #c93d25;
+      --brand-light: #FFF0ED;
+      --teal: #00856A;
+      --teal-light: #E6F5F0;
+      --gold: #F5A623;
+      --text-primary: #1a1a1a;
+      --text-secondary: #545454;
+      --text-tertiary: #8a8a8a;
+      --border: #e0e0e0;
+      --border-light: #efefef;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --radius-sm: 8px;
       --radius-md: 12px;
-      --radius-lg: 20px;
-      --duration: 300ms;
+      --radius-lg: 16px;
+      --duration: 200ms;
       --ease: cubic-bezier(0.16, 1, 0.3, 1);
 
       display: block;
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--body);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Hanken Grotesk', system-ui, sans-serif;
     }
 
-    /* ── Hero ───────────────────────────────────────── */
+    /* ── Hero / Search ─────────────────────────────── */
     .hero {
-      position: relative;
-      min-height: 92vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background:
-        url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80')
-        center / cover no-repeat;
-      overflow: hidden;
-    }
-
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        175deg,
-        rgba(36, 28, 21, 0.72) 0%,
-        rgba(36, 28, 21, 0.38) 50%,
-        rgba(217, 105, 76, 0.22) 100%
-      );
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      max-width: 760px;
-      padding: 2rem;
+      background: var(--bg-primary);
+      padding: clamp(4rem, 3rem + 5vw, 7rem) 1.5rem clamp(2.5rem, 2rem + 3vw, 4rem);
       text-align: center;
     }
 
-    .hero-eyebrow {
-      font-family: var(--body);
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1rem;
+    .hero-content {
+      max-width: 680px;
+      margin: 0 auto;
     }
 
     .hero-headline {
-      font-family: var(--heading);
-      font-size: clamp(2.8rem, 1.2rem + 6vw, 5.6rem);
-      font-weight: 400;
-      line-height: 1.05;
-      color: #fff;
-      margin: 0 0 1.2rem;
+      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-size: clamp(2.4rem, 1.6rem + 4vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--text-primary);
+      margin: 0 0 0.75rem;
+      letter-spacing: -0.02em;
     }
 
     .hero-subtitle {
-      font-size: clamp(1rem, 0.85rem + 0.6vw, 1.25rem);
-      color: rgba(255, 255, 255, 0.82);
+      font-size: clamp(1rem, 0.9rem + 0.4vw, 1.15rem);
+      color: var(--text-secondary);
       line-height: 1.6;
-      margin-bottom: 2.4rem;
+      margin: 0 0 2rem;
     }
 
-    /* ── Search bar ─────────────────────────────────── */
+    /* ── Search Bar ────────────────────────────────── */
     .search-bar {
       display: flex;
       align-items: center;
       gap: 0;
-      background: var(--bg-card);
+      background: var(--bg-primary);
+      border: 2px solid var(--border);
       border-radius: 60px;
-      padding: 6px 6px 6px 20px;
-      max-width: 560px;
-      margin: 0 auto 1.6rem;
-      box-shadow: 0 8px 32px rgba(36, 28, 21, 0.18);
+      padding: 5px 5px 5px 20px;
+      max-width: 600px;
+      margin: 0 auto 1.5rem;
+      box-shadow: var(--shadow-sm);
+      transition: border-color var(--duration) var(--ease),
+                  box-shadow var(--duration) var(--ease);
+    }
+
+    .search-bar:focus-within {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px var(--brand-light);
     }
 
     .search-icon {
       font-size: 22px;
-      color: var(--text-muted);
+      color: var(--text-tertiary);
       flex-shrink: 0;
     }
 
@@ -287,203 +344,345 @@ const CONTINENTS: readonly ContinentCard[] = [
       border: none;
       outline: none;
       background: transparent;
-      font-family: var(--body);
+      font-family: 'Hanken Grotesk', system-ui, sans-serif;
       font-size: 1rem;
-      color: var(--text);
-      padding: 12px 14px;
+      color: var(--text-primary);
+      padding: 12px 12px;
     }
 
     .search-input::placeholder {
-      color: #A89B8C;
+      color: var(--text-tertiary);
     }
 
     .search-btn {
-      background: var(--accent);
+      background: var(--brand);
       color: #fff;
       border: none;
       border-radius: 50px;
       padding: 12px 28px;
-      font-family: var(--body);
+      font-family: 'Hanken Grotesk', system-ui, sans-serif;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       cursor: pointer;
       transition: background var(--duration) var(--ease);
       white-space: nowrap;
     }
 
     .search-btn:hover {
-      background: #C4573D;
+      background: var(--brand-hover);
     }
 
     .search-btn:focus-visible {
-      outline: 2px solid #fff;
-      outline-offset: 2px;
+      outline: 2px solid var(--brand);
+      outline-offset: 3px;
     }
 
-    /* ── Quick filter chips ──────────────────────────── */
-    .quick-filters {
+    /* ── Category Chips ────────────────────────────── */
+    .category-chips {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
+      margin-bottom: 1.2rem;
     }
 
-    .filter-chip {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(6px);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.28);
+    .category-chip {
+      background: var(--bg-primary);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
       border-radius: 40px;
-      padding: 8px 20px;
-      font-family: var(--body);
+      padding: 7px 18px;
+      font-family: 'Hanken Grotesk', system-ui, sans-serif;
       font-size: 0.85rem;
       font-weight: 500;
       cursor: pointer;
-      transition:
-        background var(--duration) var(--ease),
-        transform var(--duration) var(--ease);
+      transition: background var(--duration) var(--ease),
+                  border-color var(--duration) var(--ease),
+                  color var(--duration) var(--ease);
     }
 
-    .filter-chip:hover {
-      background: rgba(255, 255, 255, 0.28);
-      transform: translateY(-1px);
+    .category-chip:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--text-tertiary);
+      color: var(--text-primary);
     }
 
-    .filter-chip:focus-visible {
-      outline: 2px solid var(--accent);
+    .category-chip--active {
+      background: var(--text-primary);
+      color: #fff;
+      border-color: var(--text-primary);
+    }
+
+    .category-chip--active:hover {
+      background: var(--text-primary);
+      color: #fff;
+      border-color: var(--text-primary);
+    }
+
+    .category-chip:focus-visible {
+      outline: 2px solid var(--brand);
       outline-offset: 2px;
     }
 
-    /* ── Section shared ──────────────────────────────── */
+    /* ── Popular Links ─────────────────────────────── */
+    .popular-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .popular-label {
+      font-size: 0.85rem;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+
+    .popular-link {
+      background: none;
+      border: none;
+      color: var(--brand);
+      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: background var(--duration) var(--ease);
+    }
+
+    .popular-link:hover {
+      background: var(--brand-light);
+    }
+
+    .popular-link:focus-visible {
+      outline: 2px solid var(--brand);
+      outline-offset: 2px;
+    }
+
+    .popular-dot {
+      color: var(--text-tertiary);
+      font-size: 0.85rem;
+      user-select: none;
+    }
+
+    /* ── Section Shared ────────────────────────────── */
     .section {
-      padding: clamp(3rem, 2rem + 4vw, 6rem) clamp(1rem, 1rem + 3vw, 4rem);
+      padding: clamp(3rem, 2rem + 3vw, 5rem) clamp(1rem, 0.5rem + 3vw, 4rem);
       max-width: 1280px;
       margin: 0 auto;
     }
 
+    .section--gray {
+      background: var(--bg-secondary);
+      max-width: 100%;
+    }
+
+    .section--gray > * {
+      max-width: 1280px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     .section-header {
-      margin-bottom: 2.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      gap: 1rem;
     }
 
     .section-title {
-      font-family: var(--heading);
-      font-size: clamp(1.8rem, 1.2rem + 2vw, 2.8rem);
-      font-weight: 400;
-      margin: 0 0 0.4rem;
-    }
-
-    .section-subtitle {
-      font-size: 1rem;
-      color: var(--text-muted);
+      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-size: clamp(1.4rem, 1rem + 1.2vw, 1.8rem);
+      font-weight: 700;
+      color: var(--text-primary);
       margin: 0;
+      letter-spacing: -0.01em;
     }
 
-    /* ── Bento grid (Featured) ───────────────────────── */
-    .bento-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
+    .see-all-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      color: var(--brand);
+      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: background var(--duration) var(--ease);
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
-    .bento-card {
-      position: relative;
-      border-radius: var(--radius-lg);
+    .see-all-link:hover {
+      background: var(--brand-light);
+    }
+
+    .see-all-link:focus-visible {
+      outline: 2px solid var(--brand);
+      outline-offset: 2px;
+    }
+
+    .see-all-arrow {
+      font-size: 18px;
+    }
+
+    /* ── Featured Destination Cards (Horizontal Scroll) ─ */
+    .featured-scroll {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px;
+    }
+
+    .featured-scroll::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .featured-scroll::-webkit-scrollbar-track {
+      background: var(--bg-tertiary);
+      border-radius: 3px;
+    }
+
+    .featured-scroll::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    .featured-scroll::-webkit-scrollbar-thumb:hover {
+      background: var(--text-tertiary);
+    }
+
+    .dest-card {
+      flex: 0 0 280px;
+      scroll-snap-align: start;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
       overflow: hidden;
       cursor: pointer;
-      aspect-ratio: 4 / 3;
-      transition: transform var(--duration) var(--ease);
+      transition: transform var(--duration) var(--ease),
+                  box-shadow var(--duration) var(--ease);
     }
 
-    .bento-card--hero {
-      grid-column: span 2;
-      aspect-ratio: 16 / 9;
+    .dest-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
     }
 
-    .bento-card:hover {
-      transform: scale(1.02);
+    .dest-card:focus-visible {
+      outline: 2px solid var(--brand);
+      outline-offset: 2px;
     }
 
-    .bento-card:focus-visible {
-      outline: 3px solid var(--accent);
-      outline-offset: 3px;
+    .dest-card__img-wrap {
+      overflow: hidden;
     }
 
-    .bento-card__img {
+    .dest-card__img {
       width: 100%;
-      height: 100%;
+      height: 200px;
       object-fit: cover;
       display: block;
+      transition: transform 300ms var(--ease);
     }
 
-    .bento-card__overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to top,
-        rgba(36, 28, 21, 0.78) 0%,
-        transparent 55%
-      );
+    .dest-card:hover .dest-card__img {
+      transform: scale(1.04);
     }
 
-    .bento-card__content {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 24px;
+    .dest-card__body {
+      padding: 14px 16px 16px;
     }
 
-    .bento-card__tags {
+    .dest-card__name {
+      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 2px;
+      line-height: 1.3;
+    }
+
+    .dest-card__country {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin: 0 0 8px;
+    }
+
+    /* ── Rating Display ────────────────────────────── */
+    .dest-card__rating {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .rating-dots {
+      display: inline-flex;
+      gap: 3px;
+    }
+
+    .rating-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .rating-dot.filled {
+      background: var(--teal);
+    }
+
+    .rating-score {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .rating-count {
+      font-size: 0.78rem;
+      color: var(--text-tertiary);
+    }
+
+    /* ── Price ──────────────────────────────────────── */
+    .dest-card__price {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--teal);
+      margin-bottom: 8px;
+    }
+
+    /* ── Tag Pills ─────────────────────────────────── */
+    .dest-card__tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 10px;
+      gap: 4px;
     }
 
     .tag-pill {
-      background: var(--accent-light);
-      color: var(--accent);
+      background: var(--bg-tertiary);
+      color: var(--text-tertiary);
       font-size: 0.72rem;
-      font-weight: 600;
-      padding: 3px 10px;
+      font-weight: 500;
+      padding: 3px 8px;
       border-radius: 20px;
       text-transform: capitalize;
     }
 
-    .bento-card__name {
-      font-family: var(--heading);
-      font-size: 1.6rem;
-      color: #fff;
-      margin: 0;
-      line-height: 1.2;
-    }
-
-    .bento-card--hero .bento-card__name {
-      font-size: 2.2rem;
-    }
-
-    .bento-card__country {
-      font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.75);
-      margin: 4px 0 8px;
-    }
-
-    .bento-card__price {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--price);
-      background: rgba(255, 255, 255, 0.92);
-      padding: 4px 12px;
-      border-radius: 20px;
-    }
-
-    /* ── Trending (horizontal scroll) ────────────────── */
+    /* ── Trending Cards (Horizontal Scroll) ─────── */
     .trending-scroll {
       display: flex;
-      gap: 20px;
+      gap: 16px;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
@@ -495,269 +694,345 @@ const CONTINENTS: readonly ContinentCard[] = [
     }
 
     .trending-scroll::-webkit-scrollbar-track {
-      background: var(--border-card);
+      background: var(--bg-tertiary);
       border-radius: 3px;
     }
 
     .trending-scroll::-webkit-scrollbar-thumb {
-      background: #C4AA86;
+      background: var(--border);
       border-radius: 3px;
     }
 
     .trending-card {
       flex: 0 0 240px;
       scroll-snap-align: start;
-      background: var(--bg-card);
-      border: 1px solid var(--border-card);
+      background: var(--bg-primary);
+      border: 1px solid var(--border-light);
       border-radius: var(--radius-md);
       overflow: hidden;
       cursor: pointer;
-      position: relative;
-      transition: transform var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
+      transition: transform var(--duration) var(--ease),
+                  box-shadow var(--duration) var(--ease);
     }
 
     .trending-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 28px rgba(36, 28, 21, 0.10);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
     }
 
-    .trending-rank {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      z-index: 2;
-      font-family: var(--heading);
-      font-size: 1.4rem;
-      color: #fff;
-      background: var(--accent);
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 400;
-      box-shadow: 0 2px 8px rgba(217, 105, 76, 0.35);
+    .trending-card:focus-visible {
+      outline: 2px solid var(--brand);
+      outline-offset: 2px;
+    }
+
+    .trending-card__img-wrap {
+      overflow: hidden;
     }
 
     .trending-card__img {
       width: 100%;
-      height: 150px;
+      height: 160px;
       object-fit: cover;
       display: block;
+      transition: transform 300ms var(--ease);
+    }
+
+    .trending-card:hover .trending-card__img {
+      transform: scale(1.04);
     }
 
     .trending-card__body {
-      padding: 14px 16px 18px;
+      padding: 12px 14px 14px;
     }
 
     .trending-card__name {
-      font-family: var(--heading);
-      font-size: 1.15rem;
+      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-primary);
       margin: 0 0 2px;
     }
 
     .trending-card__country {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      margin: 0 0 10px;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      margin: 0 0 8px;
     }
 
-    .popularity-bar {
-      height: 5px;
-      background: var(--border-card);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-
-    .popularity-bar__fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), #E89B54);
-      border-radius: 3px;
-      transition: width 600ms var(--ease);
-    }
-
-    /* ── AI CTA ──────────────────────────────────────── */
-    .cta-section {
-      padding-left: clamp(1rem, 1rem + 3vw, 4rem);
-      padding-right: clamp(1rem, 1rem + 3vw, 4rem);
-    }
-
-    .cta-inner {
-      background: var(--text);
-      border-radius: var(--radius-lg);
-      padding: clamp(2.4rem, 2rem + 3vw, 4rem);
+    .trending-card__meta {
       display: flex;
-      align-items: center;
-      gap: 3rem;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 4px;
     }
 
-    .cta-text {
-      flex: 1 1 340px;
-    }
-
-    .cta-icon {
-      font-size: 36px;
-      color: var(--accent);
-      margin-bottom: 0.6rem;
-      display: block;
-    }
-
-    .cta-headline {
-      font-family: var(--heading);
-      font-size: clamp(1.6rem, 1rem + 2vw, 2.4rem);
-      color: #fff;
-      margin: 0 0 0.8rem;
-      font-weight: 400;
-    }
-
-    .cta-body {
-      font-size: 1rem;
-      color: rgba(255, 255, 255, 0.72);
-      line-height: 1.7;
-      margin: 0;
-    }
-
-    .cta-actions {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .cta-btn {
+    .trending-indicator {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      border: none;
-      border-radius: 50px;
-      padding: 14px 28px;
-      font-family: var(--body);
-      font-size: 0.95rem;
+      gap: 4px;
+      font-size: 0.78rem;
       font-weight: 600;
-      cursor: pointer;
-      transition:
-        background var(--duration) var(--ease),
-        transform var(--duration) var(--ease);
-      white-space: nowrap;
+      color: var(--teal);
     }
 
-    .cta-btn:hover {
-      transform: translateY(-2px);
+    .trending-arrow {
+      font-size: 16px;
     }
 
-    .cta-btn:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 3px;
+    .trending-reviews {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
     }
 
-    .cta-btn--primary {
-      background: var(--accent);
-      color: #fff;
-    }
-
-    .cta-btn--primary:hover {
-      background: #C4573D;
-    }
-
-    .cta-btn--secondary {
-      background: rgba(255, 255, 255, 0.12);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .cta-btn--secondary:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    /* ── Continent grid ──────────────────────────────── */
-    .continent-grid {
+    /* ── Interest Grid (2x2) ───────────────────────── */
+    .interest-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
     }
 
-    .continent-card {
+    .interest-tile {
       position: relative;
       border-radius: var(--radius-md);
       overflow: hidden;
       cursor: pointer;
-      aspect-ratio: 3 / 2;
-      transition: transform var(--duration) var(--ease);
+      aspect-ratio: 16 / 9;
+      transition: transform var(--duration) var(--ease),
+                  box-shadow var(--duration) var(--ease);
     }
 
-    .continent-card:hover {
-      transform: scale(1.03);
+    .interest-tile:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
     }
 
-    .continent-card:focus-visible {
-      outline: 3px solid var(--accent);
-      outline-offset: 3px;
+    .interest-tile:hover .interest-tile__img {
+      transform: scale(1.04);
     }
 
-    .continent-card__img {
+    .interest-tile:focus-visible {
+      outline: 2px solid var(--brand);
+      outline-offset: 2px;
+    }
+
+    .interest-tile__img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
+      transition: transform 300ms var(--ease);
     }
 
-    .continent-card__overlay {
+    .interest-tile__overlay {
       position: absolute;
       inset: 0;
       background: linear-gradient(
         to top,
-        rgba(36, 28, 21, 0.68) 0%,
-        rgba(36, 28, 21, 0.12) 60%
+        rgba(0, 0, 0, 0.65) 0%,
+        rgba(0, 0, 0, 0.15) 50%,
+        rgba(0, 0, 0, 0.05) 100%
       );
     }
 
-    .continent-card__content {
+    .interest-tile__content {
       position: absolute;
       bottom: 0;
       left: 0;
-      padding: 18px 20px;
+      padding: 20px 24px;
     }
 
-    .continent-card__name {
-      font-family: var(--heading);
-      font-size: 1.5rem;
+    .interest-tile__icon {
+      font-size: 28px;
+      color: #fff;
+      margin-bottom: 4px;
+      display: block;
+      opacity: 0.9;
+    }
+
+    .interest-tile__title {
+      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
       color: #fff;
       margin: 0;
-      line-height: 1.15;
+      line-height: 1.2;
     }
 
-    .continent-card__count {
+    .interest-tile__count {
       font-size: 0.82rem;
-      color: rgba(255, 255, 255, 0.72);
+      color: rgba(255, 255, 255, 0.8);
       margin: 4px 0 0;
     }
 
-    /* ── Responsive adjustments ──────────────────────── */
+    /* ── Ask AI Button (in search bar) ─────────────── */
+    .ask-ai-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--teal-light);
+      color: var(--teal);
+      border: 1px solid var(--teal);
+      border-radius: 50px;
+      padding: 10px 16px;
+      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background var(--duration) var(--ease),
+                  color var(--duration) var(--ease);
+    }
+
+    .ask-ai-btn:hover {
+      background: var(--teal);
+      color: #fff;
+    }
+
+    .ask-ai-btn:focus-visible {
+      outline: 2px solid var(--teal);
+      outline-offset: 2px;
+    }
+
+    /* ── AI Banner (compact) ───────────────────────── */
+    .ai-banner {
+      background: var(--teal-light);
+      border-top: 1px solid rgba(0, 133, 106, 0.15);
+      border-bottom: 1px solid rgba(0, 133, 106, 0.15);
+      padding: 14px clamp(1rem, 0.5rem + 3vw, 4rem);
+    }
+
+    .ai-banner__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .ai-banner__icon {
+      font-size: 22px;
+      color: var(--teal);
+      flex-shrink: 0;
+    }
+
+    .ai-banner__text {
+      flex: 1;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .ai-banner__text strong {
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    .ai-banner__sep {
+      margin: 0 4px;
+      color: var(--text-tertiary);
+    }
+
+    .ai-banner__cta {
+      background: var(--teal);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 20px;
+      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background var(--duration) var(--ease);
+    }
+
+    .ai-banner__cta:hover {
+      background: #006e58;
+    }
+
+    .ai-banner__cta:focus-visible {
+      outline: 2px solid var(--teal);
+      outline-offset: 2px;
+    }
+
+    /* ── Continent Grid (3x2) ──────────────────────── */
+    .continent-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .continent-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform var(--duration) var(--ease),
+                  box-shadow var(--duration) var(--ease);
+    }
+
+    .continent-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .continent-card:focus-visible {
+      outline: 2px solid var(--brand);
+      outline-offset: 2px;
+    }
+
+    .continent-card__visual {
+      overflow: hidden;
+    }
+
+    .continent-card__img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      display: block;
+      transition: transform 300ms var(--ease);
+    }
+
+    .continent-card:hover .continent-card__img {
+      transform: scale(1.04);
+    }
+
+    .continent-card__body {
+      padding: 14px 16px;
+    }
+
+    .continent-card__name {
+      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 2px;
+    }
+
+    .continent-card__count {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    /* ── Responsive ─────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .continent-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
     @media (max-width: 680px) {
-      .bento-card--hero {
-        grid-column: span 1;
-        aspect-ratio: 4 / 3;
-      }
-
-      .bento-card--hero .bento-card__name {
-        font-size: 1.6rem;
-      }
-
-      .cta-inner {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .cta-actions {
-        justify-content: center;
+      .hero {
+        padding: clamp(3rem, 2rem + 4vw, 5rem) 1rem clamp(2rem, 1.5rem + 2vw, 3rem);
       }
 
       .search-bar {
         flex-direction: column;
         border-radius: var(--radius-md);
         padding: 10px;
-        gap: 8px;
+        gap: 6px;
       }
 
       .search-icon {
@@ -770,6 +1045,37 @@ const CONTINENTS: readonly ContinentCard[] = [
 
       .search-btn {
         width: 100%;
+        border-radius: var(--radius-sm);
+      }
+
+      .interest-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .continent-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .ai-banner__inner {
+        justify-content: center;
+        text-align: center;
+      }
+
+      .ai-banner__sep {
+        display: none;
+      }
+
+      .ask-ai-btn {
+        display: none;
+      }
+
+      .dest-card {
+        flex: 0 0 240px;
+      }
+
+      .trending-card {
+        flex: 0 0 200px;
       }
     }
   `]
@@ -780,6 +1086,9 @@ export class ExploreComponent implements OnInit {
 
   readonly quickFilters = QUICK_FILTERS;
   readonly continents = CONTINENTS;
+  readonly categoryFilters = CATEGORY_FILTERS;
+  readonly popularLinks = POPULAR_LINKS;
+  readonly interestTiles = INTEREST_TILES;
 
   readonly featuredDestinations = signal<DestinationResponse[]>([]);
   readonly trendingDestinations = signal<DestinationResponse[]>([]);

@@ -1,2 +1,2 @@
-@org.springframework.modulith.ApplicationModule(allowedDependencies = {"auth", "shared"})
+@org.springframework.modulith.ApplicationModule(allowedDependencies = {"auth", "shared", "ai"})
 package com.travelai.ai.chat;

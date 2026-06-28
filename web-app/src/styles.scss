@@ -1,10 +1,38 @@
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7f7f7;
+  --bg-tertiary: #f0f0f0;
+  --brand: #E04A2F;
+  --brand-hover: #c93d25;
+  --brand-light: #FFF0ED;
+  --teal: #00856A;
+  --teal-light: #E6F5F0;
+  --gold: #F5A623;
+  --text-primary: #1a1a1a;
+  --text-secondary: #545454;
+  --text-tertiary: #8a8a8a;
+  --border: #e0e0e0;
+  --border-light: #efefef;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+  --font-body: 'Hanken Grotesk', system-ui, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-smooth: 400ms;
+}
+
 *, *::before, *::after { box-sizing: border-box; }
-html, body { margin: 0; height: 100%; background: #EFE8DC; }
+html, body { margin: 0; height: 100%; background: var(--bg-primary); }
 
 body {
-  font-family: 'Hanken Grotesk', system-ui, sans-serif;
-  color: #241C15;
+  font-family: var(--font-body);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .ms {
@@ -16,14 +44,111 @@ body {
   user-select: none;
 }
 
-.scroll::-webkit-scrollbar { width: 9px; height: 9px; }
-.scroll::-webkit-scrollbar-thumb { background: #D8CBB6; border-radius: 6px; border: 2px solid transparent; background-clip: content-box; }
-.scroll::-webkit-scrollbar-track { background: transparent; }
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
 
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb {
+  background: #c8c8c8;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+
+/* Range slider */
 input[type=range] { -webkit-appearance: none; appearance: none; background: transparent; width: 100%; }
-input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: #fff; border: none; box-shadow: 0 2px 7px rgba(94,52,30,.3), 0 0 0 2px #D9694C; cursor: pointer; margin-top: -9px; }
-input[type=range]::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: linear-gradient(to right, #D9694C var(--pct, 20%), #F0E7D8 var(--pct, 20%)); }
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--brand);
+  border: 3px solid #fff;
+  box-shadow: var(--shadow-sm), 0 0 0 1px var(--brand);
+  cursor: pointer;
+  margin-top: -8px;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--brand) var(--pct, 20%), var(--border) var(--pct, 20%));
+}
 
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  transition:
+    background var(--duration-normal) var(--ease-out-expo),
+    box-shadow var(--duration-normal) var(--ease-out-expo),
+    transform var(--duration-normal) var(--ease-out-expo);
+}
+
+.btn-primary {
+  padding: 0.65rem 1.5rem;
+  background: var(--brand);
+  color: #fff;
+
+  &:hover {
+    background: var(--brand-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+}
+
+.btn-outline {
+  padding: 0.6rem 1.4rem;
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+
+  &:hover {
+    border-color: var(--text-tertiary);
+    background: var(--bg-secondary);
+  }
+}
+
+.btn-ghost {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  color: var(--text-secondary);
+
+  &:hover {
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+  }
+}
+
+/* Keyframe animations */
 @keyframes spin { to { transform: rotate(360deg); } }
-@keyframes pulse { 0%, 100% { opacity: .3 } 50% { opacity: 1 } }
+@keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--bg-secondary) 25%,
+    var(--bg-tertiary) 50%,
+    var(--bg-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}

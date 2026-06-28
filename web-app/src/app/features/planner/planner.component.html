@@ -1,478 +1,442 @@
-<div class="app-shell scroll" style="height:100vh;overflow:auto;background:#EFE8DC;font-family:'Hanken Grotesk',system-ui,sans-serif;color:#241C15;-webkit-font-smoothing:antialiased;position:relative;">
-<div style="min-height:100vh;min-width:1100px;display:flex;flex-direction:column;">
+<div class="planner-shell scroll">
+<div class="planner-inner">
 
-<!-- ═══ TOP BAR ═══ -->
-<div style="height:62px;flex-shrink:0;background:#fff;border-bottom:1px solid #E7DCC9;display:flex;align-items:center;padding:0 22px;gap:16px;z-index:20;">
-  <!-- Logo -->
-  <div style="display:flex;align-items:center;gap:11px;">
-    <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(145deg,#E9863A,#C0563A);display:flex;align-items:center;justify-content:center;color:#F7ECDD;font-family:'Instrument Serif',serif;font-style:italic;font-size:21px;">T</div>
-    <div style="line-height:1.1;">
-      <div style="font-weight:800;font-size:15.5px;letter-spacing:-.01em;">Travel AI</div>
-      <div style="font-size:11px;color:#9A8C78;font-weight:600;">un progetto Nexus</div>
+<!-- TOP BAR -->
+<header class="top-bar">
+  <div class="logo">
+    <div class="logo-icon">T</div>
+    <div class="logo-text">
+      <div class="logo-name">Travel AI</div>
     </div>
   </div>
 
-  <!-- Steps -->
-  <div style="display:flex;align-items:center;gap:5px;margin-left:18px;">
+  <nav class="steps-bar" aria-label="Progress steps">
     @for (st of steps(); track st.label) {
-      <div style="display:flex;align-items:center;gap:5px;">
-        <div style="display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:9px;" [style.background]="st.on ? '#FBEDE7' : 'transparent'">
-          <span class="ms" style="font-size:15px;" [style.color]="st.on ? '#C0563A' : '#B6A892'">{{st.icon}}</span>
-          <span style="font-size:12.5px;font-weight:700;" [style.color]="st.on ? '#C0563A' : '#B6A892'">{{st.label}}</span>
+      <div class="step-item">
+        <div class="step-pill" [class.active]="st.on">
+          <span class="ms step-icon">{{st.icon}}</span>
+          <span class="step-label">{{st.label}}</span>
         </div>
         @if (st.arrow) {
-          <span class="ms" style="font-size:15px;color:#D8CBB6;">chevron_right</span>
+          <span class="ms step-arrow">chevron_right</span>
         }
       </div>
     }
-  </div>
+  </nav>
 
-  <!-- Right controls -->
-  <div style="margin-left:auto;display:flex;align-items:center;gap:9px;">
-    <div (click)="toggleLang()" style="cursor:pointer;display:flex;align-items:center;gap:6px;background:#F6F1E8;border:1px solid #ECE1D2;border-radius:9px;padding:8px 12px;font-size:12.5px;font-weight:700;color:#5A4D3E;">
-      <span class="ms" style="font-size:16px;color:#D9694C;">language</span>{{lang().toUpperCase()}}
-    </div>
-    <div (click)="restart()" style="cursor:pointer;display:flex;align-items:center;gap:6px;background:#F6F1E8;border:1px solid #ECE1D2;border-radius:9px;padding:8px 12px;font-size:12.5px;font-weight:700;color:#5A4D3E;">
-      <span class="ms" style="font-size:16px;color:#D9694C;">replay</span>{{t().restart}}
-    </div>
+  <div class="top-controls">
+    <button class="ctrl-btn" (click)="toggleLang()" type="button">
+      <span class="ms ctrl-icon">language</span>{{lang().toUpperCase()}}
+    </button>
+    <button class="ctrl-btn" (click)="restart()" type="button">
+      <span class="ms ctrl-icon">replay</span>{{t().restart}}
+    </button>
     @if (authService.isAuthenticated()) {
-      <div (click)="logout()" style="cursor:pointer;display:flex;align-items:center;gap:6px;background:#F6F1E8;border:1px solid #ECE1D2;border-radius:9px;padding:8px 12px;font-size:12.5px;font-weight:700;color:#5A4D3E;">
-        <span class="ms" style="font-size:16px;color:#2E7D67;">account_circle</span>{{lang()==='it'?'Esci':'Sign out'}}
-      </div>
+      <button class="ctrl-btn ctrl-btn--auth" (click)="logout()" type="button">
+        <span class="ms ctrl-icon">account_circle</span>{{lang()==='it'?'Esci':'Sign out'}}
+      </button>
     } @else {
-      <div (click)="showAuthModal.set(true)" style="cursor:pointer;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#E9863A,#C0563A);border-radius:9px;padding:8px 14px;font-size:12.5px;font-weight:700;color:#fff;">
-        <span class="ms" style="font-size:16px;">login</span>{{lang()==='it'?'Accedi':'Sign in'}}
-      </div>
+      <button class="ctrl-btn ctrl-btn--signin" (click)="showAuthModal.set(true)" type="button">
+        <span class="ms ctrl-icon">login</span>{{lang()==='it'?'Accedi':'Sign in'}}
+      </button>
     }
   </div>
-</div>
+</header>
 
-<!-- ═══ WORKSPACE ═══ -->
-<div style="flex:1;min-height:0;display:flex;">
+<!-- WORKSPACE -->
+<div class="workspace">
 
-  <!-- ─── LEFT RAIL ─── -->
-  <div class="scroll" style="width:368px;flex-shrink:0;background:#fff;border-right:1px solid #E7DCC9;display:flex;flex-direction:column;overflow-y:auto;">
-    <div style="padding:22px 22px 8px;">
-      <div style="font-family:'Instrument Serif',serif;font-size:26px;line-height:1.05;">{{t().i_title}}</div>
-      <div style="font-size:13px;color:#8A7C6A;font-weight:600;margin-top:2px;">{{t().i_sub}}</div>
+  <!-- LEFT RAIL -->
+  <aside class="left-rail scroll">
+    <div class="rail-header">
+      <h2 class="rail-title">{{t().i_title}}</h2>
+      <p class="rail-sub">{{t().i_sub}}</p>
     </div>
 
-    <div style="padding:6px 22px 18px;display:flex;flex-direction:column;gap:18px;">
+    <div class="rail-form">
 
       <!-- Budget -->
-      <div>
-        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px;">
-          <div style="font-size:12px;font-weight:800;color:#8A7C6A;text-transform:uppercase;letter-spacing:.05em;">{{t().i_budget}}</div>
-          <div style="font-size:11px;font-family:ui-monospace,monospace;color:#C06A4C;background:#FBEDE7;padding:3px 7px;border-radius:5px;font-weight:600;">{{t().i_required}}</div>
+      <div class="form-section">
+        <div class="form-section-header">
+          <span class="form-label">{{t().i_budget}}</span>
+          <span class="form-badge">{{t().i_required}}</span>
         </div>
-        <div style="display:flex;align-items:baseline;gap:5px;margin-bottom:6px;">
-          <span style="font-family:'Instrument Serif',serif;font-size:36px;line-height:1;">€{{budgetStr()}}</span>
-          <span style="font-size:13px;color:#8A7C6A;font-weight:600;">{{t().i_total}}</span>
+        <div class="budget-value">
+          <span class="budget-amount">&#8364;{{budgetStr()}}</span>
+          <span class="budget-label">{{t().i_total}}</span>
         </div>
         <input type="range" min="400" max="4000" step="50" [value]="budget()" (input)="onBudget($event)" [style.--pct]="budgetPct()">
-        <div style="display:flex;justify-content:space-between;font-family:ui-monospace,monospace;font-size:11px;color:#B49A7C;margin-top:3px;"><span>€400</span><span>€4.000</span></div>
+        <div class="range-labels"><span>&#8364;400</span><span>&#8364;4.000</span></div>
       </div>
 
-      <div style="height:1px;background:#F1E8D8;"></div>
+      <div class="form-divider"></div>
 
       <!-- Dates -->
-      <div>
-        <div style="font-size:12px;font-weight:800;color:#8A7C6A;text-transform:uppercase;letter-spacing:.05em;margin-bottom:9px;">{{t().i_dates}}</div>
-        <div style="display:flex;gap:7px;margin-bottom:12px;">
-          <div (click)="dateMode.set('fixed')" style="flex:1;cursor:pointer;text-align:center;padding:10px;border-radius:10px;font-weight:700;font-size:13px;border-width:1px;border-style:solid;"
-            [style.background]="dateMode()==='fixed' ? '#241C15' : '#FBF6EE'"
-            [style.color]="dateMode()==='fixed' ? '#fff' : '#8A7C6A'"
-            [style.border-color]="dateMode()==='fixed' ? '#241C15' : '#F0E7D9'">{{t().i_fixed}}</div>
-          <div (click)="dateMode.set('flex')" style="flex:1;cursor:pointer;text-align:center;padding:10px;border-radius:10px;font-weight:700;font-size:13px;border-width:1px;border-style:solid;"
-            [style.background]="dateMode()==='flex' ? '#241C15' : '#FBF6EE'"
-            [style.color]="dateMode()==='flex' ? '#fff' : '#8A7C6A'"
-            [style.border-color]="dateMode()==='flex' ? '#241C15' : '#F0E7D9'">{{t().i_flex}}</div>
+      <div class="form-section">
+        <span class="form-label">{{t().i_dates}}</span>
+        <div class="toggle-row">
+          <button class="toggle-btn" [class.active]="dateMode()==='fixed'" (click)="dateMode.set('fixed')" type="button">{{t().i_fixed}}</button>
+          <button class="toggle-btn" [class.active]="dateMode()==='flex'" (click)="dateMode.set('flex')" type="button">{{t().i_flex}}</button>
         </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <div style="font-size:14px;font-weight:600;">{{t().i_nights}}</div>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div (click)="nightsDown()" class="ms" style="cursor:pointer;width:32px;height:32px;border-radius:8px;background:#F6EEE2;display:flex;align-items:center;justify-content:center;font-size:19px;color:#8A7C6A;">remove</div>
-            <div style="font-family:'Instrument Serif',serif;font-size:22px;width:22px;text-align:center;">{{nights()}}</div>
-            <div (click)="nightsUp()" class="ms" style="cursor:pointer;width:32px;height:32px;border-radius:8px;background:#FBEDE7;display:flex;align-items:center;justify-content:center;font-size:19px;color:#D9694C;">add</div>
+        <div class="stepper-row">
+          <span class="stepper-label">{{t().i_nights}}</span>
+          <div class="stepper-controls">
+            <button class="stepper-btn minus" (click)="nightsDown()" type="button"><span class="ms">remove</span></button>
+            <span class="stepper-value">{{nights()}}</span>
+            <button class="stepper-btn plus" (click)="nightsUp()" type="button"><span class="ms">add</span></button>
           </div>
         </div>
       </div>
 
-      <div style="height:1px;background:#F1E8D8;"></div>
+      <div class="form-divider"></div>
 
       <!-- Travellers -->
-      <div>
-        <div style="font-size:12px;font-weight:800;color:#8A7C6A;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">{{t().i_people}}</div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #F4ECDF;">
-          <div style="font-size:14px;font-weight:600;">{{t().i_adults}}</div>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div (click)="adultsDown()" class="ms" style="cursor:pointer;width:32px;height:32px;border-radius:8px;background:#F6EEE2;display:flex;align-items:center;justify-content:center;font-size:19px;color:#8A7C6A;">remove</div>
-            <div style="font-family:'Instrument Serif',serif;font-size:22px;width:22px;text-align:center;">{{adults()}}</div>
-            <div (click)="adultsUp()" class="ms" style="cursor:pointer;width:32px;height:32px;border-radius:8px;background:#FBEDE7;display:flex;align-items:center;justify-content:center;font-size:19px;color:#D9694C;">add</div>
+      <div class="form-section">
+        <span class="form-label">{{t().i_people}}</span>
+        <div class="stepper-row stepper-row--bordered">
+          <span class="stepper-label">{{t().i_adults}}</span>
+          <div class="stepper-controls">
+            <button class="stepper-btn minus" (click)="adultsDown()" type="button"><span class="ms">remove</span></button>
+            <span class="stepper-value">{{adults()}}</span>
+            <button class="stepper-btn plus" (click)="adultsUp()" type="button"><span class="ms">add</span></button>
           </div>
         </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0 2px;">
-          <div style="font-size:14px;font-weight:600;">{{t().i_children}}</div>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div (click)="childrenDown()" class="ms" style="cursor:pointer;width:32px;height:32px;border-radius:8px;background:#F6EEE2;display:flex;align-items:center;justify-content:center;font-size:19px;color:#8A7C6A;">remove</div>
-            <div style="font-family:'Instrument Serif',serif;font-size:22px;width:22px;text-align:center;">{{children()}}</div>
-            <div (click)="childrenUp()" class="ms" style="cursor:pointer;width:32px;height:32px;border-radius:8px;background:#FBEDE7;display:flex;align-items:center;justify-content:center;font-size:19px;color:#D9694C;">add</div>
+        <div class="stepper-row">
+          <span class="stepper-label">{{t().i_children}}</span>
+          <div class="stepper-controls">
+            <button class="stepper-btn minus" (click)="childrenDown()" type="button"><span class="ms">remove</span></button>
+            <span class="stepper-value">{{children()}}</span>
+            <button class="stepper-btn plus" (click)="childrenUp()" type="button"><span class="ms">add</span></button>
           </div>
         </div>
       </div>
 
-      <div style="height:1px;background:#F1E8D8;"></div>
+      <div class="form-divider"></div>
 
       <!-- Destination -->
-      <div (click)="toggleDest()" style="cursor:pointer;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:11px;border-width:1px;border-style:solid;"
-        [style.background]="destOpen() ? '#fff' : '#FBEDE7'"
-        [style.border-color]="destOpen() ? '#F0E7D9' : '#E9B79F'">
-        <span class="ms" style="font-size:21px;" [style.color]="destOpen() ? '#B49A7C' : '#D9694C'">{{destOpen() ? 'explore' : 'location_on'}}</span>
-        <div style="flex:1;line-height:1.2;">
-          <div style="font-size:14px;font-weight:700;">{{destOpen() ? t().dest_open_t : t().dest_set_t}}</div>
-          <div style="font-size:12px;color:#8A7C6A;font-weight:500;">{{destOpen() ? t().dest_open_s : t().dest_set_s}}</div>
+      <div class="dest-card" [class.set]="!destOpen()" (click)="toggleDest()">
+        <span class="ms dest-icon" [class.active]="!destOpen()">{{destOpen() ? 'explore' : 'location_on'}}</span>
+        <div class="dest-text">
+          <span class="dest-title">{{destOpen() ? t().dest_open_t : t().dest_set_t}}</span>
+          <span class="dest-sub">{{destOpen() ? t().dest_open_s : t().dest_set_s}}</span>
         </div>
-        <div style="font-family:ui-monospace,monospace;font-size:10px;color:#B49A7C;">{{t().i_optional}}</div>
+        <span class="dest-opt">{{t().i_optional}}</span>
       </div>
 
       <!-- Priority -->
-      <div>
-        <div style="font-size:12px;font-weight:800;color:#8A7C6A;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;">{{t().i_priority}}</div>
-        <div style="font-size:12px;color:#A6917A;margin-bottom:10px;font-weight:500;">{{t().i_priority_sub}}</div>
-        <div style="display:flex;gap:7px;">
+      <div class="form-section">
+        <span class="form-label">{{t().i_priority}}</span>
+        <p class="form-hint">{{t().i_priority_sub}}</p>
+        <div class="prio-row">
           @for (p of prioOptions(); track p.key) {
-            <div (click)="setPriorityStr(p.key)" style="flex:1;cursor:pointer;text-align:center;padding:11px 4px;border-radius:11px;border-width:1px;border-style:solid;"
-              [style.background]="p.bg" [style.border-color]="p.bd">
-              <span class="ms" style="font-size:21px;" [style.color]="p.fg">{{p.icon}}</span>
-              <div style="font-size:11.5px;font-weight:700;margin-top:3px;" [style.color]="p.fg">{{p.label}}</div>
-            </div>
+            <button class="prio-pill" [class.active]="p.on" (click)="setPriorityStr(p.key)" type="button">
+              <span class="ms prio-icon">{{p.icon}}</span>
+              <span class="prio-label">{{p.label}}</span>
+            </button>
           }
         </div>
       </div>
 
       <!-- Constraints -->
-      <div>
-        <div style="font-size:12px;font-weight:800;color:#8A7C6A;text-transform:uppercase;letter-spacing:.05em;margin-bottom:9px;">{{t().i_constraints}}</div>
-        <div style="display:flex;flex-wrap:wrap;gap:7px;">
+      <div class="form-section">
+        <span class="form-label">{{t().i_constraints}}</span>
+        <div class="chips-row">
           @for (c of constraintChips(); track c.key) {
-            <div (click)="toggleConstraint(c.key)" style="cursor:pointer;display:flex;align-items:center;gap:5px;padding:8px 12px;border-radius:999px;font-size:12.5px;font-weight:600;border-width:1px;border-style:solid;"
-              [style.background]="c.bg" [style.color]="c.fg" [style.border-color]="c.bd">
-              <span class="ms" style="font-size:16px;">{{c.icon}}</span>{{c.label}}
-            </div>
+            <button class="chip" [class.active]="c.on" (click)="toggleConstraint(c.key)" type="button">
+              <span class="ms chip-icon">{{c.icon}}</span>{{c.label}}
+            </button>
           }
         </div>
       </div>
     </div>
 
     <!-- Sticky generate button -->
-    <div style="margin-top:auto;position:sticky;bottom:0;padding:14px 22px 18px;background:linear-gradient(to top,#fff 78%,rgba(255,255,255,0));border-top:1px solid #F1E8D8;">
-      <button (click)="generate()" style="width:100%;appearance:none;border:none;cursor:pointer;background:#D9694C;color:#fff;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:15.5px;padding:15px;border-radius:13px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 22px rgba(217,105,76,.36);">
-        <span class="ms" style="font-size:20px;">auto_awesome</span>{{generateLabel()}}
+    <div class="gen-bar">
+      <button class="gen-btn" (click)="generate()" type="button">
+        <span class="ms gen-btn-icon">auto_awesome</span>{{generateLabel()}}
       </button>
     </div>
-  </div>
+  </aside>
 
-  <!-- ─── MAIN AREA ─── -->
-  <div class="scroll" style="flex:1;min-width:0;overflow-y:auto;">
+  <!-- MAIN AREA -->
+  <main class="main-area scroll">
 
     <!-- EMPTY -->
     @if (stage() === 'empty') {
-    <div style="height:100%;min-height:560px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;">
-      <div style="width:84px;height:84px;border-radius:24px;background:#fff;border:1px solid #EADFCD;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(120,80,40,.08);margin-bottom:22px;">
-        <span class="ms" style="font-size:42px;color:#D9694C;">travel_explore</span>
+    <section class="empty-stage">
+      <div class="empty-icon-wrap">
+        <span class="ms empty-icon">travel_explore</span>
       </div>
-      <div style="font-family:'Instrument Serif',serif;font-size:32px;line-height:1.1;max-width:440px;">{{t().e_title}}</div>
-      <div style="font-size:15px;color:#8A7C6A;font-weight:500;margin-top:10px;max-width:420px;line-height:1.5;">{{t().e_sub}}</div>
-      <div style="display:flex;gap:9px;margin-top:22px;">
-        <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#9A6B45;background:#fff;border:1px solid #EADFCD;border-radius:999px;padding:9px 14px;"><span class="ms" style="font-size:16px;color:#B07B4E;">hotel</span>Hotel</div>
-        <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#9A6B45;background:#fff;border:1px solid #EADFCD;border-radius:999px;padding:9px 14px;"><span class="ms" style="font-size:16px;color:#C0894B;">restaurant</span>Ristoranti</div>
-        <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#9A6B45;background:#fff;border:1px solid #EADFCD;border-radius:999px;padding:9px 14px;"><span class="ms" style="font-size:16px;color:#5E8C9E;">flight_takeoff</span>Volo</div>
+      <h1 class="empty-title">{{t().e_title}}</h1>
+      <p class="empty-sub">{{t().e_sub}}</p>
+      <div class="empty-pills">
+        <div class="empty-pill"><span class="ms empty-pill-icon empty-pill-icon--hotel">hotel</span>Hotel</div>
+        <div class="empty-pill"><span class="ms empty-pill-icon empty-pill-icon--rest">restaurant</span>{{lang()==='it'?'Ristoranti':'Restaurants'}}</div>
+        <div class="empty-pill"><span class="ms empty-pill-icon empty-pill-icon--flight">flight_takeoff</span>{{lang()==='it'?'Volo':'Flight'}}</div>
       </div>
-    </div>
+    </section>
     }
 
     <!-- GENERATING -->
     @if (stage() === 'generating') {
-    <div style="height:100%;min-height:560px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;">
-      <div style="width:64px;height:64px;position:relative;margin-bottom:18px;">
-        <div style="position:absolute;inset:0;border-radius:50%;border:3px solid #F2DEC9;border-top-color:#D9694C;animation:spin 1s linear infinite;"></div>
-        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span class="ms" style="font-size:26px;color:#D9694C;">auto_awesome</span></div>
+    <section class="gen-stage">
+      <div class="gen-progress">
+        <div class="gen-progress-bar" [style.width]="(agentStep() / 5 * 100) + '%'"></div>
       </div>
-      <div style="font-family:'Instrument Serif',serif;font-size:28px;">{{t().g_title}}</div>
-      <div style="font-size:14px;color:#8A7C6A;font-weight:600;margin-top:5px;margin-bottom:26px;">{{t().g_sub}}</div>
-      <div style="width:100%;max-width:520px;display:flex;flex-direction:column;gap:9px;">
+      <div class="gen-spinner">
+        <div class="gen-spinner-ring"></div>
+        <span class="ms gen-spinner-icon">auto_awesome</span>
+      </div>
+      <h2 class="gen-title">{{t().g_title}}</h2>
+      <p class="gen-sub">{{t().g_sub}}</p>
+      <div class="agents-list">
         @for (a of agents(); track a.name) {
-          <div style="display:flex;align-items:center;gap:13px;background:#fff;border:1px solid #EADFCD;border-radius:13px;padding:13px 16px;box-shadow:0 3px 12px rgba(120,80,40,.04);transition:opacity .4s;" [style.opacity]="a.opacity">
-            <div style="width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;" [style.background]="a.iconBg">
-              <span class="ms" style="font-size:18px;" [style.color]="a.iconFg">{{a.icon}}</span>
+          <div class="agent-card" [class.active]="a.active" [class.done]="a.done" [class.pending]="a.pending">
+            <div class="agent-icon-wrap" [style.background]="a.done ? '#E6F5F0' : a.active ? '#FFF0ED' : '#f7f7f7'">
+              <span class="ms agent-icon-glyph" [style.color]="a.done ? '#00856A' : a.active ? '#E04A2F' : '#8a8a8a'">{{a.icon}}</span>
             </div>
-            <div style="flex:1;line-height:1.15;">
-              <div style="font-size:14px;font-weight:700;">{{a.name}}</div>
-              <div style="font-size:12px;color:#A6917A;font-weight:500;">{{a.task}}</div>
+            <div class="agent-info">
+              <span class="agent-name">{{a.name}}</span>
+              <span class="agent-task">{{a.task}}</span>
             </div>
-            <div style="width:22px;height:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+            <div class="agent-status">
               @if (a.done) {
-                <span class="ms" style="font-size:20px;color:#2E7D67;">check_circle</span>
+                <span class="ms agent-check">check_circle</span>
               } @else if (a.active) {
-                <div style="width:18px;height:18px;border-radius:50%;border:2.5px solid #F2DEC9;border-top-color:#D9694C;animation:spin .8s linear infinite;"></div>
+                <div class="agent-spinner"></div>
               } @else {
-                <div style="width:10px;height:10px;border-radius:50%;background:#E4D8C6;"></div>
+                <div class="agent-dot"></div>
               }
             </div>
           </div>
         }
       </div>
-      <div style="margin-top:22px;font-family:ui-monospace,monospace;font-size:11px;color:#B49A7C;">{{t().g_foot}}</div>
-    </div>
+      <p class="gen-foot">{{t().g_foot}}</p>
+    </section>
     }
 
     <!-- RESULTS -->
     @if (stage() === 'results') {
-    <div style="padding:24px 28px 36px;">
-      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+    <section class="results-stage">
+      <div class="results-header">
         <div>
-          <div style="font-family:'Instrument Serif',serif;font-size:30px;line-height:1.05;">{{t().r_title}}</div>
-          <div style="font-size:13.5px;color:#8A7C6A;font-weight:600;margin-top:3px;">{{resultSummary()}}</div>
+          <h2 class="results-title">{{t().r_title}}</h2>
+          <p class="results-summary">{{resultSummary()}}</p>
         </div>
-        <div (click)="generate()" style="cursor:pointer;display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #E2D6C4;border-radius:11px;padding:10px 15px;font-size:13.5px;font-weight:700;color:#9A6B45;">
-          <span class="ms" style="font-size:18px;color:#D9694C;">refresh</span>{{t().r_regen}}
-        </div>
+        <button class="regen-btn" (click)="generate()" type="button">
+          <span class="ms regen-icon">refresh</span>{{t().r_regen}}
+        </button>
       </div>
 
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:18px;">
+      <div class="proposals-grid">
         @for (p of proposals(); track p.id) {
-          <div (click)="openDetail(p.id)" style="cursor:pointer;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 5px 20px rgba(120,80,40,.06);display:flex;flex-direction:column;border-width:1px;border-style:solid;" [style.border-color]="p.cardBd">
-            <!-- Card image -->
-            <div style="height:150px;position:relative;" [style.background]="p.img">
-              <div style="position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.045) 0 2px,transparent 2px 9px);"></div>
-              <div style="position:absolute;left:11px;top:11px;font-family:ui-monospace,monospace;font-size:9px;color:rgba(255,255,255,.8);background:rgba(0,0,0,.22);padding:3px 7px;border-radius:5px;">{{p.caption}}</div>
+          <article class="proposal-card" [class.recommended]="p.recommended" (click)="openDetail(p.id)">
+            <div class="card-image" [style.background]="p.img">
               @if (p.recommended) {
-                <div style="position:absolute;right:11px;top:11px;font-size:11px;font-weight:800;color:#241C15;background:#F3CE7E;padding:5px 10px;border-radius:999px;display:flex;align-items:center;gap:4px;box-shadow:0 4px 12px rgba(0,0,0,.16);">
-                  <span class="ms" style="font-size:13px;">star</span>{{t().r_recommended}}
+                <div class="card-badge">
+                  <span class="ms card-badge-icon">star</span>{{t().r_recommended}}
                 </div>
               }
-              <div style="position:absolute;left:0;right:0;bottom:0;padding:13px 15px 12px;background:linear-gradient(to top,rgba(28,20,12,.82),transparent);color:#fff;">
-                <div style="font-size:11.5px;font-weight:600;opacity:.85;display:flex;align-items:center;gap:4px;"><span class="ms" style="font-size:13px;">location_on</span>{{p.dest}} · {{p.nights}}</div>
-                <div style="font-family:'Instrument Serif',serif;font-size:22px;line-height:1.05;margin-top:2px;">{{p.title}}</div>
+            </div>
+            <div class="card-body">
+              <div class="card-top-row">
+                <h3 class="card-dest">{{p.dest}}</h3>
+                <span class="card-nights">{{p.nights}}</span>
+              </div>
+              <p class="card-title">{{p.title}}</p>
+              <div class="card-price-row">
+                <span class="card-price">&#8364;{{p.totalStr}}</span>
+                <span class="card-per-person">{{p.perPerson}}</span>
+              </div>
+              <div class="card-delta" [style.color]="p.deltaFg" [style.background]="p.deltaBg">
+                <span class="ms card-delta-icon">{{p.deltaIcon}}</span>{{p.delta}}
+              </div>
+              <div class="card-lines">
+                <div class="card-line">
+                  <span class="ms card-line-icon card-line-icon--hotel">hotel</span>
+                  <span class="line-name">{{p.hotel}}</span>
+                  <span class="line-price">&#8364;{{p.hotelPrice}}</span>
+                </div>
+                <div class="card-line">
+                  <span class="ms card-line-icon card-line-icon--rest">restaurant</span>
+                  <span class="line-name">{{p.rest}}</span>
+                  <span class="line-price">&#8364;{{p.restPrice}}</span>
+                </div>
+                <div class="card-line">
+                  <span class="ms card-line-icon card-line-icon--flight">flight_takeoff</span>
+                  <span class="line-name">{{p.flight}}</span>
+                  <span class="line-price">&#8364;{{p.flightPrice}}</span>
+                </div>
+              </div>
+              <div class="card-view">
+                {{t().r_view}}<span class="ms card-view-arrow">chevron_right</span>
               </div>
             </div>
-            <!-- Card body -->
-            <div style="padding:14px 16px 16px;display:flex;flex-direction:column;flex:1;">
-              <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:11px;">
-                <div>
-                  <div style="font-family:'Instrument Serif',serif;font-size:28px;line-height:1;">€{{p.totalStr}}</div>
-                  <div style="font-size:11.5px;color:#8A7C6A;font-weight:600;margin-top:2px;">{{p.perPerson}}</div>
-                </div>
-                <div style="font-size:11.5px;font-weight:700;padding:6px 10px;border-radius:999px;display:flex;align-items:center;gap:4px;" [style.color]="p.deltaFg" [style.background]="p.deltaBg">
-                  <span class="ms" style="font-size:13px;">{{p.deltaIcon}}</span>{{p.delta}}
-                </div>
-              </div>
-              <!-- Budget fit bar -->
-              <div style="margin-bottom:12px;">
-                <div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:#9C8E7A;margin-bottom:5px;letter-spacing:.03em;">
-                  <span>BUDGET FIT</span>
-                  <span [style.color]="p.fitFg">{{p.fitPct}} · {{p.fitLabel}}</span>
-                </div>
-                <div style="height:7px;border-radius:5px;background:#F0E7D8;overflow:hidden;position:relative;">
-                  <div style="height:100%;border-radius:5px;" [style.width]="p.fitBar" [style.background]="p.fitColor"></div>
-                </div>
-              </div>
-              <!-- Line items -->
-              <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;">
-                <div style="display:flex;align-items:center;gap:8px;font-size:13px;">
-                  <span class="ms" style="font-size:17px;color:#B07B4E;">hotel</span>
-                  <span style="font-weight:600;flex:1;">{{p.hotel}}</span>
-                  <span style="font-family:ui-monospace,monospace;font-size:11.5px;color:#8A7C6A;">€{{p.hotelPrice}}</span>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px;font-size:13px;">
-                  <span class="ms" style="font-size:17px;color:#C0894B;">restaurant</span>
-                  <span style="font-weight:600;flex:1;">{{p.rest}}</span>
-                  <span style="font-family:ui-monospace,monospace;font-size:11.5px;color:#8A7C6A;">€{{p.restPrice}}</span>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px;font-size:13px;">
-                  <span class="ms" style="font-size:17px;color:#5E8C9E;">flight_takeoff</span>
-                  <span style="font-weight:600;flex:1;">{{p.flight}}</span>
-                  <span style="font-family:ui-monospace,monospace;font-size:11.5px;color:#8A7C6A;">€{{p.flightPrice}}</span>
-                </div>
-              </div>
-              <!-- AI rationale -->
-              <div style="background:#FBF4EA;border-radius:11px;padding:10px 12px;display:flex;gap:8px;margin-top:auto;">
-                <span class="ms" style="font-size:16px;color:#D9694C;flex-shrink:0;margin-top:1px;">auto_awesome</span>
-                <div style="font-family:'Instrument Serif',serif;font-style:italic;font-size:13.5px;line-height:1.3;color:#5A4334;">{{p.why}}</div>
-              </div>
-              <div style="display:flex;align-items:center;justify-content:flex-end;gap:4px;margin-top:11px;color:#D9694C;font-weight:700;font-size:13px;">
-                {{t().r_view}}<span class="ms" style="font-size:17px;">chevron_right</span>
-              </div>
-            </div>
-          </div>
+          </article>
         }
       </div>
-    </div>
+    </section>
     }
 
     <!-- DETAIL -->
     @if (stage() === 'detail') {
-    <div style="padding:22px 28px 36px;">
-      <div (click)="backToResults()" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:700;color:#9A6B45;margin-bottom:16px;">
-        <span class="ms" style="font-size:18px;">arrow_back</span>{{t().d_back}}
-      </div>
+    <section class="detail-stage">
+      <button class="back-btn" (click)="backToResults()" type="button">
+        <span class="ms">arrow_back</span>{{t().d_back}}
+      </button>
 
-      <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:24px;align-items:start;">
+      <div class="detail-grid">
         <!-- Left col -->
-        <div>
-          <div style="height:240px;border-radius:18px;position:relative;overflow:hidden;" [style.background]="selectedProposal().img">
-            <div style="position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.045) 0 2px,transparent 2px 9px);"></div>
-            <div style="position:absolute;left:13px;top:13px;font-family:ui-monospace,monospace;font-size:9px;color:rgba(255,255,255,.8);background:rgba(0,0,0,.22);padding:3px 7px;border-radius:5px;">{{selectedProposal().caption}}</div>
-            <div style="position:absolute;left:0;right:0;bottom:0;padding:18px 20px;background:linear-gradient(to top,rgba(28,20,12,.85),transparent);color:#fff;">
-              <div style="font-size:12px;font-weight:600;opacity:.85;display:flex;align-items:center;gap:4px;">
-                <span class="ms" style="font-size:14px;">location_on</span>{{selectedProposal().dest}} · {{selectedProposal().nights}}
-              </div>
-              <div style="font-family:'Instrument Serif',serif;font-size:32px;line-height:1.02;margin-top:2px;">{{selectedProposal().title}}</div>
+        <div class="detail-left">
+          <div class="detail-hero" [style.background]="selectedProposal().img">
+            <div class="detail-hero-overlay"></div>
+            <div class="detail-hero-info">
+              <span class="hero-location"><span class="ms hero-loc-icon">location_on</span>{{selectedProposal().dest}} &middot; {{selectedProposal().nights}}</span>
+              <h2 class="hero-title">{{selectedProposal().title}}</h2>
             </div>
           </div>
 
           <!-- Budget breakdown -->
-          <div style="background:#fff;border:1px solid #EADFCD;border-radius:18px;padding:20px;margin-top:18px;box-shadow:0 4px 16px rgba(120,80,40,.05);">
-            <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:3px;">
-              <div style="font-size:12px;font-weight:800;color:#8A7C6A;text-transform:uppercase;letter-spacing:.05em;">{{t().d_breakdown}}</div>
-              <div style="font-family:'Instrument Serif',serif;font-size:24px;">€{{selectedProposal().totalStr}}</div>
+          <div class="info-card">
+            <div class="breakdown-header">
+              <span class="form-label">{{t().d_breakdown}}</span>
+              <span class="breakdown-total">&#8364;{{selectedProposal().totalStr}}</span>
             </div>
-            <div style="font-size:12px;font-weight:700;margin-bottom:16px;" [style.color]="selectedProposal().deltaFg">{{selectedProposal().delta}} · {{t().d_vs_budget}}</div>
-            <div style="display:flex;flex-direction:column;gap:14px;">
+            <div class="breakdown-delta" [style.color]="selectedProposal().deltaFg">{{selectedProposal().delta}} &middot; {{t().d_vs_budget}}</div>
+            <div class="splits-list">
               @for (s of selSplits(); track s.label) {
-                <div>
-                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-                    <span class="ms" style="font-size:17px;" [style.color]="s.color">{{s.icon}}</span>
-                    <span style="font-size:13.5px;font-weight:600;">{{s.label}}</span>
-                    <span style="margin-left:auto;font-family:ui-monospace,monospace;font-size:12.5px;color:#5A4D3E;">€{{s.amount}}</span>
+                <div class="split-row">
+                  <div class="split-header">
+                    <span class="ms split-icon" [style.color]="s.color">{{s.icon}}</span>
+                    <span class="split-label">{{s.label}}</span>
+                    <span class="split-amount">&#8364;{{s.amount}}</span>
                   </div>
-                  <div style="height:8px;border-radius:5px;background:#F1E7D8;overflow:hidden;position:relative;">
-                    <div style="height:100%;border-radius:5px;" [style.width]="s.pct" [style.background]="s.color"></div>
-                    <div style="position:absolute;top:-3px;bottom:-3px;width:2px;background:#241C15;opacity:.45;" [style.left]="s.ideal"></div>
+                  <div class="split-track">
+                    <div class="split-fill" [style.width]="s.pct" [style.background]="s.color"></div>
+                    <div class="split-ideal" [style.left]="s.ideal"></div>
                   </div>
                 </div>
               }
             </div>
-            <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:#A6917A;margin-top:14px;font-weight:500;">
-              <div style="width:14px;height:2px;background:#241C15;opacity:.45;"></div>{{t().d_ideal}}
+            <div class="ideal-legend">
+              <div class="ideal-mark"></div>{{t().d_ideal}}
             </div>
           </div>
         </div>
 
         <!-- Right col sticky -->
-        <div style="position:sticky;top:18px;display:flex;flex-direction:column;gap:14px;">
-          <div style="background:#fff;border:1px solid #EADFCD;border-radius:18px;padding:18px;box-shadow:0 4px 16px rgba(120,80,40,.05);">
-            <div style="font-size:12px;font-weight:800;color:#8A7C6A;text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px;">{{t().d_elements}}</div>
-            <div style="display:flex;flex-direction:column;gap:10px;">
-              <div style="display:flex;align-items:center;gap:11px;">
-                <div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(150deg,#E9B98C,#B07B4E);flex-shrink:0;"></div>
-                <div style="flex:1;line-height:1.2;">
-                  <div style="font-size:13.5px;font-weight:700;">{{selectedProposal().hotel}}</div>
-                  <div style="font-size:11.5px;color:#8A7C6A;font-weight:600;">{{selectedProposal().hotelMeta}}</div>
+        <div class="detail-right">
+          <div class="info-card">
+            <span class="form-label">{{t().d_elements}}</span>
+            <div class="elements-list">
+              <div class="element-row">
+                <div class="element-thumb element-thumb--hotel"></div>
+                <div class="element-info">
+                  <span class="element-name">{{selectedProposal().hotel}}</span>
+                  <span class="element-meta">{{selectedProposal().hotelMeta}}</span>
                 </div>
-                <div style="cursor:pointer;font-size:12px;font-weight:700;color:#D9694C;background:#FBEDE7;padding:7px 11px;border-radius:9px;">{{t().d_change}}</div>
+                <button class="change-btn" type="button">{{t().d_change}}</button>
               </div>
-              <div style="display:flex;align-items:center;gap:11px;">
-                <div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(150deg,#EBCF94,#C0894B);flex-shrink:0;"></div>
-                <div style="flex:1;line-height:1.2;">
-                  <div style="font-size:13.5px;font-weight:700;">{{selectedProposal().rest}}</div>
-                  <div style="font-size:11.5px;color:#8A7C6A;font-weight:600;">{{selectedProposal().restMeta}}</div>
+              <div class="element-row">
+                <div class="element-thumb element-thumb--rest"></div>
+                <div class="element-info">
+                  <span class="element-name">{{selectedProposal().rest}}</span>
+                  <span class="element-meta">{{selectedProposal().restMeta}}</span>
                 </div>
-                <div style="cursor:pointer;font-size:12px;font-weight:700;color:#D9694C;background:#FBEDE7;padding:7px 11px;border-radius:9px;">{{t().d_change}}</div>
+                <button class="change-btn" type="button">{{t().d_change}}</button>
               </div>
-              <div style="display:flex;align-items:center;gap:11px;">
-                <div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(150deg,#9CC0CE,#5E8C9E);flex-shrink:0;"></div>
-                <div style="flex:1;line-height:1.2;">
-                  <div style="font-size:13.5px;font-weight:700;">{{selectedProposal().flight}}</div>
-                  <div style="font-size:11.5px;color:#8A7C6A;font-weight:600;">{{selectedProposal().flightMeta}}</div>
+              <div class="element-row">
+                <div class="element-thumb element-thumb--flight"></div>
+                <div class="element-info">
+                  <span class="element-name">{{selectedProposal().flight}}</span>
+                  <span class="element-meta">{{selectedProposal().flightMeta}}</span>
                 </div>
-                <div style="cursor:pointer;font-size:12px;font-weight:700;color:#D9694C;background:#FBEDE7;padding:7px 11px;border-radius:9px;">{{t().d_change}}</div>
+                <button class="change-btn" type="button">{{t().d_change}}</button>
               </div>
             </div>
           </div>
 
-          <div style="display:flex;align-items:center;gap:9px;background:#fff;border:1px solid #EADFCD;border-radius:13px;padding:12px 14px;font-size:12.5px;color:#8A6B4E;font-weight:500;line-height:1.35;">
-            <span class="ms" style="font-size:18px;color:#B07B4E;flex-shrink:0;">verified_user</span>{{selectedProposal().cancel}}
+          <div class="cancel-info">
+            <span class="ms cancel-icon">verified_user</span>{{selectedProposal().cancel}}
           </div>
 
-          <button (click)="goBooking()" style="width:100%;appearance:none;border:none;cursor:pointer;background:#D9694C;color:#fff;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:16px;padding:16px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 22px rgba(217,105,76,.36);">
-            {{t().d_book}} · €{{selectedProposal().totalStr}}<span class="ms" style="font-size:19px;">arrow_forward</span>
+          <button class="book-btn" (click)="goBooking()" type="button">
+            {{t().d_book}} &middot; &#8364;{{selectedProposal().totalStr}}<span class="ms book-btn-arrow">arrow_forward</span>
           </button>
         </div>
       </div>
-    </div>
+    </section>
     }
 
-  </div>
+  </main>
 </div>
 </div>
 
-<!-- ═══ OVERLAYS ═══ -->
+<!-- OVERLAYS -->
 
 <!-- Booking / Payment / Confirmation modal -->
 @if (overlay() === 'booking' || overlay() === 'payment' || overlay() === 'confirmation') {
-<div style="position:fixed;inset:0;z-index:60;background:rgba(36,28,21,.42);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:30px;">
-  <div class="scroll" style="width:560px;max-height:88vh;overflow-y:auto;background:#FAF5EC;border-radius:22px;box-shadow:0 30px 70px rgba(36,28,21,.4);">
+<div class="overlay-backdrop" role="dialog" aria-modal="true">
+  <div class="overlay-card scroll">
 
     <!-- BOOKING -->
     @if (overlay() === 'booking') {
-    <div style="padding:24px 26px 26px;">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
-        <div style="font-family:'Instrument Serif',serif;font-size:26px;">{{t().b_title}}</div>
-        <div (click)="closeOverlay()" class="ms" style="margin-left:auto;cursor:pointer;width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid #ECE1D2;display:flex;align-items:center;justify-content:center;font-size:19px;color:#8A7C6A;">close</div>
+    <div class="overlay-inner">
+      <div class="overlay-header">
+        <h2 class="overlay-title">{{t().b_title}}</h2>
+        <button class="close-circle" (click)="closeOverlay()" type="button"><span class="ms">close</span></button>
       </div>
 
-      <div style="background:#fff;border:1px solid #EADFCD;border-radius:16px;padding:16px;margin-bottom:16px;">
-        <div style="font-size:12px;font-weight:800;color:#8A7C6A;text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px;display:flex;align-items:center;gap:7px;">
-          <span class="ms" style="font-size:17px;color:#2E7D67;">verified</span>{{t().b_checking}}
+      <div class="checks-card">
+        <div class="checks-title">
+          <span class="ms checks-title-icon">verified</span>{{t().b_checking}}
         </div>
-        <div style="display:flex;flex-direction:column;gap:11px;">
+        <div class="checks-list">
           @for (c of checks(); track c.label) {
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px;">
-              <div style="width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+            <div class="check-row">
+              <div class="check-indicator">
                 @if (c.done) {
-                  <span class="ms" style="font-size:20px;color:#2E7D67;">check_circle</span>
+                  <span class="ms check-done-icon">check_circle</span>
                 } @else if (c.active) {
-                  <div style="width:16px;height:16px;border-radius:50%;border:2.5px solid #F2DEC9;border-top-color:#D9694C;animation:spin .8s linear infinite;"></div>
+                  <div class="check-spinner"></div>
                 } @else {
-                  <div style="width:10px;height:10px;border-radius:50%;background:#E4D8C6;"></div>
+                  <div class="check-dot"></div>
                 }
               </div>
-              <span style="font-weight:600;">{{c.label}}</span>
-              <span style="margin-left:auto;font-size:12.5px;font-weight:700;" [style.color]="c.fg">{{c.status}}</span>
+              <span class="check-label">{{c.label}}</span>
+              <span class="check-status" [class.done]="c.done" [class.active]="c.active">{{c.status}}</span>
             </div>
           }
         </div>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+      <div class="booking-grid">
         <div>
-          <div style="font-size:12px;font-weight:800;color:#8A7C6A;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">{{t().b_traveler}}</div>
-          <div style="background:#fff;border:1px solid #EADFCD;border-radius:14px;overflow:hidden;">
-            <div style="padding:11px 13px;border-bottom:1px solid #F4ECDF;display:flex;align-items:center;gap:9px;"><span class="ms" style="font-size:18px;color:#B49A7C;">person</span><span style="font-size:13.5px;font-weight:600;">Marco Bianchi</span></div>
-            <div style="padding:11px 13px;border-bottom:1px solid #F4ECDF;display:flex;align-items:center;gap:9px;"><span class="ms" style="font-size:18px;color:#B49A7C;">mail</span><span style="font-size:13px;color:#5A4D3E;">marco.b&#64;email.it</span></div>
-            <div style="padding:11px 13px;display:flex;align-items:center;gap:9px;"><span class="ms" style="font-size:18px;color:#B49A7C;">group</span><span style="font-size:13px;color:#5A4D3E;">{{travelerCount()}}</span></div>
+          <span class="booking-section-label">{{t().b_traveler}}</span>
+          <div class="booking-info-card">
+            <div class="booking-info-row"><span class="ms booking-row-icon">person</span><span class="booking-row-value">Marco Bianchi</span></div>
+            <div class="booking-info-row"><span class="ms booking-row-icon">mail</span><span class="booking-row-detail">marco.b&#64;email.it</span></div>
+            <div class="booking-info-row"><span class="ms booking-row-icon">group</span><span class="booking-row-detail">{{travelerCount()}}</span></div>
           </div>
         </div>
         <div>
-          <div style="font-size:12px;font-weight:800;color:#8A7C6A;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">{{t().b_summary}}</div>
-          <div style="background:#fff;border:1px solid #EADFCD;border-radius:14px;padding:14px;">
+          <span class="booking-section-label">{{t().b_summary}}</span>
+          <div class="booking-summary-card">
             @for (s of selSplits(); track s.label) {
-              <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;color:#5A4D3E;">
-                <span style="font-weight:500;">{{s.label}}</span><span style="font-family:ui-monospace,monospace;">€{{s.amount}}</span>
+              <div class="summary-line">
+                <span>{{s.label}}</span><span class="summary-amount">&#8364;{{s.amount}}</span>
               </div>
             }
-            <div style="height:1px;background:#F0E7D9;margin:8px 0;"></div>
-            <div style="display:flex;justify-content:space-between;align-items:baseline;">
-              <span style="font-size:13.5px;font-weight:700;">{{t().b_total}}</span>
-              <span style="font-family:'Instrument Serif',serif;font-size:23px;">€{{selectedProposal().totalStr}}</span>
+            <div class="summary-divider"></div>
+            <div class="summary-total">
+              <span class="total-label">{{t().b_total}}</span>
+              <span class="total-amount">&#8364;{{selectedProposal().totalStr}}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <button (click)="goPayment()" style="width:100%;appearance:none;border:none;cursor:pointer;color:#fff;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:16px;padding:16px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 22px rgba(217,105,76,.3);transition:background .3s;"
-        [style.background]="allChecked() ? '#D9694C' : '#D6C3B0'">
+      <button class="continue-btn" [class.ready]="allChecked()" [class.waiting]="!allChecked()" (click)="goPayment()" type="button">
         {{allChecked() ? t().b_continue : t().b_wait}}
       </button>
     </div>
@@ -480,102 +444,102 @@
 
     <!-- PAYMENT -->
     @if (overlay() === 'payment') {
-    <div style="padding:24px 26px 26px;">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
-        <div (click)="backToBooking()" class="ms" style="cursor:pointer;width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid #ECE1D2;display:flex;align-items:center;justify-content:center;font-size:19px;color:#8A7C6A;">arrow_back</div>
-        <div style="font-family:'Instrument Serif',serif;font-size:26px;">{{t().p_title}}</div>
-        <div (click)="closeOverlay()" class="ms" style="margin-left:auto;cursor:pointer;width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid #ECE1D2;display:flex;align-items:center;justify-content:center;font-size:19px;color:#8A7C6A;">close</div>
+    <div class="overlay-inner">
+      <div class="overlay-header">
+        <button class="close-circle" (click)="backToBooking()" type="button"><span class="ms">arrow_back</span></button>
+        <h2 class="overlay-title">{{t().p_title}}</h2>
+        <button class="close-circle" (click)="closeOverlay()" type="button"><span class="ms">close</span></button>
       </div>
 
-      <div style="text-align:center;background:#fff;border:1px solid #EADFCD;border-radius:16px;padding:18px;margin-bottom:16px;">
-        <div style="font-size:12.5px;color:#8A7C6A;font-weight:600;">{{t().p_paying}}</div>
-        <div style="font-family:'Instrument Serif',serif;font-size:40px;line-height:1;margin-top:4px;">€{{selectedProposal().totalStr}}</div>
-        <div style="font-size:12.5px;color:#A6917A;font-weight:600;margin-top:3px;">{{selectedProposal().title}} · {{selectedProposal().dest}}</div>
+      <div class="payment-hero">
+        <span class="pay-label">{{t().p_paying}}</span>
+        <div class="pay-amount">&#8364;{{selectedProposal().totalStr}}</div>
+        <span class="pay-sub">{{selectedProposal().title}} &middot; {{selectedProposal().dest}}</span>
       </div>
 
-      <div style="font-size:12px;font-weight:800;color:#8A7C6A;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">{{t().p_how}}</div>
-      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;">
-        <div (click)="payMode.set('full')" style="cursor:pointer;background:#fff;border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;border-width:2px;border-style:solid;" [style.border-color]="payMode()==='full' ? '#D9694C' : '#F0E7D9'">
-          <div style="width:21px;height:21px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-width:2px;border-style:solid;" [style.border-color]="payMode()==='full' ? '#D9694C' : '#D8C9B5'">
-            @if (payMode() === 'full') { <div style="width:11px;height:11px;border-radius:50%;background:#D9694C;"></div> }
+      <span class="form-label pay-how-label">{{t().p_how}}</span>
+      <div class="pay-methods">
+        <button class="pay-method" [class.selected]="payMode()==='full'" (click)="payMode.set('full')" type="button">
+          <div class="pay-radio" [class.selected]="payMode()==='full'">
+            @if (payMode() === 'full') { <div class="pay-radio-dot"></div> }
           </div>
-          <div style="flex:1;line-height:1.25;">
-            <div style="font-size:14.5px;font-weight:700;">{{t().p_full}}</div>
-            <div style="font-size:12px;color:#8A7C6A;font-weight:500;">{{t().p_full_sub}}</div>
+          <div class="pay-method-info">
+            <span class="pay-method-title">{{t().p_full}}</span>
+            <span class="pay-method-sub">{{t().p_full_sub}}</span>
           </div>
-          <span class="ms" style="font-size:23px;color:#2E7D67;">account_balance_wallet</span>
-        </div>
-        <div (click)="payMode.set('install')" style="cursor:pointer;background:#fff;border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;border-width:2px;border-style:solid;" [style.border-color]="payMode()==='install' ? '#D9694C' : '#F0E7D9'">
-          <div style="width:21px;height:21px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-width:2px;border-style:solid;" [style.border-color]="payMode()==='install' ? '#D9694C' : '#D8C9B5'">
-            @if (payMode() === 'install') { <div style="width:11px;height:11px;border-radius:50%;background:#D9694C;"></div> }
+          <span class="ms pay-method-icon">account_balance_wallet</span>
+        </button>
+        <button class="pay-method" [class.selected]="payMode()==='install'" (click)="payMode.set('install')" type="button">
+          <div class="pay-radio" [class.selected]="payMode()==='install'">
+            @if (payMode() === 'install') { <div class="pay-radio-dot"></div> }
           </div>
-          <div style="flex:1;line-height:1.25;">
-            <div style="font-size:14.5px;font-weight:700;">{{t().p_install}}</div>
-            <div style="font-size:12px;color:#8A7C6A;font-weight:500;">{{installSub()}}</div>
+          <div class="pay-method-info">
+            <span class="pay-method-title">{{t().p_install}}</span>
+            <span class="pay-method-sub">{{installSub()}}</span>
           </div>
-          <div style="font-weight:800;font-size:12.5px;color:#5A4D3E;background:#FBEDE7;padding:5px 9px;border-radius:8px;">Klarna</div>
-        </div>
+          <span class="klarna-badge">Klarna</span>
+        </button>
       </div>
 
       @if (payMode() === 'install') {
-      <div style="background:#FBF4EA;border-radius:13px;padding:13px;margin-bottom:14px;">
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#8A6B4E;font-weight:600;margin-bottom:8px;">{{t().p_plan}}<span style="font-family:ui-monospace,monospace;">3 × €{{rateStr()}}</span></div>
-        <div style="display:flex;gap:7px;">
+      <div class="install-plan">
+        <div class="install-header"><span>{{t().p_plan}}</span><span class="install-formula">3 &times; &#8364;{{rateStr()}}</span></div>
+        <div class="install-slots">
           @for (label of installLabels(); track label) {
-            <div style="flex:1;text-align:center;background:#fff;border-radius:9px;padding:9px 4px;">
-              <div style="font-size:10px;color:#A6917A;font-weight:600;">{{label}}</div>
-              <div style="font-family:ui-monospace,monospace;font-size:13px;font-weight:600;margin-top:2px;">€{{rateStr()}}</div>
+            <div class="install-slot">
+              <span class="slot-label">{{label}}</span>
+              <span class="slot-amount">&#8364;{{rateStr()}}</span>
             </div>
           }
         </div>
       </div>
       }
 
-      <div style="display:flex;gap:9px;background:#EEF6F2;border-radius:12px;padding:12px 14px;margin-bottom:16px;">
-        <span class="ms" style="font-size:18px;color:#2E7D67;flex-shrink:0;">info</span>
-        <div style="font-size:12.5px;color:#3F6B5C;line-height:1.4;font-weight:500;">{{t().p_platform}}</div>
+      <div class="platform-info">
+        <span class="ms platform-icon">info</span>
+        <p class="platform-text">{{t().p_platform}}</p>
       </div>
 
-      <button (click)="confirmPay()" style="width:100%;appearance:none;border:none;cursor:pointer;background:#241C15;color:#fff;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:16px;padding:16px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 22px rgba(36,28,21,.3);">
-        <span class="ms" style="font-size:19px;">lock</span>{{payBtnLabel()}}
+      <button class="pay-btn" (click)="confirmPay()" type="button">
+        <span class="ms pay-btn-lock">lock</span>{{payBtnLabel()}}
       </button>
     </div>
     }
 
     <!-- CONFIRMATION -->
     @if (overlay() === 'confirmation') {
-    <div style="padding:32px 26px 26px;text-align:center;">
-      <div style="width:78px;height:78px;margin:0 auto 18px;border-radius:50%;background:#2E7D67;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(46,125,103,.36);">
-        <span class="ms" style="font-size:42px;color:#fff;">check</span>
+    <div class="confirm-inner">
+      <div class="confirm-check">
+        <span class="ms confirm-check-icon">check</span>
       </div>
-      <div style="font-family:'Instrument Serif',serif;font-size:30px;line-height:1.05;">{{t().c_title}}</div>
-      <div style="font-size:14px;color:#8A7C6A;font-weight:600;margin-top:7px;">{{t().c_sub}}</div>
+      <h2 class="confirm-title">{{t().c_title}}</h2>
+      <p class="confirm-sub">{{t().c_sub}}</p>
 
-      <div style="background:#fff;border:1px solid #EADFCD;border-radius:16px;padding:15px;margin:22px 0 16px;text-align:left;">
+      <div class="confirm-items">
         @for (item of confirmItems(); track item.ref) {
-          <div style="display:flex;align-items:center;gap:11px;padding:6px 0;">
-            <span class="ms" style="font-size:19px;color:#2E7D67;">check_circle</span>
-            <span style="font-size:13.5px;font-weight:600;flex:1;">{{item.label}}</span>
-            <span style="font-family:ui-monospace,monospace;font-size:11px;color:#A6917A;">{{item.ref}}</span>
+          <div class="confirm-item">
+            <span class="ms confirm-item-icon">check_circle</span>
+            <span class="confirm-label">{{item.label}}</span>
+            <span class="confirm-ref">{{item.ref}}</span>
           </div>
         }
       </div>
 
-      <div style="background:linear-gradient(135deg,#2A2018,#3E2E22);border-radius:16px;padding:18px;text-align:left;color:#fff;">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;">
-          <span class="ms" style="font-size:20px;color:#F3CE7E;">concierge</span>
-          <span style="font-weight:700;font-size:15px;">{{t().c_concierge}}</span>
-          <span style="margin-left:auto;font-family:ui-monospace,monospace;font-size:9px;letter-spacing:.06em;background:rgba(243,206,126,.2);color:#F3CE7E;padding:3px 7px;border-radius:5px;">{{t().concept}}</span>
+      <div class="concierge-promo">
+        <div class="concierge-promo-header">
+          <span class="ms concierge-promo-icon">concierge</span>
+          <span class="concierge-promo-name">{{t().c_concierge}}</span>
+          <span class="concept-badge">{{t().concept}}</span>
         </div>
-        <div style="font-size:13px;line-height:1.45;opacity:.82;margin-bottom:14px;">{{t().c_concierge_sub}}</div>
-        <button (click)="openConcierge()" style="width:100%;appearance:none;border:none;cursor:pointer;background:#F3CE7E;color:#241C15;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:15px;padding:13px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:7px;">
-          <span class="ms" style="font-size:18px;">chat</span>{{t().c_open}}
+        <p class="concierge-promo-text">{{t().c_concierge_sub}}</p>
+        <button class="concierge-open-btn" (click)="openConcierge()" type="button">
+          <span class="ms">chat</span>{{t().c_open}}
         </button>
       </div>
 
-      <div (click)="restart()" style="cursor:pointer;margin-top:16px;font-size:13px;font-weight:700;color:#9A6B45;display:flex;align-items:center;justify-content:center;gap:6px;">
-        <span class="ms" style="font-size:16px;">replay</span>{{t().c_restart}}
-      </div>
+      <button class="restart-link" (click)="restart()" type="button">
+        <span class="ms">replay</span>{{t().c_restart}}
+      </button>
     </div>
     }
 
@@ -583,64 +547,56 @@
 </div>
 }
 
-<!-- ═══ AUTH MODAL ═══ -->
+<!-- AUTH MODAL -->
 @if (showAuthModal()) {
-<div style="position:fixed;inset:0;z-index:90;background:rgba(36,28,21,.52);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;">
-  <div style="width:420px;background:#fff;border-radius:22px;padding:32px;box-shadow:0 24px 80px rgba(36,28,21,.35);position:relative;">
-    <div (click)="closeAuthModal()" class="ms" style="position:absolute;right:16px;top:16px;cursor:pointer;font-size:22px;color:#8A7C6A;">close</div>
+<div class="auth-backdrop" role="dialog" aria-modal="true">
+  <div class="auth-card">
+    <button class="ms auth-close" (click)="closeAuthModal()" type="button">close</button>
 
-    <!-- Logo -->
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;">
-      <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(145deg,#E9863A,#C0563A);display:flex;align-items:center;justify-content:center;color:#F7ECDD;font-family:'Instrument Serif',serif;font-style:italic;font-size:22px;">T</div>
-      <div style="font-family:'Instrument Serif',serif;font-size:22px;">Travel AI</div>
+    <div class="auth-logo">
+      <div class="auth-logo-icon">T</div>
+      <span class="auth-logo-name">Travel AI</span>
     </div>
 
-    <!-- Tabs -->
-    <div style="display:flex;gap:4px;background:#F6F1E8;border-radius:11px;padding:4px;margin-bottom:22px;">
-      <div (click)="authMode.set('login')" style="flex:1;text-align:center;padding:9px;border-radius:8px;cursor:pointer;font-size:13.5px;font-weight:700;transition:all .15s;"
-        [style.background]="authMode()==='login'?'#fff':'transparent'"
-        [style.color]="authMode()==='login'?'#241C15':'#8A7C6A'">
+    <div class="auth-tabs">
+      <button class="auth-tab" [class.active]="authMode()==='login'" (click)="authMode.set('login')" type="button">
         {{lang()==='it'?'Accedi':'Sign in'}}
-      </div>
-      <div (click)="authMode.set('register')" style="flex:1;text-align:center;padding:9px;border-radius:8px;cursor:pointer;font-size:13.5px;font-weight:700;transition:all .15s;"
-        [style.background]="authMode()==='register'?'#fff':'transparent'"
-        [style.color]="authMode()==='register'?'#241C15':'#8A7C6A'">
+      </button>
+      <button class="auth-tab" [class.active]="authMode()==='register'" (click)="authMode.set('register')" type="button">
         {{lang()==='it'?'Registrati':'Register'}}
-      </div>
+      </button>
     </div>
 
     @if (authErrorMsg) {
-      <div style="margin-bottom:16px;padding:10px 14px;background:#FBEAE4;border-radius:10px;font-size:13px;color:#B8492F;font-weight:600;">{{authErrorMsg}}</div>
+      <div class="auth-error" role="alert">{{authErrorMsg}}</div>
     }
 
     @if (authMode()==='register') {
-      <div style="display:flex;gap:12px;margin-bottom:14px;">
-        <div style="flex:1;">
-          <label style="font-size:12px;font-weight:700;color:#5A4D3E;display:block;margin-bottom:5px;">{{lang()==='it'?'Nome':'First name'}}</label>
-          <input [(ngModel)]="authFirstNameVal" style="width:100%;box-sizing:border-box;border:1.5px solid #E7DCC9;border-radius:10px;padding:10px 13px;font-family:'Hanken Grotesk',sans-serif;font-size:14px;outline:none;color:#241C15;" [placeholder]="lang()==='it'?'Marco':'John'">
+      <div class="auth-names">
+        <div class="auth-field">
+          <label>{{lang()==='it'?'Nome':'First name'}}</label>
+          <input [(ngModel)]="authFirstNameVal" [placeholder]="lang()==='it'?'Marco':'John'">
         </div>
-        <div style="flex:1;">
-          <label style="font-size:12px;font-weight:700;color:#5A4D3E;display:block;margin-bottom:5px;">{{lang()==='it'?'Cognome':'Last name'}}</label>
-          <input [(ngModel)]="authLastNameVal" style="width:100%;box-sizing:border-box;border:1.5px solid #E7DCC9;border-radius:10px;padding:10px 13px;font-family:'Hanken Grotesk',sans-serif;font-size:14px;outline:none;color:#241C15;" [placeholder]="lang()==='it'?'Bianchi':'Doe'">
+        <div class="auth-field">
+          <label>{{lang()==='it'?'Cognome':'Last name'}}</label>
+          <input [(ngModel)]="authLastNameVal" [placeholder]="lang()==='it'?'Bianchi':'Doe'">
         </div>
       </div>
     }
 
-    <div style="margin-bottom:14px;">
-      <label style="font-size:12px;font-weight:700;color:#5A4D3E;display:block;margin-bottom:5px;">Email</label>
-      <input [(ngModel)]="authEmailVal" type="email" style="width:100%;box-sizing:border-box;border:1.5px solid #E7DCC9;border-radius:10px;padding:10px 13px;font-family:'Hanken Grotesk',sans-serif;font-size:14px;outline:none;color:#241C15;" placeholder="email@example.com">
+    <div class="auth-field">
+      <label>Email</label>
+      <input [(ngModel)]="authEmailVal" type="email" placeholder="email@example.com">
     </div>
 
-    <div style="margin-bottom:22px;">
-      <label style="font-size:12px;font-weight:700;color:#5A4D3E;display:block;margin-bottom:5px;">Password</label>
-      <input [(ngModel)]="authPasswordVal" type="password" style="width:100%;box-sizing:border-box;border:1.5px solid #E7DCC9;border-radius:10px;padding:10px 13px;font-family:'Hanken Grotesk',sans-serif;font-size:14px;outline:none;color:#241C15;" [placeholder]="lang()==='it'?'Almeno 8 caratteri':'At least 8 characters'">
+    <div class="auth-field auth-field--last">
+      <label>Password</label>
+      <input [(ngModel)]="authPasswordVal" type="password" [placeholder]="lang()==='it'?'Almeno 8 caratteri':'At least 8 characters'">
     </div>
 
-    <button (click)="authMode()==='login'?login():register()" [disabled]="authLoadingState"
-      style="width:100%;appearance:none;border:none;cursor:pointer;background:linear-gradient(135deg,#E9863A,#C0563A);color:#fff;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:15px;padding:13px;border-radius:12px;"
-      [style.opacity]="authLoadingState?'0.7':'1'">
+    <button class="auth-submit" (click)="authMode()==='login'?login():register()" [disabled]="authLoadingState" type="button">
       @if (authLoadingState) {
-        {{lang()==='it'?'Caricamento…':'Loading…'}}
+        {{lang()==='it'?'Caricamento...':'Loading...'}}
       } @else {
         {{authMode()==='login'?(lang()==='it'?'Accedi':'Sign in'):(lang()==='it'?'Crea account':'Create account')}}
       }
@@ -651,76 +607,78 @@
 
 <!-- Concierge drawer -->
 @if (overlay() === 'concierge') {
-<div style="position:fixed;inset:0;z-index:70;background:rgba(36,28,21,.42);backdrop-filter:blur(3px);display:flex;justify-content:flex-end;">
-  <div style="width:440px;height:100%;background:#F3ECE0;display:flex;flex-direction:column;box-shadow:-20px 0 60px rgba(36,28,21,.3);">
+<div class="concierge-backdrop">
+  <div class="concierge-drawer">
     <!-- Drawer header -->
-    <div style="padding:20px 18px 14px;background:linear-gradient(135deg,#2A2018,#3E2E22);color:#fff;flex-shrink:0;">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <div style="width:40px;height:40px;border-radius:12px;background:#F3CE7E;display:flex;align-items:center;justify-content:center;">
-          <span class="ms" style="font-size:23px;color:#241C15;">concierge</span>
+    <div class="concierge-header">
+      <div class="concierge-header-row">
+        <div class="concierge-avatar">
+          <span class="ms concierge-avatar-icon">concierge</span>
         </div>
-        <div style="line-height:1.15;flex:1;">
-          <div style="font-weight:700;font-size:16px;">{{t().cc_title}}</div>
-          <div style="font-size:12px;opacity:.72;font-weight:500;">{{selectedProposal().dest}} · {{selectedProposal().nights}} · {{travelerCount()}}</div>
+        <div class="concierge-info">
+          <span class="concierge-name">{{t().cc_title}}</span>
+          <span class="concierge-meta">{{selectedProposal().dest}} &middot; {{selectedProposal().nights}} &middot; {{travelerCount()}}</span>
         </div>
-        <span style="font-family:ui-monospace,monospace;font-size:9px;letter-spacing:.05em;background:rgba(243,206,126,.2);color:#F3CE7E;padding:4px 7px;border-radius:5px;">{{t().concept}}</span>
-        <div (click)="closeOverlay()" class="ms" style="cursor:pointer;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:19px;">close</div>
+        <span class="concept-badge">{{t().concept}}</span>
+        <button class="close-circle" (click)="closeOverlay()" type="button"><span class="ms">close</span></button>
       </div>
-      <div style="margin-top:11px;display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.08);border-radius:10px;padding:9px 11px;font-size:11.5px;opacity:.85;line-height:1.35;">
-        <span class="ms" style="font-size:15px;color:#F3CE7E;">bolt</span>{{t().cc_context}}
+      <div class="concierge-context">
+        <span class="ms concierge-context-icon">bolt</span>{{t().cc_context}}
       </div>
     </div>
 
     <!-- Messages -->
-    <div class="scroll" style="flex:1;overflow-y:auto;padding:18px 16px;display:flex;flex-direction:column;gap:12px;">
+    <div class="messages-area scroll">
       @for (m of chatMessages(); track $index) {
-        <div style="display:flex;" [style.justify-content]="m.justify">
-          <div style="max-width:84%;">
+        <div class="msg-wrap" [style.justify-content]="m.justify">
+          <div class="msg-content">
             @if (m.isOffer) {
-              <div style="background:#fff;border:1px solid #EADFCD;border-radius:18px;overflow:hidden;box-shadow:0 4px 16px rgba(120,80,40,.09);">
-                <div style="height:88px;position:relative;" [style.background]="m.img">
-                  <div style="position:absolute;left:10px;top:9px;font-family:ui-monospace,monospace;font-size:8px;color:rgba(255,255,255,.85);background:rgba(0,0,0,.25);padding:2px 6px;border-radius:4px;">{{m.caption}}</div>
+              <div class="offer-card">
+                <div class="offer-image" [style.background]="m.img">
+                  <span class="offer-caption">{{m.caption}}</span>
                 </div>
-                <div style="padding:13px;">
-                  <div style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:#2E7D67;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">
-                    <span class="ms" style="font-size:13px;">verified</span>{{m.badge}}
+                <div class="offer-body">
+                  <div class="offer-badge-row">
+                    <span class="ms offer-badge-icon">verified</span>{{m.badge}}
                   </div>
-                  <div style="font-family:'Instrument Serif',serif;font-size:19px;line-height:1.1;">{{m.title}}</div>
-                  <div style="font-size:12.5px;color:#8A7C6A;font-weight:500;margin-top:3px;">{{m.sub}}</div>
-                  <button (click)="bookTable()" style="width:100%;margin-top:11px;appearance:none;border:none;cursor:pointer;background:#241C15;color:#fff;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:14px;padding:11px;border-radius:11px;display:flex;align-items:center;justify-content:center;gap:6px;">
-                    <span class="ms" style="font-size:16px;">event_available</span>{{m.cta}}
+                  <h4 class="offer-title">{{m.title}}</h4>
+                  <p class="offer-sub">{{m.sub}}</p>
+                  <button class="offer-book-btn" (click)="bookTable()" type="button">
+                    <span class="ms">event_available</span>{{m.cta}}
                   </button>
                 </div>
               </div>
             }
             @if (m.isText) {
-              <div style="padding:11px 15px;font-size:14px;line-height:1.4;font-weight:500;box-shadow:0 2px 8px rgba(120,80,40,.06);"
-                [style.background]="m.bg" [style.color]="m.fg" [style.border-radius]="m.radius">{{m.text}}</div>
+              <div class="text-bubble"
+                [class.user-bubble]="m.bg === '#D9694C'"
+                [class.ai-bubble]="m.bg !== '#D9694C'"
+                [style.border-radius]="m.radius">{{m.text}}</div>
             }
           </div>
         </div>
       }
       @if (conciergeTyping()) {
-        <div style="display:flex;justify-content:flex-start;">
-          <div style="background:#fff;padding:13px 17px;border-radius:18px 18px 18px 4px;display:flex;gap:5px;box-shadow:0 2px 8px rgba(120,80,40,.06);">
-            <div style="width:7px;height:7px;border-radius:50%;background:#C0894B;animation:pulse 1s infinite;"></div>
-            <div style="width:7px;height:7px;border-radius:50%;background:#C0894B;animation:pulse 1s infinite .2s;"></div>
-            <div style="width:7px;height:7px;border-radius:50%;background:#C0894B;animation:pulse 1s infinite .4s;"></div>
+        <div class="typing-indicator">
+          <div class="typing-dots">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
           </div>
         </div>
       }
     </div>
 
     <!-- Input bar -->
-    <div style="flex-shrink:0;padding:12px 14px 16px;background:#F3ECE0;border-top:1px solid #E6DAC8;">
+    <div class="chat-input-bar">
       @if (!suggestionUsed()) {
-        <div (click)="sendSuggestion()" style="cursor:pointer;margin-bottom:10px;display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid #E6DAC8;border-radius:999px;padding:9px 14px;font-size:13px;font-weight:600;color:#5A4334;box-shadow:0 2px 8px rgba(120,80,40,.05);">
-          <span class="ms" style="font-size:16px;color:#D9694C;">auto_awesome</span>{{t().cc_suggestion}}
-        </div>
+        <button class="suggestion-chip" (click)="sendSuggestion()" type="button">
+          <span class="ms suggestion-icon">auto_awesome</span>{{t().cc_suggestion}}
+        </button>
       }
-      <div style="display:flex;align-items:center;gap:9px;background:#fff;border:1px solid #E6DAC8;border-radius:999px;padding:7px 7px 7px 16px;">
-        <span style="flex:1;font-size:14px;color:#B49A7C;">{{t().cc_placeholder}}</span>
-        <div (click)="sendSuggestion()" class="ms" style="cursor:pointer;width:38px;height:38px;border-radius:50%;background:#D9694C;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;">arrow_upward</div>
+      <div class="chat-input-row">
+        <span class="chat-placeholder">{{t().cc_placeholder}}</span>
+        <button class="ms send-btn" (click)="sendSuggestion()" type="button">arrow_upward</button>
       </div>
     </div>
   </div>

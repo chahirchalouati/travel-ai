@@ -1,58 +1,177 @@
-:host { display: block; }
-
-section {
-  position: relative;
-  z-index: 2;
-  padding: clamp(4rem, 6rem, 9rem) 0;
-  background: linear-gradient(to bottom, transparent 0%, rgba(15,15,35,.6) 50%, transparent 100%);
+:host {
+  display: block;
 }
 
-.section-header { margin-bottom: 2.5rem; }
+section {
+  padding: clamp(3.5rem, 3rem + 4vw, 6rem) 0;
+  background: var(--bg-secondary);
+}
 
-.testimonials-grid {
+/* ---- Section header ---- */
+.section-header {
+  text-align: center;
+  max-width: 500px;
+  margin: 0 auto 2.5rem;
+}
+
+.section-title {
+  font-family: var(--font-body);
+  font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+  color: var(--text-primary);
+}
+
+.section-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ---- Reviews grid ---- */
+.reviews-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.25rem;
 }
 
-.testimonial-card {
-  padding: 1.75rem;
-  border-radius: var(--r-xl);
-  transition: all .3s var(--ease-quart);
+/* ---- Review card ---- */
+.review-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--duration-normal) var(--ease-out-expo),
+              transform var(--duration-normal) var(--ease-out-expo);
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 60px rgba(0,0,0,.4);
-    border-color: rgba(255,255,255,.16);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
   }
 }
 
-.testimonial-stars { display: flex; gap: .2rem; margin-bottom: 1rem; font-size: .85rem; }
-.testimonial-quote {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 1rem;
-  line-height: 1.65;
-  margin-bottom: 1.25rem;
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
-.testimonial-author { display: flex; align-items: center; gap: .75rem; }
-
-.author-avatar {
-  width: 38px; height: 38px;
+.review-avatar {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
-  font-size: .9rem;
-  color: rgba(255,255,255,.9);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #fff;
   flex-shrink: 0;
 }
 
-.author-name { font-size: .88rem; font-weight: 500; }
-.author-role { font-size: .75rem; color: var(--text-muted); }
+.review-author-info {
+  min-width: 0;
+}
 
-@media (max-width: 768px) {
-  .testimonials-grid { grid-template-columns: 1fr; }
+.review-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.review-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.72rem;
+  color: var(--teal);
+  font-weight: 500;
+  margin-top: 0.1rem;
+}
+
+.review-stars {
+  display: flex;
+  gap: 0.15rem;
+  margin-bottom: 0.65rem;
+}
+
+.star {
+  font-size: 0.85rem;
+  color: var(--gold);
+}
+
+.review-quote {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem;
+  font-style: normal;
+}
+
+.review-trip {
+  font-size: 0.76rem;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1024px) {
+  .reviews-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .reviews-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Skeleton ---- */
+.skeleton-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, var(--bg-secondary, #f0f0f0) 25%, #e8e8e8 50%, var(--bg-secondary, #f0f0f0) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-line {
+  background: linear-gradient(90deg, var(--bg-secondary, #f0f0f0) 25%, #e8e8e8 50%, var(--bg-secondary, #f0f0f0) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.review-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+  color: var(--text-primary);
+}
+
+.review-helpful {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  margin-top: 0.75rem;
+}
+
+.reviews-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-tertiary);
 }

@@ -24,4 +24,6 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
             @Param("targetId") UUID targetId);
 
     boolean existsByUserIdAndTargetTypeAndTargetId(UUID userId, String targetType, UUID targetId);
+
+    Page<Review> findAllByOrderByCreatedAtDesc(Pageable pageable);
 }

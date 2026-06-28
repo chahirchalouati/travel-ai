@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 interface Activity {
@@ -22,7 +22,7 @@ interface ItineraryDay {
   styleUrl: './itinerary.component.scss'
 })
 export class ItineraryComponent {
-  days: ItineraryDay[] = [
+  days = signal<ItineraryDay[]>([
     {
       label: 'Day 1 — Arrival & Shinjuku',
       activities: [
@@ -39,12 +39,12 @@ export class ItineraryComponent {
         { icon: '🗼', name: 'Tokyo Skytree at dusk', time: 'Evening · 17:30–20:00', badge: 'Views', badgeClass: 'sky' },
       ]
     },
-  ];
+  ]);
 
-  highlights = [
+  highlights = signal([
     { icon: '✦', title: 'Optimal scheduling', desc: 'AI sequences activities to minimise travel time and maximise your experience at each site.' },
     { icon: '🌤', title: 'Weather-aware planning', desc: 'Outdoor activities are automatically scheduled for the best weather windows.' },
     { icon: '💡', title: 'Local insider tips', desc: 'Skip queues, find hidden gems, and eat where the locals eat — all built into your plan.' },
     { icon: '🔄', title: 'Instantly editable', desc: 'Swap any activity, adjust timing, or regenerate a day with a single message.' },
-  ];
+  ]);
 }

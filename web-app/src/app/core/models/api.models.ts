@@ -256,10 +256,26 @@ export interface ChatRequest {
   message: string;
 }
 
+export interface ChatEntityAttachment {
+  id: string;
+  type: 'destination' | 'hotel' | 'restaurant';
+  name: string;
+  subtitle: string;
+  description: string;
+  imageUrl: string | null;
+  price: number | null;
+  priceLabel: string | null;
+  rating: number | null;
+  latitude: number | null;
+  longitude: number | null;
+  tags: string[];
+}
+
 export interface ChatResponse {
   conversationId: string;
   title: string;
   reply: string;
+  attachments: ChatEntityAttachment[];
   timestamp: string;
 }
 

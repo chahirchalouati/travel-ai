@@ -33,6 +33,13 @@ export class ReviewService {
     );
   }
 
+  getRecent(size = 6): Observable<ReviewResponse[]> {
+    const params = new HttpParams().set('size', size);
+    return this.http.get<ApiWrapper<{ content: ReviewResponse[] }>>(
+      `${environment.apiUrl}/reviews/recent`, { params }
+    ).pipe(map(res => res.data.content));
+  }
+
   getByUser(userId: string, page = 0, size = 10): Observable<ReviewResponse[]> {
     const params = new HttpParams().set('page', page).set('size', size);
     return this.http.get<ApiWrapper<{ content: ReviewResponse[] }>>(`${environment.apiUrl}/reviews/user/${userId}`, { params }).pipe(

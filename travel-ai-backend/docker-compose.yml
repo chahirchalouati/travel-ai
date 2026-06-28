@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   postgres:
-    image: postgres:16-alpine
+    image: pgvector/pgvector:pg16
     container_name: travelai-postgres
     environment:
       POSTGRES_DB: travelai
@@ -45,29 +45,29 @@ services:
       - ollama_data:/root/.ollama
     restart: unless-stopped
 
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: travelai-app
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/travelai
-      SPRING_DATASOURCE_USERNAME: travelai
-      SPRING_DATASOURCE_PASSWORD: travelai
-      SPRING_DATA_REDIS_HOST: redis
-      SPRING_MAIL_HOST: mailpit
-      SPRING_MAIL_PORT: 1025
-      JWT_SECRET: ${JWT_SECRET:-change-me-in-production-min-32-chars!!}
-      OLLAMA_BASE_URL: http://ollama:11434
-      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.2}
-    ports:
-      - "8080:8080"
-    restart: unless-stopped
+#  app:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    container_name: travelai-app
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      redis:
+#        condition: service_healthy
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/travelai
+#      SPRING_DATASOURCE_USERNAME: travelai
+#      SPRING_DATASOURCE_PASSWORD: travelai
+#      SPRING_DATA_REDIS_HOST: redis
+#      SPRING_MAIL_HOST: mailpit
+#      SPRING_MAIL_PORT: 1025
+#      JWT_SECRET: ${JWT_SECRET:-change-me-in-production-min-32-chars!!}
+#      OLLAMA_BASE_URL: http://ollama:11434
+#      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.2}
+#    ports:
+#      - "8080:8080"
+#    restart: unless-stopped
 
 volumes:
   postgres_data:
