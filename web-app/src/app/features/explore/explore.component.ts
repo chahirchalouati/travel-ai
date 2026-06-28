@@ -1,32 +1,39 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
 import { TranslocoModule } from '@jsverse/transloco';
 import { CtaSectionComponent } from '../cta-section/cta-section.component';
+import { TripStoriesComponent } from '../trip-stories/trip-stories.component';
 
 import { DestinationService } from '../../core/services/destination.service';
+import type { ContinentSummary, InterestSummary } from '../../core/services/destination.service';
+import { StatsService } from '../../core/services/stats.service';
+import type { PlatformStats } from '../../core/services/stats.service';
 import type { DestinationResponse } from '../../core/models/api.models';
 
-interface ContinentCard {
-  readonly name: string;
-  readonly imageUrl: string;
-  readonly destinationCount: number;
-}
-
-interface InterestTile {
-  readonly titleKey: string;
-  readonly icon: string;
-  readonly tag: string;
-  readonly count: number;
-  readonly imageUrl: string;
+interface HeroSlide {
+  readonly url: string;
+  readonly place: string;
+  readonly country: string;
 }
 
 interface CategoryFilter {
   readonly key: string;
   readonly tag: string;
 }
+
+/** Shown only until featured destinations load from the backend. */
+const HERO_FALLBACK_SLIDES: readonly HeroSlide[] = [
+  { url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1920&q=80', place: 'Lake Valley', country: 'Switzerland' },
+  { url: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1920&q=80', place: 'Paris', country: 'France' },
+  { url: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1920&q=80', place: 'Kyoto', country: 'Japan' },
+] as const;
+
+const POPULAR_FALLBACK_LINKS = ['Paris', 'Tokyo', 'Bali', 'New York', 'Rome'] as const;
+
+const HERO_ROTATE_MS = 6000;
 
 const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', 'Luxury'] as const;
 
@@ -38,32 +45,34 @@ const CATEGORY_FILTER_KEYS: readonly CategoryFilter[] = [
   { key: 'explore.categories.thingsToDo', tag: 'Things to Do' },
 ] as const;
 
-const POPULAR_LINKS = ['Paris', 'Tokyo', 'Bali', 'New York', 'Rome'] as const;
-
-const INTEREST_TILES: readonly InterestTile[] = [
-  { titleKey: 'explore.interests.beaches', icon: 'beach_access', tag: 'Beach', count: 142, imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80' },
-  { titleKey: 'explore.interests.city', icon: 'location_city', tag: 'Cultural', count: 98, imageUrl: 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=600&q=80' },
-  { titleKey: 'explore.interests.food', icon: 'restaurant', tag: 'Luxury', count: 76, imageUrl: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80' },
-  { titleKey: 'explore.interests.adventure', icon: 'hiking', tag: 'Adventure', count: 115, imageUrl: 'https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=600&q=80' },
-] as const;
-
-const CONTINENTS: readonly ContinentCard[] = [
-  { name: 'Europe', imageUrl: 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=600&q=80', destinationCount: 47 },
-  { name: 'Asia', imageUrl: 'https://images.unsplash.com/photo-1528181304800-259b08848526?w=600&q=80', destinationCount: 38 },
-  { name: 'North America', imageUrl: 'https://images.unsplash.com/photo-1485738422979-f5c462d49f04?w=600&q=80', destinationCount: 24 },
-  { name: 'South America', imageUrl: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=600&q=80', destinationCount: 19 },
-  { name: 'Africa', imageUrl: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=600&q=80', destinationCount: 22 },
-  { name: 'Oceania', imageUrl: 'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=600&q=80', destinationCount: 14 },
-] as const;
-
 @Component({
   selector: 'app-explore',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule, CtaSectionComponent],
+  imports: [CommonModule, FormsModule, TranslocoModule, CtaSectionComponent, TripStoriesComponent],
   template: `
     <!-- HERO / SEARCH -->
-    <section class="hero">
+    <section class="hero" aria-label="Search destinations">
+      <!-- Rotating cinematic backdrop -->
+      <div class="hero-stage" aria-hidden="true">
+        @for (slide of heroSlides(); track slide.url; let i = $index) {
+          <div
+            class="hero-slide"
+            [class.is-active]="i === activeSlide()"
+            [style.background-image]="'url(' + slide.url + ')'"
+          ></div>
+        }
+        <div class="hero-scrim"></div>
+        <div class="hero-grain"></div>
+      </div>
+
       <div class="hero-content">
+        <div class="hero-eyebrow">
+          <span class="ms" style="font-size:16px">explore</span>
+          {{ heroSlides()[activeSlide()].place }}
+          <span class="hero-eyebrow-dot"></span>
+          {{ heroSlides()[activeSlide()].country }}
+        </div>
+
         <h1 class="hero-headline">{{ 'explore.hero.headline' | transloco }}</h1>
         <p class="hero-subtitle">{{ 'explore.hero.subtitle' | transloco }}</p>
 
@@ -96,11 +105,43 @@ const CONTINENTS: readonly ContinentCard[] = [
 
         <div class="popular-links">
           <span class="popular-label">{{ 'explore.popular' | transloco }}</span>
-          @for (link of popularLinks; track link; let last = $last) {
+          @for (link of popularLinks(); track link; let last = $last) {
             <button class="popular-link" (click)="filterByTag(link)">{{ link }}</button>
             @if (!last) {
               <span class="popular-dot">&middot;</span>
             }
+          }
+        </div>
+      </div>
+
+      <!-- Trust strip -->
+      <div class="hero-trust">
+        <div class="trust-item">
+          <span class="trust-num">{{ stats() ? compact(stats()!.travelerCount) : '—' }}</span>
+          <span class="trust-label">{{ 'explore.trust.travelers' | transloco }}</span>
+        </div>
+        <span class="trust-divider"></span>
+        <div class="trust-item">
+          <span class="trust-num">{{ stats() ? stats()!.countryCount + '+' : '—' }}</span>
+          <span class="trust-label">{{ 'explore.trust.countries' | transloco }}</span>
+        </div>
+        <span class="trust-divider"></span>
+        <div class="trust-item">
+          <span class="trust-num">
+            <span class="ms" style="font-size:18px;color:var(--gold);vertical-align:-2px">star</span>
+            {{ stats() ? (stats()!.avgRating | number:'1.1-1') : '—' }}
+          </span>
+          <span class="trust-label">{{ 'explore.trust.rating' | transloco }}</span>
+        </div>
+
+        <div class="hero-dots" role="tablist" aria-label="Featured places">
+          @for (slide of heroSlides(); track slide.url; let i = $index) {
+            <button
+              class="hero-dot"
+              [class.is-active]="i === activeSlide()"
+              (click)="setSlide(i)"
+              [attr.aria-label]="slide.place"
+            ></button>
           }
         </div>
       </div>
@@ -206,24 +247,27 @@ const CONTINENTS: readonly ContinentCard[] = [
         </div>
       </div>
       <div class="interest-grid">
-        @for (tile of interestTiles; track tile.titleKey) {
+        @for (tile of interestTiles(); track tile.key) {
           <article class="interest-tile" (click)="filterByTag(tile.tag)">
             <img
               [src]="tile.imageUrl"
-              [alt]="tile.titleKey | transloco"
+              [alt]="'explore.interests.' + tile.key | transloco"
               class="interest-tile__img"
               loading="lazy"
             />
             <div class="interest-tile__overlay"></div>
             <div class="interest-tile__content">
               <span class="ms interest-tile__icon">{{ tile.icon }}</span>
-              <h3 class="interest-tile__title">{{ tile.titleKey | transloco }}</h3>
-              <p class="interest-tile__count">{{ tile.count }} {{ 'explore.destinations' | transloco }}</p>
+              <h3 class="interest-tile__title">{{ 'explore.interests.' + tile.key | transloco }}</h3>
+              <p class="interest-tile__count">{{ tile.destinationCount }} {{ 'explore.destinations' | transloco }}</p>
             </div>
           </article>
         }
       </div>
     </section>
+
+    <!-- TRAVEL STORIES (video showcase) -->
+    <app-trip-stories />
 
     <!-- AI BANNER -->
     <section class="ai-banner" aria-labelledby="ai-heading">
@@ -246,18 +290,18 @@ const CONTINENTS: readonly ContinentCard[] = [
         </div>
       </div>
       <div class="continent-grid">
-        @for (c of continents; track c.name) {
-          <article class="continent-card" (click)="filterByContinent(c.name)">
+        @for (c of continents(); track c.continent) {
+          <article class="continent-card" (click)="filterByContinent(c.continent)">
             <div class="continent-card__visual">
               <img
                 [src]="c.imageUrl"
-                [alt]="c.name"
+                [alt]="c.continent"
                 class="continent-card__img"
                 loading="lazy"
               />
             </div>
             <div class="continent-card__body">
-              <h3 class="continent-card__name">{{ c.name }}</h3>
+              <h3 class="continent-card__name">{{ c.continent }}</h3>
               <p class="continent-card__count">{{ c.destinationCount }} {{ 'explore.destinations' | transloco }}</p>
             </div>
           </article>
@@ -300,31 +344,105 @@ const CONTINENTS: readonly ContinentCard[] = [
 
     /* ── Hero / Search ─────────────────────────────── */
     .hero {
-      background: var(--bg-primary);
-      padding: clamp(4rem, 3rem + 5vw, 7rem) 1.5rem clamp(2.5rem, 2rem + 3vw, 4rem);
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      padding: clamp(6rem, 4rem + 8vw, 9rem) 1.5rem clamp(5.5rem, 4rem + 4vw, 7rem);
       text-align: center;
+      color: #fff;
+    }
+
+    .hero-stage {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+    }
+
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transform: scale(1.08);
+      transition: opacity 1400ms var(--ease);
+      will-change: opacity, transform;
+    }
+
+    .hero-slide.is-active {
+      opacity: 1;
+      animation: heroKenBurns 9s ease-out forwards;
+    }
+
+    @keyframes heroKenBurns {
+      from { transform: scale(1.12); }
+      to   { transform: scale(1.0); }
+    }
+
+    .hero-scrim {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(120% 80% at 50% 0%, rgba(0,0,0,0.15), transparent 55%),
+        linear-gradient(180deg, rgba(15,18,22,0.55) 0%, rgba(15,18,22,0.35) 35%, rgba(15,18,22,0.78) 100%);
+    }
+
+    .hero-grain {
+      position: absolute;
+      inset: 0;
+      opacity: 0.06;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
     .hero-content {
-      max-width: 680px;
+      max-width: 720px;
       margin: 0 auto;
+      animation: fadeInUp 700ms var(--ease) both;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 14px;
+      margin-bottom: 1.25rem;
+      border-radius: 40px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: #fff;
+    }
+
+    .hero-eyebrow-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.6);
     }
 
     .hero-headline {
       font-family: 'Hanken Grotesk', system-ui, sans-serif;
-      font-size: clamp(2.4rem, 1.6rem + 4vw, 3.8rem);
+      font-size: clamp(2.6rem, 1.6rem + 5vw, 4.6rem);
       font-weight: 800;
-      line-height: 1.1;
-      color: var(--text-primary);
-      margin: 0 0 0.75rem;
-      letter-spacing: -0.02em;
+      line-height: 1.05;
+      color: #fff;
+      margin: 0 0 0.85rem;
+      letter-spacing: -0.03em;
+      text-shadow: 0 2px 30px rgba(0,0,0,0.35);
     }
 
     .hero-subtitle {
-      font-size: clamp(1rem, 0.9rem + 0.4vw, 1.15rem);
-      color: var(--text-secondary);
+      font-size: clamp(1.05rem, 0.95rem + 0.4vw, 1.25rem);
+      color: rgba(255,255,255,0.88);
       line-height: 1.6;
-      margin: 0 0 2rem;
+      margin: 0 auto 2.25rem;
+      max-width: 540px;
+      text-shadow: 0 1px 16px rgba(0,0,0,0.3);
     }
 
     /* ── Search Bar ────────────────────────────────── */
@@ -333,19 +451,21 @@ const CONTINENTS: readonly ContinentCard[] = [
       align-items: center;
       gap: 0;
       background: var(--bg-primary);
-      border: 2px solid var(--border);
+      border: 2px solid transparent;
       border-radius: 60px;
-      padding: 5px 5px 5px 20px;
-      max-width: 600px;
-      margin: 0 auto 1.5rem;
-      box-shadow: var(--shadow-sm);
+      padding: 6px 6px 6px 22px;
+      max-width: 640px;
+      margin: 0 auto 1.75rem;
+      box-shadow: 0 18px 50px -12px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.2);
       transition: border-color var(--duration) var(--ease),
-                  box-shadow var(--duration) var(--ease);
+                  box-shadow var(--duration) var(--ease),
+                  transform var(--duration) var(--ease);
     }
 
     .search-bar:focus-within {
       border-color: var(--brand);
-      box-shadow: 0 0 0 3px var(--brand-light);
+      box-shadow: 0 0 0 4px rgba(224,74,47,0.25), 0 18px 50px -12px rgba(0,0,0,0.5);
+      transform: translateY(-1px);
     }
 
     .search-icon {
@@ -402,9 +522,11 @@ const CONTINENTS: readonly ContinentCard[] = [
     }
 
     .category-chip {
-      background: var(--bg-primary);
-      color: var(--text-secondary);
-      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.28);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border-radius: 40px;
       padding: 7px 18px;
       font-family: 'Hanken Grotesk', system-ui, sans-serif;
@@ -417,21 +539,22 @@ const CONTINENTS: readonly ContinentCard[] = [
     }
 
     .category-chip:hover {
-      background: var(--bg-tertiary);
-      border-color: var(--text-tertiary);
-      color: var(--text-primary);
+      background: rgba(255,255,255,0.22);
+      border-color: rgba(255,255,255,0.5);
+      color: #fff;
     }
 
     .category-chip--active {
-      background: var(--text-primary);
-      color: #fff;
-      border-color: var(--text-primary);
+      background: #fff;
+      color: var(--text-primary);
+      border-color: #fff;
+      font-weight: 600;
     }
 
     .category-chip--active:hover {
-      background: var(--text-primary);
-      color: #fff;
-      border-color: var(--text-primary);
+      background: #fff;
+      color: var(--text-primary);
+      border-color: #fff;
     }
 
     .category-chip:focus-visible {
@@ -450,36 +573,108 @@ const CONTINENTS: readonly ContinentCard[] = [
 
     .popular-label {
       font-size: 0.85rem;
-      color: var(--text-tertiary);
+      color: rgba(255,255,255,0.7);
       font-weight: 500;
     }
 
     .popular-link {
       background: none;
       border: none;
-      color: var(--brand);
+      color: #fff;
       font-family: 'Hanken Grotesk', system-ui, sans-serif;
       font-size: 0.85rem;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
-      padding: 2px 4px;
+      padding: 2px 6px;
       border-radius: 4px;
-      transition: background var(--duration) var(--ease);
+      transition: background var(--duration) var(--ease), color var(--duration) var(--ease);
     }
 
     .popular-link:hover {
-      background: var(--brand-light);
+      background: rgba(255,255,255,0.15);
+      color: #fff;
     }
 
     .popular-link:focus-visible {
-      outline: 2px solid var(--brand);
+      outline: 2px solid #fff;
       outline-offset: 2px;
     }
 
     .popular-dot {
-      color: var(--text-tertiary);
+      color: rgba(255,255,255,0.45);
       font-size: 0.85rem;
       user-select: none;
+    }
+
+    /* ── Hero Trust Strip ──────────────────────────── */
+    .hero-trust {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: clamp(2rem, 1rem + 3vw, 3rem) auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(1rem, 0.5rem + 2vw, 2.25rem);
+      flex-wrap: wrap;
+    }
+
+    .trust-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .trust-num {
+      font-size: clamp(1.15rem, 1rem + 0.6vw, 1.5rem);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+
+    .trust-label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .trust-divider {
+      width: 1px;
+      height: 28px;
+      background: rgba(255,255,255,0.25);
+    }
+
+    .hero-dots {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: clamp(0.5rem, 0.2rem + 1vw, 1rem);
+    }
+
+    .hero-dot {
+      width: 8px;
+      height: 8px;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      cursor: pointer;
+      transition: width var(--duration) var(--ease), background var(--duration) var(--ease);
+    }
+
+    .hero-dot.is-active {
+      width: 24px;
+      border-radius: 5px;
+      background: #fff;
+    }
+
+    .hero-dot:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 3px;
     }
 
     /* ── Section Shared ────────────────────────────── */
@@ -1040,7 +1235,21 @@ const CONTINENTS: readonly ContinentCard[] = [
 
     @media (max-width: 680px) {
       .hero {
-        padding: clamp(3rem, 2rem + 4vw, 5rem) 1rem clamp(2rem, 1.5rem + 2vw, 3rem);
+        padding: clamp(4.5rem, 3rem + 6vw, 6rem) 1rem clamp(3.5rem, 2.5rem + 3vw, 4.5rem);
+      }
+
+      .hero-trust {
+        gap: 0.9rem 1.1rem;
+      }
+
+      .trust-divider {
+        display: none;
+      }
+
+      .hero-dots {
+        flex-basis: 100%;
+        justify-content: center;
+        margin: 0.5rem 0 0;
       }
 
       .search-bar {
@@ -1095,19 +1304,43 @@ const CONTINENTS: readonly ContinentCard[] = [
     }
   `]
 })
-export class ExploreComponent implements OnInit {
+export class ExploreComponent implements OnInit, OnDestroy {
   private readonly destinationService = inject(DestinationService);
+  private readonly statsService = inject(StatsService);
   private readonly router = inject(Router);
 
   readonly quickFilters = QUICK_FILTERS;
-  readonly continents = CONTINENTS;
   readonly categoryFilterKeys = CATEGORY_FILTER_KEYS;
-  readonly popularLinks = POPULAR_LINKS;
-  readonly interestTiles = INTEREST_TILES;
 
   readonly featuredDestinations = signal<DestinationResponse[]>([]);
   readonly trendingDestinations = signal<DestinationResponse[]>([]);
+  readonly continents = signal<ContinentSummary[]>([]);
+  readonly interestTiles = signal<InterestSummary[]>([]);
+  readonly stats = signal<PlatformStats | null>(null);
   readonly searchQuery = signal('');
+  readonly activeSlide = signal(0);
+
+  /** Hero slides come from featured destinations; fall back to curated set until loaded. */
+  readonly heroSlides = computed<readonly HeroSlide[]>(() => {
+    const featured = this.featuredDestinations();
+    if (featured.length === 0) {
+      return HERO_FALLBACK_SLIDES;
+    }
+    return featured
+      .filter(d => !!d.imageUrl)
+      .slice(0, 5)
+      .map(d => ({ url: d.imageUrl, place: d.name, country: d.country }));
+  });
+
+  /** Popular quick-links derived from the most popular destinations. */
+  readonly popularLinks = computed<readonly string[]>(() => {
+    const featured = this.featuredDestinations();
+    return featured.length > 0
+      ? featured.slice(0, 5).map(d => d.name)
+      : POPULAR_FALLBACK_LINKS;
+  });
+
+  private slideTimer: ReturnType<typeof setInterval> | null = null;
 
   ngOnInit(): void {
     this.destinationService.getFeatured().pipe(
@@ -1117,14 +1350,63 @@ export class ExploreComponent implements OnInit {
     this.destinationService.getTrending(8).pipe(
       catchError(() => of([]))
     ).subscribe(destinations => this.trendingDestinations.set(destinations));
+
+    this.destinationService.getContinents().pipe(
+      catchError(() => of([]))
+    ).subscribe(continents => this.continents.set(continents));
+
+    this.destinationService.getInterests().pipe(
+      catchError(() => of([]))
+    ).subscribe(interests => this.interestTiles.set(interests));
+
+    this.statsService.getStats().pipe(
+      catchError(() => of(null))
+    ).subscribe(stats => this.stats.set(stats));
+
+    this.startHeroRotation();
+  }
+
+  ngOnDestroy(): void {
+    if (this.slideTimer) {
+      clearInterval(this.slideTimer);
+    }
+  }
+
+  private startHeroRotation(): void {
+    this.slideTimer = setInterval(() => {
+      const count = this.heroSlides().length;
+      if (count > 0) {
+        this.activeSlide.update(i => (i + 1) % count);
+      }
+    }, HERO_ROTATE_MS);
+  }
+
+  /** Compact number formatting for the trust strip, e.g. 30 → "30", 2_400_000 → "2.4M+". */
+  compact(value: number): string {
+    if (value >= 1_000_000) {
+      return `${(value / 1_000_000).toFixed(1)}M+`;
+    }
+    if (value >= 1_000) {
+      return `${(value / 1_000).toFixed(1)}K+`;
+    }
+    return `${value}+`;
+  }
+
+  setSlide(index: number): void {
+    this.activeSlide.set(index);
+    if (this.slideTimer) {
+      clearInterval(this.slideTimer);
+    }
+    this.startHeroRotation();
   }
 
   search(): void {
     const query = this.searchQuery().trim();
     if (query.length === 0) {
+      this.router.navigate(['/search']);
       return;
     }
-    this.router.navigate(['/explore'], { queryParams: { q: query } });
+    this.router.navigate(['/search'], { queryParams: { q: query } });
   }
 
   goToDestination(id: string): void {
@@ -1140,11 +1422,27 @@ export class ExploreComponent implements OnInit {
   }
 
   filterByContinent(continent: string): void {
-    this.router.navigate(['/explore'], { queryParams: { continent } });
+    this.router.navigate(['/search'], { queryParams: { q: continent } });
   }
 
   filterByTag(tag: string): void {
-    this.router.navigate(['/explore'], { queryParams: { q: tag } });
+    // Route category chips to their dedicated listing pages where one exists.
+    const routeByTag: Record<string, string> = {
+      Hotels: '/hotels',
+      Restaurants: '/restaurants',
+      Cruises: '/cruises',
+      Flights: '/flights',
+    };
+    const dedicated = routeByTag[tag];
+    if (dedicated) {
+      this.router.navigate([dedicated]);
+      return;
+    }
+    if (tag === 'All' || tag === 'Destinations') {
+      this.router.navigate(['/search']);
+      return;
+    }
+    this.router.navigate(['/search'], { queryParams: { q: tag } });
   }
 
   parseTags(tags: string): string[] {

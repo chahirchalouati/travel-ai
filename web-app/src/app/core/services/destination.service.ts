@@ -4,9 +4,35 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import type { ApiWrapper, DestinationResponse, DestinationGuide } from '../models/api.models';
 
+export interface ContinentSummary {
+  continent: string;
+  destinationCount: number;
+  imageUrl: string;
+}
+
+export interface InterestSummary {
+  key: string;
+  tag: string;
+  icon: string;
+  destinationCount: number;
+  imageUrl: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class DestinationService {
   private readonly http = inject(HttpClient);
+
+  getContinents(): Observable<ContinentSummary[]> {
+    return this.http.get<ApiWrapper<ContinentSummary[]>>(`${environment.apiUrl}/destinations/continents`).pipe(
+      map(res => res.data)
+    );
+  }
+
+  getInterests(): Observable<InterestSummary[]> {
+    return this.http.get<ApiWrapper<InterestSummary[]>>(`${environment.apiUrl}/destinations/interests`).pipe(
+      map(res => res.data)
+    );
+  }
 
   getAll(page = 0, size = 20): Observable<DestinationResponse[]> {
     const params = new HttpParams().set('page', page).set('size', size);

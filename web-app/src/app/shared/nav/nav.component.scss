@@ -141,6 +141,29 @@ nav {
   padding: 0.55rem 1.25rem;
 }
 
+.nav-signin-btn {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--brand);
+  border: none;
+  border-radius: 8px;
+  padding: 0.55rem 1.3rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background var(--duration-normal) var(--ease-out-expo),
+    box-shadow var(--duration-normal) var(--ease-out-expo),
+    transform var(--duration-normal) var(--ease-out-expo);
+
+  &:hover {
+    background: var(--brand-hover);
+    box-shadow: 0 4px 14px rgba(224, 74, 47, 0.35);
+    transform: translateY(-1px);
+  }
+}
+
 /* Hamburger */
 .nav-hamburger {
   display: none;

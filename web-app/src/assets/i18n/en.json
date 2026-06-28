@@ -1,4 +1,98 @@
 {
+  "catalog": {
+    "search": "Search",
+    "view": "View",
+    "perNight": "night",
+    "perPerson": "person",
+    "soldOut": "Sold out",
+    "empty": {
+      "title": "No results found",
+      "subtitle": "Try adjusting your filters or search a different location."
+    },
+    "fields": {
+      "city": "City",
+      "cityPlaceholder": "e.g. Paris",
+      "checkIn": "Check-in",
+      "checkOut": "Check-out",
+      "guests": "Guests",
+      "maxBudget": "Max budget",
+      "from": "From",
+      "to": "To",
+      "departure": "Departure",
+      "passengers": "Passengers",
+      "maxPrice": "Max price",
+      "cuisine": "Cuisine",
+      "cuisinePlaceholder": "e.g. Italian",
+      "date": "Date",
+      "covers": "Guests",
+      "maxPerPerson": "Max / person",
+      "departurePort": "Departure port",
+      "portPlaceholder": "e.g. Barcelona",
+      "cruiseType": "Cruise type",
+      "cruiseTypePlaceholder": "e.g. Mediterranean"
+    },
+    "amenities": {
+      "sea": "Sea view",
+      "family": "Family friendly",
+      "pet": "Pet friendly",
+      "accessible": "Accessible"
+    },
+    "hotels": {
+      "eyebrow": "Stays",
+      "title": "Find your perfect hotel",
+      "subtitle": "Handpicked stays from boutique gems to beachfront resorts.",
+      "found": "hotels found"
+    },
+    "flights": {
+      "eyebrow": "Air travel",
+      "title": "Search flights",
+      "subtitle": "Compare fares and book your next journey.",
+      "found": "flights found",
+      "baggageYes": "Baggage included",
+      "baggageNo": "No baggage",
+      "seats": "seats left"
+    },
+    "restaurants": {
+      "eyebrow": "Dining",
+      "title": "Reserve a table",
+      "subtitle": "Discover restaurants loved by travelers worldwide.",
+      "found": "restaurants found",
+      "available": "Available",
+      "fullyBooked": "Fully booked"
+    },
+    "cruises": {
+      "eyebrow": "Voyages",
+      "title": "Set sail",
+      "subtitle": "Unforgettable cruises across the world's most beautiful waters.",
+      "found": "cruises found",
+      "nights": "nights",
+      "allInclusive": "All-inclusive",
+      "cabins": "cabins"
+    },
+    "searchResults": {
+      "title": "Search everything",
+      "query": "Search",
+      "matches": "results for",
+      "noneTitle": "Nothing matched your search",
+      "noneSubtitle": "Try a different city, hotel, or destination.",
+      "destinations": "Destinations",
+      "destination": "Destination",
+      "hotel": "Hotel",
+      "restaurant": "Restaurant",
+      "cruise": "Cruise"
+    }
+  },
+  "hotel": {
+    "back": "Back to hotels",
+    "about": "About this hotel",
+    "amenities": "Amenities",
+    "city": "City",
+    "availability": "Availability",
+    "availableNow": "Available now",
+    "notAvailable": "Not available",
+    "book": "Plan a trip here",
+    "askAi": "Ask AI about this hotel"
+  },
   "nav": {
     "tabs": {
       "discover": "Discover",
@@ -31,6 +125,19 @@
       "thingsToDo": "Things to Do"
     },
     "popular": "Popular:",
+    "trust": {
+      "travelers": "Happy travelers",
+      "countries": "Countries",
+      "rating": "Average rating"
+    },
+    "stories": {
+      "eyebrow": "Trips in motion",
+      "title": "See the world before you go",
+      "subtitle": "Real moments from real travelers — press play and get inspired.",
+      "watch": "Watch story",
+      "duration": "min",
+      "cta": "Share your story"
+    },
     "sections": {
       "featured": "Top destinations travelers love",
       "trending": "Trending right now",

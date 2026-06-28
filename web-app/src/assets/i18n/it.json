@@ -1,4 +1,98 @@
 {
+  "catalog": {
+    "search": "Cerca",
+    "view": "Vedi",
+    "perNight": "notte",
+    "perPerson": "persona",
+    "soldOut": "Esaurito",
+    "empty": {
+      "title": "Nessun risultato",
+      "subtitle": "Prova a modificare i filtri o a cercare un'altra località."
+    },
+    "fields": {
+      "city": "Città",
+      "cityPlaceholder": "es. Parigi",
+      "checkIn": "Check-in",
+      "checkOut": "Check-out",
+      "guests": "Ospiti",
+      "maxBudget": "Budget max",
+      "from": "Da",
+      "to": "A",
+      "departure": "Partenza",
+      "passengers": "Passeggeri",
+      "maxPrice": "Prezzo max",
+      "cuisine": "Cucina",
+      "cuisinePlaceholder": "es. Italiana",
+      "date": "Data",
+      "covers": "Coperti",
+      "maxPerPerson": "Max / persona",
+      "departurePort": "Porto di partenza",
+      "portPlaceholder": "es. Barcellona",
+      "cruiseType": "Tipo di crociera",
+      "cruiseTypePlaceholder": "es. Mediterraneo"
+    },
+    "amenities": {
+      "sea": "Vista mare",
+      "family": "Adatto alle famiglie",
+      "pet": "Animali ammessi",
+      "accessible": "Accessibile"
+    },
+    "hotels": {
+      "eyebrow": "Soggiorni",
+      "title": "Trova l'hotel perfetto",
+      "subtitle": "Soggiorni selezionati, da gioielli boutique a resort fronte mare.",
+      "found": "hotel trovati"
+    },
+    "flights": {
+      "eyebrow": "Voli",
+      "title": "Cerca voli",
+      "subtitle": "Confronta le tariffe e prenota il tuo prossimo viaggio.",
+      "found": "voli trovati",
+      "baggageYes": "Bagaglio incluso",
+      "baggageNo": "Senza bagaglio",
+      "seats": "posti"
+    },
+    "restaurants": {
+      "eyebrow": "Ristorazione",
+      "title": "Prenota un tavolo",
+      "subtitle": "Scopri ristoranti amati dai viaggiatori di tutto il mondo.",
+      "found": "ristoranti trovati",
+      "available": "Disponibile",
+      "fullyBooked": "Tutto prenotato"
+    },
+    "cruises": {
+      "eyebrow": "Crociere",
+      "title": "Salpa",
+      "subtitle": "Crociere indimenticabili nelle acque più belle del mondo.",
+      "found": "crociere trovate",
+      "nights": "notti",
+      "allInclusive": "Tutto incluso",
+      "cabins": "cabine"
+    },
+    "searchResults": {
+      "title": "Cerca ovunque",
+      "query": "Cerca",
+      "matches": "risultati per",
+      "noneTitle": "Nessuna corrispondenza",
+      "noneSubtitle": "Prova un'altra città, hotel o destinazione.",
+      "destinations": "Destinazioni",
+      "destination": "Destinazione",
+      "hotel": "Hotel",
+      "restaurant": "Ristorante",
+      "cruise": "Crociera"
+    }
+  },
+  "hotel": {
+    "back": "Torna agli hotel",
+    "about": "Informazioni su questo hotel",
+    "amenities": "Servizi",
+    "city": "Città",
+    "availability": "Disponibilità",
+    "availableNow": "Disponibile ora",
+    "notAvailable": "Non disponibile",
+    "book": "Pianifica un viaggio qui",
+    "askAi": "Chiedi all'IA su questo hotel"
+  },
   "nav": {
     "tabs": {
       "discover": "Scopri",
@@ -31,6 +125,19 @@
       "thingsToDo": "Attività"
     },
     "popular": "Popolari:",
+    "trust": {
+      "travelers": "Viaggiatori felici",
+      "countries": "Paesi",
+      "rating": "Valutazione media"
+    },
+    "stories": {
+      "eyebrow": "Viaggi in movimento",
+      "title": "Guarda il mondo prima di partire",
+      "subtitle": "Momenti reali di viaggiatori veri: premi play e lasciati ispirare.",
+      "watch": "Guarda la storia",
+      "duration": "min",
+      "cta": "Condividi la tua storia"
+    },
     "sections": {
       "featured": "Le destinazioni preferite dai viaggiatori",
       "trending": "Di tendenza ora",

@@ -14,10 +14,34 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'hotels',
+    loadComponent: () =>
+      import('./features/hotels/hotels.component').then(m => m.HotelsComponent),
+  },
+  {
+    path: 'hotels/:id',
+    loadComponent: () =>
+      import('./features/hotel-detail/hotel-detail.component').then(
+        m => m.HotelDetailComponent
+      ),
+  },
+  {
+    path: 'flights',
+    loadComponent: () =>
+      import('./features/flights/flights.component').then(m => m.FlightsComponent),
+  },
+  {
     path: 'flights/:id',
     loadComponent: () =>
       import('./features/flight-detail/flight-detail.component').then(
         m => m.FlightDetailComponent
+      ),
+  },
+  {
+    path: 'restaurants',
+    loadComponent: () =>
+      import('./features/restaurants/restaurants.component').then(
+        m => m.RestaurantsComponent
       ),
   },
   {
@@ -28,11 +52,21 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'cruises',
+    loadComponent: () =>
+      import('./features/cruises/cruises.component').then(m => m.CruisesComponent),
+  },
+  {
     path: 'cruises/:id',
     loadComponent: () =>
       import('./features/cruise-detail/cruise-detail.component').then(
         m => m.CruiseDetailComponent
       ),
+  },
+  {
+    path: 'search',
+    loadComponent: () =>
+      import('./features/search/search.component').then(m => m.SearchComponent),
   },
   {
     path: 'chat',
