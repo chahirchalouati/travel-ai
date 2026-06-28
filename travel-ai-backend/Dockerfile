@@ -18,7 +18,8 @@ RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
 
 COPY --from=builder /app/target/travel-ai-backend-*.jar app.jar
+COPY entrypoint.sh entrypoint.sh
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["./entrypoint.sh"]
