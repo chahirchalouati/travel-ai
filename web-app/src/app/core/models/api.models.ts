@@ -129,6 +129,25 @@ export interface RestaurantSearchResult {
   partnerId: string;
 }
 
+export interface CruiseSearchResult {
+  id: string;
+  operator: string;
+  name: string;
+  shipName: string;
+  departurePort: string;
+  arrivalPort: string;
+  departureDate: string;
+  returnDate: string;
+  durationNights: number;
+  pricePerPerson: number;
+  cabinsAvailable: number;
+  cruiseType: string;
+  description: string;
+  imageUrl: string;
+  itinerary: string;
+  allInclusive: boolean;
+}
+
 export interface TravelerRequest {
   firstName: string;
   lastName: string;

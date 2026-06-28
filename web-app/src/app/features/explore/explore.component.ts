@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
+import { TranslocoModule } from '@jsverse/transloco';
+import { CtaSectionComponent } from '../cta-section/cta-section.component';
 
 import { DestinationService } from '../../core/services/destination.service';
 import type { DestinationResponse } from '../../core/models/api.models';
@@ -14,24 +16,35 @@ interface ContinentCard {
 }
 
 interface InterestTile {
-  readonly title: string;
+  readonly titleKey: string;
   readonly icon: string;
   readonly tag: string;
   readonly count: number;
   readonly imageUrl: string;
 }
 
+interface CategoryFilter {
+  readonly key: string;
+  readonly tag: string;
+}
+
 const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', 'Luxury'] as const;
 
-const CATEGORY_FILTERS = ['All', 'Destinations', 'Hotels', 'Restaurants', 'Things to Do'] as const;
+const CATEGORY_FILTER_KEYS: readonly CategoryFilter[] = [
+  { key: 'explore.categories.all', tag: 'All' },
+  { key: 'explore.categories.destinations', tag: 'Destinations' },
+  { key: 'explore.categories.hotels', tag: 'Hotels' },
+  { key: 'explore.categories.restaurants', tag: 'Restaurants' },
+  { key: 'explore.categories.thingsToDo', tag: 'Things to Do' },
+] as const;
 
 const POPULAR_LINKS = ['Paris', 'Tokyo', 'Bali', 'New York', 'Rome'] as const;
 
 const INTEREST_TILES: readonly InterestTile[] = [
-  { title: 'Beaches & Islands', icon: 'beach_access', tag: 'Beach', count: 142, imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80' },
-  { title: 'City Breaks', icon: 'location_city', tag: 'Cultural', count: 98, imageUrl: 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=600&q=80' },
-  { title: 'Food & Wine', icon: 'restaurant', tag: 'Luxury', count: 76, imageUrl: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80' },
-  { title: 'Adventure', icon: 'hiking', tag: 'Adventure', count: 115, imageUrl: 'https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=600&q=80' },
+  { titleKey: 'explore.interests.beaches', icon: 'beach_access', tag: 'Beach', count: 142, imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80' },
+  { titleKey: 'explore.interests.city', icon: 'location_city', tag: 'Cultural', count: 98, imageUrl: 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=600&q=80' },
+  { titleKey: 'explore.interests.food', icon: 'restaurant', tag: 'Luxury', count: 76, imageUrl: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80' },
+  { titleKey: 'explore.interests.adventure', icon: 'hiking', tag: 'Adventure', count: 115, imageUrl: 'https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=600&q=80' },
 ] as const;
 
 const CONTINENTS: readonly ContinentCard[] = [
@@ -46,43 +59,43 @@ const CONTINENTS: readonly ContinentCard[] = [
 @Component({
   selector: 'app-explore',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslocoModule, CtaSectionComponent],
   template: `
     <!-- HERO / SEARCH -->
     <section class="hero">
       <div class="hero-content">
-        <h1 class="hero-headline">Where to next?</h1>
-        <p class="hero-subtitle">Discover destinations, read reviews, and plan with AI</p>
+        <h1 class="hero-headline">{{ 'explore.hero.headline' | transloco }}</h1>
+        <p class="hero-subtitle">{{ 'explore.hero.subtitle' | transloco }}</p>
 
         <div class="search-bar">
           <span class="ms search-icon">search</span>
           <input
             type="text"
             class="search-input"
-            placeholder="Search destinations, hotels, restaurants..."
+            [placeholder]="'explore.search.placeholder' | transloco"
             [ngModel]="searchQuery()"
             (ngModelChange)="searchQuery.set($event)"
             (keydown.enter)="search()"
           />
           <button class="ask-ai-btn" (click)="goToChat()">
             <span class="ms" style="font-size:16px">auto_awesome</span>
-            Ask AI
+            {{ 'explore.search.askAi' | transloco }}
           </button>
-          <button class="search-btn" (click)="search()">Search</button>
+          <button class="search-btn" (click)="search()">{{ 'explore.search.button' | transloco }}</button>
         </div>
 
         <div class="category-chips">
-          @for (cat of categoryFilters; track cat) {
+          @for (cat of categoryFilterKeys; track cat.key) {
             <button
               class="category-chip"
-              [class.category-chip--active]="cat === 'All'"
-              (click)="filterByTag(cat)"
-            >{{ cat }}</button>
+              [class.category-chip--active]="cat.key === 'explore.categories.all'"
+              (click)="filterByTag(cat.tag)"
+            >{{ cat.key | transloco }}</button>
           }
         </div>
 
         <div class="popular-links">
-          <span class="popular-label">Popular:</span>
+          <span class="popular-label">{{ 'explore.popular' | transloco }}</span>
           @for (link of popularLinks; track link; let last = $last) {
             <button class="popular-link" (click)="filterByTag(link)">{{ link }}</button>
             @if (!last) {
@@ -98,9 +111,9 @@ const CONTINENTS: readonly ContinentCard[] = [
       <section class="section" aria-labelledby="featured-heading">
         <div class="section-header">
           <div>
-            <h2 class="section-title" id="featured-heading">Top destinations travelers love</h2>
+            <h2 class="section-title" id="featured-heading">{{ 'explore.sections.featured' | transloco }}</h2>
           </div>
-          <button class="see-all-link" (click)="filterByTag('All')">See all
+          <button class="see-all-link" (click)="filterByTag('All')">{{ 'explore.sections.seeAll' | transloco }}
             <span class="ms see-all-arrow">arrow_forward</span>
           </button>
         </div>
@@ -129,9 +142,9 @@ const CONTINENTS: readonly ContinentCard[] = [
                     <span class="rating-dot"></span>
                   </span>
                   <span class="rating-score">{{ (dest.popularityScore / 20) | number:'1.1-1' }}</span>
-                  <span class="rating-count">({{ dest.popularityScore * 24 | number:'1.0-0' }} reviews)</span>
+                  <span class="rating-count">({{ dest.popularityScore * 24 | number:'1.0-0' }} {{ 'explore.card.reviews' | transloco }})</span>
                 </div>
-                <span class="dest-card__price">From {{ dest.avgDailyCost | currency:dest.currency:'symbol':'1.0-0' }}/night</span>
+                <span class="dest-card__price">{{ 'explore.card.from' | transloco }} {{ dest.avgDailyCost | currency:dest.currency:'symbol':'1.0-0' }}{{ 'explore.card.perNight' | transloco }}</span>
                 <div class="dest-card__tags">
                   @for (tag of parseTags(dest.tags); track tag) {
                     <span class="tag-pill">{{ tag }}</span>
@@ -149,9 +162,9 @@ const CONTINENTS: readonly ContinentCard[] = [
       <section class="section section--gray" aria-labelledby="trending-heading">
         <div class="section-header">
           <div>
-            <h2 class="section-title" id="trending-heading">Trending right now</h2>
+            <h2 class="section-title" id="trending-heading">{{ 'explore.sections.trending' | transloco }}</h2>
           </div>
-          <button class="see-all-link" (click)="filterByTag('All')">See all
+          <button class="see-all-link" (click)="filterByTag('All')">{{ 'explore.sections.seeAll' | transloco }}
             <span class="ms see-all-arrow">arrow_forward</span>
           </button>
         </div>
@@ -174,9 +187,9 @@ const CONTINENTS: readonly ContinentCard[] = [
                 <div class="trending-card__meta">
                   <span class="trending-indicator">
                     <span class="ms trending-arrow">trending_up</span>
-                    {{ dest.popularityScore }}% this month
+                    {{ dest.popularityScore }}{{ 'explore.trending.thisMonth' | transloco }}
                   </span>
-                  <span class="trending-reviews">{{ dest.popularityScore * 24 | number:'1.0-0' }} reviews</span>
+                  <span class="trending-reviews">{{ dest.popularityScore * 24 | number:'1.0-0' }} {{ 'explore.card.reviews' | transloco }}</span>
                 </div>
               </div>
             </article>
@@ -189,23 +202,23 @@ const CONTINENTS: readonly ContinentCard[] = [
     <section class="section" aria-labelledby="interest-heading">
       <div class="section-header">
         <div>
-          <h2 class="section-title" id="interest-heading">Explore by interest</h2>
+          <h2 class="section-title" id="interest-heading">{{ 'explore.sections.interests' | transloco }}</h2>
         </div>
       </div>
       <div class="interest-grid">
-        @for (tile of interestTiles; track tile.title) {
+        @for (tile of interestTiles; track tile.titleKey) {
           <article class="interest-tile" (click)="filterByTag(tile.tag)">
             <img
               [src]="tile.imageUrl"
-              [alt]="tile.title"
+              [alt]="tile.titleKey | transloco"
               class="interest-tile__img"
               loading="lazy"
             />
             <div class="interest-tile__overlay"></div>
             <div class="interest-tile__content">
               <span class="ms interest-tile__icon">{{ tile.icon }}</span>
-              <h3 class="interest-tile__title">{{ tile.title }}</h3>
-              <p class="interest-tile__count">{{ tile.count }} destinations</p>
+              <h3 class="interest-tile__title">{{ tile.titleKey | transloco }}</h3>
+              <p class="interest-tile__count">{{ tile.count }} {{ 'explore.destinations' | transloco }}</p>
             </div>
           </article>
         }
@@ -217,11 +230,11 @@ const CONTINENTS: readonly ContinentCard[] = [
       <div class="ai-banner__inner">
         <span class="ms ai-banner__icon">auto_awesome</span>
         <div class="ai-banner__text">
-          <strong id="ai-heading">New: AI Travel Planner</strong>
+          <strong id="ai-heading">{{ 'explore.aiBanner.label' | transloco }}</strong>
           <span class="ai-banner__sep">&mdash;</span>
-          <span>Get a personalized itinerary in 2 minutes, tailored to your budget.</span>
+          <span>{{ 'explore.aiBanner.description' | transloco }}</span>
         </div>
-        <button class="ai-banner__cta" (click)="goToPlanner()">Try it free</button>
+        <button class="ai-banner__cta" (click)="goToPlanner()">{{ 'explore.aiBanner.cta' | transloco }}</button>
       </div>
     </section>
 
@@ -229,7 +242,7 @@ const CONTINENTS: readonly ContinentCard[] = [
     <section class="section" aria-labelledby="region-heading">
       <div class="section-header">
         <div>
-          <h2 class="section-title" id="region-heading">Browse by region</h2>
+          <h2 class="section-title" id="region-heading">{{ 'explore.sections.regions' | transloco }}</h2>
         </div>
       </div>
       <div class="continent-grid">
@@ -245,12 +258,14 @@ const CONTINENTS: readonly ContinentCard[] = [
             </div>
             <div class="continent-card__body">
               <h3 class="continent-card__name">{{ c.name }}</h3>
-              <p class="continent-card__count">{{ c.destinationCount }} destinations</p>
+              <p class="continent-card__count">{{ c.destinationCount }} {{ 'explore.destinations' | transloco }}</p>
             </div>
           </article>
         }
       </div>
     </section>
+
+    <app-cta-section />
   `,
   styles: [`
     /* ── Design Tokens ─────────────────────────────── */
@@ -1086,7 +1101,7 @@ export class ExploreComponent implements OnInit {
 
   readonly quickFilters = QUICK_FILTERS;
   readonly continents = CONTINENTS;
-  readonly categoryFilters = CATEGORY_FILTERS;
+  readonly categoryFilterKeys = CATEGORY_FILTER_KEYS;
   readonly popularLinks = POPULAR_LINKS;
   readonly interestTiles = INTEREST_TILES;
 

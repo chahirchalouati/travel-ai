@@ -104,31 +104,32 @@ input[type=range]::-webkit-slider-runnable-track {
 
   &:hover {
     background: var(--brand-hover);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 4px 14px rgba(224, 74, 47, 0.35);
     transform: translateY(-1px);
   }
 }
 
 .btn-outline {
   padding: 0.6rem 1.4rem;
-  background: transparent;
+  background: var(--bg-secondary);
   color: var(--text-primary);
   border: 1px solid var(--border);
 
   &:hover {
-    border-color: var(--text-tertiary);
-    background: var(--bg-secondary);
+    border-color: var(--text-secondary);
+    background: var(--bg-tertiary);
+    box-shadow: var(--shadow-sm);
   }
 }
 
 .btn-ghost {
   padding: 0.5rem 1rem;
   background: transparent;
-  color: var(--text-secondary);
+  color: var(--text-primary);
 
   &:hover {
-    color: var(--text-primary);
-    background: var(--bg-tertiary);
+    color: var(--brand);
+    background: var(--brand-light);
   }
 }
 

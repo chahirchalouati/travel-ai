@@ -113,6 +113,8 @@ management:
       show-details: when-authorized
 
 logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) [%15.15thread] %cyan(%-40.40logger{39}) : %msg%n"
   level:
     com.travelai: DEBUG
     org.springframework.modulith: INFO

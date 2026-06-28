@@ -1,0 +1,187 @@
+{
+  "nav": {
+    "tabs": {
+      "discover": "Discover",
+      "hotels": "Hotels",
+      "restaurants": "Restaurants",
+      "cruises": "Cruises",
+      "flights": "Flights",
+      "thingsToDo": "Things to Do",
+      "aiPlanner": "AI Planner",
+      "chat": "Chat"
+    },
+    "signIn": "Sign In",
+    "startPlanning": "Start Planning"
+  },
+  "explore": {
+    "hero": {
+      "headline": "Where to next?",
+      "subtitle": "Discover destinations, read reviews, and plan with AI"
+    },
+    "search": {
+      "placeholder": "Search destinations, hotels, restaurants...",
+      "askAi": "Ask AI",
+      "button": "Search"
+    },
+    "categories": {
+      "all": "All",
+      "destinations": "Destinations",
+      "hotels": "Hotels",
+      "restaurants": "Restaurants",
+      "thingsToDo": "Things to Do"
+    },
+    "popular": "Popular:",
+    "sections": {
+      "featured": "Top destinations travelers love",
+      "trending": "Trending right now",
+      "interests": "Explore by interest",
+      "regions": "Browse by region",
+      "seeAll": "See all"
+    },
+    "interests": {
+      "beaches": "Beaches & Islands",
+      "city": "City Breaks",
+      "food": "Food & Wine",
+      "adventure": "Adventure"
+    },
+    "aiBanner": {
+      "label": "New: AI Travel Planner",
+      "description": "Get a personalized itinerary in 2 minutes, tailored to your budget.",
+      "cta": "Try it free"
+    },
+    "card": {
+      "from": "From",
+      "perNight": "/night",
+      "reviews": "reviews"
+    },
+    "trending": {
+      "thisMonth": "% this month"
+    },
+    "destinations": "destinations"
+  },
+  "destination": {
+    "back": "Back to destinations",
+    "perDay": "/day avg",
+    "overview": "Overview",
+    "bestTime": "Best Time to Visit",
+    "reviews": {
+      "title": "Traveler Reviews",
+      "noReviews": "No reviews yet. Be the first to share your experience.",
+      "aiSummary": "AI Summary",
+      "helpful": "Helpful"
+    },
+    "guide": {
+      "title": "AI Travel Guide",
+      "description": "Get a personalized AI-generated travel guide with top attractions, food recommendations, and insider travel tips.",
+      "generate": "Generate AI Guide",
+      "retry": "Retry",
+      "error": "Could not generate the guide. Please try again.",
+      "attractions": "Top Attractions",
+      "food": "Food Recommendations",
+      "tips": "Travel Tips"
+    },
+    "quickInfo": {
+      "title": "Quick Info",
+      "avgDailyCost": "Avg Daily Cost",
+      "climate": "Climate",
+      "language": "Language",
+      "currency": "Currency",
+      "bestMonths": "Best Months"
+    },
+    "cta": {
+      "title": "Ready to explore?",
+      "description": "Let AI craft the perfect itinerary for",
+      "planTrip": "Plan a Trip",
+      "chat": "Chat about"
+    }
+  },
+  "flight": {
+    "back": "Back",
+    "flightNo": "Flight",
+    "origin": "Origin",
+    "destination": "Destination",
+    "schedule": "Schedule",
+    "inclusions": "Inclusions",
+    "baggage": "Checked baggage included",
+    "carryOn": "Carry-on bag",
+    "seatSelection": "Seat selection",
+    "booking": {
+      "pricePerPerson": "Price per person",
+      "seatsLeft": "Seats left",
+      "route": "Route",
+      "baggage": "Baggage",
+      "included": "Included",
+      "notIncluded": "Not included",
+      "book": "Book this flight",
+      "urgency": "Only {{count}} {{unit}} left at this price",
+      "seat": "seat",
+      "seats": "seats"
+    }
+  },
+  "restaurant": {
+    "back": "Back",
+    "about": "About",
+    "amenities": "Amenities",
+    "petFriendly": "Pet friendly",
+    "accessible": "Wheelchair accessible",
+    "reservations": "Reservations available",
+    "quickInfo": "Quick Info",
+    "city": "City",
+    "cuisine": "Cuisine",
+    "priceRange": "Price range",
+    "availability": "Availability",
+    "availableNow": "Available now",
+    "notAvailable": "Not available",
+    "book": "Plan a trip with this restaurant",
+    "askAi": "Ask AI about this restaurant",
+    "priceTiers": {
+      "1": "$ Budget-friendly",
+      "2": "$$ Moderate",
+      "3": "$$$ Upscale",
+      "4": "$$$$ Fine Dining"
+    }
+  },
+  "cruise": {
+    "back": "Back",
+    "about": "About this Cruise",
+    "schedule": "Schedule",
+    "departure": "Departure",
+    "return": "Return",
+    "nights": "nights",
+    "itinerary": "Itinerary",
+    "whatsIncluded": "What's included",
+    "allInclusive": "All-inclusive meals & drinks",
+    "cabin": "Cabin accommodation",
+    "entertainment": "Entertainment on board",
+    "portTransfers": "Port transfers",
+    "booking": {
+      "fromPerPerson": "From per person",
+      "nightCruise": "-night cruise",
+      "ship": "Ship",
+      "operator": "Operator",
+      "cabinsAvailable": "Cabins available",
+      "type": "Type",
+      "book": "Book this cruise",
+      "askAi": "Ask AI about this cruise",
+      "urgency": "Only {{count}} {{unit}} left",
+      "cabin": "cabin",
+      "cabins": "cabins"
+    }
+  },
+  "userMenu": {
+    "myTrips": "My trips",
+    "profile": "Profile",
+    "bookings": "Bookings",
+    "messages": "Messages",
+    "accountInfo": "Account info",
+    "signOut": "Sign out"
+  },
+  "common": {
+    "back": "Back",
+    "loading": "Loading...",
+    "error": "Something went wrong. Please try again.",
+    "planTrip": "Plan a Trip",
+    "askAi": "Ask AI",
+    "climate": "climate"
+  }
+}

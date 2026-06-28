@@ -798,6 +798,17 @@ export class PlannerComponent implements OnDestroy {
     this.messages.update(ms => [...ms, { kind: 'text', from: 'ai', text: t.cc_booked }]);
   }
 
+  changeToast = signal<string | null>(null);
+
+  changeElement(type: 'hotel' | 'restaurant' | 'flight'): void {
+    const labels = { hotel: 'hotel', restaurant: 'restaurant', flight: 'flight' };
+    this.changeToast.set(`Finding alternative ${labels[type]}s…`);
+    this._timers.push(setTimeout(() => {
+      this.changeToast.set(null);
+      this.backToResults();
+    }, 1400));
+  }
+
   private _clearTimers(): void {
     this._timers.forEach(clearTimeout);
     this._timers = [];
