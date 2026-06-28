@@ -1,0 +1,187 @@
+{
+  "nav": {
+    "tabs": {
+      "discover": "Découvrir",
+      "hotels": "Hôtels",
+      "restaurants": "Restaurants",
+      "cruises": "Croisières",
+      "flights": "Vols",
+      "thingsToDo": "Activités",
+      "aiPlanner": "Planificateur IA",
+      "chat": "Chat"
+    },
+    "signIn": "Se connecter",
+    "startPlanning": "Commencer à planifier"
+  },
+  "explore": {
+    "hero": {
+      "headline": "Où aller maintenant ?",
+      "subtitle": "Découvrez des destinations, lisez des avis et planifiez avec l'IA"
+    },
+    "search": {
+      "placeholder": "Rechercher des destinations, hôtels, restaurants...",
+      "askAi": "Demander à l'IA",
+      "button": "Rechercher"
+    },
+    "categories": {
+      "all": "Tout",
+      "destinations": "Destinations",
+      "hotels": "Hôtels",
+      "restaurants": "Restaurants",
+      "thingsToDo": "Activités"
+    },
+    "popular": "Populaire :",
+    "sections": {
+      "featured": "Destinations préférées des voyageurs",
+      "trending": "Tendances en ce moment",
+      "interests": "Explorer par centres d'intérêt",
+      "regions": "Parcourir par région",
+      "seeAll": "Tout voir"
+    },
+    "interests": {
+      "beaches": "Plages & Îles",
+      "city": "Escapades en ville",
+      "food": "Gastronomie & Vins",
+      "adventure": "Aventure"
+    },
+    "aiBanner": {
+      "label": "Nouveau : Planificateur de voyage IA",
+      "description": "Obtenez un itinéraire personnalisé en 2 minutes, adapté à votre budget.",
+      "cta": "Essayer gratuitement"
+    },
+    "card": {
+      "from": "Dès",
+      "perNight": "/nuit",
+      "reviews": "avis"
+    },
+    "trending": {
+      "thisMonth": "% ce mois-ci"
+    },
+    "destinations": "destinations"
+  },
+  "destination": {
+    "back": "Retour aux destinations",
+    "perDay": "/jour en moy.",
+    "overview": "Présentation",
+    "bestTime": "Meilleure période pour visiter",
+    "reviews": {
+      "title": "Avis des voyageurs",
+      "noReviews": "Aucun avis pour l'instant. Soyez le premier à partager votre expérience.",
+      "aiSummary": "Résumé IA",
+      "helpful": "Utile"
+    },
+    "guide": {
+      "title": "Guide de voyage IA",
+      "description": "Obtenez un guide de voyage personnalisé généré par l'IA avec les meilleures attractions, recommandations culinaires et conseils de voyage.",
+      "generate": "Générer le guide IA",
+      "retry": "Réessayer",
+      "error": "Impossible de générer le guide. Veuillez réessayer.",
+      "attractions": "Meilleures attractions",
+      "food": "Recommandations culinaires",
+      "tips": "Conseils de voyage"
+    },
+    "quickInfo": {
+      "title": "Infos rapides",
+      "avgDailyCost": "Coût journalier moyen",
+      "climate": "Climat",
+      "language": "Langue",
+      "currency": "Monnaie",
+      "bestMonths": "Meilleurs mois"
+    },
+    "cta": {
+      "title": "Prêt à explorer ?",
+      "description": "Laissez l'IA créer l'itinéraire parfait pour",
+      "planTrip": "Planifier un voyage",
+      "chat": "Discuter de"
+    }
+  },
+  "flight": {
+    "back": "Retour",
+    "flightNo": "Vol",
+    "origin": "Origine",
+    "destination": "Destination",
+    "schedule": "Horaire",
+    "inclusions": "Inclusions",
+    "baggage": "Bagage enregistré inclus",
+    "carryOn": "Bagage cabine",
+    "seatSelection": "Choix du siège",
+    "booking": {
+      "pricePerPerson": "Prix par personne",
+      "seatsLeft": "Sièges restants",
+      "route": "Itinéraire",
+      "baggage": "Bagages",
+      "included": "Inclus",
+      "notIncluded": "Non inclus",
+      "book": "Réserver ce vol",
+      "urgency": "Seulement {{count}} {{unit}} restant(s) à ce prix",
+      "seat": "siège",
+      "seats": "sièges"
+    }
+  },
+  "restaurant": {
+    "back": "Retour",
+    "about": "À propos",
+    "amenities": "Équipements",
+    "petFriendly": "Animaux acceptés",
+    "accessible": "Accès handicapé",
+    "reservations": "Réservations disponibles",
+    "quickInfo": "Infos rapides",
+    "city": "Ville",
+    "cuisine": "Cuisine",
+    "priceRange": "Gamme de prix",
+    "availability": "Disponibilité",
+    "availableNow": "Disponible maintenant",
+    "notAvailable": "Non disponible",
+    "book": "Planifier un voyage avec ce restaurant",
+    "askAi": "Demander à l'IA à propos de ce restaurant",
+    "priceTiers": {
+      "1": "€ Économique",
+      "2": "€€ Modéré",
+      "3": "€€€ Haut de gamme",
+      "4": "€€€€ Gastronomique"
+    }
+  },
+  "cruise": {
+    "back": "Retour",
+    "about": "À propos de cette croisière",
+    "schedule": "Calendrier",
+    "departure": "Départ",
+    "return": "Retour",
+    "nights": "nuits",
+    "itinerary": "Itinéraire",
+    "whatsIncluded": "Ce qui est inclus",
+    "allInclusive": "Repas & boissons tout compris",
+    "cabin": "Hébergement en cabine",
+    "entertainment": "Divertissements à bord",
+    "portTransfers": "Transferts portuaires",
+    "booking": {
+      "fromPerPerson": "À partir de par personne",
+      "nightCruise": " nuits de croisière",
+      "ship": "Navire",
+      "operator": "Opérateur",
+      "cabinsAvailable": "Cabines disponibles",
+      "type": "Type",
+      "book": "Réserver cette croisière",
+      "askAi": "Demander à l'IA à propos de cette croisière",
+      "urgency": "Seulement {{count}} {{unit}} restante(s)",
+      "cabin": "cabine",
+      "cabins": "cabines"
+    }
+  },
+  "userMenu": {
+    "myTrips": "Mes voyages",
+    "profile": "Profil",
+    "bookings": "Réservations",
+    "messages": "Messages",
+    "accountInfo": "Informations du compte",
+    "signOut": "Se déconnecter"
+  },
+  "common": {
+    "back": "Retour",
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue. Veuillez réessayer.",
+    "planTrip": "Planifier un voyage",
+    "askAi": "Demander à l'IA",
+    "climate": "climat"
+  }
+}

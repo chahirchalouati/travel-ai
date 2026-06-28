@@ -18,6 +18,7 @@ public enum ErrorCode {
     HOTEL_NOT_FOUND("Hotel not found"),
     RESTAURANT_NOT_FOUND("Restaurant not found"),
     FLIGHT_NOT_FOUND("Flight not found"),
+    CRUISE_NOT_FOUND("Cruise not found"),
     WAITLIST_NOT_FOUND("Waitlist entry not found"),
     DESTINATION_NOT_FOUND("Destination not found"),
     REVIEW_NOT_FOUND("Review not found"),

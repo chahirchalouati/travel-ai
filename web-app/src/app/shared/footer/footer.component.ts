@@ -1,15 +1,22 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+
+interface FooterLink {
+  label: string;
+  route?: string;
+  href?: string;
+}
 
 interface FooterColumn {
   title: string;
-  links: { label: string; href: string }[];
+  links: FooterLink[];
 }
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss'
 })
@@ -20,11 +27,11 @@ export class FooterComponent {
     {
       title: 'Product',
       links: [
-        { label: 'AI Planner', href: '#' },
-        { label: 'Destinations', href: '#destinations' },
-        { label: 'Itinerary Builder', href: '#itinerary' },
-        { label: 'Trip Dashboard', href: '#' },
-        { label: 'Booking Integration', href: '#' },
+        { label: 'AI Planner', route: '/planner' },
+        { label: 'Destinations', route: '/' },
+        { label: 'Chat with AI', route: '/chat' },
+        { label: 'Trip Dashboard', route: '/profile' },
+        { label: 'Booking Integration', route: '/planner' },
       ]
     },
     {
@@ -50,7 +57,7 @@ export class FooterComponent {
   ];
 
   socials = [
-    { label: 'Twitter', icon: '𝕏' },
+    { label: 'Twitter / X', icon: '𝕏' },
     { label: 'Instagram', icon: '◎' },
     { label: 'TikTok', icon: '▶' },
     { label: 'YouTube', icon: '▷' },

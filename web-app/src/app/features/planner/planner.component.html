@@ -335,7 +335,7 @@
                   <span class="element-name">{{selectedProposal().hotel}}</span>
                   <span class="element-meta">{{selectedProposal().hotelMeta}}</span>
                 </div>
-                <button class="change-btn" type="button">{{t().d_change}}</button>
+                <button class="change-btn" (click)="changeElement('hotel')" type="button">{{t().d_change}}</button>
               </div>
               <div class="element-row">
                 <div class="element-thumb element-thumb--rest"></div>
@@ -343,7 +343,7 @@
                   <span class="element-name">{{selectedProposal().rest}}</span>
                   <span class="element-meta">{{selectedProposal().restMeta}}</span>
                 </div>
-                <button class="change-btn" type="button">{{t().d_change}}</button>
+                <button class="change-btn" (click)="changeElement('restaurant')" type="button">{{t().d_change}}</button>
               </div>
               <div class="element-row">
                 <div class="element-thumb element-thumb--flight"></div>
@@ -351,7 +351,7 @@
                   <span class="element-name">{{selectedProposal().flight}}</span>
                   <span class="element-meta">{{selectedProposal().flightMeta}}</span>
                 </div>
-                <button class="change-btn" type="button">{{t().d_change}}</button>
+                <button class="change-btn" (click)="changeElement('flight')" type="button">{{t().d_change}}</button>
               </div>
             </div>
           </div>
@@ -371,6 +371,13 @@
   </main>
 </div>
 </div>
+
+<!-- CHANGE TOAST -->
+@if (changeToast()) {
+<div class="change-toast" role="status">
+  <span class="ms change-toast-icon">search</span>{{changeToast()}}
+</div>
+}
 
 <!-- OVERLAYS -->
 

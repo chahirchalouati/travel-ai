@@ -1,0 +1,322 @@
+-- =============================================================================
+-- V18: Seed 54 additional destinations across all continents
+-- =============================================================================
+
+INSERT INTO destinations (name, country, continent, description, image_url, tags, climate, best_months, avg_daily_cost, currency, language, timezone, latitude, longitude, popularity_score, featured) VALUES
+
+-- EUROPE (17)
+('London', 'United Kingdom', 'Europe',
+ 'A grand tapestry of royal palaces, cutting-edge theatre, and centuries of history layered into every borough. London''s electric diversity makes it one of the world''s most compelling capitals.',
+ 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800',
+ 'cultural,historical,gastronomy,nightlife,city,shopping',
+ 'oceanic', '5,6,7,8,9', 200.00, 'GBP', 'English', 'Europe/London', 51.5074, -0.1278, 96, TRUE),
+
+('Lisbon', 'Portugal', 'Europe',
+ 'Sun-drenched hills draped in azulejo tiles, rattling vintage trams, and pasteis de nata fresh from the oven. Lisbon is Europe''s most soulful and affordable coastal capital.',
+ 'https://images.unsplash.com/photo-1585208798174-6cedd86e019a?w=800',
+ 'cultural,budget,gastronomy,scenic,nightlife,beach',
+ 'mediterranean', '4,5,6,9,10', 100.00, 'EUR', 'Portuguese', 'Europe/Lisbon', 38.7223, -9.1393, 89, TRUE),
+
+('Vienna', 'Austria', 'Europe',
+ 'Imperial grandeur meets coffeehouse culture in a city where Mozart''s melodies still echo through gilded concert halls. Vienna''s architecture and pastry alone are worth the journey.',
+ 'https://images.unsplash.com/photo-1516550893923-42d28e5677af?w=800',
+ 'cultural,historical,gastronomy,romantic,city',
+ 'continental', '4,5,6,9,10', 150.00, 'EUR', 'German', 'Europe/Vienna', 48.2082, 16.3738, 86, FALSE),
+
+('Budapest', 'Hungary', 'Europe',
+ 'Straddling the Danube with art-nouveau thermal baths, ruin bars in crumbling courtyards, and panoramas that rival any European capital. Budapest delivers grandeur on a backpacker''s budget.',
+ 'https://images.unsplash.com/photo-1549923746-c502d488b3ea?w=800',
+ 'cultural,budget,nightlife,historical,romantic,scenic',
+ 'continental', '5,6,7,8,9', 75.00, 'HUF', 'Hungarian', 'Europe/Budapest', 47.4979, 19.0402, 84, FALSE),
+
+('Dubrovnik', 'Croatia', 'Europe',
+ 'Honey-coloured ramparts plunge into the sapphire Adriatic, enclosing a medieval old town so cinematic it doubled as King''s Landing. Dubrovnik is compact perfection.',
+ 'https://images.unsplash.com/photo-1555990538-1e15a564e565?w=800',
+ 'historical,scenic,beach,cultural,romantic',
+ 'mediterranean', '5,6,7,8,9', 130.00, 'EUR', 'Croatian', 'Europe/Zagreb', 42.6507, 18.0944, 82, FALSE),
+
+('Reykjavik', 'Iceland', 'Europe',
+ 'Gateway to fire and ice — volcanic landscapes, erupting geysers, northern lights, and glacial lagoons. Reykjavik itself charms with colourful rooftops and a fierce creative spirit.',
+ 'https://images.unsplash.com/photo-1504829857797-ddff29c27927?w=800',
+ 'nature,adventure,scenic,hiking,wildlife',
+ 'subarctic', '6,7,8,9,12,1,2', 250.00, 'ISK', 'Icelandic', 'Atlantic/Reykjavik', 64.1466, -21.9426, 80, FALSE),
+
+('Edinburgh', 'United Kingdom', 'Europe',
+ 'A dramatic skyline of medieval turrets and volcanic crags, with winding closes that harbour ghost stories and whisky bars. Edinburgh''s literary soul comes alive every August at the world''s largest arts festival.',
+ 'https://images.unsplash.com/photo-1506377585622-bedcbb5f6444?w=800',
+ 'historical,cultural,scenic,nightlife,hiking',
+ 'oceanic', '5,6,7,8', 160.00, 'GBP', 'English', 'Europe/London', 55.9533, -3.1883, 79, FALSE),
+
+('Cinque Terre', 'Italy', 'Europe',
+ 'Five candy-coloured fishing villages cling to the Ligurian cliffs, linked by coastal trails with views that steal your breath. Vineyards tumble toward turquoise coves below.',
+ 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=800',
+ 'scenic,hiking,romantic,beach,gastronomy',
+ 'mediterranean', '5,6,9,10', 140.00, 'EUR', 'Italian', 'Europe/Rome', 44.1461, 9.6439, 83, FALSE),
+
+('Amalfi Coast', 'Italy', 'Europe',
+ 'Vertiginous cliffs carpeted in lemon groves, pastel villages cascading to the Tyrrhenian Sea, and the scent of fresh limoncello on every terrace. Dolce vita distilled into coastline.',
+ 'https://images.unsplash.com/photo-1534113414509-0eec2bfb493f?w=800',
+ 'scenic,romantic,luxury,beach,gastronomy',
+ 'mediterranean', '5,6,7,8,9', 220.00, 'EUR', 'Italian', 'Europe/Rome', 40.6340, 14.6027, 87, TRUE),
+
+('Swiss Alps', 'Switzerland', 'Europe',
+ 'Jagged peaks draped in eternal snow tower above emerald valleys dotted with timber chalets and mirror-still lakes. Whether skiing or hiking, the Swiss Alps are nature''s cathedral.',
+ 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800',
+ 'nature,skiing,hiking,scenic,adventure,luxury',
+ 'alpine', '1,2,3,6,7,8,9', 280.00, 'CHF', 'German', 'Europe/Zurich', 46.8182, 8.2275, 85, FALSE),
+
+('Mykonos', 'Greece', 'Europe',
+ 'Whitewashed cubes tumble toward electric-blue water, windmills spin lazily on the ridge, and beach clubs pulse until sunrise. Mykonos is the Aegean''s glamorous party island.',
+ 'https://images.unsplash.com/photo-1601581875039-e899893d520c?w=800',
+ 'beach,nightlife,luxury,island,romantic',
+ 'mediterranean', '6,7,8,9', 210.00, 'EUR', 'Greek', 'Europe/Athens', 37.4467, 25.3289, 84, FALSE),
+
+('Istanbul', 'Turkey', 'Europe',
+ 'Where minarets and church domes share the skyline across two continents. Istanbul intoxicates with spice bazaars, hammams, Bosphorus sunsets, and millennia of layered civilisation.',
+ 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800',
+ 'cultural,historical,gastronomy,romantic,shopping',
+ 'continental', '4,5,9,10,11', 70.00, 'TRY', 'Turkish', 'Europe/Istanbul', 41.0082, 28.9784, 88, TRUE),
+
+('Copenhagen', 'Denmark', 'Europe',
+ 'Bicycle-friendly canals, Michelin-starred New Nordic cuisine, and hygge woven into every candlelit cafe. Copenhagen is Scandinavian design and sustainability made tangible.',
+ 'https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?w=800',
+ 'cultural,gastronomy,city,cycling,scenic',
+ 'oceanic', '5,6,7,8,9', 190.00, 'DKK', 'Danish', 'Europe/Copenhagen', 55.6761, 12.5683, 81, FALSE),
+
+('Nice', 'France', 'Europe',
+ 'Azure waters lap a sweeping pebble beach backed by Belle Epoque mansions and the vibrant stalls of Cours Saleya market. Nice is the elegant heart of the French Riviera.',
+ 'https://images.unsplash.com/photo-1491166617655-0723a0999cfc?w=800',
+ 'beach,luxury,scenic,gastronomy,romantic',
+ 'mediterranean', '5,6,7,8,9', 170.00, 'EUR', 'French', 'Europe/Paris', 43.7102, 7.2620, 78, FALSE),
+
+('Bruges', 'Belgium', 'Europe',
+ 'Medieval spires reflected in glassy canals, cobblestone squares fragrant with chocolate and waffles, and a pace of life that feels blissfully timeless. Bruges is a living fairy tale.',
+ 'https://images.unsplash.com/photo-1491557345352-5929e343eb89?w=800',
+ 'historical,romantic,cultural,gastronomy,scenic',
+ 'oceanic', '4,5,6,7,8,9', 130.00, 'EUR', 'Dutch', 'Europe/Brussels', 51.2094, 3.2247, 76, FALSE),
+
+('Bergen', 'Norway', 'Europe',
+ 'Colourful wooden wharf houses lean over a fjord-carved harbour, gateway to Norway''s most dramatic waterways. Bergen trades rain for staggering natural beauty at every turn.',
+ 'https://images.unsplash.com/photo-1507272931001-fc06c17e4f43?w=800',
+ 'scenic,nature,hiking,cultural,adventure',
+ 'oceanic', '6,7,8,9', 200.00, 'NOK', 'Norwegian', 'Europe/Oslo', 60.3913, 5.3221, 75, FALSE),
+
+('Seville', 'Spain', 'Europe',
+ 'Flamenco echoes through orange-blossom plazas, the Alcazar''s Moorish arches shimmer with ceramic tiles, and tapas bars spill onto lamp-lit streets until the early hours.',
+ 'https://images.unsplash.com/photo-1559386484-97dfc0e15539?w=800',
+ 'cultural,historical,gastronomy,romantic,nightlife',
+ 'mediterranean', '3,4,5,10,11', 95.00, 'EUR', 'Spanish', 'Europe/Madrid', 37.3891, -5.9845, 81, FALSE),
+
+-- ASIA (12)
+('Singapore', 'Singapore', 'Asia',
+ 'A futuristic city-state where hawker stalls serve Michelin-starred laksa beneath supertree groves that glow at night. Singapore fuses Malay, Chinese, and Indian cultures into spotless, garden-laced streets.',
+ 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=800',
+ 'city,gastronomy,luxury,cultural,family,shopping',
+ 'tropical', '1,2,3,4,5,6,7,8,9,10,11,12', 180.00, 'SGD', 'English', 'Asia/Singapore', 1.3521, 103.8198, 90, TRUE),
+
+('Seoul', 'South Korea', 'Asia',
+ 'Neon-soaked streets pulse with K-pop energy while serene Joseon-era palaces and Buddhist temples anchor the city in deep tradition. Seoul''s food scene alone is a reason to visit.',
+ 'https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=800',
+ 'cultural,gastronomy,city,nightlife,shopping',
+ 'continental', '3,4,5,9,10,11', 100.00, 'KRW', 'Korean', 'Asia/Seoul', 37.5665, 126.9780, 85, FALSE),
+
+('Hanoi', 'Vietnam', 'Asia',
+ 'Motorbikes weave around thousand-year-old temples while street vendors ladle steaming pho beside jade-green Hoan Kiem Lake. Hanoi is sensory, chaotic, and utterly captivating.',
+ 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=800',
+ 'cultural,budget,gastronomy,historical,adventure',
+ 'tropical', '10,11,3,4', 40.00, 'VND', 'Vietnamese', 'Asia/Ho_Chi_Minh', 21.0278, 105.8342, 80, FALSE),
+
+('Kyoto', 'Japan', 'Asia',
+ 'Bamboo groves whisper beside gold-leaf pavilions, geisha glide through wooden machiya lanes, and a thousand temples mark the seasons in cherry blossom and crimson maple.',
+ 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800',
+ 'cultural,historical,spiritual,scenic,gastronomy',
+ 'continental', '3,4,5,10,11', 140.00, 'JPY', 'Japanese', 'Asia/Tokyo', 35.0116, 135.7681, 91, TRUE),
+
+('Sri Lanka', 'Sri Lanka', 'Asia',
+ 'A tear-drop island brimming with misty tea plantations, ancient Buddhist ruins, leopard-roamed jungles, and surf-lapped golden coasts. Sri Lanka packs continent-level diversity into one small nation.',
+ 'https://images.unsplash.com/photo-1586523969720-7a4c30835841?w=800',
+ 'nature,beach,cultural,wildlife,adventure,budget',
+ 'tropical', '1,2,3,4,12', 50.00, 'LKR', 'Sinhala', 'Asia/Colombo', 7.8731, 80.7718, 77, FALSE),
+
+('Kathmandu', 'Nepal', 'Asia',
+ 'Prayer flags flutter above a medieval cityscape of pagoda temples and bustling bazaars, all framed by the towering Himalaya. Kathmandu is the gateway to the world''s highest peaks.',
+ 'https://images.unsplash.com/photo-1558799401-1dcba79834c2?w=800',
+ 'adventure,spiritual,hiking,cultural,budget,nature',
+ 'continental', '3,4,5,10,11', 35.00, 'NPR', 'Nepali', 'Asia/Kathmandu', 27.7172, 85.3240, 74, FALSE),
+
+('Macao', 'China', 'Asia',
+ 'Portuguese colonial charm meets glittering casino towers on a tiny peninsula where egg tarts, temples, and neon coexist in delirious harmony. Macao is a pocket-sized cultural collision.',
+ 'https://images.unsplash.com/photo-1555992643-fd93bab07bf1?w=800',
+ 'cultural,gastronomy,nightlife,historical,luxury',
+ 'tropical', '10,11,12,3,4', 150.00, 'MOP', 'Cantonese', 'Asia/Macau', 22.1987, 113.5439, 72, FALSE),
+
+('Hong Kong', 'China', 'Asia',
+ 'A vertical city where bamboo-scaffolded skyscrapers loom over incense-filled temples, dim sum carts rattle at dawn, and the harbour light show dazzles nightly. Hong Kong is pure urban adrenaline.',
+ 'https://images.unsplash.com/photo-1536599018102-9f803c140fc1?w=800',
+ 'city,gastronomy,shopping,nightlife,scenic',
+ 'tropical', '10,11,12,3,4', 160.00, 'HKD', 'Cantonese', 'Asia/Hong_Kong', 22.3193, 114.1694, 87, FALSE),
+
+('Petra', 'Jordan', 'Asia',
+ 'Rose-red facades carved into sandstone cliffs two millennia ago emerge from a narrow canyon like a mirage. Petra is archaeology''s masterpiece and one of the New Seven Wonders of the World.',
+ 'https://images.unsplash.com/photo-1579606032821-4e6161c81571?w=800',
+ 'historical,adventure,scenic,cultural,hiking',
+ 'arid', '3,4,5,10,11', 90.00, 'JOD', 'Arabic', 'Asia/Amman', 30.3285, 35.4444, 83, FALSE),
+
+('Phuket', 'Thailand', 'Asia',
+ 'Thailand''s largest island delivers powdery white sand, limestone karst seascapes, and a nightlife strip that never sleeps. Beyond Patong, tranquil coves and jungle-clad hills await.',
+ 'https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?w=800',
+ 'beach,nightlife,adventure,diving,budget,island',
+ 'tropical', '11,12,1,2,3,4', 65.00, 'THB', 'Thai', 'Asia/Bangkok', 7.8804, 98.3923, 86, FALSE),
+
+('Luang Prabang', 'Laos', 'Asia',
+ 'Saffron-robed monks collect alms at dawn along a misty Mekong peninsula dotted with gilded temples and French colonial cafes. Luang Prabang is Southeast Asia''s most serene gem.',
+ 'https://images.unsplash.com/photo-1583321500900-82807e458f3c?w=800',
+ 'cultural,spiritual,budget,scenic,nature',
+ 'tropical', '11,12,1,2,3', 35.00, 'LAK', 'Lao', 'Asia/Vientiane', 19.8856, 102.1347, 72, FALSE),
+
+('Jaipur', 'India', 'Asia',
+ 'The Pink City dazzles with honeycomb palace facades, elephant-guarded hilltop forts, and bazaars overflowing with block-printed textiles and gemstones. Jaipur is Rajasthan''s regal heartbeat.',
+ 'https://images.unsplash.com/photo-1599661046289-e31897846e41?w=800',
+ 'cultural,historical,shopping,scenic,budget',
+ 'arid', '10,11,12,1,2,3', 40.00, 'INR', 'Hindi', 'Asia/Kolkata', 26.9124, 75.7873, 80, FALSE),
+
+-- AMERICAS (10)
+('Buenos Aires', 'Argentina', 'South America',
+ 'Tango rhythms spill from dimly lit milongas, Malbec flows in San Telmo antique markets, and ornate Belle Epoque facades line Europe-like boulevards. Buenos Aires is passionate and relentless.',
+ 'https://images.unsplash.com/photo-1589909202802-8f4aadce1849?w=800',
+ 'cultural,gastronomy,nightlife,romantic,city',
+ 'continental', '3,4,5,9,10,11', 60.00, 'ARS', 'Spanish', 'America/Argentina/Buenos_Aires', -34.6037, -58.3816, 82, FALSE),
+
+('Havana', 'Cuba', 'North America',
+ 'Pastel-painted colonial mansions line crumbling avenues where vintage Chevys rumble past, salsa drifts from every doorway, and time feels deliciously suspended in amber.',
+ 'https://images.unsplash.com/photo-1500759285222-a95626b934cb?w=800',
+ 'cultural,historical,budget,nightlife,romantic',
+ 'tropical', '11,12,1,2,3,4', 50.00, 'CUP', 'Spanish', 'America/Havana', 23.1136, -82.3666, 78, FALSE),
+
+('Cartagena', 'Colombia', 'South America',
+ 'A walled Caribbean jewel of bougainvillea-draped balconies, colonial plazas alive with cumbia, and rooftop bars overlooking a glittering bay. Cartagena is Latin romance at its most vivid.',
+ 'https://images.unsplash.com/photo-1583997052103-b4a1cb974ce5?w=800',
+ 'cultural,beach,romantic,historical,nightlife,gastronomy',
+ 'tropical', '12,1,2,3,4', 70.00, 'COP', 'Spanish', 'America/Bogota', 10.3910, -75.5364, 79, FALSE),
+
+('Costa Rica', 'Costa Rica', 'North America',
+ 'Cloud forests brimming with quetzals, volcanic hot springs, and both Pacific and Caribbean surf breaks within a day''s drive. Costa Rica is the planet''s most accessible eco-adventure playground.',
+ 'https://images.unsplash.com/photo-1518259102261-b40117eabbc0?w=800',
+ 'nature,adventure,wildlife,beach,hiking,surfing',
+ 'tropical', '12,1,2,3,4', 80.00, 'CRC', 'Spanish', 'America/Costa_Rica', 9.7489, -83.7534, 84, FALSE),
+
+('Patagonia', 'Argentina', 'South America',
+ 'Glaciers calve into milky lakes beneath granite spires that pierce the southern sky. Patagonia is raw, wind-blasted wilderness at the edge of the world and utterly magnificent.',
+ 'https://images.unsplash.com/photo-1531794446710-29bc67e9d0c3?w=800',
+ 'nature,hiking,adventure,scenic,wildlife',
+ 'alpine', '11,12,1,2,3', 120.00, 'ARS', 'Spanish', 'America/Argentina/Ushuaia', -50.3400, -72.2646, 81, FALSE),
+
+('San Francisco', 'United States', 'North America',
+ 'Golden Gate fog rolls over painted Victorian rows, cable cars climb impossible gradients, and the Bay glitters from Alcatraz to Silicon Valley. San Francisco is innovation wrapped in old-world charm.',
+ 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800',
+ 'city,cultural,gastronomy,scenic,nightlife',
+ 'mediterranean', '9,10,5,6', 220.00, 'USD', 'English', 'America/Los_Angeles', 37.7749, -122.4194, 85, FALSE),
+
+('Vancouver', 'Canada', 'North America',
+ 'Glass towers reflect snow-capped mountains across an inlet where orcas surface, and Stanley Park''s rainforest trails are minutes from world-class sushi. Vancouver is nature and urbanity in perfect balance.',
+ 'https://images.unsplash.com/photo-1559511260-66a68e7813de?w=800',
+ 'nature,city,scenic,hiking,gastronomy,skiing',
+ 'oceanic', '6,7,8,9', 170.00, 'CAD', 'English', 'America/Vancouver', 49.2827, -123.1207, 80, FALSE),
+
+('Tulum', 'Mexico', 'North America',
+ 'Cliffside Mayan ruins overlook Caribbean turquoise, cenotes hide in the jungle canopy, and bohemian beach clubs serve mezcal as the sun melts into the sea. Tulum is barefoot luxury.',
+ 'https://images.unsplash.com/photo-1682553064729-0537f0c1e43d?w=800',
+ 'beach,adventure,historical,romantic,luxury,nature',
+ 'tropical', '11,12,1,2,3,4', 110.00, 'MXN', 'Spanish', 'America/Cancun', 20.2115, -87.4654, 83, FALSE),
+
+('Cusco', 'Peru', 'South America',
+ 'Inca stonework underpins Spanish colonial churches in a high-altitude city that served as the navel of the world. Cusco pulses with Andean culture and is the gateway to the Sacred Valley.',
+ 'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=800',
+ 'cultural,historical,adventure,hiking,spiritual',
+ 'alpine', '5,6,7,8,9', 55.00, 'PEN', 'Spanish', 'America/Lima', -13.5319, -71.9675, 82, FALSE),
+
+('Montreal', 'Canada', 'North America',
+ 'A bilingual metropolis where cobblestone Old Port charm meets mile-end street art, poutine joints, and one of North America''s liveliest summer festival calendars.',
+ 'https://images.unsplash.com/photo-1559587336-6ff10a5c6e0e?w=800',
+ 'cultural,gastronomy,city,nightlife,family',
+ 'continental', '5,6,7,8,9', 140.00, 'CAD', 'French', 'America/Montreal', 45.5017, -73.5673, 77, FALSE),
+
+-- AFRICA & MIDDLE EAST (7)
+('Zanzibar', 'Tanzania', 'Africa',
+ 'Spice-scented Stone Town alleys open onto powder-white beaches lapped by the Indian Ocean. Zanzibar layers Swahili, Arab, and Portuguese heritage into an island of intoxicating beauty.',
+ 'https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?w=800',
+ 'beach,cultural,island,budget,romantic,diving',
+ 'tropical', '6,7,8,9,1,2', 60.00, 'TZS', 'Swahili', 'Africa/Dar_es_Salaam', -6.1659, 39.2026, 76, FALSE),
+
+('Serengeti', 'Tanzania', 'Africa',
+ 'Endless golden savanna stretching to the horizon, where the Great Migration thunders in a primal spectacle of two million wildebeest, zebra, and predators in pursuit. This is Africa''s greatest wildlife theatre.',
+ 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800',
+ 'wildlife,nature,adventure,scenic,safari',
+ 'tropical', '6,7,8,9,10,1,2', 350.00, 'TZS', 'Swahili', 'Africa/Dar_es_Salaam', -2.3333, 34.8333, 85, TRUE),
+
+('Cairo', 'Egypt', 'Africa',
+ 'The Great Pyramids rise from the desert haze at the city''s edge, the Nile snakes through a metropolis of twenty million, and the Egyptian Museum guards treasures older than memory itself.',
+ 'https://images.unsplash.com/photo-1572252009286-268acec5ca0a?w=800',
+ 'historical,cultural,adventure,scenic,gastronomy',
+ 'arid', '10,11,12,1,2,3', 45.00, 'EGP', 'Arabic', 'Africa/Cairo', 30.0444, 31.2357, 84, FALSE),
+
+('Mauritius', 'Mauritius', 'Africa',
+ 'Volcanic peaks wrapped in sugarcane fields slope down to lagoons of impossible turquoise ringed by coral reef. Mauritius is a honeymoon Eden with Creole, Indian, and French cultural layers.',
+ 'https://images.unsplash.com/photo-1589979481223-deb893043163?w=800',
+ 'beach,luxury,romantic,honeymoon,island,diving',
+ 'tropical', '5,6,7,8,9,10,11', 160.00, 'MUR', 'English', 'Indian/Mauritius', -20.3484, 57.5522, 79, FALSE),
+
+('Oman', 'Oman', 'Asia',
+ 'Frankincense-scented wadis carve through ochre desert canyons to a coastline of hidden fjords and pristine beaches. Oman is the Arabian Peninsula''s most gracious and unspoiled secret.',
+ 'https://images.unsplash.com/photo-1597466765990-64ad1c35dafc?w=800',
+ 'adventure,cultural,nature,scenic,luxury,beach',
+ 'arid', '10,11,12,1,2,3', 120.00, 'OMR', 'Arabic', 'Asia/Muscat', 23.5880, 58.3829, 73, FALSE),
+
+('Victoria Falls', 'Zimbabwe', 'Africa',
+ 'A mile-wide curtain of the Zambezi plunges into a basalt gorge, sending spray clouds visible from thirty kilometres away. Victoria Falls is raw, thundering power and one of Earth''s great spectacles.',
+ 'https://images.unsplash.com/photo-1568454537842-d933259bb258?w=800',
+ 'nature,adventure,scenic,wildlife,hiking',
+ 'tropical', '2,3,4,8,9', 100.00, 'USD', 'English', 'Africa/Harare', -17.9243, 25.8572, 78, FALSE),
+
+('Essaouira', 'Morocco', 'Africa',
+ 'Atlantic winds fill kite sails above a walled medina where blue fishing boats bob in the harbour and Gnawa music drifts from hidden riads. Essaouira is Marrakech''s laid-back coastal counterpoint.',
+ 'https://images.unsplash.com/photo-1560095633-6858e1a7a5e2?w=800',
+ 'beach,cultural,surfing,budget,scenic',
+ 'mediterranean', '4,5,6,9,10', 50.00, 'MAD', 'Arabic', 'Africa/Casablanca', 31.5085, -9.7595, 68, FALSE),
+
+-- OCEANIA (6)
+('Fiji', 'Fiji', 'Oceania',
+ 'Over three hundred islands scattered across the South Pacific, fringed with coconut palms and coral reefs teeming with manta rays. Fiji''s warm Bula greeting sets the tone for paradise.',
+ 'https://images.unsplash.com/photo-1584811644165-33db3b146db5?w=800',
+ 'beach,island,diving,romantic,honeymoon,nature',
+ 'tropical', '5,6,7,8,9,10', 180.00, 'FJD', 'English', 'Pacific/Fiji', -17.7134, 178.0650, 78, FALSE),
+
+('Great Barrier Reef', 'Australia', 'Oceania',
+ 'The planet''s largest living structure stretches over two thousand kilometres of kaleidoscopic coral, teeming with sea turtles, reef sharks, and clouds of tropical fish. Diving here is a bucket-list imperative.',
+ 'https://images.unsplash.com/photo-1587139223877-04cb899fa3e8?w=800',
+ 'diving,nature,adventure,beach,wildlife,scenic',
+ 'tropical', '6,7,8,9,10', 200.00, 'AUD', 'English', 'Australia/Brisbane', -18.2871, 147.6992, 88, TRUE),
+
+('Tasmania', 'Australia', 'Oceania',
+ 'Ancient temperate rainforests, craggy peaks, and empty white-sand bays at the edge of the Roaring Forties. Tasmania is wild Australia distilled — rugged, artisanal, and hauntingly beautiful.',
+ 'https://images.unsplash.com/photo-1527004013197-933c4bb611b3?w=800',
+ 'nature,hiking,wildlife,scenic,adventure,gastronomy',
+ 'oceanic', '12,1,2,3', 150.00, 'AUD', 'English', 'Australia/Hobart', -42.8821, 147.3272, 71, FALSE),
+
+('Bora Bora', 'French Polynesia', 'Oceania',
+ 'An extinct volcano ringed by a necklace lagoon of impossible aquamarine, dotted with overwater bungalows that define tropical luxury. Bora Bora is the South Pacific''s crown jewel.',
+ 'https://images.unsplash.com/photo-1589197331516-4d84b72ebde3?w=800',
+ 'beach,luxury,honeymoon,romantic,island,diving',
+ 'tropical', '5,6,7,8,9,10', 450.00, 'XPF', 'French', 'Pacific/Tahiti', -16.5004, -151.7415, 82, FALSE),
+
+('Milford Sound', 'New Zealand', 'Oceania',
+ 'Sheer granite walls draped in cascading waterfalls rise from mirror-dark fjord waters, where dolphins and penguins break the surface. Milford Sound is New Zealand''s crown jewel of wilderness.',
+ 'https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=800',
+ 'nature,scenic,hiking,adventure,wildlife',
+ 'oceanic', '11,12,1,2,3', 160.00, 'NZD', 'English', 'Pacific/Auckland', -44.6714, 167.9256, 80, TRUE),
+
+('Tahiti', 'French Polynesia', 'Oceania',
+ 'Lush volcanic peaks plunge into reef-protected lagoons where outrigger canoes glide past fragrant tiare gardens. Tahiti is Polynesian culture, warmth, and natural splendour woven into one island.',
+ 'https://images.unsplash.com/photo-1504730655501-84b7e1a5b4e5?w=800',
+ 'beach,island,cultural,romantic,nature,diving',
+ 'tropical', '5,6,7,8,9,10', 250.00, 'XPF', 'French', 'Pacific/Tahiti', -17.6509, -149.4260, 74, FALSE);

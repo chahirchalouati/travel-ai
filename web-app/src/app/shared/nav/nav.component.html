@@ -1,21 +1,25 @@
 <nav [class.scrolled]="scrolled()">
   <div class="container nav-inner">
-    <a href="/" class="nav-logo" aria-label="TravelAI home">
+    <a routerLink="/" class="nav-logo" aria-label="TravelAI home">
       <span class="nav-logo-text">Travel<span class="nav-logo-accent">AI</span></span>
       <span class="nav-logo-dot" aria-hidden="true"></span>
     </a>
 
     <ul class="nav-tabs" role="list">
-      @for (tab of tabs; track tab.label) {
+      @for (tab of tabs; track tab.key) {
         <li>
-          <a [href]="tab.href" [class.active]="tab.active">{{ tab.label }}</a>
+          <a [routerLink]="tab.route"
+             routerLinkActive="active"
+             [routerLinkActiveOptions]="{ exact: tab.route === '/' }">
+            {{ tab.key | transloco }}
+          </a>
         </li>
       }
     </ul>
 
     <div class="nav-actions">
-      <a href="#" class="nav-sign-in">Sign In</a>
-      <a href="#cta" class="btn btn-primary nav-cta-btn">Start Planning</a>
+      <app-language-switcher />
+      <app-user-menu />
     </div>
 
     <button class="nav-hamburger" (click)="openMenu()" aria-label="Open navigation" [attr.aria-expanded]="mobileOpen()">
@@ -27,7 +31,7 @@
 <!-- Mobile Menu -->
 <div class="nav-mobile-overlay" [class.open]="mobileOpen()" role="dialog" aria-label="Navigation">
   <div class="nav-mobile-header">
-    <a href="/" class="nav-logo" aria-label="TravelAI home">
+    <a routerLink="/" class="nav-logo" aria-label="TravelAI home">
       <span class="nav-logo-text">Travel<span class="nav-logo-accent">AI</span></span>
       <span class="nav-logo-dot" aria-hidden="true"></span>
     </a>
@@ -36,10 +40,17 @@
     </button>
   </div>
   <div class="nav-mobile-links">
-    @for (tab of tabs; track tab.label) {
-      <a [href]="tab.href" (click)="closeMenu()">{{ tab.label }}</a>
+    @for (tab of tabs; track tab.key) {
+      <a [routerLink]="tab.route"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: tab.route === '/' }"
+         (click)="closeMenu()">
+        {{ tab.key | transloco }}
+      </a>
     }
-    <a href="#" class="nav-mobile-sign-in" (click)="closeMenu()">Sign In</a>
-    <a href="#cta" class="btn btn-primary nav-mobile-cta" (click)="closeMenu()">Start Planning</a>
+    <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid #efefef; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+      <app-language-switcher />
+      <app-user-menu />
+    </div>
   </div>
 </div>
