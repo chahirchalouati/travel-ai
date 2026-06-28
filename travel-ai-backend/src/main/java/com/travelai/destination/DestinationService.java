@@ -60,9 +60,9 @@ public class DestinationService {
         Destination destination = destinationRepository.findById(id)
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.DESTINATION_NOT_FOUND));
 
-        String prompt = "Generate a comprehensive travel guide for %s, %s. Include: "
+        String prompt = ("Generate a comprehensive travel guide for %s, %s. Include: "
                 + "1) Top 5 attractions 2) Must-try local foods 3) Essential travel tips. "
-                + "Be specific, enthusiastic and helpful. Max 300 words."
+                + "Be specific, enthusiastic and helpful. Max 300 words.")
                         .formatted(destination.getName(), destination.getCountry());
 
         log.info("Generating AI travel guide for destination: {}", destination.getName());
