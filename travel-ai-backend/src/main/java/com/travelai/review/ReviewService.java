@@ -87,6 +87,12 @@ public class ReviewService {
         return new ReviewSummary(targetType, targetId, averageRating, totalReviews, aiSummary);
     }
 
+    @Transactional(readOnly = true)
+    public Page<ReviewResponse> getRecentReviews(int page, int size) {
+        return reviewRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, size))
+                .map(ReviewResponse::from);
+    }
+
     private String generateAiSummary(String targetType, UUID targetId) {
         Page<Review> recentReviews = reviewRepository
                 .findByTargetTypeAndTargetIdOrderByCreatedAtDesc(

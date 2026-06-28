@@ -1,34 +1,71 @@
 <section id="testimonials" aria-labelledby="testimonials-heading">
   <div class="container">
-    <div class="section-header centered reveal">
-      <div class="section-eyebrow">Traveller stories</div>
+    <header class="section-header">
       <h2 class="section-title" id="testimonials-heading">
-        From the road to <em>the world</em>
+        What travelers say
       </h2>
       <p class="section-subtitle">
-        Millions of travellers trust TravelAI to plan their adventures. Here's what they say.
+        Real reviews from our community of travelers.
       </p>
-    </div>
+    </header>
 
-    <div class="testimonials-grid">
-      @for (t of testimonials; track t.name; let i = $index) {
-        <div class="testimonial-card glass reveal" [class]="'reveal-delay-' + (i + 1)">
-          <div class="testimonial-stars" [attr.aria-label]="'5 out of 5 stars'">
-            <span class="star">★</span><span class="star">★</span>
-            <span class="star">★</span><span class="star">★</span><span class="star">★</span>
-          </div>
-          <p class="testimonial-quote">{{ t.quote }}</p>
-          <div class="testimonial-author">
-            <div class="author-avatar" [style.background]="t.avatarGradient" aria-hidden="true">
-              {{ t.initial }}
+    @if (loading()) {
+      <div class="reviews-grid">
+        @for (i of [1,2,3]; track i) {
+          <article class="review-card skeleton">
+            <div class="review-header">
+              <div class="skeleton-circle"></div>
+              <div>
+                <div class="skeleton-line" style="width:120px;height:1rem"></div>
+                <div class="skeleton-line" style="width:80px;height:0.75rem"></div>
+              </div>
             </div>
-            <div>
-              <div class="author-name">{{ t.name }}</div>
-              <div class="author-role">{{ t.role }}</div>
+            <div class="skeleton-line" style="width:100%;height:3rem;margin-top:0.75rem"></div>
+          </article>
+        }
+      </div>
+    } @else if (reviews().length > 0) {
+      <div class="reviews-grid">
+        @for (r of reviews(); track r.id; let i = $index) {
+          <article class="review-card">
+            <div class="review-header">
+              <div class="review-avatar" [style.background]="getAvatarGradient(r.userFirstName)" aria-hidden="true">
+                {{ getInitial(r.userFirstName) }}
+              </div>
+              <div class="review-author-info">
+                <div class="review-name">{{ r.userFirstName }}</div>
+                <div class="review-badge">
+                  @if (r.verified) {
+                    <span class="ms" style="font-size:.7rem">verified</span>
+                    Verified traveler
+                  } @else {
+                    {{ formatDate(r.createdAt) }}
+                  }
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      }
-    </div>
+            <div class="review-stars" [attr.aria-label]="r.rating + ' out of 5 stars'">
+              @for (s of getStars(r.rating); track s) {
+                <span class="star">&#9733;</span>
+              }
+            </div>
+            @if (r.title) {
+              <div class="review-title">{{ r.title }}</div>
+            }
+            <blockquote class="review-quote">{{ r.content }}</blockquote>
+            @if (r.helpfulCount > 0) {
+              <div class="review-helpful">
+                <span class="ms" style="font-size:.85rem">thumb_up</span>
+                {{ r.helpfulCount }} found this helpful
+              </div>
+            }
+          </article>
+        }
+      </div>
+    } @else {
+      <div class="reviews-empty">
+        <p>No reviews yet. Be the first to share your experience!</p>
+      </div>
+    }
   </div>
 </section>

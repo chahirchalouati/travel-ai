@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 interface Suggestion {
   icon: string;
@@ -17,6 +18,8 @@ interface Suggestion {
   styleUrl: './hero.component.scss'
 })
 export class HeroComponent {
+  private readonly router = inject(Router);
+
   searchQuery = signal('');
   showSuggestions = signal(false);
   isPlanning = signal(false);
@@ -65,5 +68,10 @@ export class HeroComponent {
       this.isPlanning.set(false);
       document.getElementById('itinerary')?.scrollIntoView({ behavior: 'smooth' });
     }, 1600);
+  }
+
+  askAI(): void {
+    const query = this.searchQuery().trim();
+    this.router.navigate(['/chat'], query ? { queryParams: { q: query } } : {});
   }
 }

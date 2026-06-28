@@ -1,66 +1,84 @@
 <section id="destinations" aria-labelledby="destinations-heading">
   <div class="container">
     <div class="dest-header-row">
-      <div class="section-header reveal" style="margin-bottom:0">
-        <div class="section-eyebrow no-before">
-          <span class="eyebrow-line"></span>
-          Explore the world
-        </div>
-        <h2 class="section-title" id="destinations-heading">Top <em>destinations</em></h2>
-      </div>
+      <header class="section-header">
+        <h2 class="section-title" id="destinations-heading">Top destinations</h2>
+      </header>
 
-      <div class="dest-filters reveal">
+      <nav class="dest-filters" aria-label="Filter destinations">
         @for (f of filters; track f.id) {
           <button
-            class="filter-btn"
+            class="filter-pill"
             [class.active]="activeFilter() === f.id"
             (click)="setFilter(f.id)"
           >{{ f.label }}</button>
         }
+      </nav>
+    </div>
+
+    @if (loading()) {
+      <div class="dest-grid">
+        @for (i of [1,2,3,4,5,6]; track i) {
+          <article class="dest-card skeleton">
+            <div class="dest-card-img skeleton-img"></div>
+            <div class="dest-card-body">
+              <div class="skeleton-line" style="width:60%;height:1.1rem"></div>
+              <div class="skeleton-line" style="width:40%;height:0.9rem"></div>
+              <div class="skeleton-line" style="width:30%;height:0.9rem"></div>
+            </div>
+          </article>
+        }
       </div>
-    </div>
-
-    <div class="dest-grid">
-      @for (dest of visibleDestinations; track dest.id; let i = $index) {
-        <article
-          class="dest-card reveal"
-          [class]="'reveal-delay-' + (i % 4)"
-          [class.featured]="dest.featured"
-        >
-          <div class="dest-card-img-wrap">
-            <div class="dest-card-visual" [class]="dest.bgClass">
-              @for (g of dest.glows; track $index) {
-                <div [ngStyle]="getGlowStyle(g)"></div>
+    } @else {
+      <div class="dest-grid">
+        @for (dest of filteredDestinations(); track dest.id; let i = $index) {
+          <article class="dest-card" [class.featured]="dest.featured" [routerLink]="['/destinations', dest.id]">
+            <div class="dest-card-img">
+              @if (dest.imageUrl) {
+                <img
+                  [src]="dest.imageUrl"
+                  [alt]="dest.name + ', ' + dest.country"
+                  loading="lazy"
+                  width="400"
+                  height="260"
+                >
+              } @else {
+                <div class="dest-card-placeholder">
+                  <span class="ms" aria-hidden="true">landscape</span>
+                </div>
+              }
+              @if (dest.featured) {
+                <div class="dest-featured-ribbon">Featured</div>
               }
             </div>
-          </div>
-          <div class="dest-card-overlay"></div>
-
-          @if (dest.featured) {
-            <div class="dest-card-ai-badge">✦ AI Recommended</div>
-          }
-
-          <div class="dest-card-rating">
-            <span class="star">★</span> {{ dest.rating }}
-          </div>
-
-          <div class="dest-card-content">
-            <div class="dest-card-tags">
-              @for (tag of dest.tags; track tag) {
-                <span class="dest-card-tag">{{ tag }}</span>
-              }
+            <div class="dest-card-body">
+              <div class="dest-card-name">{{ dest.name }}, {{ dest.country }}</div>
+              <div class="dest-card-meta">
+                <span class="dest-continent">{{ dest.continent }}</span>
+                @if (dest.bestMonths) {
+                  <span class="dest-best-time">Best: {{ dest.bestMonths }}</span>
+                }
+              </div>
+              <div class="dest-card-price">From {{ formatPrice(dest.avgDailyCost) }}/day</div>
+              <div class="dest-card-tags">
+                @for (tag of parseTags(dest.tags); track tag) {
+                  <span class="dest-tag">{{ tag }}</span>
+                }
+                @if (dest.featured) {
+                  <span class="dest-tag dest-tag--ai">AI Recommended</span>
+                }
+              </div>
             </div>
-            <div class="dest-card-name">{{ dest.name }}, {{ dest.country }}</div>
-            <div class="dest-card-meta">
-              @if (dest.bestTime) {
-                <div class="dest-meta-item">📅 Best: {{ dest.bestTime }}</div>
-              }
-              <div class="dest-meta-item">✈️ From {{ dest.price }}</div>
-              <div class="dest-meta-item">⏱ {{ dest.days }}</div>
-            </div>
-          </div>
-        </article>
-      }
-    </div>
+          </article>
+        }
+      </div>
+    }
+
+    @if (!loading() && filteredDestinations().length === 0) {
+      <div class="dest-empty">
+        <span class="ms" aria-hidden="true">explore</span>
+        <p>No destinations found for this filter.</p>
+      </div>
+    }
   </div>
 </section>

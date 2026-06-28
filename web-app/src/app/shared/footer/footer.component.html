@@ -2,11 +2,11 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a href="/" class="nav-logo" aria-label="TravelAI home">
-          <div class="nav-logo-mark" aria-hidden="true">✦</div>
-          <span class="nav-logo-text">Travel<span>AI</span></span>
+        <a href="/" class="footer-logo" aria-label="TravelAI home">
+          <span class="footer-logo-text">Travel<span class="footer-logo-accent">AI</span></span>
+          <span class="footer-logo-dot" aria-hidden="true"></span>
         </a>
-        <p>Intelligent travel planning powered by AI. Discover the world smarter, travel deeper, and experience more.</p>
+        <p class="footer-tagline">Discover destinations, read real reviews, and plan smarter trips with AI-powered recommendations.</p>
         <div class="footer-socials">
           @for (s of socials; track s.label) {
             <a href="#" class="social-icon" [attr.aria-label]="s.label">{{ s.icon }}</a>
@@ -15,7 +15,7 @@
       </div>
 
       @for (col of columns; track col.title) {
-        <div>
+        <div class="footer-column">
           <div class="footer-col-title">{{ col.title }}</div>
           <ul class="footer-links" role="list">
             @for (link of col.links; track link.label) {
@@ -27,11 +27,14 @@
     </div>
 
     <div class="footer-bottom">
-      <p>© {{ year }} TravelAI. All rights reserved.</p>
+      <p>&copy; {{ year }} TravelAI. All rights reserved.</p>
       <div class="footer-bottom-links">
         <a href="#">Privacy</a>
+        <span class="footer-dot" aria-hidden="true"></span>
         <a href="#">Terms</a>
+        <span class="footer-dot" aria-hidden="true"></span>
         <a href="#">Cookies</a>
+        <span class="footer-dot" aria-hidden="true"></span>
         <a href="#">Accessibility</a>
       </div>
     </div>

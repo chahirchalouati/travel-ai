@@ -41,6 +41,8 @@ public class SecurityConfig {
                         .requestMatchers("/catalog/**").permitAll()
                         .requestMatchers("/destinations/**").permitAll()
                         .requestMatchers("/reviews/target/**").permitAll()
+                        .requestMatchers("/reviews/recent").permitAll()
+                        .requestMatchers("/stats/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/webhooks/**").permitAll()
                         .requestMatchers("/api-docs/**").permitAll()
