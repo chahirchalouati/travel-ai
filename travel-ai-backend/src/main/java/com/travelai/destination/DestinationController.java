@@ -1,7 +1,9 @@
 package com.travelai.destination;
 
+import com.travelai.destination.dto.ContinentSummary;
 import com.travelai.destination.dto.DestinationGuide;
 import com.travelai.destination.dto.DestinationResponse;
+import com.travelai.destination.dto.InterestSummary;
 import com.travelai.shared.domain.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -46,6 +48,16 @@ public class DestinationController {
             @RequestParam(defaultValue = "20") int size) {
         Page<DestinationResponse> result = destinationService.search(query, page, size);
         return ResponseEntity.ok(ApiResponse.ok(result));
+    }
+
+    @GetMapping("/continents")
+    public ResponseEntity<ApiResponse<List<ContinentSummary>>> getContinents() {
+        return ResponseEntity.ok(ApiResponse.ok(destinationService.getContinents()));
+    }
+
+    @GetMapping("/interests")
+    public ResponseEntity<ApiResponse<List<InterestSummary>>> getInterests() {
+        return ResponseEntity.ok(ApiResponse.ok(destinationService.getInterests()));
     }
 
     @GetMapping("/continent/{continent}")

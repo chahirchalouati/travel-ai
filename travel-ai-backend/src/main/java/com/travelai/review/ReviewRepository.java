@@ -26,4 +26,7 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
     boolean existsByUserIdAndTargetTypeAndTargetId(UUID userId, String targetType, UUID targetId);
 
     Page<Review> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
+    @Query("SELECT AVG(r.rating) FROM Review r")
+    Optional<Double> findGlobalAverageRating();
 }

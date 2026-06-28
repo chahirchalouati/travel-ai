@@ -30,20 +30,23 @@ public class HotelService {
     @Cacheable(value = "hotels-search",
             key = "#request.city + '-' + #request.checkIn + '-' + #request.checkOut + '-' + #request.maxBudget")
     public List<HotelSearchResult> search(HotelSearchRequest request) {
-        int nights = (int) ChronoUnit.DAYS.between(request.checkIn(), request.checkOut());
+        // Browse mode: when no dates are supplied (e.g. the public hotels listing),
+        // skip availability/budget filtering and simply return active hotels.
+        boolean browse = request.checkIn() == null || request.checkOut() == null;
+        int nights = browse ? 1 : (int) ChronoUnit.DAYS.between(request.checkIn(), request.checkOut());
 
         List<Hotel> candidates = request.city() != null
                 ? hotelRepository.findByActiveTrueAndCityIgnoreCase(request.city())
                 : hotelRepository.findByActiveTrue(Pageable.unpaged());
 
         return candidates.stream()
-                .filter(h -> isAvailable(h.getId(), request.checkIn(), request.checkOut()))
+                .filter(h -> browse || isAvailable(h.getId(), request.checkIn(), request.checkOut()))
                 .filter(h -> meetsConstraints(h, request.constraints()))
-                .filter(h -> h.getBasePriceNight() != null
-                        && request.maxBudget() != null
+                .filter(h -> request.maxBudget() == null
+                        || (h.getBasePriceNight() != null
                         && h.getBasePriceNight()
                         .multiply(BigDecimal.valueOf(nights))
-                        .compareTo(request.maxBudget()) <= 0)
+                        .compareTo(request.maxBudget()) <= 0))
                 .map(h -> toResult(h, nights))
                 .toList();
     }

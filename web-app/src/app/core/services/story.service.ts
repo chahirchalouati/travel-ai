@@ -4,20 +4,23 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import type { ApiWrapper } from '../models/api.models';
 
-export interface PlatformStats {
-  destinationCount: number;
-  reviewCount: number;
-  countryCount: number;
-  travelerCount: number;
-  avgRating: number;
+export interface TravelStory {
+  id: string;
+  place: string;
+  country: string;
+  tag: string;
+  minutes: number;
+  posterUrl: string;
+  videoUrl: string | null;
+  featured: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
-export class StatsService {
+export class StoryService {
   private readonly http = inject(HttpClient);
 
-  getStats(): Observable<PlatformStats> {
-    return this.http.get<ApiWrapper<PlatformStats>>(`${environment.apiUrl}/stats`).pipe(
+  getStories(): Observable<TravelStory[]> {
+    return this.http.get<ApiWrapper<TravelStory[]>>(`${environment.apiUrl}/stories`).pipe(
       map(res => res.data)
     );
   }

@@ -43,6 +43,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/reviews/target/**").permitAll()
                         .requestMatchers("/api/reviews/recent").permitAll()
                         .requestMatchers("/api/stats/**").permitAll()
+                        .requestMatchers("/api/stories/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/api/webhooks/**").permitAll()
                         .requestMatchers("/api/api-docs/**").permitAll()

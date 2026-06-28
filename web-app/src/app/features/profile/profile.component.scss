@@ -618,9 +618,10 @@
 
 // ─── Custom Cover ─────────────────────────────────────────────────────────────
 .cover-photo.has-custom-cover {
-  background-image: none !important;
   background-size: cover;
   background-position: center;
+
+  &::before { opacity: 0; }
 }
 
 .avatar-photo {
@@ -929,6 +930,663 @@
       border-color: #dc2626;
     }
   }
+}
+
+// ─── Profile identity extras ─────────────────────────────────────────────────
+.profile-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.verified-badge {
+  display: inline-flex;
+  color: var(--teal);
+}
+
+.profile-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-top: 8px;
+}
+
+.meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  font-weight: 500;
+
+  .ms { color: var(--text-tertiary); }
+}
+
+// ─── Content head (tab toolbars) ─────────────────────────────────────────────
+.content-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.feed-heading {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 4px 0 14px;
+  letter-spacing: -0.01em;
+}
+
+.content-count {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+}
+
+.btn-add-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--brand);
+  background: var(--brand-light);
+  border: none;
+  border-radius: 40px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: background var(--duration-fast);
+
+  &:hover { background: #ffe2db; }
+}
+
+// ─── 2026 highlight banner ───────────────────────────────────────────────────
+.highlight-banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  border-radius: 16px;
+  padding: 26px 28px;
+  margin-bottom: 24px;
+  color: #fff;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 140% at 0% 0%, #00856A 0%, transparent 55%),
+    linear-gradient(120deg, #0f3460 0%, #16213e 55%, #1a1a2e 100%);
+  box-shadow: 0 16px 40px -18px rgba(15, 52, 96, 0.6);
+}
+
+.highlight-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.65);
+}
+
+.highlight-title {
+  font-size: clamp(18px, 14px + 1vw, 23px);
+  font-weight: 800;
+  line-height: 1.25;
+  margin: 8px 0 6px;
+  max-width: 360px;
+
+  b { color: #F5A623; }
+}
+
+.highlight-sub {
+  font-size: 13.5px;
+  color: rgba(255,255,255,0.8);
+  margin: 0 0 16px;
+}
+
+.highlight-banner .btn-start-exploring {
+  background: #fff;
+  color: var(--text-primary);
+
+  &:hover { background: #f0f0f0; box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+}
+
+.highlight-stats {
+  display: flex;
+  gap: 22px;
+}
+
+.hl-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.hl-num {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1;
+  color: #fff;
+}
+
+.hl-lbl {
+  font-size: 11px;
+  color: rgba(255,255,255,0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+// ─── Activity feed ───────────────────────────────────────────────────────────
+.activity-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.feed-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 12px 14px;
+  transition: box-shadow var(--duration-fast), transform var(--duration-fast);
+
+  &:hover {
+    box-shadow: var(--shadow-sm);
+    transform: translateX(2px);
+  }
+}
+
+.feed-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.feed-body { flex: 1; min-width: 0; }
+
+.feed-text {
+  font-size: 13.5px;
+  color: var(--text-primary);
+  margin: 0 0 2px;
+  line-height: 1.4;
+
+  b { font-weight: 700; }
+}
+
+.feed-time {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.feed-thumb {
+  width: 46px;
+  height: 46px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+// ─── Trips grid ──────────────────────────────────────────────────────────────
+.trips-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.trip-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform var(--duration-fast), box-shadow var(--duration-fast);
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.trip-img-wrap {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+}
+
+.trip-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s var(--ease-out-expo);
+
+  .trip-card:hover & { transform: scale(1.06); }
+}
+
+.trip-status {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: capitalize;
+  padding: 4px 10px;
+  border-radius: 40px;
+  color: #fff;
+  backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.45);
+
+  &--completed { background: rgba(0, 133, 106, 0.9); }
+  &--upcoming  { background: rgba(224, 74, 47, 0.92); }
+  &--planning  { background: rgba(245, 166, 35, 0.92); }
+}
+
+.trip-body { padding: 12px 14px 14px; }
+
+.trip-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+}
+
+.trip-loc {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  margin: 0 0 6px;
+
+  .ms { color: var(--text-tertiary); }
+}
+
+.trip-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+// ─── Photo grid ──────────────────────────────────────────────────────────────
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.photo-tile {
+  position: relative;
+  margin: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  cursor: pointer;
+}
+
+.photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s var(--ease-out-expo);
+
+  .photo-tile:hover & { transform: scale(1.08); }
+}
+
+.photo-cap {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 10px 8px;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  opacity: 0;
+  transition: opacity var(--duration-fast);
+
+  .photo-tile:hover & { opacity: 1; }
+}
+
+.photo-place,
+.photo-likes {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #fff;
+}
+
+// ─── Reviews ─────────────────────────────────────────────────────────────────
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.review-card {
+  display: flex;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: box-shadow var(--duration-fast);
+
+  &:hover { box-shadow: var(--shadow-md); }
+}
+
+.review-cover {
+  width: 130px;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.review-content {
+  flex: 1;
+  min-width: 0;
+  padding: 16px 18px;
+}
+
+.review-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.review-place {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.review-type {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.review-date {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.review-stars {
+  display: flex;
+  gap: 1px;
+  margin: 8px 0 6px;
+}
+
+.review-star {
+  font-size: 17px;
+  color: #d8d8d8;
+  font-variation-settings: 'FILL' 0;
+
+  &.filled {
+    color: var(--gold, #F5A623);
+    font-variation-settings: 'FILL' 1;
+  }
+}
+
+.review-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+}
+
+.review-body {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin: 0 0 10px;
+}
+
+.review-photos {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.review-photo {
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.review-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.review-helpful,
+.review-share {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: background var(--duration-fast), color var(--duration-fast), border-color var(--duration-fast);
+
+  &:hover {
+    background: var(--teal-light);
+    color: var(--teal);
+    border-color: var(--teal);
+  }
+}
+
+.review-share { padding: 6px 10px; }
+
+// ─── Travel map / passport ───────────────────────────────────────────────────
+.map-hero {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  min-height: 200px;
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 24px;
+  background:
+    linear-gradient(135deg, #0f3460 0%, #533483 100%),
+    url("https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&q=80") center/cover;
+  background-blend-mode: overlay;
+}
+
+.map-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(15,18,34,0.85), rgba(15,18,34,0.25));
+}
+
+.map-hero-content {
+  position: relative;
+  padding: 24px 26px;
+  color: #fff;
+  width: 100%;
+}
+
+.map-hero-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.7);
+}
+
+.map-hero-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 6px 0 4px;
+}
+
+.map-hero-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.82);
+  margin: 0 0 14px;
+}
+
+.map-progress {
+  height: 7px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.22);
+  overflow: hidden;
+  max-width: 320px;
+}
+
+.map-progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #F5A623, #E04A2F);
+}
+
+.stamps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.stamp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 10px;
+  border-radius: 12px;
+  background: var(--bg-primary);
+  border: 1px dashed var(--border);
+  text-align: center;
+  transition: transform var(--duration-fast), border-color var(--duration-fast);
+
+  &:hover {
+    transform: translateY(-2px) rotate(-1deg);
+    border-color: var(--brand);
+  }
+}
+
+.stamp-flag { font-size: 30px; line-height: 1; }
+
+.stamp-country {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.stamp-year {
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+  font-weight: 600;
+}
+
+// ─── Right sidebar extras ────────────────────────────────────────────────────
+.votes-hint {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 10px 0 0;
+
+  b { color: var(--text-primary); }
+}
+
+.style-tags,
+.wishlist { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.wishlist { flex-direction: column; gap: 10px; }
+
+.style-tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  padding: 5px 12px;
+}
+
+.wish-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+// ─── Trip placeholder (no image from backend) ────────────────────────────────
+.trip-img-wrap--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0f3460 0%, #533483 100%);
+}
+
+.trip-placeholder-icon {
+  font-size: 40px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+// ─── Place pins (travel map) ─────────────────────────────────────────────────
+.stamp-pin {
+  font-size: 26px;
+  color: var(--brand);
+}
+
+// ─── Review verified badge ───────────────────────────────────────────────────
+.review-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--teal);
+}
+
+// ─── Snapshot list (right sidebar) ───────────────────────────────────────────
+.snapshot-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.snapshot-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+
+  .ms { font-size: 18px; }
+}
+
+// ─── Responsive (new content) ────────────────────────────────────────────────
+@media (max-width: 560px) {
+  .trips-grid { grid-template-columns: 1fr; }
+  .photo-grid { grid-template-columns: repeat(2, 1fr); }
+  .review-card { flex-direction: column; }
+  .review-cover { width: 100%; height: 140px; }
+  .highlight-stats { gap: 16px; }
 }
 
 // ─── Responsive ──────────────────────────────────────────────────────────────

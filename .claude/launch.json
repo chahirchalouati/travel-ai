@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "web",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd web-app && npx ng serve --port 4200"],
+      "port": 4200
+    }
+  ]
+}

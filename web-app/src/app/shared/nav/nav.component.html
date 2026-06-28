@@ -19,7 +19,13 @@
 
     <div class="nav-actions">
       <app-language-switcher />
-      <app-user-menu />
+      @if (auth.isAuthenticated()) {
+        <app-user-menu />
+      } @else {
+        <button class="nav-signin-btn" (click)="openAuth()" type="button">
+          {{ 'nav.signIn' | transloco }}
+        </button>
+      }
     </div>
 
     <button class="nav-hamburger" (click)="openMenu()" aria-label="Open navigation" [attr.aria-expanded]="mobileOpen()">
@@ -50,7 +56,17 @@
     }
     <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid #efefef; display:flex; align-items:center; justify-content:space-between; gap:12px;">
       <app-language-switcher />
-      <app-user-menu />
+      @if (auth.isAuthenticated()) {
+        <app-user-menu />
+      } @else {
+        <button class="nav-signin-btn" (click)="openAuth()" type="button">
+          {{ 'nav.signIn' | transloco }}
+        </button>
+      }
     </div>
   </div>
 </div>
+
+@if (authOpen()) {
+  <app-auth-modal (close)="closeAuth()" />
+}

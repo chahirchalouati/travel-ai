@@ -1,7 +1,9 @@
 package com.travelai.destination;
 
+import com.travelai.destination.dto.ContinentSummary;
 import com.travelai.destination.dto.DestinationGuide;
 import com.travelai.destination.dto.DestinationResponse;
+import com.travelai.destination.dto.InterestSummary;
 import com.travelai.shared.exception.ErrorCode;
 import com.travelai.shared.exception.TravelAiException;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +13,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -54,6 +59,66 @@ public class DestinationService {
         return destinationRepository.findByActiveTrueOrderByPopularityScoreDesc(PageRequest.of(0, limit))
                 .map(this::toResponse)
                 .getContent();
+    }
+
+    /** Interest categories surfaced on the homepage, matched against real destination tags. */
+    private static final List<Interest> INTEREST_CATALOG = List.of(
+            new Interest("beaches", "beach", "beach_access"),
+            new Interest("city", "city", "location_city"),
+            new Interest("food", "gastronomy", "restaurant"),
+            new Interest("adventure", "adventure", "hiking"));
+
+    private record Interest(String key, String tag, String icon) {}
+
+    public List<ContinentSummary> getContinents() {
+        List<Destination> active = destinationRepository.findActiveOrderByPopularity();
+        // Preserve popularity order so the representative image is the top destination.
+        Map<String, List<Destination>> byContinent = new LinkedHashMap<>();
+        for (Destination d : active) {
+            String continent = d.getContinent();
+            if (continent == null || continent.isBlank()) {
+                continue;
+            }
+            byContinent.computeIfAbsent(continent, k -> new ArrayList<>()).add(d);
+        }
+
+        return byContinent.entrySet().stream()
+                .map(e -> new ContinentSummary(
+                        e.getKey(),
+                        e.getValue().size(),
+                        firstImage(e.getValue())))
+                .sorted((a, b) -> Long.compare(b.destinationCount(), a.destinationCount()))
+                .toList();
+    }
+
+    public List<InterestSummary> getInterests() {
+        List<Destination> active = destinationRepository.findActiveOrderByPopularity();
+        List<InterestSummary> result = new ArrayList<>();
+        for (Interest interest : INTEREST_CATALOG) {
+            List<Destination> matches = active.stream()
+                    .filter(d -> hasTag(d, interest.tag()))
+                    .toList();
+            result.add(new InterestSummary(
+                    interest.key(),
+                    interest.tag(),
+                    interest.icon(),
+                    matches.size(),
+                    firstImage(matches)));
+        }
+        return result;
+    }
+
+    private boolean hasTag(Destination d, String tag) {
+        String tags = d.getTags();
+        return tags != null && tags.toLowerCase().contains(tag.toLowerCase());
+    }
+
+    private String firstImage(List<Destination> destinations) {
+        return destinations.stream()
+                .map(Destination::getImageUrl)
+                .filter(url -> url != null && !url.isBlank())
+                .findFirst()
+                .orElse(null);
     }
 
     public DestinationGuide generateGuide(UUID id) {

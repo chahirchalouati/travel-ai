@@ -26,4 +26,10 @@ public interface DestinationRepository extends JpaRepository<Destination, UUID> 
     Page<Destination> searchByNameOrCountry(@Param("query") String query, Pageable pageable);
 
     Page<Destination> findByActiveTrueOrderByPopularityScoreDesc(Pageable pageable);
+
+    @Query("SELECT d FROM Destination d WHERE d.active = true ORDER BY d.popularityScore DESC")
+    List<Destination> findActiveOrderByPopularity();
+
+    @Query("SELECT COUNT(DISTINCT d.country) FROM Destination d WHERE d.active = true")
+    long countDistinctCountries();
 }

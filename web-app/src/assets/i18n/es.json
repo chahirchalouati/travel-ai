@@ -1,4 +1,98 @@
 {
+  "catalog": {
+    "search": "Buscar",
+    "view": "Ver",
+    "perNight": "noche",
+    "perPerson": "persona",
+    "soldOut": "Agotado",
+    "empty": {
+      "title": "No se encontraron resultados",
+      "subtitle": "Prueba a ajustar los filtros o busca otro destino."
+    },
+    "fields": {
+      "city": "Ciudad",
+      "cityPlaceholder": "ej. París",
+      "checkIn": "Entrada",
+      "checkOut": "Salida",
+      "guests": "Huéspedes",
+      "maxBudget": "Presupuesto máx.",
+      "from": "Origen",
+      "to": "Destino",
+      "departure": "Salida",
+      "passengers": "Pasajeros",
+      "maxPrice": "Precio máx.",
+      "cuisine": "Cocina",
+      "cuisinePlaceholder": "ej. Italiana",
+      "date": "Fecha",
+      "covers": "Comensales",
+      "maxPerPerson": "Máx. / persona",
+      "departurePort": "Puerto de salida",
+      "portPlaceholder": "ej. Barcelona",
+      "cruiseType": "Tipo de crucero",
+      "cruiseTypePlaceholder": "ej. Mediterráneo"
+    },
+    "amenities": {
+      "sea": "Vista al mar",
+      "family": "Para familias",
+      "pet": "Admite mascotas",
+      "accessible": "Accesible"
+    },
+    "hotels": {
+      "eyebrow": "Alojamientos",
+      "title": "Encuentra tu hotel perfecto",
+      "subtitle": "Alojamientos seleccionados, desde joyas boutique hasta resorts frente al mar.",
+      "found": "hoteles encontrados"
+    },
+    "flights": {
+      "eyebrow": "Vuelos",
+      "title": "Buscar vuelos",
+      "subtitle": "Compara tarifas y reserva tu próximo viaje.",
+      "found": "vuelos encontrados",
+      "baggageYes": "Equipaje incluido",
+      "baggageNo": "Sin equipaje",
+      "seats": "asientos"
+    },
+    "restaurants": {
+      "eyebrow": "Gastronomía",
+      "title": "Reserva una mesa",
+      "subtitle": "Descubre restaurantes que encantan a viajeros de todo el mundo.",
+      "found": "restaurantes encontrados",
+      "available": "Disponible",
+      "fullyBooked": "Completo"
+    },
+    "cruises": {
+      "eyebrow": "Travesías",
+      "title": "Zarpa",
+      "subtitle": "Cruceros inolvidables por las aguas más bellas del mundo.",
+      "found": "cruceros encontrados",
+      "nights": "noches",
+      "allInclusive": "Todo incluido",
+      "cabins": "camarotes"
+    },
+    "searchResults": {
+      "title": "Buscar todo",
+      "query": "Buscar",
+      "matches": "resultados para",
+      "noneTitle": "Nada coincide con tu búsqueda",
+      "noneSubtitle": "Prueba otra ciudad, hotel o destino.",
+      "destinations": "Destinos",
+      "destination": "Destino",
+      "hotel": "Hotel",
+      "restaurant": "Restaurante",
+      "cruise": "Crucero"
+    }
+  },
+  "hotel": {
+    "back": "Volver a hoteles",
+    "about": "Sobre este hotel",
+    "amenities": "Servicios",
+    "city": "Ciudad",
+    "availability": "Disponibilidad",
+    "availableNow": "Disponible ahora",
+    "notAvailable": "No disponible",
+    "book": "Planificar un viaje aquí",
+    "askAi": "Preguntar a la IA sobre este hotel"
+  },
   "nav": {
     "tabs": {
       "discover": "Descubrir",
@@ -31,6 +125,19 @@
       "thingsToDo": "Actividades"
     },
     "popular": "Popular:",
+    "trust": {
+      "travelers": "Viajeros felices",
+      "countries": "Países",
+      "rating": "Valoración media"
+    },
+    "stories": {
+      "eyebrow": "Viajes en movimiento",
+      "title": "Mira el mundo antes de partir",
+      "subtitle": "Momentos reales de viajeros reales: dale al play e inspírate.",
+      "watch": "Ver historia",
+      "duration": "min",
+      "cta": "Comparte tu historia"
+    },
     "sections": {
       "featured": "Destinos favoritos de los viajeros",
       "trending": "Tendencias ahora",
