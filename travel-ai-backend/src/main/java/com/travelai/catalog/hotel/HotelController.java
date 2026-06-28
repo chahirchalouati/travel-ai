@@ -2,6 +2,7 @@ package com.travelai.catalog.hotel;
 
 import com.travelai.catalog.hotel.dto.HotelSearchRequest;
 import com.travelai.catalog.hotel.dto.HotelSearchResult;
+import com.travelai.shared.domain.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,8 @@ public class HotelController {
     }
 
     @GetMapping("/{id}")
-    public HotelSearchResult getById(@PathVariable UUID id) {
-        return hotelService.getById(id);
+    public ApiResponse<HotelSearchResult> getById(@PathVariable UUID id) {
+        return ApiResponse.ok(hotelService.getById(id));
     }
 
     @GetMapping("/{id}/availability")

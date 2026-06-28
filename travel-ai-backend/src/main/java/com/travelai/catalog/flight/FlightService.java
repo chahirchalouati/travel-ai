@@ -28,15 +28,20 @@ public class FlightService {
             key = "#request.originIata + '-' + #request.destIata + '-' + #request.departureDate + '-' + #request.passengers + '-' + #request.maxPrice")
     public List<FlightSearchResult> search(FlightSearchRequest request) {
         Instant dayStart = request.departureDate().atStartOfDay().toInstant(ZoneOffset.UTC);
-        Instant dayEnd = request.departureDate().plusDays(1).atStartOfDay().toInstant(ZoneOffset.UTC);
+        // Search within a 30-day window to account for flexible dates and data availability
+        Instant dayEnd = request.departureDate().plusDays(30).atStartOfDay().toInstant(ZoneOffset.UTC);
 
-        return flightRepository.findByActiveTrueAndOriginIataAndDestIataAndDepartureAtBetweenAndSeatsAvailableGreaterThan(
-                        request.originIata(),
-                        request.destIata(),
-                        dayStart,
-                        dayEnd,
-                        (short) request.passengers())
-                .stream()
+        List<Flight> candidates;
+        if (request.originIata() != null && request.destIata() != null) {
+            candidates = flightRepository.findByActiveTrueAndOriginIataAndDestIataAndDepartureAtBetweenAndSeatsAvailableGreaterThan(
+                    request.originIata(), request.destIata(), dayStart, dayEnd, (short) request.passengers());
+        } else {
+            // No specific route requested — return any available flights in the window
+            candidates = flightRepository.findByActiveTrueAndDepartureAtBetweenAndSeatsAvailableGreaterThan(
+                    dayStart, dayEnd, (short) request.passengers());
+        }
+
+        return candidates.stream()
                 .filter(f -> request.maxPrice() == null || f.getPrice().compareTo(request.maxPrice()) <= 0)
                 .map(this::toResult)
                 .toList();

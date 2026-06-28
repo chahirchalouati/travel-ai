@@ -2,6 +2,7 @@ package com.travelai.catalog.flight;
 
 import com.travelai.catalog.flight.dto.FlightSearchRequest;
 import com.travelai.catalog.flight.dto.FlightSearchResult;
+import com.travelai.shared.domain.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class FlightController {
     }
 
     @GetMapping("/{id}")
-    public FlightSearchResult getById(@PathVariable UUID id) {
-        return flightService.getById(id);
+    public ApiResponse<FlightSearchResult> getById(@PathVariable UUID id) {
+        return ApiResponse.ok(flightService.getById(id));
     }
 }

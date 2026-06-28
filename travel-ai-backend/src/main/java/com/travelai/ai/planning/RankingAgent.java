@@ -35,12 +35,21 @@ public class RankingAgent {
                                     .multiply(BigDecimal.valueOf(ctx.adultsCount() + ctx.childrenCount())));
 
                     if (total.compareTo(ctx.budget()) <= 0) {
+                        int persons = ctx.adultsCount() + ctx.childrenCount();
+                        BigDecimal hotelCost = hotel.totalCost();
+                        BigDecimal restaurantCost = restaurant.estimatedCostPerPerson()
+                                .multiply(BigDecimal.valueOf(persons));
+                        BigDecimal flightCost = flight.price()
+                                .multiply(BigDecimal.valueOf(persons));
                         String motivation = generateMotivation(ctx, hotel, restaurant, flight);
                         proposals.add(new RankedProposal(
                                 hotel.hotelId(),
                                 restaurant.restaurantId(),
                                 flight.flightId(),
                                 total,
+                                hotelCost,
+                                restaurantCost,
+                                flightCost,
                                 rank--,
                                 motivation
                         ));

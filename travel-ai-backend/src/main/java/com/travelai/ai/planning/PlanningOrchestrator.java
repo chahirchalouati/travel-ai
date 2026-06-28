@@ -70,6 +70,9 @@ public class PlanningOrchestrator {
                 proposal.setRestaurantId(rp.restaurantId());
                 proposal.setFlightId(rp.flightId());
                 proposal.setTotalCost(rp.totalCost());
+                proposal.setHotelCost(rp.hotelCost());
+                proposal.setRestaurantCost(rp.restaurantCost());
+                proposal.setFlightCost(rp.flightCost());
                 proposal.setRankScore(rp.rankScore());
                 proposal.setAiMotivation(rp.aiMotivation());
                 proposal.setExpiresAt(LocalDateTime.now().plusHours(48));

@@ -16,9 +16,11 @@ public class FlightAgent {
     private final FlightService flightService;
 
     public List<FlightOption> findOptions(AgentContext ctx) {
+        // Pass null for IATA codes — destination is a city name, not an IATA code.
+        // FlightService will return any available flights when origin/dest are null.
         FlightSearchRequest req = new FlightSearchRequest(
                 null,
-                ctx.destination(),
+                null,
                 ctx.departureDate(),
                 ctx.adultsCount() + ctx.childrenCount(),
                 ctx.flightBudget()

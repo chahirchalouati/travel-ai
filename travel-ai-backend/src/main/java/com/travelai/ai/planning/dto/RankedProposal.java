@@ -8,6 +8,9 @@ public record RankedProposal(
         UUID restaurantId,
         UUID flightId,
         BigDecimal totalCost,
+        BigDecimal hotelCost,
+        BigDecimal restaurantCost,
+        BigDecimal flightCost,
         int rankScore,
         String aiMotivation
 ) {

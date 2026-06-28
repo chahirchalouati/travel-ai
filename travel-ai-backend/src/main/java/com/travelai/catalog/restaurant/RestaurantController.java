@@ -2,6 +2,7 @@ package com.travelai.catalog.restaurant;
 
 import com.travelai.catalog.restaurant.dto.RestaurantSearchRequest;
 import com.travelai.catalog.restaurant.dto.RestaurantSearchResult;
+import com.travelai.shared.domain.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}")
-    public RestaurantSearchResult getById(@PathVariable UUID id) {
-        return restaurantService.getById(id);
+    public ApiResponse<RestaurantSearchResult> getById(@PathVariable UUID id) {
+        return ApiResponse.ok(restaurantService.getById(id));
     }
 }

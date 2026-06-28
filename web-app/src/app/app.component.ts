@@ -1,6 +1,12 @@
-import { Component, computed, signal, OnDestroy } from '@angular/core';
+import { Component, computed, signal, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { switchMap, forkJoin, of, catchError, timer, take, first } from 'rxjs';
+import { AuthService } from './core/services/auth.service';
+import { TravelService } from './core/services/travel.service';
+import { CatalogService } from './core/services/catalog.service';
+import { BookingService } from './core/services/booking.service';
+import { PaymentService } from './core/services/payment.service';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -139,6 +145,31 @@ export class AppComponent implements OnDestroy {
 
   private _timers: ReturnType<typeof setTimeout>[] = [];
 
+  // ── Services ──────────────────────────────────────────────────────────────
+  readonly authService = inject(AuthService);
+  private readonly travelService = inject(TravelService);
+  private readonly catalogService = inject(CatalogService);
+  private readonly bookingService = inject(BookingService);
+  private readonly paymentService = inject(PaymentService);
+
+  // ── Auth modal state ──────────────────────────────────────────────────────
+  showAuthModal = signal(false);
+  authMode = signal<'login' | 'register'>('login');
+  authEmailVal = '';
+  authPasswordVal = '';
+  authFirstNameVal = '';
+  authLastNameVal = '';
+  authErrorMsg = '';
+  authLoadingState = false;
+
+  // ── Backend integration state ─────────────────────────────────────────────
+  private rawBackendData = signal<any[]>([]);
+  useBackendProposals = signal(false);
+  currentRequestId = signal<string | null>(null);
+  currentBookingId = signal<string | null>(null);
+  private departureDateStr = '';
+  private returnDateStr = '';
+
   // ── Derived ───────────────────────────────────────────────────────────────
   t = computed(() => STR[this.lang()]);
 
@@ -204,6 +235,10 @@ export class AppComponent implements OnDestroy {
         fitColor: over ? '#D98A4C' : 'linear-gradient(90deg,#E9863A,#D9694C)',
       };
     };
+
+    if (this.useBackendProposals() && this.rawBackendData().length) {
+      return this.rawBackendData().map(o => mk(o));
+    }
 
     return [
       mk({ id:'amalfi', dest:'Amalfi', title: it?'Costiera Gourmet':'Gourmet Coast', img: IMG.amalfi, caption:'Amalfi · Costiera Amalfitana', recommended:true, total:1190,
@@ -472,15 +507,190 @@ export class AppComponent implements OnDestroy {
     this.agentStep.set(0); this.checkStep.set(0); this.payMode.set('full');
     this.messages.set([]); this.conciergeTyping.set(false);
     this.suggestionUsed.set(false); this.tableBooked.set(false);
+    this.useBackendProposals.set(false);
+    this.rawBackendData.set([]);
+    this.currentRequestId.set(null);
+    this.currentBookingId.set(null);
+  }
+
+  // ── Auth methods ──────────────────────────────────────────────────────────
+  login(): void {
+    if (!this.authEmailVal || !this.authPasswordVal) {
+      this.authErrorMsg = this.lang() === 'it' ? 'Inserisci email e password.' : 'Enter your email and password.';
+      return;
+    }
+    this.authLoadingState = true;
+    this.authErrorMsg = '';
+    this.authService.login({ email: this.authEmailVal, password: this.authPasswordVal }).subscribe({
+      next: () => {
+        this.authLoadingState = false;
+        this.showAuthModal.set(false);
+        this.authEmailVal = '';
+        this.authPasswordVal = '';
+      },
+      error: () => {
+        this.authLoadingState = false;
+        this.authErrorMsg = this.lang() === 'it' ? 'Credenziali non valide.' : 'Invalid credentials.';
+      }
+    });
+  }
+
+  register(): void {
+    if (!this.authFirstNameVal || !this.authLastNameVal || !this.authEmailVal || !this.authPasswordVal) {
+      this.authErrorMsg = this.lang() === 'it' ? 'Compila tutti i campi.' : 'Please fill in all fields.';
+      return;
+    }
+    this.authLoadingState = true;
+    this.authErrorMsg = '';
+    this.authService.register({
+      email: this.authEmailVal,
+      password: this.authPasswordVal,
+      firstName: this.authFirstNameVal,
+      lastName: this.authLastNameVal,
+    }).subscribe({
+      next: () => {
+        this.authLoadingState = false;
+        this.showAuthModal.set(false);
+        this.authEmailVal = '';
+        this.authPasswordVal = '';
+        this.authFirstNameVal = '';
+        this.authLastNameVal = '';
+      },
+      error: (err: any) => {
+        this.authLoadingState = false;
+        this.authErrorMsg = err?.error?.error
+          ?? (this.lang() === 'it' ? 'Errore durante la registrazione.' : 'Registration failed.');
+      }
+    });
+  }
+
+  logout(): void {
+    this.authService.logout().subscribe();
+    this.useBackendProposals.set(false);
+    this.rawBackendData.set([]);
+    this.currentBookingId.set(null);
+    this.currentRequestId.set(null);
+  }
+
+  closeAuthModal(): void {
+    this.showAuthModal.set(false);
+    this.authErrorMsg = '';
   }
 
   generate(): void {
+    if (!this.authService.isAuthenticated()) {
+      this.showAuthModal.set(true);
+      return;
+    }
+
     this._clearTimers();
-    this.stage.set('generating'); this.overlay.set(null); this.agentStep.set(0);
+    this.stage.set('generating');
+    this.overlay.set(null);
+    this.agentStep.set(0);
+    this.useBackendProposals.set(false);
+
     [600,1150,1700,2250,2750].forEach((ms, i) => {
       this._timers.push(setTimeout(() => this.agentStep.set(i + 1), ms));
     });
+    // Always transition to results after animation
     this._timers.push(setTimeout(() => this.stage.set('results'), 3350));
+
+    // Compute trip dates
+    const dep = new Date();
+    dep.setDate(dep.getDate() + 30);
+    const ret = new Date(dep);
+    ret.setDate(ret.getDate() + this.nights());
+    this.departureDateStr = dep.toISOString().split('T')[0];
+    this.returnDateStr = ret.toISOString().split('T')[0];
+
+    const priorityMap: Record<string, string> = { food: 'FOOD', stay: 'STAY', bal: 'BALANCED' };
+
+    this.travelService.createRequest({
+      departureDate: this.departureDateStr,
+      returnDate: this.returnDateStr,
+      dateMode: this.dateMode() === 'fixed' ? 'FIXED' : 'FLEXIBLE',
+      adultsCount: this.adults(),
+      childrenCount: this.children() || undefined,
+      budget: this.budget(),
+      spendingPriority: priorityMap[this.priority()] as 'FOOD' | 'STAY' | 'BALANCED',
+      constraints: this.constraints().length ? this.constraints() : undefined,
+    }).pipe(
+      switchMap(req => {
+        this.currentRequestId.set(req.id);
+        // Poll every 2s (up to 10 times / 20s) until the backend returns proposals
+        return timer(2000, 2000).pipe(
+          take(10),
+          switchMap(() => this.travelService.getProposals(req.id)),
+          first(proposals => proposals.length > 0, [])
+        );
+      }),
+      switchMap(proposals => forkJoin(proposals.map(p =>
+        forkJoin({
+          proposal: of(p),
+          hotel: this.catalogService.getHotel(p.hotelId).pipe(catchError(() => of(null))),
+          flight: p.flightId ? this.catalogService.getFlight(p.flightId).pipe(catchError(() => of(null))) : of(null),
+        })
+      )))
+    ).subscribe({
+      next: results => {
+        const it = this.lang() === 'it';
+        const destImgs: Record<string, string> = {
+          default0: IMG.amalfi, default1: IMG.cinque, default2: IMG.sardegna,
+          default3: IMG.roma,   default4: IMG.venezia, default5: IMG.firenze,
+        };
+
+        this.rawBackendData.set(results.map((r, idx) => {
+          const p = r.proposal;
+          const hotel = r.hotel;
+          const flight = r.flight;
+          const fallbackImg = destImgs[`default${idx % 6}`];
+          return {
+            id: p.id,
+            dest: p.destination,
+            title: p.destination,
+            img: hotel?.imageUrl ? `url(${hotel.imageUrl}) center/cover no-repeat` : fallbackImg,
+            caption: p.destination,
+            recommended: idx === 0,
+            total: Number(p.totalCost),
+            hotel: hotel?.name ?? (it ? 'Hotel' : 'Hotel'),
+            hp: Number(p.hotelCost),
+            rest: it ? 'Ristoranti consigliati' : 'Recommended restaurants',
+            rp: Number(p.restaurantCost),
+            flight: flight ? `${flight.airline} · ${flight.flightNumber}` : (it ? 'Volo A/R' : 'Round-trip'),
+            fp: Number(p.flightCost),
+            why: p.aiMotivation ?? (it ? 'Proposta ottimizzata per le tue preferenze.' : 'Optimised for your preferences.'),
+            hotelMeta: hotel
+              ? `${hotel.city} · ${this.nights()} ${it ? 'notti' : 'nights'}${hotel.seaProximity ? (it ? ' · mare' : ' · sea') : ''}`
+              : '',
+            restMeta: it ? 'Cucina locale' : 'Local cuisine',
+            flightMeta: flight?.baggageIncluded ? (it ? 'Bagaglio incluso' : 'Bag included') : (it ? 'Bagaglio a mano' : 'Carry-on'),
+            cancel: it ? 'Cancellazione gratuita fino a 7 giorni prima.' : 'Free cancellation up to 7 days before.',
+            splits: [
+              ['stay', Number(p.hotelCost)],
+              ['food', Number(p.restaurantCost)],
+              ['transport', Number(p.flightCost)],
+            ] as [string, number][],
+            // Backend IDs needed for booking
+            proposalId: p.id,
+            hotelId: p.hotelId,
+            restaurantId: p.restaurantId,
+            flightId: p.flightId,
+          };
+        }));
+
+        if (results.length) {
+          this.useBackendProposals.set(true);
+          this.selId.set(results[0].proposal.id);
+        }
+      },
+      error: err => {
+        if (err.status === 401) {
+          this.authService.clearAuth();
+          this.showAuthModal.set(true);
+        }
+        // Animation timer already queued; falls back to demo proposals
+      }
+    });
   }
 
   onBudget(e: Event): void {
@@ -505,14 +715,57 @@ export class AppComponent implements OnDestroy {
   backToResults(): void { this.stage.set('results'); }
 
   goBooking(): void {
-    this.overlay.set('booking'); this.checkStep.set(0);
+    this.overlay.set('booking');
+    this.checkStep.set(0);
     [700, 1400, 2100].forEach((ms, i) => {
       this._timers.push(setTimeout(() => this.checkStep.set(i + 1), ms));
     });
+
+    if (this.useBackendProposals()) {
+      const sel = this.selectedProposal() as any;
+      this.bookingService.create({
+        proposalId: sel.proposalId ?? sel.id,
+        hotelId: sel.hotelId,
+        restaurantId: sel.restaurantId,
+        flightId: sel.flightId,
+        destination: sel.dest,
+        checkIn: this.departureDateStr,
+        checkOut: this.returnDateStr,
+        totalAmount: sel.total,
+        hotelAmount: sel.hp,
+        restaurantAmount: sel.rp,
+        flightAmount: sel.fp,
+        travelers: [{ firstName: 'Marco', lastName: 'Bianchi', primary: true }],
+      }).subscribe({
+        next: booking => this.currentBookingId.set(booking.id),
+        error: () => { /* continue with demo flow */ }
+      });
+    }
   }
+
   goPayment(): void { if (this.allChecked()) this.overlay.set('payment'); }
   backToBooking(): void { this.overlay.set('booking'); }
-  confirmPay(): void { this.overlay.set('confirmation'); }
+
+  confirmPay(): void {
+    const bookingId = this.currentBookingId();
+    if (bookingId) {
+      const gateway = this.payMode() === 'install' ? 'KLARNA' : 'STRIPE';
+      this.paymentService.initiate({
+        bookingId,
+        amount: this.selectedProposal().total,
+        gateway: gateway as 'STRIPE' | 'KLARNA',
+        type: 'CARD',
+        currency: 'EUR',
+      }).pipe(
+        switchMap(payment => this.paymentService.confirm(payment.id))
+      ).subscribe({
+        next: () => this.overlay.set('confirmation'),
+        error: () => this.overlay.set('confirmation'),
+      });
+    } else {
+      this.overlay.set('confirmation');
+    }
+  }
   closeOverlay(): void { this.overlay.set(null); }
 
   openConcierge(): void {
