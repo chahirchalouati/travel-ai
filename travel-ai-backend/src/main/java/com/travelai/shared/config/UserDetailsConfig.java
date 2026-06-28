@@ -1,5 +1,6 @@
 package com.travelai.shared.config;
 
+import com.travelai.auth.JwtAuthFilter;
 import com.travelai.auth.UserRepository;
 import com.travelai.shared.exception.ErrorCode;
 import com.travelai.shared.exception.TravelAiException;
@@ -13,10 +14,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public class UserDetailsConfig {
 
     private final UserRepository userRepository;
+    private final JwtService jwtService;
 
     @Bean
     public UserDetailsService userDetailsService() {
         return email -> userRepository.findByEmail(email)
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.USER_NOT_FOUND));
+    }
+
+    @Bean
+    public JwtAuthFilter jwtAuthFilter() {
+        return new JwtAuthFilter(jwtService, userDetailsService());
     }
 }
