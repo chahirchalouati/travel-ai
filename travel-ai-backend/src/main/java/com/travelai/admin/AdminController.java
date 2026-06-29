@@ -70,6 +70,12 @@ public class AdminController {
         return ResponseEntity.ok(ApiResponse.ok(page, meta));
     }
 
+    @PatchMapping("/bookings/{id}/status")
+    public ResponseEntity<ApiResponse<AdminBookingResponse>> updateBookingStatus(
+            @PathVariable UUID id, @Valid @RequestBody UpdateBookingStatusRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok(adminService.updateBookingStatus(id, request.status())));
+    }
+
     @GetMapping("/ai-logs")
     public ResponseEntity<ApiResponse<Page<AdminAiLogResponse>>> listAiLogs(Pageable pageable) {
         Page<AdminAiLogResponse> page = adminService.listAiLogs(pageable);
@@ -78,6 +84,18 @@ public class AdminController {
     }
 
     // ── User management ───────────────────────────────────────────────────
+
+    @PostMapping("/users")
+    public ResponseEntity<ApiResponse<AdminUserResponse>> createUser(
+            @Valid @RequestBody AdminUserUpsertRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok(adminService.createUser(request)));
+    }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<ApiResponse<AdminUserResponse>> updateUser(
+            @PathVariable UUID id, @Valid @RequestBody AdminUserUpsertRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok(adminService.updateUser(id, request)));
+    }
 
     @PatchMapping("/users/{id}/role")
     public ResponseEntity<ApiResponse<AdminUserResponse>> updateUserRole(

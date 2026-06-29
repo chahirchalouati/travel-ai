@@ -272,6 +272,10 @@ public class AdminCatalogService {
         d.setDescription(req.description());
         d.setImageUrl(req.imageUrl());
         d.setGalleryUrls(req.galleryUrls());
+        d.setGuideText(req.guideText());
+        d.setTopAttractions(req.topAttractions());
+        d.setFoodRecommendations(req.foodRecommendations());
+        d.setTravelTips(req.travelTips());
         d.setTags(req.tags());
         d.setClimate(req.climate());
         d.setBestMonths(req.bestMonths());

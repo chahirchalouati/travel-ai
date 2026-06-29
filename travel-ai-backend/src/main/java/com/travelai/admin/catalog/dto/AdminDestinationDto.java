@@ -19,6 +19,10 @@ public final class AdminDestinationDto {
             String description,
             String imageUrl,
             String galleryUrls,
+            String guideText,
+            String topAttractions,
+            String foodRecommendations,
+            String travelTips,
             String tags,
             String climate,
             String bestMonths,
@@ -41,6 +45,10 @@ public final class AdminDestinationDto {
             String description,
             String imageUrl,
             String galleryUrls,
+            String guideText,
+            String topAttractions,
+            String foodRecommendations,
+            String travelTips,
             String tags,
             String climate,
             String bestMonths,
@@ -57,7 +65,9 @@ public final class AdminDestinationDto {
         public static View from(Destination d) {
             return new View(
                     d.getId(), d.getName(), d.getCountry(), d.getContinent(), d.getDescription(),
-                    d.getImageUrl(), d.getGalleryUrls(), d.getTags(), d.getClimate(), d.getBestMonths(),
+                    d.getImageUrl(), d.getGalleryUrls(),
+                    d.getGuideText(), d.getTopAttractions(), d.getFoodRecommendations(), d.getTravelTips(),
+                    d.getTags(), d.getClimate(), d.getBestMonths(),
                     d.getAvgDailyCost(), d.getCurrency(), d.getLanguage(), d.getTimezone(),
                     d.getLatitude(), d.getLongitude(), d.getPopularityScore(), d.isFeatured(), d.isActive()
             );

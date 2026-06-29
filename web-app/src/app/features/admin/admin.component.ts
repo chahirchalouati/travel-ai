@@ -7,7 +7,7 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../core/services/auth.service';
 import { AdminService } from '../../core/services/admin.service';
 import type {
-  AdminDashboard, AdminUser, AdminBooking, AdminReview, AdminAiLog,
+  AdminDashboard, AdminUser, AdminBooking, AdminReview, AdminAiLog, AdminUserUpsert,
 } from '../../core/services/admin.service';
 import { AdminEntityManagerComponent } from './entity-manager/admin-entity-manager.component';
 import { ENTITY_CONFIGS, EntityConfig } from './entity-manager/entity-configs';
@@ -18,6 +18,11 @@ type Section =
   | 'bookings' | 'reviews' | 'logs';
 
 const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
+const BOOKING_STATUSES = ['PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED'];
+
+function emptyUserForm(): AdminUserUpsert {
+  return { email: '', password: '', firstName: '', lastName: '', phone: '', role: 'TRAVELER', emailVerified: false, active: true };
+}
 
 @Component({
   selector: 'app-admin',
@@ -64,9 +69,19 @@ const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
               <div class="stat-card"><span class="ms stat-ic" style="color:#e0573a">hourglass_top</span><div><span class="stat-num">{{ d.pendingPartners }}</span><span class="stat-lbl">{{ 'admin.statPending' | transloco }}</span></div></div>
               <div class="stat-card"><span class="ms stat-ic" style="color:#42b07a">rocket_launch</span><div><span class="stat-num">{{ d.activePartners }}</span><span class="stat-lbl">{{ 'admin.statLive' | transloco }}</span></div></div>
             </div>
+            <h2 class="admin-sub">{{ 'admin.catalogContent' | transloco }}</h2>
+            <div class="stat-grid">
+              <div class="stat-card stat-link" (click)="go('hotels')"><span class="ms stat-ic" style="color:#5b8def">hotel</span><div><span class="stat-num">{{ d.totalHotels }}</span><span class="stat-lbl">{{ 'admin.navHotels' | transloco }}</span></div></div>
+              <div class="stat-card stat-link" (click)="go('flights')"><span class="ms stat-ic" style="color:#e0573a">flight</span><div><span class="stat-num">{{ d.totalFlights }}</span><span class="stat-lbl">{{ 'admin.navFlights' | transloco }}</span></div></div>
+              <div class="stat-card stat-link" (click)="go('cruises')"><span class="ms stat-ic" style="color:#2f9fe0">directions_boat</span><div><span class="stat-num">{{ d.totalCruises }}</span><span class="stat-lbl">{{ 'admin.navCruises' | transloco }}</span></div></div>
+              <div class="stat-card stat-link" (click)="go('restaurants')"><span class="ms stat-ic" style="color:#e0a23a">restaurant</span><div><span class="stat-num">{{ d.totalRestaurants }}</span><span class="stat-lbl">{{ 'admin.navRestaurants' | transloco }}</span></div></div>
+              <div class="stat-card stat-link" (click)="go('destinations')"><span class="ms stat-ic" style="color:#42b07a">public</span><div><span class="stat-num">{{ d.totalDestinations }}</span><span class="stat-lbl">{{ 'admin.navDestinations' | transloco }}</span></div></div>
+              <div class="stat-card stat-link" (click)="go('stories')"><span class="ms stat-ic" style="color:#9b59b6">movie</span><div><span class="stat-num">{{ d.totalStories }}</span><span class="stat-lbl">{{ 'admin.navStories' | transloco }}</span></div></div>
+            </div>
             <div class="quick-actions">
               <button (click)="go('users')"><span class="ms">manage_accounts</span> {{ 'admin.manageUsers' | transloco }}</button>
               <button (click)="go('partners')"><span class="ms">handshake</span> {{ 'admin.reviewPartners' | transloco }}</button>
+              <button (click)="go('hotels')"><span class="ms">hotel</span> {{ 'admin.manageCatalog' | transloco }}</button>
               <button (click)="go('reviews')"><span class="ms">reviews</span> {{ 'admin.moderateReviews' | transloco }}</button>
             </div>
           } @else {
@@ -76,6 +91,9 @@ const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
 
         <!-- USERS -->
         @if (section() === 'users') {
+          <div class="user-bar">
+            <button class="em-new-btn" (click)="openCreateUser()"><span class="ms">person_add</span> {{ 'admin.newUser' | transloco }}</button>
+          </div>
           <div class="table-wrap">
             <table class="admin-table">
               <thead><tr><th>{{ 'admin.thUser' | transloco }}</th><th>{{ 'admin.thEmail' | transloco }}</th><th>{{ 'admin.thRole' | transloco }}</th><th>{{ 'admin.thStatus' | transloco }}</th><th>{{ 'admin.thActions' | transloco }}</th></tr></thead>
@@ -92,7 +110,8 @@ const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
                     <td>
                       <span class="tag" [class.tag-ok]="u.active" [class.tag-off]="!u.active">{{ (u.active ? 'admin.active' : 'admin.banned') | transloco }}</span>
                     </td>
-                    <td>
+                    <td class="user-actions">
+                      <button class="mini" (click)="openEditUser(u)">{{ 'admin.edit' | transloco }}</button>
                       <button class="mini" [class.mini-danger]="u.active" (click)="toggleBan(u)">
                         {{ (u.active ? 'admin.ban' : 'admin.reinstate') | transloco }}
                       </button>
@@ -118,17 +137,22 @@ const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
         @if (section() === 'bookings') {
           <div class="table-wrap">
             <table class="admin-table">
-              <thead><tr><th>{{ 'admin.thBookingId' | transloco }}</th><th>{{ 'admin.thUser' | transloco }}</th><th>{{ 'admin.thStatus' | transloco }}</th><th>{{ 'admin.thAmount' | transloco }}</th><th>{{ 'admin.thCreated' | transloco }}</th></tr></thead>
+              <thead><tr><th>{{ 'admin.thBookingRef' | transloco }}</th><th>{{ 'admin.thUser' | transloco }}</th><th>{{ 'admin.thDestination' | transloco }}</th><th>{{ 'admin.thAmount' | transloco }}</th><th>{{ 'admin.thCreated' | transloco }}</th><th>{{ 'admin.thStatus' | transloco }}</th></tr></thead>
               <tbody>
                 @for (b of bookings(); track b.id) {
                   <tr>
-                    <td class="mono">{{ b.id.slice(0, 8) }}</td>
-                    <td class="mono muted">{{ b.userId.slice(0, 8) }}</td>
-                    <td><span class="tag tag-neutral">{{ b.status }}</span></td>
+                    <td class="mono">{{ b.bookingReference || b.id.slice(0, 8) }}</td>
+                    <td class="muted">{{ b.userEmail || b.userId.slice(0, 8) }}</td>
+                    <td>{{ b.destination || '—' }}</td>
                     <td>{{ b.totalAmount != null ? (b.totalAmount | currency) : '—' }}</td>
                     <td class="muted">{{ b.createdAt ? (b.createdAt | date:'medium') : '—' }}</td>
+                    <td>
+                      <select class="role-select" [ngModel]="b.status" (ngModelChange)="changeBookingStatus(b, $event)">
+                        @for (s of bookingStatuses; track s) { <option [value]="s">{{ s }}</option> }
+                      </select>
+                    </td>
                   </tr>
-                } @empty { <tr><td colspan="5" class="empty-row">{{ 'admin.noBookings' | transloco }}</td></tr> }
+                } @empty { <tr><td colspan="6" class="empty-row">{{ 'admin.noBookings' | transloco }}</td></tr> }
               </tbody>
             </table>
           </div>
@@ -190,6 +214,41 @@ const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
           </div>
         }
       </main>
+
+      <!-- USER CREATE / EDIT MODAL -->
+      @if (userFormOpen()) {
+        <div class="u-overlay" (click)="closeUserForm()">
+          <div class="u-modal" (click)="$event.stopPropagation()">
+            <header class="u-head">
+              <h3>{{ (editingUserId() ? 'admin.editUser' : 'admin.newUser') | transloco }}</h3>
+              <button class="u-close" (click)="closeUserForm()"><span class="ms">close</span></button>
+            </header>
+            <div class="u-grid">
+              <label class="u-field u-full"><span class="u-lbl">{{ 'admin.fEmail' | transloco }} <span class="req">*</span></span>
+                <input type="email" [(ngModel)]="userForm.email" [disabled]="!!editingUserId()" /></label>
+              <label class="u-field u-full"><span class="u-lbl">{{ (editingUserId() ? 'admin.fPasswordKeep' : 'admin.fPassword') | transloco }} @if (!editingUserId()) { <span class="req">*</span> }</span>
+                <input type="text" [(ngModel)]="userForm.password" autocomplete="off" /></label>
+              <label class="u-field"><span class="u-lbl">{{ 'admin.fFirstName' | transloco }} <span class="req">*</span></span>
+                <input type="text" [(ngModel)]="userForm.firstName" /></label>
+              <label class="u-field"><span class="u-lbl">{{ 'admin.fLastName' | transloco }} <span class="req">*</span></span>
+                <input type="text" [(ngModel)]="userForm.lastName" /></label>
+              <label class="u-field"><span class="u-lbl">{{ 'admin.fPhone' | transloco }}</span>
+                <input type="text" [(ngModel)]="userForm.phone" /></label>
+              <label class="u-field"><span class="u-lbl">{{ 'admin.thRole' | transloco }}</span>
+                <select [(ngModel)]="userForm.role">@for (r of roles; track r) { <option [value]="r">{{ r }}</option> }</select></label>
+              <label class="u-field"><span class="u-lbl">{{ 'admin.fEmailVerified' | transloco }}</span>
+                <span class="u-check"><input type="checkbox" [(ngModel)]="userForm.emailVerified" /></span></label>
+              <label class="u-field"><span class="u-lbl">{{ 'admin.fActive' | transloco }}</span>
+                <span class="u-check"><input type="checkbox" [(ngModel)]="userForm.active" /></span></label>
+            </div>
+            @if (userFormError()) { <p class="u-error">{{ userFormError() }}</p> }
+            <footer class="u-foot">
+              <button class="u-ghost" (click)="closeUserForm()">{{ 'admin.cancel' | transloco }}</button>
+              <button class="u-primary" [disabled]="userSaving()" (click)="saveUser()">{{ (userSaving() ? 'admin.saving' : 'admin.save') | transloco }}</button>
+            </footer>
+          </div>
+        </div>
+      }
     </div>
   `,
 })
@@ -200,6 +259,7 @@ export class AdminComponent implements OnInit {
   private readonly transloco = inject(TranslocoService);
 
   readonly roles = ROLES;
+  readonly bookingStatuses = BOOKING_STATUSES;
   readonly navItems: { id: Section; key: string; icon: string }[] = [
     { id: 'overview', key: 'admin.navOverview', icon: 'dashboard' },
     { id: 'users', key: 'admin.navUsers', icon: 'group' },
@@ -305,6 +365,67 @@ export class AdminComponent implements OnInit {
   toggleBan(u: AdminUser): void {
     this.admin.setUserActive(u.id, !u.active).pipe(catchError(() => of(null))).subscribe(updated => {
       if (updated) { this.users.update(list => list.map(x => x.id === u.id ? updated : x)); this.flash(this.transloco.translate(updated.active ? 'admin.userReinstated' : 'admin.userBanned')); }
+    });
+  }
+
+  changeBookingStatus(b: AdminBooking, status: string): void {
+    if (status === b.status) return;
+    this.admin.setBookingStatus(b.id, status).pipe(catchError(() => of(null))).subscribe(updated => {
+      if (updated) { this.bookings.update(list => list.map(x => x.id === b.id ? updated : x)); this.flash(this.transloco.translate('admin.bookingUpdated')); }
+    });
+  }
+
+  // ── User create / edit ─────────────────────────────────────────────────
+
+  readonly userFormOpen = signal(false);
+  readonly editingUserId = signal<string | null>(null);
+  readonly userSaving = signal(false);
+  readonly userFormError = signal('');
+  userForm: AdminUserUpsert = emptyUserForm();
+
+  openCreateUser(): void {
+    this.editingUserId.set(null);
+    this.userFormError.set('');
+    this.userForm = emptyUserForm();
+    this.userFormOpen.set(true);
+  }
+
+  openEditUser(u: AdminUser): void {
+    this.editingUserId.set(u.id);
+    this.userFormError.set('');
+    this.userForm = {
+      email: u.email, password: '', firstName: u.firstName, lastName: u.lastName,
+      phone: '', role: u.role, emailVerified: u.emailVerified, active: u.active,
+    };
+    this.userFormOpen.set(true);
+  }
+
+  closeUserForm(): void { this.userFormOpen.set(false); }
+
+  saveUser(): void {
+    const f = this.userForm;
+    if (!f.email || !f.firstName || !f.lastName || (!this.editingUserId() && !f.password)) {
+      this.userFormError.set(this.transloco.translate('admin.userFormIncomplete'));
+      return;
+    }
+    this.userSaving.set(true);
+    this.userFormError.set('');
+    const id = this.editingUserId();
+    const req$ = id ? this.admin.updateUser(id, f) : this.admin.createUser(f);
+    req$.pipe(catchError(() => { this.userFormError.set(this.transloco.translate('admin.saveFailed')); return of(null); }))
+      .subscribe(result => {
+        this.userSaving.set(false);
+        if (!result) return;
+        this.userFormOpen.set(false);
+        this.flash(this.transloco.translate(id ? 'admin.itemUpdated' : 'admin.itemCreated'));
+        this.loadCurrentUsers();
+      });
+  }
+
+  private loadCurrentUsers(): void {
+    this.admin.users(this.page(), this.pageSize).pipe(catchError(() => of(null))).subscribe(res => {
+      this.users.set(res?.content ?? []);
+      this.hasMore.set(this.computeHasMore(res));
     });
   }
 
