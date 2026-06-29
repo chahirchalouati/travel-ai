@@ -103,7 +103,8 @@
       "flights": "Vols",
       "thingsToDo": "Activités",
       "aiPlanner": "Planificateur IA",
-      "chat": "Chat"
+      "chat": "Chat",
+      "community": "Communauté"
     },
     "signIn": "Se connecter",
     "startPlanning": "Commencer à planifier"
@@ -440,7 +441,9 @@
       "Oct",
       "Nov",
       "Déc"
-    ]
+    ],
+    "thingsToDo": "À faire",
+    "seeAllThings": "Voir tout"
   },
   "trips": {
     "title": "Mes voyages",
@@ -786,6 +789,125 @@
     "fGuideText": "Guide (texte complet)",
     "fTopAttractions": "Attractions principales",
     "fFoodReco": "Recommandations gastronomiques",
-    "fTravelTips": "Conseils de voyage"
+    "fTravelTips": "Conseils de voyage",
+    "navAttractions": "Attractions",
+    "entAttraction": "Attraction",
+    "cCategory": "Catégorie",
+    "fCategory": "Catégorie",
+    "fPriceLevel": "Niveau de prix",
+    "fDuration": "Durée (min)",
+    "fBookable": "Réservable"
+  },
+  "attractions": {
+    "eyebrow": "À faire",
+    "title": "Choses à faire",
+    "subtitle": "Monuments, musées, visites et expériences inoubliables.",
+    "found": "attractions trouvées",
+    "allCategories": "Toutes",
+    "bookable": "Réservable",
+    "from": "dès",
+    "of": "sur",
+    "about": "À propos",
+    "duration": "Durée",
+    "price": "Prix",
+    "booking": "Réservation",
+    "notFound": "Attraction introuvable",
+    "backToList": "Retour aux activités",
+    "writeReview": "Écrire un avis",
+    "signInToReview": "Connectez-vous pour donner un avis",
+    "yourRating": "Votre note",
+    "reviewTitlePlaceholder": "Titre (facultatif)",
+    "reviewBodyPlaceholder": "Partagez votre expérience...",
+    "reviewError": "Impossible d'envoyer votre avis. Réessayez.",
+    "cancel": "Annuler",
+    "submitting": "Envoi...",
+    "submitReview": "Envoyer l'avis",
+    "categories": {
+      "LANDMARK": "Monument",
+      "MUSEUM": "Musée",
+      "PARK": "Parc",
+      "TOUR": "Visite",
+      "ACTIVITY": "Activité",
+      "NATURE": "Nature",
+      "NIGHTLIFE": "Vie nocturne",
+      "SHOPPING": "Shopping",
+      "FOOD": "Gastronomie",
+      "BEACH": "Plage"
+    },
+    "priceLevel": {
+      "FREE": "Gratuit",
+      "LOW": "Économique",
+      "MEDIUM": "Modéré",
+      "HIGH": "Premium"
+    },
+    "planTitle": "Planifier avec l'IA",
+    "planSubtitle": "Ajoutez cette expérience à un itinéraire intelligent sur mesure.",
+    "planCta": "Planifier avec l'IA"
+  },
+  "itinerary": {
+    "notFound": "Itinéraire en direct indisponible",
+    "backToTrips": "Retour aux voyages",
+    "liveBadge": "En direct",
+    "title": "Itinéraire vivant",
+    "subtitle": "Nous surveillons votre voyage et replanifions en cas d'imprévu.",
+    "alertPending": "replanification(s) en attente de votre validation",
+    "yourTrip": "Votre voyage",
+    "proposalsTitle": "Changements proposés",
+    "aiReplan": "Replanification IA",
+    "expires": "Expire",
+    "reject": "Ignorer",
+    "approve": "Approuver",
+    "reportIssue": "Signaler un problème",
+    "reportPlaceholder": "Que s'est-il passé ? (ex. vol annulé)",
+    "reportSubmit": "Signaler et replanifier",
+    "cancel": "Annuler",
+    "submitting": "Envoi...",
+    "segmentTypes": {
+      "FLIGHT": "Vol",
+      "HOTEL": "Hôtel",
+      "RESTAURANT": "Restaurant"
+    },
+    "status": {
+      "ON_SCHEDULE": "À l'heure",
+      "DELAYED": "Perturbé",
+      "CANCELLED": "Annulé",
+      "CLOSED": "Fermé",
+      "REBOOKED": "Reréservé"
+    },
+    "changeTypes": {
+      "REPLACE_FLIGHT": "Remplacer le vol",
+      "REPLACE_HOTEL": "Remplacer l'hôtel",
+      "REPLACE_RESTAURANT": "Remplacer le restaurant",
+      "ADJUST_TIME": "Ajuster l'horaire",
+      "CANCEL_SEGMENT": "Annuler"
+    }
+  },
+  "forum": {
+    "eyebrow": "Communauté",
+    "title": "Questions des voyageurs",
+    "subtitle": "Demandez à la communauté, partagez vos connaissances, voyagez mieux.",
+    "searchPlaceholder": "Rechercher des questions...",
+    "askButton": "Poser une question",
+    "signInToAsk": "Connectez-vous pour demander",
+    "askTitle": "Demander à la communauté",
+    "titlePlaceholder": "Votre question",
+    "bodyPlaceholder": "Ajoutez des détails pour de meilleures réponses...",
+    "locationPlaceholder": "Lieu (facultatif)",
+    "cancel": "Annuler",
+    "posting": "Publication...",
+    "post": "Publier la question",
+    "emptyTitle": "Pas encore de questions",
+    "emptyBody": "Soyez le premier à demander à la communauté.",
+    "answer": "réponse",
+    "answers": "réponses",
+    "backToList": "Retour aux questions",
+    "noAnswers": "Pas encore de réponse — soyez le premier à aider.",
+    "accepted": "Acceptée",
+    "helpful": "Utile",
+    "yourAnswer": "Votre réponse",
+    "answerPlaceholder": "Partagez votre expérience ou un conseil...",
+    "postAnswer": "Publier la réponse",
+    "signInToAnswer": "Connectez-vous pour répondre",
+    "notFound": "Question introuvable"
   }
 }

@@ -29,6 +29,8 @@ interface TripSample {
   key: string;
   brief: string;
   summary: string;
+  /** Cinematic backdrop shown behind the stage while this trip builds. */
+  image: string;
   days: ItineraryDay[];
   pins: MapPin[];
 }
@@ -62,13 +64,25 @@ export class HeroComponent implements OnInit, OnDestroy {
   pinsShown = signal(0);
   activeSample = signal<TripSample | null>(null);
 
+  // Pointer parallax — normalized -1..1 offsets the stage layers track.
+  mx = signal(0);
+  my = signal(0);
+
+  /** How long a finished trip lingers before the carousel moves on. */
+  private readonly dwellMs = 2600;
+
   private timers: ReturnType<typeof setTimeout>[] = [];
+  private cycleTimer: ReturnType<typeof setTimeout> | null = null;
+  private cycleIndex = 0;
+  private autoplay = true;
+  private hoverPaused = false;
 
   readonly samples: TripSample[] = [
     {
       key: 'japan',
       brief: '10 days in Japan — temples, food & quiet mornings',
       summary: 'Kyoto · Hakone · Tokyo',
+      image: 'assets/hero/japan.webp',
       days: [
         {
           day: 'Day 1', place: 'Kyoto',
@@ -99,6 +113,7 @@ export class HeroComponent implements OnInit, OnDestroy {
       key: 'portugal',
       brief: 'A week along the coast of Portugal',
       summary: 'Lisbon · Sintra · Algarve',
+      image: 'assets/hero/portugal.webp',
       days: [
         {
           day: 'Day 1', place: 'Lisbon',
@@ -129,6 +144,7 @@ export class HeroComponent implements OnInit, OnDestroy {
       key: 'iceland',
       brief: 'Iceland ring road in 6 days, chasing the aurora',
       summary: 'Reykjavík · South Coast · Vík',
+      image: 'assets/hero/iceland.webp',
       days: [
         {
           day: 'Day 1', place: 'Reykjavík',
@@ -168,6 +184,7 @@ export class HeroComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.clearTimers();
+    if (this.cycleTimer) clearTimeout(this.cycleTimer);
   }
 
   /** Total revealable items in the active sample. */
@@ -208,6 +225,10 @@ export class HeroComponent implements OnInit, OnDestroy {
   /** Run the staged "AI is assembling your trip" sequence. */
   private runBuild(sample: TripSample): void {
     this.clearTimers();
+    if (this.cycleTimer) {
+      clearTimeout(this.cycleTimer);
+      this.cycleTimer = null;
+    }
     this.activeSample.set(sample);
     this.revealed.set(0);
     this.pinsShown.set(0);
@@ -243,14 +264,68 @@ export class HeroComponent implements OnInit, OnDestroy {
       this.after(typedDone + 520 + i * 360, () => this.pinsShown.set(i + 1));
     });
 
-    // 4) Settle.
-    this.after(typedDone + 480 + total * 240, () => this.phase.set('done'));
+    // 4) Settle, then — if still on autoplay — queue the next destination.
+    const settleAt = typedDone + 480 + total * 240;
+    this.after(settleAt, () => this.phase.set('done'));
+    if (this.autoplay) {
+      this.cycleTimer = setTimeout(() => this.advance(), settleAt + this.dwellMs);
+    }
+  }
+
+  /** Advance the carousel to the next destination, unless the user is hovering. */
+  private advance(): void {
+    if (!this.autoplay || this.reduceMotion) return;
+    if (this.hoverPaused) {
+      this.cycleTimer = setTimeout(() => this.advance(), 900);
+      return;
+    }
+    this.cycleIndex = (this.cycleIndex + 1) % this.samples.length;
+    this.runBuild(this.samples[this.cycleIndex]);
+  }
+
+  /** The user took the wheel — freeze the carousel on whatever is showing. */
+  private stopAutoplay(): void {
+    this.autoplay = false;
+    if (this.cycleTimer) {
+      clearTimeout(this.cycleTimer);
+      this.cycleTimer = null;
+    }
+  }
+
+  /** Hovering the stage holds the current trip in view. */
+  onStageEnter(): void {
+    this.hoverPaused = true;
+  }
+  onStageLeave(): void {
+    this.hoverPaused = false;
+  }
+
+  /** Track the pointer to drive layered parallax. Change detection coalesces
+   *  the signal writes to one update per frame, so no manual throttling. */
+  onPointerMove(event: PointerEvent): void {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    if (this.reduceMotion || !w || !h) return;
+    this.mx.set((event.clientX / w - 0.5) * 2);
+    this.my.set((event.clientY / h - 0.5) * 2);
+  }
+
+  onPointerLeave(): void {
+    this.mx.set(0);
+    this.my.set(0);
   }
 
   selectPick(pick: QuickPick): void {
     const sample = this.samples.find((s) => s.key === pick.key) ?? this.samples[0];
+    this.cycleIndex = this.samples.indexOf(sample);
+    this.stopAutoplay();
     this.searchQuery.set(sample.brief);
     this.runBuild(sample);
+  }
+
+  /** Stop the carousel as soon as the user engages the search field. */
+  onSearchFocus(): void {
+    this.stopAutoplay();
   }
 
   /** Match a free-text query to the closest sample for the live preview. */
@@ -266,6 +341,7 @@ export class HeroComponent implements OnInit, OnDestroy {
   planTrip(): void {
     const q = this.searchQuery().trim();
     if (!q) return;
+    this.stopAutoplay();
     this.runBuild(this.matchSample(q));
   }
 

@@ -55,6 +55,11 @@ import type { BookingResponse } from '../../core/models/api.models';
               </div>
               <div class="row-side">
                 <span class="row-amount">{{ b.totalAmount | currency }}</span>
+                @if (b.status === 'CONFIRMED') {
+                  <button class="row-live" (click)="router.navigate(['/trips', b.id, 'live'])">
+                    <span class="ms">radar</span> {{ 'itinerary.liveBadge' | transloco }}
+                  </button>
+                }
                 @if (b.status === 'PENDING' || b.status === 'CONFIRMED') {
                   <button class="row-cancel" (click)="cancel(b)" [disabled]="cancelling() === b.id">
                     {{ (cancelling() === b.id ? 'bookings.cancelling' : 'bookings.cancel') | transloco }}
@@ -84,6 +89,9 @@ import type { BookingResponse } from '../../core/models/api.models';
     .row-cancel { background: none; border: 1px solid var(--line); color: #c0392b; border-radius: 999px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease; }
     .row-cancel:hover:not(:disabled) { background: #fdecec; }
     .row-cancel:disabled { opacity: 0.6; cursor: default; }
+    .row-live { display: inline-flex; align-items: center; gap: 5px; background: var(--accent-soft); border: 1px solid var(--accent); color: var(--accent); border-radius: 999px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease; }
+    .row-live:hover { background: var(--accent); color: #fff; }
+    .row-live .ms { font-size: 15px; }
     .toast { background: var(--ink); color: #fff; padding: 0.7rem 1.1rem; border-radius: 12px; margin-bottom: 1.2rem; font-weight: 600; font-size: 0.9rem; }
     @media (max-width: 560px) { .row { flex-wrap: wrap; } .row-side { width: 100%; flex-direction: row; justify-content: space-between; } }
   `],

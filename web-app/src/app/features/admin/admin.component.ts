@@ -14,7 +14,7 @@ import { ENTITY_CONFIGS, EntityConfig } from './entity-manager/entity-configs';
 
 type Section =
   | 'overview' | 'users' | 'partners'
-  | 'hotels' | 'flights' | 'cruises' | 'restaurants' | 'destinations' | 'stories'
+  | 'hotels' | 'flights' | 'cruises' | 'restaurants' | 'destinations' | 'attractions' | 'stories'
   | 'bookings' | 'reviews' | 'logs';
 
 const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
@@ -269,6 +269,7 @@ export class AdminComponent implements OnInit {
     { id: 'cruises', key: 'admin.navCruises', icon: 'directions_boat' },
     { id: 'restaurants', key: 'admin.navRestaurants', icon: 'restaurant' },
     { id: 'destinations', key: 'admin.navDestinations', icon: 'public' },
+    { id: 'attractions', key: 'admin.navAttractions', icon: 'attractions' },
     { id: 'stories', key: 'admin.navStories', icon: 'movie' },
     { id: 'bookings', key: 'admin.navBookings', icon: 'confirmation_number' },
     { id: 'reviews', key: 'admin.navReviews', icon: 'reviews' },

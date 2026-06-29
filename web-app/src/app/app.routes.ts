@@ -53,6 +53,18 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'attractions',
+    loadComponent: () =>
+      import('./features/attractions/attractions.component').then(m => m.AttractionsComponent),
+  },
+  {
+    path: 'attractions/:id',
+    loadComponent: () =>
+      import('./features/attraction-detail/attraction-detail.component').then(
+        m => m.AttractionDetailComponent
+      ),
+  },
+  {
     path: 'cruises',
     loadComponent: () =>
       import('./features/cruises/cruises.component').then(m => m.CruisesComponent),
@@ -75,6 +87,18 @@ export const routes: Routes = [
       import('./features/chat/chat.component').then(m => m.ChatComponent),
   },
   {
+    path: 'forum',
+    loadComponent: () =>
+      import('./features/forum/forum.component').then(m => m.ForumComponent),
+  },
+  {
+    path: 'forum/:id',
+    loadComponent: () =>
+      import('./features/forum-detail/forum-detail.component').then(
+        m => m.ForumDetailComponent
+      ),
+  },
+  {
     path: 'planner',
     loadComponent: () =>
       import('./features/planner/planner.component').then(m => m.PlannerComponent),
@@ -88,6 +112,13 @@ export const routes: Routes = [
     path: 'trips',
     loadComponent: () =>
       import('./features/trips/trips.component').then(m => m.TripsComponent),
+  },
+  {
+    path: 'trips/:id/live',
+    loadComponent: () =>
+      import('./features/itinerary-live/itinerary-live.component').then(
+        m => m.ItineraryLiveComponent
+      ),
   },
   {
     path: 'bookings',
