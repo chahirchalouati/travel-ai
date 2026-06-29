@@ -9,6 +9,10 @@ import com.travelai.shared.exception.TravelAiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.messages.AssistantMessage;
+import org.springframework.ai.chat.messages.Message;
+import org.springframework.ai.chat.messages.SystemMessage;
+import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -57,7 +62,9 @@ public class ChatService {
             "Please try again in a moment, and I'll be happy to help with your travel plans!";
 
     private static final int RAG_TOP_K = 5;
-    private static final double RAG_SIMILARITY_THRESHOLD = 0.7;
+    // nomic-embed-text scores relevant matches in the ~0.45-0.7 range; 0.7 filtered out nearly
+    // everything, leaving the model ungrounded. 0.45 keeps genuinely relevant catalog docs.
+    private static final double RAG_SIMILARITY_THRESHOLD = 0.45;
 
     private final ChatClient chatClient;
     private final VectorStore vectorStore;
@@ -80,7 +87,7 @@ public class ChatService {
         messageRepository.save(userMessage);
 
         List<Document> ragResults = retrieveDocuments(request.message());
-        String aiReply = callAi(conversation.getId(), request.message(), ragResults);
+        String aiReply = callAi(conversation.getId(), ragResults);
         List<ChatEntityAttachment> attachments = ragEntityResolver.resolveAttachments(ragResults);
 
         ChatMessage assistantMessage = ChatMessage.builder()
@@ -173,17 +180,22 @@ public class ChatService {
         return conversation;
     }
 
-    private String callAi(UUID conversationId, String newMessage, List<Document> ragResults) {
+    private String callAi(UUID conversationId, List<Document> ragResults) {
         try {
-            String fullPrompt = buildPrompt(conversationId, newMessage, ragResults);
-            return chatClient.prompt(fullPrompt).call().content();
+            List<Message> messages = buildMessages(conversationId, ragResults);
+            return chatClient.prompt().messages(messages).call().content();
         } catch (Exception e) {
             log.warn("AI chat call failed for conversation {}: {}", conversationId, e.getMessage());
             return FALLBACK_REPLY;
         }
     }
 
-    private String buildPrompt(UUID conversationId, String newMessage, List<Document> ragResults) {
+    /**
+     * Builds a properly-roled message list: a system message (instructions + RAG context),
+     * followed by the recent conversation history. The latest user turn is already persisted
+     * in history before this runs, so it must NOT be appended again.
+     */
+    private List<Message> buildMessages(UUID conversationId, List<Document> ragResults) {
         List<ChatMessage> history = messageRepository
                 .findByConversationIdOrderByCreatedAtAsc(conversationId);
 
@@ -194,24 +206,21 @@ public class ChatService {
                 .map(Document::getText)
                 .collect(Collectors.joining("\n---\n"));
 
-        StringBuilder prompt = new StringBuilder();
-        prompt.append("System: ").append(SYSTEM_PROMPT).append("\n\n");
-
+        StringBuilder system = new StringBuilder(SYSTEM_PROMPT);
         if (!ragContext.isEmpty()) {
-            prompt.append("Relevant information from our database:\n")
-                    .append(ragContext)
-                    .append("\nUse the above information to give specific, accurate answers. ")
-                    .append("If the information doesn't match the user's question, rely on your general knowledge.\n\n");
+            system.append("\n\nRELEVANT INFORMATION FROM OUR DATABASE (use it for specific, accurate answers; ")
+                    .append("if it doesn't fit the question, rely on your general knowledge):\n")
+                    .append(ragContext);
         }
 
+        List<Message> messages = new ArrayList<>();
+        messages.add(new SystemMessage(system.toString()));
         for (ChatMessage msg : recentHistory) {
-            String label = "user".equals(msg.getRole()) ? "User" : "Assistant";
-            prompt.append(label).append(": ").append(msg.getContent()).append("\n\n");
+            messages.add("user".equals(msg.getRole())
+                    ? new UserMessage(msg.getContent())
+                    : new AssistantMessage(msg.getContent()));
         }
-
-        prompt.append("User: ").append(newMessage).append("\n\nAssistant:");
-
-        return prompt.toString();
+        return messages;
     }
 
     private List<Document> retrieveDocuments(String query) {

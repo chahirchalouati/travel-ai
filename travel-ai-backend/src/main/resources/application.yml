@@ -59,9 +59,13 @@ spring:
     ollama:
       base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
       chat:
+        # qwen2.5:7b follows instructions and grounds on RAG context far better than the 3B llama3.2,
+        # and is strong multilingually (the app ships en/it/fr/es). Override with OLLAMA_MODEL.
+        # Requires: `ollama pull qwen2.5:7b`. Alternative: llama3.1:8b.
         options:
-          model: ${OLLAMA_MODEL:llama3.2}
-          temperature: 0.7
+          model: ${OLLAMA_MODEL:qwen2.5:7b}
+          # Lower temperature than before: factual travel answers should stick to retrieved data, not improvise.
+          temperature: ${OLLAMA_TEMPERATURE:0.4}
           num-predict: 2048
       embedding:
         options:

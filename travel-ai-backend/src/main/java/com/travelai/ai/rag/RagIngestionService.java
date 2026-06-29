@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -27,15 +28,27 @@ import java.util.Map;
 public class RagIngestionService {
 
     private final VectorStore vectorStore;
+    private final JdbcTemplate jdbcTemplate;
     private final DestinationRepository destinationRepository;
     private final HotelRepository hotelRepository;
     private final RestaurantRepository restaurantRepository;
     private final ReviewRepository reviewRepository;
 
+    /**
+     * Ingest only when the store is empty. Without this guard the listener re-ran on every
+     * application restart and appended a fresh copy of every document, so each doc ended up
+     * duplicated N times — which collapsed top-K retrieval to N identical copies of one doc.
+     */
     @EventListener(ApplicationReadyEvent.class)
     @Async
     public void ingestOnStartup() {
-        log.info("Starting RAG data ingestion...");
+        long existing = countDocuments();
+        if (existing > 0) {
+            log.info("RAG store already populated ({} documents) — skipping startup ingestion. " +
+                    "Use POST /admin/rag/ingest to force a clean rebuild.", existing);
+            return;
+        }
+        log.info("RAG store empty — starting ingestion...");
         try {
             ingestAll();
             log.info("RAG data ingestion completed successfully");
@@ -44,7 +57,13 @@ public class RagIngestionService {
         }
     }
 
+    /**
+     * Full, idempotent rebuild: clears the store first so re-running always yields exactly one
+     * copy of every document. Safe to call repeatedly (e.g. after catalog edits).
+     */
     public int ingestAll() {
+        clearStore();
+
         List<Document> documents = new ArrayList<>();
         documents.addAll(buildDestinationDocuments());
         documents.addAll(buildHotelDocuments());
@@ -59,6 +78,23 @@ public class RagIngestionService {
         vectorStore.add(documents);
         log.info("Ingested {} documents into vector store", documents.size());
         return documents.size();
+    }
+
+    private long countDocuments() {
+        try {
+            Long count = jdbcTemplate.queryForObject("SELECT count(*) FROM vector_store", Long.class);
+            return count != null ? count : 0L;
+        } catch (Exception e) {
+            log.warn("Could not count vector_store rows, assuming empty: {}", e.getMessage());
+            return 0L;
+        }
+    }
+
+    private void clearStore() {
+        int removed = jdbcTemplate.update("DELETE FROM vector_store");
+        if (removed > 0) {
+            log.info("Cleared {} existing documents from vector store before rebuild", removed);
+        }
     }
 
     private List<Document> buildDestinationDocuments() {
