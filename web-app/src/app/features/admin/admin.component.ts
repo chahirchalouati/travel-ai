@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../core/services/auth.service';
 import { AdminService } from '../../core/services/admin.service';
 import type {
@@ -16,7 +17,7 @@ const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslocoModule],
   styleUrls: ['./admin.component.scss'],
   template: `
     <div class="admin">
@@ -24,16 +25,16 @@ const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
       <aside class="admin-side">
         <div class="admin-brand">
           <span class="ms brand-mark">shield_person</span>
-          <span class="brand-text">Admin<span class="brand-accent">Console</span></span>
+          <span class="brand-text">{{ 'admin.brand1' | transloco }}<span class="brand-accent">{{ 'admin.brand2' | transloco }}</span></span>
         </div>
         <nav class="admin-nav">
           @for (item of navItems; track item.id) {
             <button class="nav-item" [class.active]="section() === item.id" (click)="go(item.id)">
-              <span class="ms">{{ item.icon }}</span> {{ item.label }}
+              <span class="ms">{{ item.icon }}</span> {{ item.key | transloco }}
             </button>
           }
         </nav>
-        <button class="nav-exit" (click)="exit()"><span class="ms">logout</span> Back to app</button>
+        <button class="nav-exit" (click)="exit()"><span class="ms">logout</span> {{ 'admin.backToApp' | transloco }}</button>
       </aside>
 
       <!-- Content -->
@@ -41,9 +42,9 @@ const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
         <header class="admin-top">
           <div>
             <h1 class="admin-h1">{{ currentLabel() }}</h1>
-            <p class="admin-crumb">Platform administration · {{ adminName() }}</p>
+            <p class="admin-crumb">{{ 'admin.crumb' | transloco }} · {{ adminName() }}</p>
           </div>
-          <span class="admin-badge"><span class="ms" style="font-size:16px">verified_user</span> ADMIN</span>
+          <span class="admin-badge"><span class="ms" style="font-size:16px">verified_user</span> {{ 'admin.badge' | transloco }}</span>
         </header>
 
         @if (toast()) { <div class="admin-toast">{{ toast() }}</div> }
@@ -52,19 +53,19 @@ const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
         @if (section() === 'overview') {
           @if (dashboard(); as d) {
             <div class="stat-grid">
-              <div class="stat-card"><span class="ms stat-ic" style="color:#5b8def">group</span><div><span class="stat-num">{{ d.totalUsers }}</span><span class="stat-lbl">Users</span></div></div>
-              <div class="stat-card"><span class="ms stat-ic" style="color:#e0a23a">store</span><div><span class="stat-num">{{ d.totalPartners }}</span><span class="stat-lbl">Partners</span></div></div>
-              <div class="stat-card"><span class="ms stat-ic" style="color:#42b07a">confirmation_number</span><div><span class="stat-num">{{ d.totalBookings }}</span><span class="stat-lbl">Bookings</span></div></div>
-              <div class="stat-card"><span class="ms stat-ic" style="color:#e0573a">hourglass_top</span><div><span class="stat-num">{{ d.pendingPartners }}</span><span class="stat-lbl">Pending partners</span></div></div>
-              <div class="stat-card"><span class="ms stat-ic" style="color:#42b07a">rocket_launch</span><div><span class="stat-num">{{ d.activePartners }}</span><span class="stat-lbl">Live partners</span></div></div>
+              <div class="stat-card"><span class="ms stat-ic" style="color:#5b8def">group</span><div><span class="stat-num">{{ d.totalUsers }}</span><span class="stat-lbl">{{ 'admin.statUsers' | transloco }}</span></div></div>
+              <div class="stat-card"><span class="ms stat-ic" style="color:#e0a23a">store</span><div><span class="stat-num">{{ d.totalPartners }}</span><span class="stat-lbl">{{ 'admin.statPartners' | transloco }}</span></div></div>
+              <div class="stat-card"><span class="ms stat-ic" style="color:#42b07a">confirmation_number</span><div><span class="stat-num">{{ d.totalBookings }}</span><span class="stat-lbl">{{ 'admin.statBookings' | transloco }}</span></div></div>
+              <div class="stat-card"><span class="ms stat-ic" style="color:#e0573a">hourglass_top</span><div><span class="stat-num">{{ d.pendingPartners }}</span><span class="stat-lbl">{{ 'admin.statPending' | transloco }}</span></div></div>
+              <div class="stat-card"><span class="ms stat-ic" style="color:#42b07a">rocket_launch</span><div><span class="stat-num">{{ d.activePartners }}</span><span class="stat-lbl">{{ 'admin.statLive' | transloco }}</span></div></div>
             </div>
             <div class="quick-actions">
-              <button (click)="go('users')"><span class="ms">manage_accounts</span> Manage users</button>
-              <button (click)="go('partners')"><span class="ms">handshake</span> Review partners</button>
-              <button (click)="go('reviews')"><span class="ms">reviews</span> Moderate reviews</button>
+              <button (click)="go('users')"><span class="ms">manage_accounts</span> {{ 'admin.manageUsers' | transloco }}</button>
+              <button (click)="go('partners')"><span class="ms">handshake</span> {{ 'admin.reviewPartners' | transloco }}</button>
+              <button (click)="go('reviews')"><span class="ms">reviews</span> {{ 'admin.moderateReviews' | transloco }}</button>
             </div>
           } @else {
-            <div class="admin-loading">Loading dashboard…</div>
+            <div class="admin-loading">{{ 'admin.loading' | transloco }}</div>
           }
         }
 
@@ -72,7 +73,7 @@ const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
         @if (section() === 'users') {
           <div class="table-wrap">
             <table class="admin-table">
-              <thead><tr><th>User</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
+              <thead><tr><th>{{ 'admin.thUser' | transloco }}</th><th>{{ 'admin.thEmail' | transloco }}</th><th>{{ 'admin.thRole' | transloco }}</th><th>{{ 'admin.thStatus' | transloco }}</th><th>{{ 'admin.thActions' | transloco }}</th></tr></thead>
               <tbody>
                 @for (u of users(); track u.id) {
                   <tr [class.row-banned]="!u.active">
@@ -84,22 +85,22 @@ const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
                       </select>
                     </td>
                     <td>
-                      <span class="tag" [class.tag-ok]="u.active" [class.tag-off]="!u.active">{{ u.active ? 'Active' : 'Banned' }}</span>
+                      <span class="tag" [class.tag-ok]="u.active" [class.tag-off]="!u.active">{{ (u.active ? 'admin.active' : 'admin.banned') | transloco }}</span>
                     </td>
                     <td>
                       <button class="mini" [class.mini-danger]="u.active" (click)="toggleBan(u)">
-                        {{ u.active ? 'Ban' : 'Reinstate' }}
+                        {{ (u.active ? 'admin.ban' : 'admin.reinstate') | transloco }}
                       </button>
                     </td>
                   </tr>
-                } @empty { <tr><td colspan="5" class="empty-row">No users</td></tr> }
+                } @empty { <tr><td colspan="5" class="empty-row">{{ 'admin.noUsers' | transloco }}</td></tr> }
               </tbody>
             </table>
           </div>
           <div class="pager">
-            <button [disabled]="page() === 0" (click)="prev()">Prev</button>
-            <span>Page {{ page() + 1 }}</span>
-            <button [disabled]="!hasMore()" (click)="next()">Next</button>
+            <button [disabled]="page() === 0" (click)="prev()">{{ 'admin.prev' | transloco }}</button>
+            <span>{{ 'admin.page' | transloco }} {{ page() + 1 }}</span>
+            <button [disabled]="!hasMore()" (click)="next()">{{ 'admin.next' | transloco }}</button>
           </div>
         }
 
@@ -107,27 +108,27 @@ const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
         @if (section() === 'partners') {
           <div class="table-wrap">
             <table class="admin-table">
-              <thead><tr><th>Partner</th><th>Type</th><th>City</th><th>Status</th><th>Actions</th></tr></thead>
+              <thead><tr><th>{{ 'admin.thPartner' | transloco }}</th><th>{{ 'admin.thType' | transloco }}</th><th>{{ 'admin.thCity' | transloco }}</th><th>{{ 'admin.thStatus' | transloco }}</th><th>{{ 'admin.thActions' | transloco }}</th></tr></thead>
               <tbody>
                 @for (p of partners(); track p.id) {
                   <tr>
                     <td><b>{{ p.name }}</b><br><span class="muted">{{ p.contactEmail }}</span></td>
                     <td>{{ p.type || '—' }}</td>
                     <td>{{ p.city || '—' }}</td>
-                    <td><span class="tag" [class.tag-ok]="p.active" [class.tag-off]="!p.active">{{ p.status || (p.active ? 'Active' : 'Inactive') }}</span></td>
+                    <td><span class="tag" [class.tag-ok]="p.active" [class.tag-off]="!p.active">{{ p.status || ((p.active ? 'admin.active' : 'admin.inactive') | transloco) }}</span></td>
                     <td>
-                      @if (p.active) { <button class="mini mini-danger" (click)="suspendPartner(p)">Suspend</button> }
-                      @else { <button class="mini mini-ok" (click)="activatePartner(p)">Activate</button> }
+                      @if (p.active) { <button class="mini mini-danger" (click)="suspendPartner(p)">{{ 'admin.suspend' | transloco }}</button> }
+                      @else { <button class="mini mini-ok" (click)="activatePartner(p)">{{ 'admin.activate' | transloco }}</button> }
                     </td>
                   </tr>
-                } @empty { <tr><td colspan="5" class="empty-row">No partners</td></tr> }
+                } @empty { <tr><td colspan="5" class="empty-row">{{ 'admin.noPartners' | transloco }}</td></tr> }
               </tbody>
             </table>
           </div>
           <div class="pager">
-            <button [disabled]="page() === 0" (click)="prev()">Prev</button>
-            <span>Page {{ page() + 1 }}</span>
-            <button [disabled]="!hasMore()" (click)="next()">Next</button>
+            <button [disabled]="page() === 0" (click)="prev()">{{ 'admin.prev' | transloco }}</button>
+            <span>{{ 'admin.page' | transloco }} {{ page() + 1 }}</span>
+            <button [disabled]="!hasMore()" (click)="next()">{{ 'admin.next' | transloco }}</button>
           </div>
         }
 
@@ -135,7 +136,7 @@ const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
         @if (section() === 'bookings') {
           <div class="table-wrap">
             <table class="admin-table">
-              <thead><tr><th>Booking ID</th><th>User</th><th>Status</th><th>Amount</th><th>Created</th></tr></thead>
+              <thead><tr><th>{{ 'admin.thBookingId' | transloco }}</th><th>{{ 'admin.thUser' | transloco }}</th><th>{{ 'admin.thStatus' | transloco }}</th><th>{{ 'admin.thAmount' | transloco }}</th><th>{{ 'admin.thCreated' | transloco }}</th></tr></thead>
               <tbody>
                 @for (b of bookings(); track b.id) {
                   <tr>
@@ -145,14 +146,14 @@ const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
                     <td>{{ b.totalAmount != null ? (b.totalAmount | currency) : '—' }}</td>
                     <td class="muted">{{ b.createdAt ? (b.createdAt | date:'medium') : '—' }}</td>
                   </tr>
-                } @empty { <tr><td colspan="5" class="empty-row">No bookings yet</td></tr> }
+                } @empty { <tr><td colspan="5" class="empty-row">{{ 'admin.noBookings' | transloco }}</td></tr> }
               </tbody>
             </table>
           </div>
           <div class="pager">
-            <button [disabled]="page() === 0" (click)="prev()">Prev</button>
-            <span>Page {{ page() + 1 }}</span>
-            <button [disabled]="!hasMore()" (click)="next()">Next</button>
+            <button [disabled]="page() === 0" (click)="prev()">{{ 'admin.prev' | transloco }}</button>
+            <span>{{ 'admin.page' | transloco }} {{ page() + 1 }}</span>
+            <button [disabled]="!hasMore()" (click)="next()">{{ 'admin.next' | transloco }}</button>
           </div>
         }
 
@@ -166,18 +167,18 @@ const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
                     <span class="stars">@for (s of [1,2,3,4,5]; track s) { <span class="ms" [class.lit]="s <= r.rating">star</span> }</span>
                     <span class="tag tag-neutral">{{ r.targetType }}</span>
                   </div>
-                  <h4>{{ r.title || 'Untitled review' }}</h4>
+                  <h4>{{ r.title || ('admin.untitledReview' | transloco) }}</h4>
                   <p class="review-body">{{ r.content }}</p>
-                  <span class="muted">by {{ r.authorName }} @if (r.authorEmail) { · {{ r.authorEmail }} } · {{ r.createdAt | date:'mediumDate' }}</span>
+                  <span class="muted">{{ 'admin.by' | transloco }} {{ r.authorName }} @if (r.authorEmail) { · {{ r.authorEmail }} } · {{ r.createdAt | date:'mediumDate' }}</span>
                 </div>
-                <button class="mini mini-danger" (click)="removeReview(r)"><span class="ms" style="font-size:15px">delete</span> Delete</button>
+                <button class="mini mini-danger" (click)="removeReview(r)"><span class="ms" style="font-size:15px">delete</span> {{ 'admin.delete' | transloco }}</button>
               </article>
-            } @empty { <div class="admin-loading">No reviews to moderate</div> }
+            } @empty { <div class="admin-loading">{{ 'admin.noReviews' | transloco }}</div> }
           </div>
           <div class="pager">
-            <button [disabled]="page() === 0" (click)="prev()">Prev</button>
-            <span>Page {{ page() + 1 }}</span>
-            <button [disabled]="!hasMore()" (click)="next()">Next</button>
+            <button [disabled]="page() === 0" (click)="prev()">{{ 'admin.prev' | transloco }}</button>
+            <span>{{ 'admin.page' | transloco }} {{ page() + 1 }}</span>
+            <button [disabled]="!hasMore()" (click)="next()">{{ 'admin.next' | transloco }}</button>
           </div>
         }
 
@@ -185,7 +186,7 @@ const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
         @if (section() === 'logs') {
           <div class="table-wrap">
             <table class="admin-table">
-              <thead><tr><th>Agent</th><th>Model</th><th>Duration</th><th>Tokens</th><th>Result</th><th>When</th></tr></thead>
+              <thead><tr><th>{{ 'admin.thAgent' | transloco }}</th><th>{{ 'admin.thModel' | transloco }}</th><th>{{ 'admin.thDuration' | transloco }}</th><th>{{ 'admin.thTokens' | transloco }}</th><th>{{ 'admin.thResult' | transloco }}</th><th>{{ 'admin.thWhen' | transloco }}</th></tr></thead>
               <tbody>
                 @for (l of logs(); track l.id) {
                   <tr>
@@ -193,17 +194,17 @@ const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
                     <td class="muted">{{ l.model || '—' }}</td>
                     <td>{{ l.durationMs != null ? l.durationMs + ' ms' : '—' }}</td>
                     <td>{{ l.tokensUsed ?? '—' }}</td>
-                    <td><span class="tag" [class.tag-off]="l.error" [class.tag-ok]="!l.error">{{ l.error ? 'Error' : 'OK' }}</span></td>
+                    <td><span class="tag" [class.tag-off]="l.error" [class.tag-ok]="!l.error">{{ (l.error ? 'admin.error' : 'admin.ok') | transloco }}</span></td>
                     <td class="muted">{{ l.createdAt ? (l.createdAt | date:'short') : '—' }}</td>
                   </tr>
-                } @empty { <tr><td colspan="6" class="empty-row">No AI logs yet</td></tr> }
+                } @empty { <tr><td colspan="6" class="empty-row">{{ 'admin.noLogs' | transloco }}</td></tr> }
               </tbody>
             </table>
           </div>
           <div class="pager">
-            <button [disabled]="page() === 0" (click)="prev()">Prev</button>
-            <span>Page {{ page() + 1 }}</span>
-            <button [disabled]="!hasMore()" (click)="next()">Next</button>
+            <button [disabled]="page() === 0" (click)="prev()">{{ 'admin.prev' | transloco }}</button>
+            <span>{{ 'admin.page' | transloco }} {{ page() + 1 }}</span>
+            <button [disabled]="!hasMore()" (click)="next()">{{ 'admin.next' | transloco }}</button>
           </div>
         }
       </main>
@@ -214,15 +215,16 @@ export class AdminComponent implements OnInit {
   private readonly admin = inject(AdminService);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly transloco = inject(TranslocoService);
 
   readonly roles = ROLES;
-  readonly navItems: { id: Section; label: string; icon: string }[] = [
-    { id: 'overview', label: 'Overview', icon: 'dashboard' },
-    { id: 'users', label: 'Users', icon: 'group' },
-    { id: 'partners', label: 'Partners', icon: 'store' },
-    { id: 'bookings', label: 'Bookings', icon: 'confirmation_number' },
-    { id: 'reviews', label: 'Reviews', icon: 'reviews' },
-    { id: 'logs', label: 'AI logs', icon: 'monitoring' },
+  readonly navItems: { id: Section; key: string; icon: string }[] = [
+    { id: 'overview', key: 'admin.navOverview', icon: 'dashboard' },
+    { id: 'users', key: 'admin.navUsers', icon: 'group' },
+    { id: 'partners', key: 'admin.navPartners', icon: 'store' },
+    { id: 'bookings', key: 'admin.navBookings', icon: 'confirmation_number' },
+    { id: 'reviews', key: 'admin.navReviews', icon: 'reviews' },
+    { id: 'logs', key: 'admin.navLogs', icon: 'monitoring' },
   ];
 
   readonly section = signal<Section>('overview');
@@ -241,7 +243,10 @@ export class AdminComponent implements OnInit {
 
   ngOnInit(): void { this.loadSection(); }
 
-  currentLabel(): string { return this.navItems.find(n => n.id === this.section())?.label ?? ''; }
+  currentLabel(): string {
+    const key = this.navItems.find(n => n.id === this.section())?.key;
+    return key ? this.transloco.translate(key) : '';
+  }
   adminName(): string {
     const u = this.auth.currentUser();
     return u ? `${u.firstName} ${u.lastName}`.trim() || u.email : 'admin';
@@ -307,35 +312,35 @@ export class AdminComponent implements OnInit {
   changeRole(u: AdminUser, role: string): void {
     if (role === u.role) return;
     this.admin.setUserRole(u.id, role).pipe(catchError(() => of(null))).subscribe(updated => {
-      if (updated) { this.users.update(list => list.map(x => x.id === u.id ? updated : x)); this.flash(`${u.email} is now ${role}`); }
+      if (updated) { this.users.update(list => list.map(x => x.id === u.id ? updated : x)); this.flash(this.transloco.translate('admin.roleChanged', { email: u.email, role })); }
     });
   }
 
   toggleBan(u: AdminUser): void {
     this.admin.setUserActive(u.id, !u.active).pipe(catchError(() => of(null))).subscribe(updated => {
-      if (updated) { this.users.update(list => list.map(x => x.id === u.id ? updated : x)); this.flash(updated.active ? 'User reinstated' : 'User banned'); }
+      if (updated) { this.users.update(list => list.map(x => x.id === u.id ? updated : x)); this.flash(this.transloco.translate(updated.active ? 'admin.userReinstated' : 'admin.userBanned')); }
     });
   }
 
   activatePartner(p: AdminPartner): void {
     this.admin.activatePartner(p.id).pipe(catchError(() => of(null))).subscribe(() => {
       this.partners.update(list => list.map(x => x.id === p.id ? { ...x, active: true, status: 'LIVE' } : x));
-      this.flash('Partner activated');
+      this.flash(this.transloco.translate('admin.partnerActivated'));
     });
   }
 
   suspendPartner(p: AdminPartner): void {
     this.admin.suspendPartner(p.id).pipe(catchError(() => of(null))).subscribe(() => {
       this.partners.update(list => list.map(x => x.id === p.id ? { ...x, active: false, status: 'SUSPENDED' } : x));
-      this.flash('Partner suspended');
+      this.flash(this.transloco.translate('admin.partnerSuspended'));
     });
   }
 
   removeReview(r: AdminReview): void {
-    if (!confirm('Delete this review permanently?')) return;
+    if (!confirm(this.transloco.translate('admin.deleteReviewConfirm'))) return;
     this.admin.deleteReview(r.id).pipe(catchError(() => of(null))).subscribe(() => {
       this.reviews.update(list => list.filter(x => x.id !== r.id));
-      this.flash('Review deleted');
+      this.flash(this.transloco.translate('admin.reviewDeleted'));
     });
   }
 

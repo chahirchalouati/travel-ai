@@ -2,23 +2,24 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { BookingService } from '../../core/services/booking.service';
 import type { BookingResponse } from '../../core/models/api.models';
 
 @Component({
   selector: 'app-bookings',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslocoModule],
   styleUrls: ['../../shared/styles/dashboard.scss'],
   template: `
     <div class="dash-container">
       <header class="dash-head">
         <div>
-          <h1 class="dash-title">Bookings</h1>
-          <p class="dash-sub">Reservations, references and payment details.</p>
+          <h1 class="dash-title">{{ 'bookings.title' | transloco }}</h1>
+          <p class="dash-sub">{{ 'bookings.subtitle' | transloco }}</p>
         </div>
         <button class="dash-cta dash-cta--ghost" (click)="router.navigate(['/hotels'])">
-          <span class="ms">search</span> Find a stay
+          <span class="ms">search</span> {{ 'bookings.findStay' | transloco }}
         </button>
       </header>
 
@@ -31,9 +32,9 @@ import type { BookingResponse } from '../../core/models/api.models';
       } @else if (bookings().length === 0) {
         <div class="empty">
           <span class="ms">confirmation_number</span>
-          <h3>No bookings yet</h3>
-          <p>When you reserve a hotel, flight or restaurant it appears here.</p>
-          <button class="dash-cta" (click)="router.navigate(['/'])"><span class="ms">explore</span> Explore TravelAI</button>
+          <h3>{{ 'bookings.emptyTitle' | transloco }}</h3>
+          <p>{{ 'bookings.emptyBody' | transloco }}</p>
+          <button class="dash-cta" (click)="router.navigate(['/'])"><span class="ms">explore</span> {{ 'bookings.emptyCta' | transloco }}</button>
         </div>
       } @else {
         <div class="rows">
@@ -44,7 +45,7 @@ import type { BookingResponse } from '../../core/models/api.models';
               </div>
               <div class="row-main">
                 <div class="row-top">
-                  <h3 class="row-dest">{{ b.destination || 'Reservation' }}</h3>
+                  <h3 class="row-dest">{{ b.destination || ('bookings.reservationFallback' | transloco) }}</h3>
                   <span class="pill" [class]="'pill--' + b.status.toLowerCase()">{{ b.status }}</span>
                 </div>
                 <p class="row-meta">
@@ -56,7 +57,7 @@ import type { BookingResponse } from '../../core/models/api.models';
                 <span class="row-amount">{{ b.totalAmount | currency }}</span>
                 @if (b.status === 'PENDING' || b.status === 'CONFIRMED') {
                   <button class="row-cancel" (click)="cancel(b)" [disabled]="cancelling() === b.id">
-                    {{ cancelling() === b.id ? 'Cancelling…' : 'Cancel' }}
+                    {{ (cancelling() === b.id ? 'bookings.cancelling' : 'bookings.cancel') | transloco }}
                   </button>
                 }
               </div>
@@ -90,6 +91,7 @@ import type { BookingResponse } from '../../core/models/api.models';
 export class BookingsComponent implements OnInit {
   readonly router = inject(Router);
   private readonly service = inject(BookingService);
+  private readonly transloco = inject(TranslocoService);
 
   readonly loading = signal(true);
   readonly bookings = signal<BookingResponse[]>([]);
@@ -112,9 +114,9 @@ export class BookingsComponent implements OnInit {
       this.cancelling.set(null);
       if (updated) {
         this.bookings.update(list => list.map(x => (x.id === b.id ? updated : x)));
-        this.flash('Booking cancelled');
+        this.flash(this.transloco.translate('bookings.cancelled'));
       } else {
-        this.flash('Could not cancel — please try again');
+        this.flash(this.transloco.translate('bookings.cancelError'));
       }
     });
   }

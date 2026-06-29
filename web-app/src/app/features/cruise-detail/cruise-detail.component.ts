@@ -44,7 +44,7 @@ import type { CruiseSearchResult } from '../../core/models/api.models';
                 <span class="badge badge--blue">{{ c.cruiseType }}</span>
               }
               @if (c.allInclusive) {
-                <span class="badge badge--teal">All Inclusive</span>
+                <span class="badge badge--teal">{{ 'catalog.cruises.allInclusive' | transloco }}</span>
               }
             </div>
             <h1 class="hero-card__name">{{ c.name }}</h1>

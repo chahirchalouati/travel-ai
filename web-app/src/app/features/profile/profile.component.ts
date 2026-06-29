@@ -2,6 +2,7 @@ import { Component, computed, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../core/services/auth.service';
 import { ProfileService } from '../../core/services/profile.service';
 import type { ProfileOverview, GalleryPhoto, TravelPlace } from '../../core/services/profile.service';
@@ -31,7 +32,7 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslocoModule],
   template: `
     <div class="profile-page">
 
@@ -82,28 +83,28 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
                 @if (homePlace()) {
                   <span class="meta-chip"><span class="ms" style="font-size:15px">location_on</span> {{ homePlace() }}</span>
                 }
-                <span class="meta-chip"><span class="ms" style="font-size:15px">flight_takeoff</span> {{ placesCount() }} {{ placesCount() === 1 ? 'place' : 'places' }}</span>
-                <span class="meta-chip"><span class="ms" style="font-size:15px">calendar_today</span> Since {{ memberSince() }}</span>
+                <span class="meta-chip"><span class="ms" style="font-size:15px">flight_takeoff</span> {{ placesCount() }} {{ (placesCount() === 1 ? 'profile.place' : 'profile.places') | transloco }}</span>
+                <span class="meta-chip"><span class="ms" style="font-size:15px">calendar_today</span> {{ 'profile.since' | transloco }} {{ memberSince() }}</span>
               </div>
               <div class="profile-stats-row">
                 <div class="profile-stat">
                   <span class="stat-num">{{ contributions() }}</span>
-                  <span class="stat-label">Reviews</span>
+                  <span class="stat-label">{{ 'profile.statReviews' | transloco }}</span>
                 </div>
                 <div class="profile-stat">
                   <span class="stat-num">{{ trips() }}</span>
-                  <span class="stat-label">Trips</span>
+                  <span class="stat-label">{{ 'profile.statTrips' | transloco }}</span>
                 </div>
                 <div class="profile-stat">
                   <span class="stat-num">{{ photoCount() }}</span>
-                  <span class="stat-label">Photos</span>
+                  <span class="stat-label">{{ 'profile.statPhotos' | transloco }}</span>
                 </div>
               </div>
             </div>
           </div>
 
           <div class="profile-actions">
-            <button class="btn-edit-profile" (click)="editProfile()" type="button">Edit profile</button>
+            <button class="btn-edit-profile" (click)="editProfile()" type="button">{{ 'profile.editProfile' | transloco }}</button>
             <button class="btn-settings" (click)="openSettings()" type="button" aria-label="Settings">
               <span class="ms" style="font-size:20px">settings</span>
             </button>
@@ -119,7 +120,7 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
                 [class.active]="activeTab() === tab.id"
                 (click)="setTab(tab.id)"
                 type="button">
-                {{ tab.label }}
+                {{ tab.key | transloco }}
               </button>
             }
           </div>
@@ -132,8 +133,8 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
         <!-- Left col -->
         <aside class="profile-sidebar">
           <div class="sidebar-card">
-            <h2 class="sidebar-title">Your Achievements</h2>
-            <p class="sidebar-sub">{{ unlockedCount() }} of {{ achievements().length }} unlocked &middot; keep going!</p>
+            <h2 class="sidebar-title">{{ 'profile.achievements' | transloco }}</h2>
+            <p class="sidebar-sub">{{ 'profile.unlockedOf' | transloco:{ count: unlockedCount(), total: achievements().length } }}</p>
             <div class="achievements-list">
               @for (ach of achievements(); track ach.label) {
                 <div class="achievement-item">
@@ -151,18 +152,18 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
 
           <!-- Profile strength -->
           <div class="sidebar-card">
-            <h2 class="sidebar-title">Profile Strength</h2>
+            <h2 class="sidebar-title">{{ 'profile.profileStrength' | transloco }}</h2>
             <div class="strength-bar-wrap">
               <div class="strength-bar">
                 <div class="strength-fill" [style.width]="strengthPct()"></div>
               </div>
-              <span class="strength-label">{{ strengthPct() }} complete</span>
+              <span class="strength-label">{{ strengthPct() }} {{ 'profile.complete' | transloco }}</span>
             </div>
             <div class="strength-items">
-              @for (item of strengthItems(); track item.label) {
+              @for (item of strengthItems(); track item.key) {
                 <div class="strength-item" [class.done]="item.done">
                   <span class="ms strength-item-icon">{{ item.done ? 'check_circle' : 'radio_button_unchecked' }}</span>
-                  <span class="strength-item-label">{{ item.label }}</span>
+                  <span class="strength-item-label">{{ item.key | transloco }}</span>
                 </div>
               }
             </div>
@@ -176,22 +177,22 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
             <!-- Highlight banner -->
             <div class="highlight-banner">
               <div class="highlight-text">
-                <span class="highlight-eyebrow">Your journey so far</span>
-                <h2 class="highlight-title">{{ contributions() }} {{ contributions() === 1 ? 'review' : 'reviews' }} across <b>{{ placesCount() }}</b> {{ placesCount() === 1 ? 'place' : 'places' }}</h2>
-                <p class="highlight-sub">Every review helps another traveler. Where to next?</p>
+                <span class="highlight-eyebrow">{{ 'profile.journey' | transloco }}</span>
+                <h2 class="highlight-title">{{ contributions() }} {{ (contributions() === 1 ? 'profile.review' : 'profile.reviews') | transloco }} {{ 'profile.across' | transloco }} <b>{{ placesCount() }}</b> {{ (placesCount() === 1 ? 'profile.place' : 'profile.places') | transloco }}</h2>
+                <p class="highlight-sub">{{ 'profile.journeySub' | transloco }}</p>
                 <button class="btn-start-exploring" (click)="goPlanner()" type="button">
                   <span class="ms" style="font-size:18px">auto_awesome</span>
-                  Plan your next trip
+                  {{ 'profile.planNextTrip' | transloco }}
                 </button>
               </div>
               <div class="highlight-stats">
-                <div class="hl-stat"><span class="hl-num">{{ contributions() }}</span><span class="hl-lbl">Reviews</span></div>
-                <div class="hl-stat"><span class="hl-num">{{ photoCount() }}</span><span class="hl-lbl">Photos</span></div>
-                <div class="hl-stat"><span class="hl-num">{{ helpfulVotes() }}</span><span class="hl-lbl">Helpful votes</span></div>
+                <div class="hl-stat"><span class="hl-num">{{ contributions() }}</span><span class="hl-lbl">{{ 'profile.ovReviews' | transloco }}</span></div>
+                <div class="hl-stat"><span class="hl-num">{{ photoCount() }}</span><span class="hl-lbl">{{ 'profile.ovPhotos' | transloco }}</span></div>
+                <div class="hl-stat"><span class="hl-num">{{ helpfulVotes() }}</span><span class="hl-lbl">{{ 'profile.ovHelpful' | transloco }}</span></div>
               </div>
             </div>
 
-            <h3 class="feed-heading">Recent activity</h3>
+            <h3 class="feed-heading">{{ 'profile.recentActivity' | transloco }}</h3>
             <div class="activity-feed">
               @for (a of activity(); track $index) {
                 <div class="feed-item">
@@ -206,11 +207,11 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
               } @empty {
                 <div class="tab-empty">
                   <span class="ms tab-empty-icon">rss_feed</span>
-                  <h3>No activity yet</h3>
-                  <p>Review places you've visited and your activity will appear here.</p>
+                  <h3>{{ 'profile.noActivity' | transloco }}</h3>
+                  <p>{{ 'profile.noActivitySub' | transloco }}</p>
                   <button class="btn-start-exploring" (click)="goExplore()" type="button">
                     <span class="ms" style="font-size:18px">travel_explore</span>
-                    Start exploring
+                    {{ 'profile.startExploring' | transloco }}
                   </button>
                 </div>
               }
@@ -219,9 +220,9 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
 
           @if (activeTab() === 'trips') {
             <div class="content-head">
-              <h3 class="feed-heading" style="margin:0">Your trips</h3>
+              <h3 class="feed-heading" style="margin:0">{{ 'profile.yourTrips' | transloco }}</h3>
               <button class="btn-add-inline" (click)="goPlanner()" type="button">
-                <span class="ms" style="font-size:18px">add</span> New trip
+                <span class="ms" style="font-size:18px">add</span> {{ 'profile.newTrip' | transloco }}
               </button>
             </div>
             <div class="trips-grid">
@@ -235,18 +236,18 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
                     <h4 class="trip-title">{{ t.title }}</h4>
                     <p class="trip-loc"><span class="ms" style="font-size:14px">location_on</span> {{ t.location }}</p>
                     <div class="trip-meta">
-                      <span>{{ t.dates || 'Dates TBD' }}</span>
+                      <span>{{ t.dates || ('profile.datesTbd' | transloco) }}</span>
                     </div>
                   </div>
                 </article>
               } @empty {
                 <div class="tab-empty" style="grid-column:1/-1">
                   <span class="ms tab-empty-icon">luggage</span>
-                  <h3>No trips yet</h3>
-                  <p>Plan your first trip with Travel AI and it will appear here.</p>
+                  <h3>{{ 'profile.noTrips' | transloco }}</h3>
+                  <p>{{ 'profile.noTripsSub' | transloco }}</p>
                   <button class="btn-start-exploring" (click)="goPlanner()" type="button">
                     <span class="ms" style="font-size:18px">auto_awesome</span>
-                    Plan a trip
+                    {{ 'common.planTrip' | transloco }}
                   </button>
                 </div>
               }
@@ -256,16 +257,16 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
           @if (activeTab() === 'photos') {
             <input #galleryInput type="file" accept="image/*" style="display:none" (change)="onGalleryAdd($event)">
             <div class="content-head">
-              <h3 class="feed-heading" style="margin:0">Photo gallery</h3>
+              <h3 class="feed-heading" style="margin:0">{{ 'profile.photoGallery' | transloco }}</h3>
               <button class="add-btn" type="button" (click)="galleryInput.click()" [disabled]="uploadingPhoto()">
                 <span class="ms" style="font-size:18px">{{ uploadingPhoto() ? 'hourglass_top' : 'add_photo_alternate' }}</span>
-                {{ uploadingPhoto() ? 'Uploading…' : 'Add photo' }}
+                {{ (uploadingPhoto() ? 'profile.uploading' : 'profile.addPhotoBtn') | transloco }}
               </button>
             </div>
             <div class="photo-grid">
               <button class="photo-add-tile" type="button" (click)="galleryInput.click()" [disabled]="uploadingPhoto()">
                 <span class="ms" style="font-size:30px">add_a_photo</span>
-                <span>Upload</span>
+                <span>{{ 'profile.upload' | transloco }}</span>
               </button>
               @for (p of gallery(); track p.id) {
                 <figure class="photo-tile">
@@ -284,16 +285,16 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
             @if (gallery().length === 0 && photos().length === 0) {
               <div class="tab-empty">
                 <span class="ms tab-empty-icon">photo_library</span>
-                <h3>No photos yet</h3>
-                <p>Upload your travel photos — they'll appear in your gallery.</p>
+                <h3>{{ 'profile.noPhotos' | transloco }}</h3>
+                <p>{{ 'profile.noPhotosSub' | transloco }}</p>
               </div>
             }
           }
 
           @if (activeTab() === 'reviews') {
             <div class="content-head">
-              <h3 class="feed-heading" style="margin:0">Reviews</h3>
-              <span class="content-count">{{ contributions() }} {{ contributions() === 1 ? 'review' : 'reviews' }}</span>
+              <h3 class="feed-heading" style="margin:0">{{ 'profile.statReviews' | transloco }}</h3>
+              <span class="content-count">{{ contributions() }} {{ (contributions() === 1 ? 'profile.review' : 'profile.reviews') | transloco }}</span>
             </div>
             <div class="reviews-list">
               @for (r of reviews(); track r.id) {
@@ -303,7 +304,7 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
                     <div class="review-top">
                       <div>
                         <h4 class="review-place">{{ r.title }}</h4>
-                        <span class="review-type">{{ reviewType(r) }} review</span>
+                        <span class="review-type">{{ reviewType(r) }} {{ 'profile.review' | transloco }}</span>
                       </div>
                       <span class="review-date">{{ r.createdAt | date:'MMM y' }}</span>
                     </div>
@@ -323,10 +324,10 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
                     <div class="review-foot">
                       <button class="review-helpful" type="button">
                         <span class="ms" style="font-size:16px">thumb_up</span>
-                        Helpful ({{ r.helpfulCount }})
+                        {{ 'profile.helpful' | transloco }} ({{ r.helpfulCount }})
                       </button>
                       @if (r.verified) {
-                        <span class="review-verified"><span class="ms" style="font-size:15px">verified</span> Verified</span>
+                        <span class="review-verified"><span class="ms" style="font-size:15px">verified</span> {{ 'profile.verifiedLabel' | transloco }}</span>
                       }
                     </div>
                   </div>
@@ -334,11 +335,11 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
               } @empty {
                 <div class="tab-empty">
                   <span class="ms tab-empty-icon">rate_review</span>
-                  <h3>No reviews yet</h3>
-                  <p>Review places you've visited to help other travelers.</p>
+                  <h3>{{ 'profile.noReviews' | transloco }}</h3>
+                  <p>{{ 'profile.noReviewsSub' | transloco }}</p>
                   <button class="btn-start-exploring" (click)="goExplore()" type="button">
                     <span class="ms" style="font-size:18px">travel_explore</span>
-                    Find places to review
+                    {{ 'profile.findToReview' | transloco }}
                   </button>
                 </div>
               }
@@ -349,26 +350,26 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
             <div class="map-hero">
               <div class="map-hero-overlay"></div>
               <div class="map-hero-content">
-                <span class="map-hero-eyebrow">Travel passport</span>
-                <h3 class="map-hero-title">{{ totalPlaces() }} {{ totalPlaces() === 1 ? 'place' : 'places' }} explored</h3>
-                <p class="map-hero-sub">Pin the places you've been and build your travel map.</p>
+                <span class="map-hero-eyebrow">{{ 'profile.travelPassport' | transloco }}</span>
+                <h3 class="map-hero-title">{{ totalPlaces() }} {{ (totalPlaces() === 1 ? 'profile.place' : 'profile.places') | transloco }} {{ 'profile.explored' | transloco }}</h3>
+                <p class="map-hero-sub">{{ 'profile.travelPassportSub' | transloco }}</p>
               </div>
             </div>
 
             <div class="content-head">
-              <h3 class="feed-heading" style="margin:0">Places visited</h3>
+              <h3 class="feed-heading" style="margin:0">{{ 'profile.placesVisited' | transloco }}</h3>
               <button class="add-btn" type="button" (click)="toggleAddPlace()">
                 <span class="ms" style="font-size:18px">{{ showAddPlace() ? 'close' : 'add_location_alt' }}</span>
-                {{ showAddPlace() ? 'Cancel' : 'Add place' }}
+                {{ (showAddPlace() ? 'profile.cancel' : 'profile.addPlace') | transloco }}
               </button>
             </div>
 
             @if (showAddPlace()) {
               <div class="add-place-form">
-                <input class="ap-input" [(ngModel)]="newPlaceName" placeholder="Place (e.g. Lisbon)" maxlength="160">
-                <input class="ap-input" [(ngModel)]="newPlaceCountry" placeholder="Country" maxlength="120">
-                <input class="ap-input ap-note" [(ngModel)]="newPlaceNote" placeholder="A note (optional)" maxlength="500">
-                <button class="ap-save" type="button" [disabled]="!newPlaceName.trim()" (click)="addPlace()">Add</button>
+                <input class="ap-input" [(ngModel)]="newPlaceName" [placeholder]="'profile.placePlaceholder' | transloco" maxlength="160">
+                <input class="ap-input" [(ngModel)]="newPlaceCountry" [placeholder]="'profile.countryPlaceholder' | transloco" maxlength="120">
+                <input class="ap-input ap-note" [(ngModel)]="newPlaceNote" [placeholder]="'profile.notePlaceholder' | transloco" maxlength="500">
+                <button class="ap-save" type="button" [disabled]="!newPlaceName.trim()" (click)="addPlace()">{{ 'profile.add' | transloco }}</button>
               </div>
             }
 
@@ -392,8 +393,8 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
               @if (placesList().length === 0 && places().length === 0) {
                 <div class="tab-empty" style="grid-column:1/-1">
                   <span class="ms tab-empty-icon">map</span>
-                  <h3>No places yet</h3>
-                  <p>Add the places you've been to start your travel map.</p>
+                  <h3>{{ 'profile.noPlaces' | transloco }}</h3>
+                  <p>{{ 'profile.noPlacesSub' | transloco }}</p>
                 </div>
               }
             </div>
@@ -403,21 +404,21 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
         <!-- Right col -->
         <aside class="profile-right">
           <div class="sidebar-card">
-            <h2 class="sidebar-title">Helpful Votes</h2>
+            <h2 class="sidebar-title">{{ 'profile.helpfulVotesTitle' | transloco }}</h2>
             <div class="votes-display">
               <span class="votes-num">{{ helpfulVotes() }}</span>
-              <span class="votes-label">votes received</span>
+              <span class="votes-label">{{ 'profile.votesReceived' | transloco }}</span>
             </div>
-            <p class="votes-hint">Votes other travelers gave your reviews.</p>
+            <p class="votes-hint">{{ 'profile.votesSub' | transloco }}</p>
           </div>
 
           <div class="sidebar-card">
-            <h2 class="sidebar-title">Snapshot</h2>
+            <h2 class="sidebar-title">{{ 'profile.snapshot' | transloco }}</h2>
             <div class="snapshot-list">
-              <div class="snapshot-row"><span class="ms" style="color:var(--teal)">rate_review</span> {{ contributions() }} reviews</div>
-              <div class="snapshot-row"><span class="ms" style="color:var(--brand)">photo_camera</span> {{ photoCount() }} photos</div>
-              <div class="snapshot-row"><span class="ms" style="color:var(--gold)">place</span> {{ placesCount() }} places</div>
-              <div class="snapshot-row"><span class="ms" style="color:var(--text-tertiary)">luggage</span> {{ trips() }} trips</div>
+              <div class="snapshot-row"><span class="ms" style="color:var(--teal)">rate_review</span> {{ contributions() }} {{ 'profile.reviews' | transloco }}</div>
+              <div class="snapshot-row"><span class="ms" style="color:var(--brand)">photo_camera</span> {{ photoCount() }} {{ 'profile.statPhotos' | transloco }}</div>
+              <div class="snapshot-row"><span class="ms" style="color:var(--gold)">place</span> {{ placesCount() }} {{ 'profile.places' | transloco }}</div>
+              <div class="snapshot-row"><span class="ms" style="color:var(--text-tertiary)">luggage</span> {{ trips() }} {{ 'profile.statTrips' | transloco }}</div>
             </div>
           </div>
         </aside>
@@ -429,7 +430,7 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
       <div class="modal-overlay" (click)="showEditModal.set(false)" role="dialog" aria-modal="true" aria-label="Edit profile">
         <div class="modal" (click)="$event.stopPropagation()">
           <div class="modal-header">
-            <h2 class="modal-title">Edit profile</h2>
+            <h2 class="modal-title">{{ 'profile.editProfile' | transloco }}</h2>
             <button class="modal-close" (click)="showEditModal.set(false)" aria-label="Close">
               <span class="ms">close</span>
             </button>
@@ -437,26 +438,26 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
           <div class="modal-body">
             <div class="form-row">
               <div class="form-field">
-                <label class="form-label" for="edit-first-name">First name</label>
-                <input id="edit-first-name" class="form-input" type="text" [(ngModel)]="editFirstName" placeholder="First name">
+                <label class="form-label" for="edit-first-name">{{ 'auth.firstName' | transloco }}</label>
+                <input id="edit-first-name" class="form-input" type="text" [(ngModel)]="editFirstName" [placeholder]="'auth.firstName' | transloco">
               </div>
               <div class="form-field">
-                <label class="form-label" for="edit-last-name">Last name</label>
-                <input id="edit-last-name" class="form-input" type="text" [(ngModel)]="editLastName" placeholder="Last name">
+                <label class="form-label" for="edit-last-name">{{ 'auth.lastName' | transloco }}</label>
+                <input id="edit-last-name" class="form-input" type="text" [(ngModel)]="editLastName" [placeholder]="'auth.lastName' | transloco">
               </div>
             </div>
             <div class="form-field">
-              <label class="form-label" for="edit-bio">Bio</label>
-              <textarea id="edit-bio" class="form-input form-textarea" [(ngModel)]="editBio" placeholder="Tell us about yourself" rows="3"></textarea>
+              <label class="form-label" for="edit-bio">{{ 'profile.bio' | transloco }}</label>
+              <textarea id="edit-bio" class="form-input form-textarea" [(ngModel)]="editBio" [placeholder]="'profile.bioPlaceholder' | transloco" rows="3"></textarea>
             </div>
             <div class="form-field">
-              <label class="form-label" for="edit-city">Home city</label>
-              <input id="edit-city" class="form-input" type="text" [(ngModel)]="editCity" placeholder="Where are you based?">
+              <label class="form-label" for="edit-city">{{ 'profile.homeCity' | transloco }}</label>
+              <input id="edit-city" class="form-input" type="text" [(ngModel)]="editCity" [placeholder]="'profile.homeCityPlaceholder' | transloco">
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn-cancel" type="button" (click)="showEditModal.set(false)">Cancel</button>
-            <button class="btn-save" type="button" (click)="saveProfile()">Save changes</button>
+            <button class="btn-cancel" type="button" (click)="showEditModal.set(false)">{{ 'profile.cancel' | transloco }}</button>
+            <button class="btn-save" type="button" (click)="saveProfile()">{{ 'profile.saveChanges' | transloco }}</button>
           </div>
         </div>
       </div>
@@ -467,18 +468,18 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
       <div class="modal-overlay" (click)="showSettingsModal.set(false)" role="dialog" aria-modal="true" aria-label="Settings">
         <div class="modal" (click)="$event.stopPropagation()">
           <div class="modal-header">
-            <h2 class="modal-title">Settings</h2>
+            <h2 class="modal-title">{{ 'profile.settings' | transloco }}</h2>
             <button class="modal-close" (click)="showSettingsModal.set(false)" aria-label="Close">
               <span class="ms">close</span>
             </button>
           </div>
           <div class="modal-body">
             <div class="settings-section">
-              <h3 class="settings-section-title">Notifications</h3>
+              <h3 class="settings-section-title">{{ 'profile.notifications' | transloco }}</h3>
               <div class="settings-row">
                 <div class="settings-row-info">
-                  <span class="settings-row-label">Email notifications</span>
-                  <span class="settings-row-sub">Receive trip updates and deals</span>
+                  <span class="settings-row-label">{{ 'profile.emailNotif' | transloco }}</span>
+                  <span class="settings-row-sub">{{ 'profile.emailNotifSub' | transloco }}</span>
                 </div>
                 <button class="toggle-btn" type="button" [class.active]="notifEmail()"
                         (click)="notifEmail.set(!notifEmail())" [attr.aria-checked]="notifEmail()" role="switch">
@@ -487,8 +488,8 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
               </div>
               <div class="settings-row">
                 <div class="settings-row-info">
-                  <span class="settings-row-label">Push notifications</span>
-                  <span class="settings-row-sub">Reminders and real-time alerts</span>
+                  <span class="settings-row-label">{{ 'profile.pushNotif' | transloco }}</span>
+                  <span class="settings-row-sub">{{ 'profile.pushNotifSub' | transloco }}</span>
                 </div>
                 <button class="toggle-btn" type="button" [class.active]="notifPush()"
                         (click)="notifPush.set(!notifPush())" [attr.aria-checked]="notifPush()" role="switch">
@@ -497,18 +498,18 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
               </div>
             </div>
             <div class="settings-section">
-              <h3 class="settings-section-title">Account</h3>
+              <h3 class="settings-section-title">{{ 'profile.account' | transloco }}</h3>
               <div class="settings-account-email">
                 <span class="ms" style="font-size:18px;color:var(--text-tertiary)">mail</span>
                 <span class="settings-email-text">{{ authService.currentUser()?.email }}</span>
               </div>
               <button class="settings-action-btn" type="button" (click)="signOut()">
                 <span class="ms">logout</span>
-                Sign out
+                {{ 'userMenu.signOut' | transloco }}
               </button>
               <button class="settings-action-btn danger" type="button" (click)="deleteAccount()">
                 <span class="ms">delete_forever</span>
-                Delete account
+                {{ 'profile.deleteAccount' | transloco }}
               </button>
             </div>
           </div>
@@ -523,15 +524,16 @@ export class ProfileComponent implements OnInit {
   private readonly profileService = inject(ProfileService);
   private readonly mediaService = inject(MediaService);
   private readonly router = inject(Router);
+  private readonly transloco = inject(TranslocoService);
 
   activeTab = signal<Tab>('activity');
 
   readonly tabs = [
-    { id: 'activity' as Tab, label: 'Activity feed' },
-    { id: 'trips' as Tab,    label: 'Trips' },
-    { id: 'photos' as Tab,   label: 'Photos' },
-    { id: 'reviews' as Tab,  label: 'Reviews' },
-    { id: 'map' as Tab,      label: 'Travel map' },
+    { id: 'activity' as Tab, key: 'profile.tabActivity' },
+    { id: 'trips' as Tab,    key: 'profile.tabTrips' },
+    { id: 'photos' as Tab,   key: 'profile.tabPhotos' },
+    { id: 'reviews' as Tab,  key: 'profile.tabReviews' },
+    { id: 'map' as Tab,      key: 'profile.tabMap' },
   ];
 
   readonly defaultCover = DEFAULT_COVER;
@@ -594,7 +596,7 @@ export class ProfileComponent implements OnInit {
     const o = this.overview();
     if (o?.displayName) return o.displayName;
     const u = this.authService.currentUser();
-    if (!u) return 'Traveler';
+    if (!u) return this.transloco.translate('profile.travelerFallback');
     return `${u.firstName} ${u.lastName}`.trim() || u.email.split('@')[0];
   });
 
@@ -610,11 +612,11 @@ export class ProfileComponent implements OnInit {
     const u = this.authService.currentUser();
     const o = this.overview();
     return [
-      { label: 'Add your name', done: u ? !!(u.firstName && u.lastName) : false },
-      { label: 'Verify email', done: u?.emailVerified ?? false },
-      { label: 'Add a profile photo', done: !!this.avatarUrl() },
-      { label: 'Write a review', done: (o?.stats.reviewCount ?? 0) > 0 },
-      { label: 'Share a photo', done: (o?.stats.photoCount ?? 0) > 0 },
+      { key: 'profile.achAddName', done: u ? !!(u.firstName && u.lastName) : false },
+      { key: 'profile.achVerifyEmail', done: u?.emailVerified ?? false },
+      { key: 'profile.achAddPhoto', done: !!this.avatarUrl() },
+      { key: 'profile.achWriteReview', done: (o?.stats.reviewCount ?? 0) > 0 },
+      { key: 'profile.achSharePhoto', done: (o?.stats.photoCount ?? 0) > 0 },
     ];
   });
 
@@ -667,9 +669,9 @@ export class ProfileComponent implements OnInit {
     this.uploadingCover.set(true);
     this.mediaService.upload(file, 'covers').pipe(catchError(() => of(null))).subscribe(res => {
       this.uploadingCover.set(false);
-      if (!res) { this.toast('Upload failed — try again'); return; }
+      if (!res) { this.toast(this.transloco.translate('profile.uploadFailed')); return; }
       this.coverUrl.set(res.url);
-      this.persistMedia({ coverUrl: res.url }, 'Cover photo updated');
+      this.persistMedia({ coverUrl: res.url }, this.transloco.translate('profile.coverUpdated'));
     });
   }
 
@@ -679,9 +681,9 @@ export class ProfileComponent implements OnInit {
     this.uploadingAvatar.set(true);
     this.mediaService.upload(file, 'avatars').pipe(catchError(() => of(null))).subscribe(res => {
       this.uploadingAvatar.set(false);
-      if (!res) { this.toast('Upload failed — try again'); return; }
+      if (!res) { this.toast(this.transloco.translate('profile.uploadFailed')); return; }
       this.avatarUrl.set(res.url);
-      this.persistMedia({ avatarUrl: res.url }, 'Avatar updated');
+      this.persistMedia({ avatarUrl: res.url }, this.transloco.translate('profile.avatarUpdated'));
     });
   }
 
@@ -701,10 +703,10 @@ export class ProfileComponent implements OnInit {
     (event.target as HTMLInputElement).value = '';
     this.uploadingPhoto.set(true);
     this.mediaService.upload(file, 'gallery').pipe(catchError(() => of(null))).subscribe(res => {
-      if (!res) { this.uploadingPhoto.set(false); this.toast('Upload failed — try again'); return; }
+      if (!res) { this.uploadingPhoto.set(false); this.toast(this.transloco.translate('profile.uploadFailed')); return; }
       this.profileService.addPhoto({ url: res.url }).pipe(catchError(() => of(null))).subscribe(photo => {
         this.uploadingPhoto.set(false);
-        if (photo) { this.gallery.update(list => [photo, ...list]); this.toast('Photo added'); }
+        if (photo) { this.gallery.update(list => [photo, ...list]); this.toast(this.transloco.translate('profile.photoAdded')); }
       });
     });
   }
@@ -712,7 +714,7 @@ export class ProfileComponent implements OnInit {
   deleteGalleryPhoto(photo: GalleryPhoto): void {
     this.profileService.deletePhoto(photo.id).pipe(catchError(() => of(null))).subscribe(() => {
       this.gallery.update(list => list.filter(p => p.id !== photo.id));
-      this.toast('Photo removed');
+      this.toast(this.transloco.translate('profile.photoRemoved'));
     });
   }
 
@@ -732,9 +734,9 @@ export class ProfileComponent implements OnInit {
         this.placesList.update(list => [place, ...list]);
         this.newPlaceName = ''; this.newPlaceCountry = ''; this.newPlaceNote = '';
         this.showAddPlace.set(false);
-        this.toast('Place added to your map');
+        this.toast(this.transloco.translate('profile.placeAdded'));
       } else {
-        this.toast('Could not add place');
+        this.toast(this.transloco.translate('profile.placeAddError'));
       }
     });
   }
@@ -742,7 +744,7 @@ export class ProfileComponent implements OnInit {
   deletePlace(place: TravelPlace): void {
     this.profileService.deletePlace(place.id).pipe(catchError(() => of(null))).subscribe(() => {
       this.placesList.update(list => list.filter(p => p.id !== place.id));
-      this.toast('Place removed');
+      this.toast(this.transloco.translate('profile.placeRemoved'));
     });
   }
 
@@ -768,7 +770,7 @@ export class ProfileComponent implements OnInit {
       this.profileService.updateMedia({ bio, location }).pipe(catchError(() => of(null))).subscribe(() => {
         const u = this.authService.currentUser();
         if (u) this.authService.currentUser.set({ ...u, bio, location });
-        this.toast('Profile updated');
+        this.toast(this.transloco.translate('profile.profileUpdated'));
       });
     });
     this.showEditModal.set(false);
@@ -784,7 +786,7 @@ export class ProfileComponent implements OnInit {
   }
 
   deleteAccount(): void {
-    if (!confirm('Delete your account? This cannot be undone.')) return;
+    if (!confirm(this.transloco.translate('profile.deleteConfirm'))) return;
     this.authService.logout().subscribe({ complete: () => this.router.navigate(['/']) });
   }
 

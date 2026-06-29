@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../core/services/auth.service';
 
 type Mode = 'login' | 'register';
@@ -8,7 +9,7 @@ type Mode = 'login' | 'register';
 @Component({
   selector: 'app-auth-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslocoModule],
   template: `
     <div class="auth-overlay" (click)="onClose()" role="dialog" aria-modal="true" aria-label="Account">
       <div class="auth-card" (click)="$event.stopPropagation()">
@@ -20,23 +21,21 @@ type Mode = 'login' | 'register';
           <span class="auth-logo">Travel<span class="auth-logo-accent">AI</span></span>
         </div>
 
-        <h2 class="auth-title">{{ mode() === 'login' ? 'Welcome back' : 'Create your account' }}</h2>
+        <h2 class="auth-title">{{ (mode() === 'login' ? 'auth.welcomeBack' : 'auth.createAccount') | transloco }}</h2>
         <p class="auth-sub">
-          {{ mode() === 'login'
-            ? 'Sign in to plan trips, save places and write reviews.'
-            : 'Join thousands of travelers planning smarter trips.' }}
+          {{ (mode() === 'login' ? 'auth.subLogin' : 'auth.subRegister') | transloco }}
         </p>
 
         <form class="auth-form" (ngSubmit)="submit()">
           @if (mode() === 'register') {
             <div class="auth-row">
               <div class="auth-field">
-                <label class="auth-label" for="auth-first">First name</label>
+                <label class="auth-label" for="auth-first">{{ 'auth.firstName' | transloco }}</label>
                 <input id="auth-first" class="auth-input" type="text" name="firstName"
                        [(ngModel)]="firstName" autocomplete="given-name" required>
               </div>
               <div class="auth-field">
-                <label class="auth-label" for="auth-last">Last name</label>
+                <label class="auth-label" for="auth-last">{{ 'auth.lastName' | transloco }}</label>
                 <input id="auth-last" class="auth-input" type="text" name="lastName"
                        [(ngModel)]="lastName" autocomplete="family-name" required>
               </div>
@@ -44,13 +43,13 @@ type Mode = 'login' | 'register';
           }
 
           <div class="auth-field">
-            <label class="auth-label" for="auth-email">Email</label>
+            <label class="auth-label" for="auth-email">{{ 'auth.email' | transloco }}</label>
             <input id="auth-email" class="auth-input" type="email" name="email"
                    [(ngModel)]="email" autocomplete="email" placeholder="you@example.com" required>
           </div>
 
           <div class="auth-field">
-            <label class="auth-label" for="auth-pass">Password</label>
+            <label class="auth-label" for="auth-pass">{{ 'auth.password' | transloco }}</label>
             <input id="auth-pass" class="auth-input" type="password" name="password"
                    [(ngModel)]="password" [attr.autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'"
                    placeholder="••••••••" required>
@@ -67,18 +66,18 @@ type Mode = 'login' | 'register';
             @if (loading()) {
               <span class="auth-spinner"></span>
             } @else {
-              {{ mode() === 'login' ? 'Sign in' : 'Create account' }}
+              {{ (mode() === 'login' ? 'auth.signIn' : 'auth.create') | transloco }}
             }
           </button>
         </form>
 
         <p class="auth-switch">
           @if (mode() === 'login') {
-            Don't have an account?
-            <button type="button" class="auth-link" (click)="setMode('register')">Sign up</button>
+            {{ 'auth.noAccount' | transloco }}
+            <button type="button" class="auth-link" (click)="setMode('register')">{{ 'auth.signUp' | transloco }}</button>
           } @else {
-            Already have an account?
-            <button type="button" class="auth-link" (click)="setMode('login')">Sign in</button>
+            {{ 'auth.haveAccount' | transloco }}
+            <button type="button" class="auth-link" (click)="setMode('login')">{{ 'auth.signIn' | transloco }}</button>
           }
         </p>
       </div>
@@ -259,6 +258,7 @@ export class AuthModalComponent {
   @Output() authenticated = new EventEmitter<void>();
 
   private readonly authService = inject(AuthService);
+  private readonly transloco = inject(TranslocoService);
 
   readonly mode = signal<Mode>('login');
   readonly loading = signal(false);
@@ -282,11 +282,11 @@ export class AuthModalComponent {
   submit(): void {
     const email = this.email.trim();
     if (!email || !this.password) {
-      this.error.set('Please fill in all required fields.');
+      this.error.set(this.transloco.translate('auth.errRequired'));
       return;
     }
     if (this.mode() === 'register' && (!this.firstName.trim() || !this.lastName.trim())) {
-      this.error.set('Please enter your first and last name.');
+      this.error.set(this.transloco.translate('auth.errName'));
       return;
     }
 
@@ -318,13 +318,11 @@ export class AuthModalComponent {
   private messageFor(err: unknown): string {
     const status = (err as { status?: number })?.status;
     if (status === 401 || status === 400) {
-      return this.mode() === 'login'
-        ? 'Incorrect email or password.'
-        : 'Could not create your account. Check your details and try again.';
+      return this.transloco.translate(this.mode() === 'login' ? 'auth.errLogin' : 'auth.errRegister');
     }
     if (status === 409) {
-      return 'An account with this email already exists.';
+      return this.transloco.translate('auth.errExists');
     }
-    return 'Something went wrong. Please try again.';
+    return this.transloco.translate('auth.errGeneric');
   }
 }

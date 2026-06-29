@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { DestinationService } from '../../core/services/destination.service';
 import { ReviewService } from '../../core/services/review.service';
 import type {
@@ -18,7 +19,7 @@ const MONTH_NAMES = [
 @Component({
   selector: 'app-destination-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslocoModule],
   template: `
     @if (destination(); as dest) {
       <!-- Back navigation -->
@@ -32,7 +33,7 @@ const MONTH_NAMES = [
           class="back-link"
         >
           <span class="ms" style="font-size: 18px;">arrow_back</span>
-          Back to destinations
+          {{ 'destDetail.back' | transloco }}
         </button>
       </nav>
 
@@ -135,7 +136,7 @@ const MONTH_NAMES = [
 
           <!-- Overview -->
           <section class="content-card">
-            <h2 class="section-heading">Overview</h2>
+            <h2 class="section-heading">{{ 'destDetail.overview' | transloco }}</h2>
             <p
               style="
                 font-size: 15px; color: #545454; line-height: 1.75; margin: 0 0 24px;
@@ -154,7 +155,7 @@ const MONTH_NAMES = [
                     font-family: 'Hanken Grotesk', sans-serif; font-size: 15px;
                     color: #1a1a1a; margin: 0; font-weight: 700;
                   "
-                >Best Time to Visit</h3>
+                >{{ 'destDetail.bestTime' | transloco }}</h3>
               </div>
               <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                 @for (month of getMonthList(); track month) {
@@ -174,9 +175,9 @@ const MONTH_NAMES = [
           <!-- Reviews -->
           <section class="content-card">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-              <h2 class="section-heading" style="margin-bottom: 0;">Traveler Reviews</h2>
+              <h2 class="section-heading" style="margin-bottom: 0;">{{ 'destDetail.reviews' | transloco }}</h2>
               @if (reviewSummary(); as summary) {
-                <span style="font-size: 14px; color: #8a8a8a;">{{ summary.totalReviews }} reviews</span>
+                <span style="font-size: 14px; color: #8a8a8a;">{{ summary.totalReviews }} {{ 'destDetail.reviewsCount' | transloco }}</span>
               }
             </div>
 
@@ -193,7 +194,7 @@ const MONTH_NAMES = [
                 </div>
                 <div style="flex: 1;">
                   <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                    <span style="font-family: 'Hanken Grotesk', sans-serif; font-size: 12px; color: #00856A; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">AI Summary</span>
+                    <span style="font-family: 'Hanken Grotesk', sans-serif; font-size: 12px; color: #00856A; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">{{ 'destDetail.aiSummary' | transloco }}</span>
                     <span style="font-family: 'Hanken Grotesk', sans-serif; font-size: 22px; color: #1a1a1a; font-weight: 800;">{{ summary.averageRating | number:'1.1-1' }}</span>
                     <div style="display: flex; gap: 1px;">
                       @for (star of getStars(summary.averageRating); track $index) {
@@ -220,7 +221,7 @@ const MONTH_NAMES = [
                   style="
                     font-size: 15px; color: #8a8a8a; margin: 0;
                   "
-                >No reviews yet. Be the first to share your experience.</p>
+                >{{ 'destDetail.noReviews' | transloco }}</p>
               </div>
             }
 
@@ -283,7 +284,7 @@ const MONTH_NAMES = [
                       class="helpful-btn"
                     >
                       <span class="ms" style="font-size: 15px;">thumb_up</span>
-                      Helpful ({{ review.helpfulCount }})
+                      {{ 'destDetail.helpful' | transloco }} ({{ review.helpfulCount }})
                     </button>
                   </article>
                 }
@@ -300,7 +301,7 @@ const MONTH_NAMES = [
                   font-size: 24px; color: #E04A2F;
                 "
               >auto_awesome</span>
-              <h2 class="section-heading" style="margin-bottom: 0;">AI Travel Guide</h2>
+              <h2 class="section-heading" style="margin-bottom: 0;">{{ 'destDetail.aiGuide' | transloco }}</h2>
             </div>
 
             @if (!guide() && !guideLoading()) {
@@ -308,7 +309,7 @@ const MONTH_NAMES = [
                 style="
                   font-size: 15px; color: #545454; line-height: 1.65; margin: 0 0 20px;
                 "
-              >Get a personalized AI-generated travel guide with top attractions, food recommendations, and insider travel tips.</p>
+              >{{ 'destDetail.guideIntro' | transloco }}</p>
               @if (guideError()) {
                 <p style="font-size: 14px; color: #E04A2F; margin: 0 0 16px; display: flex; align-items: center; gap: 6px;">
                   <span class="ms" style="font-size: 16px;">error_outline</span>
@@ -320,7 +321,7 @@ const MONTH_NAMES = [
                 class="btn-primary"
               >
                 <span class="ms" style="font-size: 20px;">auto_awesome</span>
-                {{ guideError() ? 'Retry' : 'Generate AI Guide' }}
+                {{ (guideError() ? 'destDetail.retry' : 'destDetail.generateGuide') | transloco }}
               </button>
             }
 
@@ -346,7 +347,7 @@ const MONTH_NAMES = [
                   <div class="guide-section-card">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
                       <span class="ms" style="font-size: 22px; color: #E04A2F;">attractions</span>
-                      <h3 class="guide-section-title">Top Attractions</h3>
+                      <h3 class="guide-section-title">{{ 'destDetail.topAttractions' | transloco }}</h3>
                     </div>
                     <p class="guide-section-text">{{ g.topAttractions }}</p>
                   </div>
@@ -356,7 +357,7 @@ const MONTH_NAMES = [
                   <div class="guide-section-card">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
                       <span class="ms" style="font-size: 22px; color: #E04A2F;">restaurant</span>
-                      <h3 class="guide-section-title">Food Recommendations</h3>
+                      <h3 class="guide-section-title">{{ 'destDetail.foodRec' | transloco }}</h3>
                     </div>
                     <p class="guide-section-text">{{ g.foodRecommendations }}</p>
                   </div>
@@ -366,7 +367,7 @@ const MONTH_NAMES = [
                   <div class="guide-section-card">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
                       <span class="ms" style="font-size: 22px; color: #E04A2F;">lightbulb</span>
-                      <h3 class="guide-section-title">Travel Tips</h3>
+                      <h3 class="guide-section-title">{{ 'destDetail.travelTips' | transloco }}</h3>
                     </div>
                     <p class="guide-section-text">{{ g.travelTips }}</p>
                   </div>
@@ -386,13 +387,13 @@ const MONTH_NAMES = [
                 font-family: 'Hanken Grotesk', sans-serif; font-size: 18px;
                 color: #1a1a1a; margin: 0 0 18px; font-weight: 700;
               "
-            >Quick Info</h3>
+            >{{ 'destDetail.quickInfo' | transloco }}</h3>
 
             <div style="display: flex; flex-direction: column; gap: 14px;">
               <div style="display: flex; align-items: center; gap: 12px;">
                 <span class="ms" style="font-size: 20px; color: #00856A;">payments</span>
                 <div>
-                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">Avg Daily Cost</div>
+                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">{{ 'destDetail.avgDailyCost' | transloco }}</div>
                   <div style="font-size: 15px; color: #1a1a1a; font-weight: 700;">{{ dest.avgDailyCost | currency:dest.currency:'symbol':'1.0-0' }}</div>
                 </div>
               </div>
@@ -402,7 +403,7 @@ const MONTH_NAMES = [
               <div style="display: flex; align-items: center; gap: 12px;">
                 <span class="ms" style="font-size: 20px; color: #00856A;">thermostat</span>
                 <div>
-                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">Climate</div>
+                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">{{ 'destDetail.climate' | transloco }}</div>
                   <div style="font-size: 15px; color: #1a1a1a; font-weight: 700;">{{ dest.climate }}</div>
                 </div>
               </div>
@@ -412,7 +413,7 @@ const MONTH_NAMES = [
               <div style="display: flex; align-items: center; gap: 12px;">
                 <span class="ms" style="font-size: 20px; color: #00856A;">translate</span>
                 <div>
-                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">Language</div>
+                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">{{ 'destDetail.language' | transloco }}</div>
                   <div style="font-size: 15px; color: #1a1a1a; font-weight: 700;">{{ dest.language }}</div>
                 </div>
               </div>
@@ -422,7 +423,7 @@ const MONTH_NAMES = [
               <div style="display: flex; align-items: center; gap: 12px;">
                 <span class="ms" style="font-size: 20px; color: #00856A;">monetization_on</span>
                 <div>
-                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">Currency</div>
+                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">{{ 'destDetail.currency' | transloco }}</div>
                   <div style="font-size: 15px; color: #1a1a1a; font-weight: 700;">{{ dest.currency }}</div>
                 </div>
               </div>
@@ -432,7 +433,7 @@ const MONTH_NAMES = [
               <div style="display: flex; align-items: center; gap: 12px;">
                 <span class="ms" style="font-size: 20px; color: #00856A;">calendar_month</span>
                 <div>
-                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">Best Months</div>
+                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">{{ 'destDetail.bestMonths' | transloco }}</div>
                   <div style="font-size: 15px; color: #1a1a1a; font-weight: 700;">{{ getMonthNames(dest.bestMonths) }}</div>
                 </div>
               </div>
@@ -446,12 +447,12 @@ const MONTH_NAMES = [
                 font-family: 'Hanken Grotesk', sans-serif; font-size: 18px;
                 color: #1a1a1a; margin: 0 0 6px; font-weight: 700;
               "
-            >Ready to explore?</h3>
+            >{{ 'destDetail.readyToExplore' | transloco }}</h3>
             <p
               style="
                 font-size: 14px; color: #545454; margin: 0 0 18px; line-height: 1.5;
               "
-            >Let AI craft the perfect itinerary for {{ dest.name }}.</p>
+            >{{ 'destDetail.craftItinerary' | transloco:{ name: dest.name } }}</p>
 
             <div style="display: flex; flex-direction: column; gap: 10px;">
               <button
@@ -460,7 +461,7 @@ const MONTH_NAMES = [
                 style="width: 100%; justify-content: center;"
               >
                 <span class="ms" style="font-size: 20px;">travel_explore</span>
-                Plan a Trip
+                {{ 'common.planTrip' | transloco }}
               </button>
               <button
                 (click)="goToChat()"
@@ -468,7 +469,7 @@ const MONTH_NAMES = [
                 style="width: 100%; justify-content: center;"
               >
                 <span class="ms" style="font-size: 20px;">chat</span>
-                Chat about {{ dest.name }}
+                {{ 'destDetail.chatAbout' | transloco:{ name: dest.name } }}
               </button>
             </div>
           </div>
@@ -657,6 +658,13 @@ export class DestinationDetailComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly destinationService = inject(DestinationService);
   private readonly reviewService = inject(ReviewService);
+  private readonly transloco = inject(TranslocoService);
+
+  /** Localized 3-letter month abbreviations from the active language. */
+  private monthNames(): string[] {
+    const list = this.transloco.translate<string[]>('destDetail.months');
+    return Array.isArray(list) && list.length === 12 ? list : [...MONTH_NAMES];
+  }
 
   readonly destination = signal<DestinationResponse | null>(null);
   readonly reviews = signal<ReviewResponse[]>([]);
@@ -700,7 +708,7 @@ export class DestinationDetailComponent implements OnInit {
       },
       error: () => {
         this.guideLoading.set(false);
-        this.guideError.set('Could not generate the guide. Please try again.');
+        this.guideError.set(this.transloco.translate('destDetail.guideError'));
       },
     });
   }
@@ -720,10 +728,11 @@ export class DestinationDetailComponent implements OnInit {
   }
 
   getMonthNames(bestMonths: string): string {
+    const names = this.monthNames();
     return (
       bestMonths
         ?.split(',')
-        .map((m) => MONTH_NAMES[parseInt(m.trim(), 10) - 1])
+        .map((m) => names[parseInt(m.trim(), 10) - 1])
         .filter(Boolean)
         .join(', ') ?? ''
     );
@@ -732,10 +741,11 @@ export class DestinationDetailComponent implements OnInit {
   getMonthList(): string[] {
     const dest = this.destination();
     if (!dest?.bestMonths) return [];
+    const names = this.monthNames();
     return dest.bestMonths
       .split(',')
-      .map((m) => MONTH_NAMES[parseInt(m.trim(), 10) - 1])
-      .filter((m): m is (typeof MONTH_NAMES)[number] => Boolean(m));
+      .map((m) => names[parseInt(m.trim(), 10) - 1])
+      .filter((m): m is string => Boolean(m));
   }
 
   getTags(): string[] {

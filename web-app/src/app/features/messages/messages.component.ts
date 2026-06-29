@@ -2,22 +2,23 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { catchError, of } from 'rxjs';
+import { TranslocoModule } from '@jsverse/transloco';
 import { MessagingService } from '../../core/services/messaging.service';
 import type { Conversation } from '../../core/services/messaging.service';
 
 @Component({
   selector: 'app-messages',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslocoModule],
   styleUrls: ['../../shared/styles/dashboard.scss'],
   template: `
     <div class="dash-container">
       <header class="dash-head">
         <div>
-          <h1 class="dash-title">Messages</h1>
-          <p class="dash-sub">Talk to TravelAI support and your trip specialists.</p>
+          <h1 class="dash-title">{{ 'messages.title' | transloco }}</h1>
+          <p class="dash-sub">{{ 'messages.subtitle' | transloco }}</p>
         </div>
-        <button class="dash-cta" (click)="startNew()"><span class="ms">edit</span> New message</button>
+        <button class="dash-cta" (click)="startNew()"><span class="ms">edit</span> {{ 'messages.newMessage' | transloco }}</button>
       </header>
 
       @if (loading()) {
@@ -27,12 +28,12 @@ import type { Conversation } from '../../core/services/messaging.service';
           <aside class="thread-list">
             @if (composing()) {
               <div class="compose card">
-                <input class="compose-subject" [(ngModel)]="newSubject" placeholder="Subject" maxlength="200" />
-                <textarea class="compose-body" [(ngModel)]="newBody" placeholder="How can we help?" rows="4" maxlength="4000"></textarea>
+                <input class="compose-subject" [(ngModel)]="newSubject" [placeholder]="'messages.subjectPlaceholder' | transloco" maxlength="200" />
+                <textarea class="compose-body" [(ngModel)]="newBody" [placeholder]="'messages.bodyPlaceholder' | transloco" rows="4" maxlength="4000"></textarea>
                 <div class="compose-actions">
-                  <button class="dash-cta dash-cta--ghost" (click)="cancelCompose()">Cancel</button>
+                  <button class="dash-cta dash-cta--ghost" (click)="cancelCompose()">{{ 'messages.cancel' | transloco }}</button>
                   <button class="dash-cta" [disabled]="!newSubject.trim() || !newBody.trim() || sending()" (click)="send()">
-                    {{ sending() ? 'Sending…' : 'Send' }}
+                    {{ (sending() ? 'messages.sending' : 'messages.send') | transloco }}
                   </button>
                 </div>
               </div>
@@ -41,8 +42,8 @@ import type { Conversation } from '../../core/services/messaging.service';
             @if (conversations().length === 0 && !composing()) {
               <div class="empty" style="padding:2.5rem 1rem">
                 <span class="ms">forum</span>
-                <h3>No conversations</h3>
-                <p>Start a message and we'll get back to you fast.</p>
+                <h3>{{ 'messages.emptyTitle' | transloco }}</h3>
+                <p>{{ 'messages.emptyBody' | transloco }}</p>
               </div>
             }
 
@@ -61,7 +62,7 @@ import type { Conversation } from '../../core/services/messaging.service';
             @if (!selected()) {
               <div class="thread-placeholder">
                 <span class="ms">chat</span>
-                <p>Select a conversation to read the thread.</p>
+                <p>{{ 'messages.selectThread' | transloco }}</p>
               </div>
             } @else {
               <div class="thread-header">
@@ -78,7 +79,7 @@ import type { Conversation } from '../../core/services/messaging.service';
                 }
               </div>
               <div class="reply-bar">
-                <input [(ngModel)]="replyBody" placeholder="Write a reply…" (keyup.enter)="sendReply()" maxlength="4000" />
+                <input [(ngModel)]="replyBody" [placeholder]="'messages.replyPlaceholder' | transloco" (keyup.enter)="sendReply()" maxlength="4000" />
                 <button class="reply-send" [disabled]="!replyBody.trim() || replying()" (click)="sendReply()">
                   <span class="ms">send</span>
                 </button>

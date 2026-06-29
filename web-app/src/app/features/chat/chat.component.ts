@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { ChatService } from '../../core/services/chat.service';
 import { AuthService } from '../../core/services/auth.service';
 import { MarkdownPipe } from '../../shared/pipes/markdown.pipe';
@@ -23,7 +24,7 @@ interface ChatMsg {
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule, MarkdownPipe, ChatMapComponent, EntityCardComponent],
+  imports: [CommonModule, FormsModule, TranslocoModule, MarkdownPipe, ChatMapComponent, EntityCardComponent],
   template: `
     <div class="stage">
       <!-- Atmospheric backdrop -->
@@ -39,11 +40,11 @@ interface ChatMsg {
         <div class="topbar-actions">
           <button class="pill-btn" (click)="newChat()" aria-label="New conversation">
             <span class="ms">edit_square</span>
-            <span class="pill-btn__label">New</span>
+            <span class="pill-btn__label">{{ 'chat.new' | transloco }}</span>
           </button>
           <button class="pill-btn" (click)="historyOpen.set(true)" aria-label="Conversation history">
             <span class="ms">history</span>
-            <span class="pill-btn__label">History</span>
+            <span class="pill-btn__label">{{ 'chat.history' | transloco }}</span>
           </button>
         </div>
       </header>
@@ -53,12 +54,12 @@ interface ChatMsg {
         <div class="drawer-scrim" (click)="historyOpen.set(false)"></div>
         <aside class="drawer glass" role="dialog" aria-label="Conversation history">
           <div class="drawer-head">
-            <h2>Conversations</h2>
+            <h2>{{ 'chat.conversations' | transloco }}</h2>
             <button class="icon-btn" (click)="historyOpen.set(false)" aria-label="Close"><span class="ms">close</span></button>
           </div>
 
           <button class="drawer-new" (click)="newChat(); historyOpen.set(false)">
-            <span class="ms">add</span> Start a new conversation
+            <span class="ms">add</span> {{ 'chat.startNew' | transloco }}
           </button>
 
           @if (authService.isAuthenticated()) {
@@ -77,14 +78,14 @@ interface ChatMsg {
                   <span class="ms convo-item__del" (click)="deleteConversation(conv.id, $event)" aria-label="Delete">delete</span>
                 </button>
               } @empty {
-                <p class="drawer-empty">No conversations yet. Ask me anything to begin.</p>
+                <p class="drawer-empty">{{ 'chat.empty' | transloco }}</p>
               }
             </div>
           } @else {
             <div class="drawer-locked">
               <span class="ms">lock_open</span>
-              <p>Sign in to save and revisit your conversations.</p>
-              <button class="solid-btn" (click)="showAuthModal.set(true); historyOpen.set(false)">Sign in</button>
+              <p>{{ 'chat.lockedMsg' | transloco }}</p>
+              <button class="solid-btn" (click)="showAuthModal.set(true); historyOpen.set(false)">{{ 'chat.signIn' | transloco }}</button>
             </div>
           }
         </aside>
@@ -96,25 +97,22 @@ interface ChatMsg {
           @if (messages().length === 0 && !isTyping()) {
             <div class="welcome">
               <div class="welcome-orb"><span class="ms">explore</span></div>
-              <h1 class="welcome-title">Where to next?</h1>
-              <p class="welcome-sub">
-                I know every destination, hotel and restaurant in our database — ask me anything
-                and I'll answer with specific, data-backed picks.
-              </p>
+              <h1 class="welcome-title">{{ 'chat.welcomeTitle' | transloco }}</h1>
+              <p class="welcome-sub">{{ 'chat.welcomeSub' | transloco }}</p>
 
               <div class="chips">
-                @for (c of capabilities; track c.label) {
-                  <span class="chip"><span class="ms">{{ c.icon }}</span>{{ c.label }}</span>
+                @for (c of capabilities; track c.key) {
+                  <span class="chip"><span class="ms">{{ c.icon }}</span>{{ c.key | transloco }}</span>
                 }
               </div>
 
               <div class="suggest-grid">
-                @for (s of suggestionCards; track s.text) {
-                  <button class="suggest glass" (click)="useSuggestion(s.text)">
+                @for (s of suggestionCards; track s.textKey) {
+                  <button class="suggest glass" (click)="useSuggestionKey(s.textKey)">
                     <span class="suggest-icon"><span class="ms">{{ s.icon }}</span></span>
                     <span class="suggest-body">
-                      <span class="suggest-kicker">{{ s.label }}</span>
-                      <span class="suggest-text">{{ s.text }}</span>
+                      <span class="suggest-kicker">{{ s.labelKey | transloco }}</span>
+                      <span class="suggest-text">{{ s.textKey | transloco }}</span>
                     </span>
                     <span class="ms suggest-go">arrow_outward</span>
                   </button>
@@ -159,10 +157,10 @@ interface ChatMsg {
                   <div class="actions">
                     <button class="ghost-btn" (click)="copyMessage(i)">
                       <span class="ms">{{ msg.copied ? 'check' : 'content_copy' }}</span>
-                      {{ msg.copied ? 'Copied' : 'Copy' }}
+                      {{ (msg.copied ? 'chat.copied' : 'chat.copy') | transloco }}
                     </button>
                     <button class="ghost-btn" (click)="regenerate(i)">
-                      <span class="ms">refresh</span> Retry
+                      <span class="ms">refresh</span> {{ 'chat.retry' | transloco }}
                     </button>
                   </div>
                 }
@@ -176,7 +174,7 @@ interface ChatMsg {
               <div class="bubble-wrap">
                 <div class="bubble bubble--bot glass typing">
                   <span class="dots"><i></i><i></i><i></i></span>
-                  <span class="typing-label">Searching the travel database…</span>
+                  <span class="typing-label">{{ 'chat.searching' | transloco }}</span>
                 </div>
               </div>
             </div>
@@ -189,7 +187,7 @@ interface ChatMsg {
         @if (!authService.isAuthenticated()) {
           <button class="auth-cta glass" (click)="showAuthModal.set(true)">
             <span class="ms">lock</span>
-            <span>Sign in to chat with your AI travel concierge</span>
+            <span>{{ 'chat.authCta' | transloco }}</span>
             <span class="ms">arrow_forward</span>
           </button>
         } @else {
@@ -199,7 +197,7 @@ interface ChatMsg {
               [ngModel]="inputText()"
               (ngModelChange)="inputText.set($event)"
               (keydown)="onKeydown($event)"
-              placeholder="Ask about destinations, hotels, restaurants, itineraries…"
+              [placeholder]="'chat.placeholder' | transloco"
               rows="1"
             ></textarea>
             <button
@@ -211,7 +209,7 @@ interface ChatMsg {
               <span class="ms">{{ isTyping() ? 'stop' : 'arrow_upward' }}</span>
             </button>
           </div>
-          <p class="composer-hint">Answers come from real hotels, restaurants &amp; destinations in our database</p>
+          <p class="composer-hint">{{ 'chat.hint' | transloco }}</p>
         }
       </div>
     </div>
@@ -228,8 +226,8 @@ interface ChatMsg {
           </div>
 
           <div class="auth-tabs">
-            <button class="auth-tab" [class.active]="authMode() === 'login'" (click)="authMode.set('login')" type="button">Sign in</button>
-            <button class="auth-tab" [class.active]="authMode() === 'register'" (click)="authMode.set('register')" type="button">Register</button>
+            <button class="auth-tab" [class.active]="authMode() === 'login'" (click)="authMode.set('login')" type="button">{{ 'auth.signIn' | transloco }}</button>
+            <button class="auth-tab" [class.active]="authMode() === 'register'" (click)="authMode.set('register')" type="button">{{ 'auth.register' | transloco }}</button>
           </div>
 
           @if (authErrorMsg) {
@@ -239,31 +237,31 @@ interface ChatMsg {
           @if (authMode() === 'register') {
             <div class="auth-names">
               <div class="auth-field">
-                <label>First name</label>
+                <label>{{ 'auth.firstName' | transloco }}</label>
                 <input [(ngModel)]="authFirstNameVal" placeholder="John">
               </div>
               <div class="auth-field">
-                <label>Last name</label>
+                <label>{{ 'auth.lastName' | transloco }}</label>
                 <input [(ngModel)]="authLastNameVal" placeholder="Doe">
               </div>
             </div>
           }
 
           <div class="auth-field">
-            <label>Email</label>
+            <label>{{ 'auth.email' | transloco }}</label>
             <input [(ngModel)]="authEmailVal" type="email" placeholder="email@example.com">
           </div>
 
           <div class="auth-field auth-field--last">
-            <label>Password</label>
-            <input [(ngModel)]="authPasswordVal" type="password" placeholder="At least 8 characters">
+            <label>{{ 'auth.password' | transloco }}</label>
+            <input [(ngModel)]="authPasswordVal" type="password" placeholder="••••••••">
           </div>
 
           <button class="auth-submit" (click)="authMode() === 'login' ? loginAuth() : registerAuth()" [disabled]="authLoadingState" type="button">
             @if (authLoadingState) {
-              Loading…
+              {{ 'auth.loading' | transloco }}
             } @else {
-              {{ authMode() === 'login' ? 'Sign in' : 'Create account' }}
+              {{ (authMode() === 'login' ? 'auth.signIn' : 'auth.create') | transloco }}
             }
           </button>
         </div>
@@ -745,6 +743,7 @@ interface ChatMsg {
 export class ChatComponent implements OnInit, AfterViewChecked {
   private readonly chatService = inject(ChatService);
   readonly authService = inject(AuthService);
+  private readonly transloco = inject(TranslocoService);
 
   conversations = signal<ConversationResponse[]>([]);
   currentConversationId = signal<string | null>(null);
@@ -765,21 +764,21 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   authLoadingState = false;
 
   readonly capabilities = [
-    { icon: 'explore', label: 'Destinations' },
-    { icon: 'hotel', label: 'Hotels' },
-    { icon: 'restaurant', label: 'Restaurants' },
-    { icon: 'map', label: 'Itineraries' },
-    { icon: 'compare_arrows', label: 'Compare' },
-    { icon: 'savings', label: 'Budget' },
+    { icon: 'explore', key: 'chat.caps.destinations' },
+    { icon: 'hotel', key: 'chat.caps.hotels' },
+    { icon: 'restaurant', key: 'chat.caps.restaurants' },
+    { icon: 'map', key: 'chat.caps.itineraries' },
+    { icon: 'compare_arrows', key: 'chat.caps.compare' },
+    { icon: 'savings', key: 'chat.caps.budget' },
   ];
 
   readonly suggestionCards = [
-    { icon: 'luggage', label: 'Plan a trip', text: 'Plan a week in Bali under $2000' },
-    { icon: 'restaurant', label: 'Find dining', text: 'Best restaurants in Rome for authentic Italian food' },
-    { icon: 'beach_access', label: 'Discover', text: 'Family-friendly beach destinations in Europe' },
-    { icon: 'compare_arrows', label: 'Compare', text: 'Compare Tokyo and Seoul for first-time visitors' },
-    { icon: 'hotel', label: 'Hotels', text: 'Pet-friendly hotels in Amalfi Coast under €200/night' },
-    { icon: 'savings', label: 'Budget', text: 'Cheapest destinations in Southeast Asia this summer' },
+    { icon: 'luggage', labelKey: 'chat.suggest.planLabel', textKey: 'chat.suggest.planText' },
+    { icon: 'restaurant', labelKey: 'chat.suggest.diningLabel', textKey: 'chat.suggest.diningText' },
+    { icon: 'beach_access', labelKey: 'chat.suggest.discoverLabel', textKey: 'chat.suggest.discoverText' },
+    { icon: 'compare_arrows', labelKey: 'chat.suggest.compareLabel', textKey: 'chat.suggest.compareText' },
+    { icon: 'hotel', labelKey: 'chat.suggest.hotelsLabel', textKey: 'chat.suggest.hotelsText' },
+    { icon: 'savings', labelKey: 'chat.suggest.budgetLabel', textKey: 'chat.suggest.budgetText' },
   ];
 
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
@@ -856,7 +855,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
         this.isTyping.set(false);
         this.messages.update(msgs => [
           ...msgs,
-          { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }
+          { role: 'assistant', content: this.transloco.translate('common.error') }
         ]);
       }
     });
@@ -865,6 +864,10 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   useSuggestion(text: string): void {
     this.inputText.set(text);
     this.send();
+  }
+
+  useSuggestionKey(key: string): void {
+    this.useSuggestion(this.transloco.translate(key));
   }
 
   copyMessage(index: number): void {
@@ -907,7 +910,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
         this.isTyping.set(false);
         this.messages.update(msgs => [
           ...msgs,
-          { role: 'assistant', content: 'Sorry, regeneration failed. Please try again.' }
+          { role: 'assistant', content: this.transloco.translate('common.error') }
         ]);
       }
     });
@@ -945,7 +948,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
   loginAuth(): void {
     if (!this.authEmailVal || !this.authPasswordVal) {
-      this.authErrorMsg = 'Enter your email and password.';
+      this.authErrorMsg = this.transloco.translate('auth.errRequired');
       return;
     }
     this.authLoadingState = true;
@@ -960,14 +963,14 @@ export class ChatComponent implements OnInit, AfterViewChecked {
       },
       error: () => {
         this.authLoadingState = false;
-        this.authErrorMsg = 'Invalid credentials.';
+        this.authErrorMsg = this.transloco.translate('auth.errLogin');
       }
     });
   }
 
   registerAuth(): void {
     if (!this.authFirstNameVal || !this.authLastNameVal || !this.authEmailVal || !this.authPasswordVal) {
-      this.authErrorMsg = 'Please fill in all fields.';
+      this.authErrorMsg = this.transloco.translate('auth.errRequired');
       return;
     }
     this.authLoadingState = true;
@@ -989,7 +992,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
       },
       error: (err: any) => {
         this.authLoadingState = false;
-        this.authErrorMsg = err?.error?.error ?? 'Registration failed.';
+        this.authErrorMsg = err?.error?.error ?? this.transloco.translate('auth.errRegister');
       }
     });
   }

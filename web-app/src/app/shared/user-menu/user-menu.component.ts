@@ -26,7 +26,9 @@ const MENU_ITEMS: MenuItem[] = [
     <div class="user-wrap" [class.open]="open()">
       <button class="avatar-btn" (click)="toggle()" [attr.aria-expanded]="open()" aria-label="User menu">
         <span class="avatar-circle">
-          @if (initials()) {
+          @if (avatarUrl()) {
+            <img class="avatar-photo" [src]="avatarUrl()" alt="" />
+          } @else if (initials()) {
             <span class="avatar-initials">{{ initials() }}</span>
           } @else {
             <span class="ms" style="font-size:20px; color:#fff">person</span>
@@ -55,7 +57,7 @@ const MENU_ITEMS: MenuItem[] = [
             <div class="divider"></div>
             <button class="menu-item menu-item--admin" role="menuitem" (click)="navigate('/admin')">
               <span class="ms menu-icon">admin_panel_settings</span>
-              Admin panel
+              {{ 'userMenu.adminPanel' | transloco }}
             </button>
           }
 
@@ -85,7 +87,9 @@ const MENU_ITEMS: MenuItem[] = [
       display: flex; align-items: center; justify-content: center;
       border: 2px solid #e0e0e0;
       transition: border-color 150ms ease;
+      overflow: hidden;
     }
+    .avatar-photo { width: 100%; height: 100%; object-fit: cover; display: block; }
     .avatar-btn:hover .avatar-circle { border-color: #1a1a1a; }
 
     .dropdown {
@@ -144,6 +148,8 @@ export class UserMenuComponent {
 
   readonly menuItems = MENU_ITEMS;
   readonly open = signal(false);
+
+  readonly avatarUrl = computed(() => this.authService.currentUser()?.avatarUrl ?? null);
 
   readonly initials = computed(() => {
     const u = this.authService.currentUser();

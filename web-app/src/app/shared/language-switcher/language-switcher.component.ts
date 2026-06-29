@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslocoService } from '@jsverse/transloco';
+import { persistLang } from '../../core/i18n/lang-storage';
 
 interface Lang {
   code: string;
@@ -109,6 +110,7 @@ export class LanguageSwitcherComponent {
 
   select(lang: Lang): void {
     this.transloco.setActiveLang(lang.code);
+    persistLang(lang.code);
     this.open.set(false);
   }
 }
