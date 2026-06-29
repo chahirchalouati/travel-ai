@@ -1,12 +1,13 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { catchError, of } from 'rxjs';
-import { CatalogService } from '../../core/services/catalog.service';
+import { CatalogService, emptyPage } from '../../core/services/catalog.service';
 import type { HotelSearchQuery } from '../../core/services/catalog.service';
 import type { HotelSearchResult } from '../../core/models/api.models';
+import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920&q=80';
@@ -14,7 +15,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-hotels',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, TranslocoModule],
+  imports: [CommonModule, FormsModule, CurrencyPipe, TranslocoModule, InfiniteScrollDirective],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -64,7 +65,7 @@ const HEADER_IMG =
         </div>
       } @else {
         <div class="results-head">
-          <p class="results-count">{{ results().length }} <span>{{ 'catalog.hotels.found' | transloco }}</span></p>
+          <p class="results-count">{{ total() }} <span>{{ 'catalog.hotels.found' | transloco }}</span></p>
         </div>
         <div class="card-grid">
           @for (h of results(); track h.id) {
@@ -92,6 +93,13 @@ const HEADER_IMG =
             </article>
           }
         </div>
+        @if (hasMore()) {
+          <div class="infinite-sentinel" appInfiniteScroll
+               [scrollDisabled]="loadingMore()" (scrolled)="loadMore()"></div>
+        }
+        @if (loadingMore()) {
+          <div class="loading-more"><span class="loading-more__spinner"></span>{{ 'catalog.loadingMore' | transloco }}</div>
+        }
       }
     </section>
   `,
@@ -104,7 +112,11 @@ export class HotelsComponent implements OnInit {
 
   readonly headerImg = HEADER_IMG;
   readonly results = signal<HotelSearchResult[]>([]);
+  readonly total = signal(0);
   readonly loading = signal(true);
+  readonly loadingMore = signal(false);
+  readonly hasMore = computed(() => this.results().length < this.total());
+  private page = 0;
 
   city = '';
   checkIn = '';
@@ -121,21 +133,42 @@ export class HotelsComponent implements OnInit {
   }
 
   runSearch(): void {
+    this.page = 0;
     this.loading.set(true);
-    const query: HotelSearchQuery = {
+    this.catalog
+      .searchHotels(this.buildQuery(), 0)
+      .pipe(catchError(() => of(emptyPage<HotelSearchResult>())))
+      .subscribe(res => {
+        this.results.set(res.items);
+        this.total.set(res.total);
+        this.loading.set(false);
+      });
+  }
+
+  loadMore(): void {
+    if (this.loadingMore() || !this.hasMore()) {
+      return;
+    }
+    this.loadingMore.set(true);
+    this.catalog
+      .searchHotels(this.buildQuery(), this.page + 1)
+      .pipe(catchError(() => of(emptyPage<HotelSearchResult>(this.page, this.total()))))
+      .subscribe(res => {
+        this.page = res.page;
+        this.total.set(res.total);
+        this.results.update(current => [...current, ...res.items]);
+        this.loadingMore.set(false);
+      });
+  }
+
+  private buildQuery(): HotelSearchQuery {
+    return {
       city: this.city.trim() || undefined,
       checkIn: this.checkIn || undefined,
       checkOut: this.checkOut || undefined,
       guests: this.guests || 1,
       maxBudget: this.maxBudget,
     };
-    this.catalog
-      .searchHotels(query)
-      .pipe(catchError(() => of([])))
-      .subscribe(list => {
-        this.results.set(list);
-        this.loading.set(false);
-      });
   }
 
   starString(stars: number): string {

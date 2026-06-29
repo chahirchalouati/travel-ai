@@ -3,6 +3,7 @@ package com.travelai.catalog.hotel;
 import com.travelai.catalog.hotel.dto.HotelSearchRequest;
 import com.travelai.catalog.hotel.dto.HotelSearchResult;
 import com.travelai.shared.domain.ApiResponse;
+import com.travelai.shared.domain.PageSupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +20,11 @@ public class HotelController {
     private final HotelService hotelService;
 
     @GetMapping("/search")
-    public List<HotelSearchResult> search(@ModelAttribute HotelSearchRequest request) {
-        return hotelService.search(request);
+    public ApiResponse<List<HotelSearchResult>> search(
+            @ModelAttribute HotelSearchRequest request,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
+        return PageSupport.paginate(hotelService.search(request), page, size);
     }
 
     @GetMapping("/{id}")

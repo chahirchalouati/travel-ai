@@ -7,17 +7,22 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../core/services/auth.service';
 import { AdminService } from '../../core/services/admin.service';
 import type {
-  AdminDashboard, AdminUser, AdminPartner, AdminBooking, AdminReview, AdminAiLog,
+  AdminDashboard, AdminUser, AdminBooking, AdminReview, AdminAiLog,
 } from '../../core/services/admin.service';
+import { AdminEntityManagerComponent } from './entity-manager/admin-entity-manager.component';
+import { ENTITY_CONFIGS, EntityConfig } from './entity-manager/entity-configs';
 
-type Section = 'overview' | 'users' | 'partners' | 'bookings' | 'reviews' | 'logs';
+type Section =
+  | 'overview' | 'users' | 'partners'
+  | 'hotels' | 'flights' | 'cruises' | 'restaurants' | 'destinations' | 'stories'
+  | 'bookings' | 'reviews' | 'logs';
 
 const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule],
+  imports: [CommonModule, FormsModule, TranslocoModule, AdminEntityManagerComponent],
   styleUrls: ['./admin.component.scss'],
   template: `
     <div class="admin">
@@ -104,32 +109,9 @@ const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
           </div>
         }
 
-        <!-- PARTNERS -->
-        @if (section() === 'partners') {
-          <div class="table-wrap">
-            <table class="admin-table">
-              <thead><tr><th>{{ 'admin.thPartner' | transloco }}</th><th>{{ 'admin.thType' | transloco }}</th><th>{{ 'admin.thCity' | transloco }}</th><th>{{ 'admin.thStatus' | transloco }}</th><th>{{ 'admin.thActions' | transloco }}</th></tr></thead>
-              <tbody>
-                @for (p of partners(); track p.id) {
-                  <tr>
-                    <td><b>{{ p.name }}</b><br><span class="muted">{{ p.contactEmail }}</span></td>
-                    <td>{{ p.type || '—' }}</td>
-                    <td>{{ p.city || '—' }}</td>
-                    <td><span class="tag" [class.tag-ok]="p.active" [class.tag-off]="!p.active">{{ p.status || ((p.active ? 'admin.active' : 'admin.inactive') | transloco) }}</span></td>
-                    <td>
-                      @if (p.active) { <button class="mini mini-danger" (click)="suspendPartner(p)">{{ 'admin.suspend' | transloco }}</button> }
-                      @else { <button class="mini mini-ok" (click)="activatePartner(p)">{{ 'admin.activate' | transloco }}</button> }
-                    </td>
-                  </tr>
-                } @empty { <tr><td colspan="5" class="empty-row">{{ 'admin.noPartners' | transloco }}</td></tr> }
-              </tbody>
-            </table>
-          </div>
-          <div class="pager">
-            <button [disabled]="page() === 0" (click)="prev()">{{ 'admin.prev' | transloco }}</button>
-            <span>{{ 'admin.page' | transloco }} {{ page() + 1 }}</span>
-            <button [disabled]="!hasMore()" (click)="next()">{{ 'admin.next' | transloco }}</button>
-          </div>
+        <!-- PARTNERS + CATALOG + CONTENT (schema-driven manager) -->
+        @if (managerConfig(); as cfg) {
+          <app-admin-entity-manager [config]="cfg" />
         }
 
         <!-- BOOKINGS -->
@@ -222,10 +204,21 @@ export class AdminComponent implements OnInit {
     { id: 'overview', key: 'admin.navOverview', icon: 'dashboard' },
     { id: 'users', key: 'admin.navUsers', icon: 'group' },
     { id: 'partners', key: 'admin.navPartners', icon: 'store' },
+    { id: 'hotels', key: 'admin.navHotels', icon: 'hotel' },
+    { id: 'flights', key: 'admin.navFlights', icon: 'flight' },
+    { id: 'cruises', key: 'admin.navCruises', icon: 'directions_boat' },
+    { id: 'restaurants', key: 'admin.navRestaurants', icon: 'restaurant' },
+    { id: 'destinations', key: 'admin.navDestinations', icon: 'public' },
+    { id: 'stories', key: 'admin.navStories', icon: 'movie' },
     { id: 'bookings', key: 'admin.navBookings', icon: 'confirmation_number' },
     { id: 'reviews', key: 'admin.navReviews', icon: 'reviews' },
     { id: 'logs', key: 'admin.navLogs', icon: 'monitoring' },
   ];
+
+  /** Sections handled by the schema-driven entity manager. */
+  managerConfig(): EntityConfig | null {
+    return ENTITY_CONFIGS[this.section()] ?? null;
+  }
 
   readonly section = signal<Section>('overview');
   readonly page = signal(0);
@@ -234,7 +227,6 @@ export class AdminComponent implements OnInit {
 
   readonly dashboard = signal<AdminDashboard | null>(null);
   readonly users = signal<AdminUser[]>([]);
-  readonly partners = signal<AdminPartner[]>([]);
   readonly bookings = signal<AdminBooking[]>([]);
   readonly reviews = signal<AdminReview[]>([]);
   readonly logs = signal<AdminAiLog[]>([]);
@@ -277,12 +269,6 @@ export class AdminComponent implements OnInit {
           this.hasMore.set(this.computeHasMore(res));
         });
         break;
-      case 'partners':
-        this.admin.partners(p, this.pageSize).pipe(catchError(() => of(null))).subscribe(res => {
-          this.partners.set(res?.content ?? []);
-          this.hasMore.set(this.computeHasMore(res));
-        });
-        break;
       case 'bookings':
         this.admin.bookings(p, this.pageSize).pipe(catchError(() => of(null))).subscribe(res => {
           this.bookings.set(res?.content ?? []);
@@ -319,20 +305,6 @@ export class AdminComponent implements OnInit {
   toggleBan(u: AdminUser): void {
     this.admin.setUserActive(u.id, !u.active).pipe(catchError(() => of(null))).subscribe(updated => {
       if (updated) { this.users.update(list => list.map(x => x.id === u.id ? updated : x)); this.flash(this.transloco.translate(updated.active ? 'admin.userReinstated' : 'admin.userBanned')); }
-    });
-  }
-
-  activatePartner(p: AdminPartner): void {
-    this.admin.activatePartner(p.id).pipe(catchError(() => of(null))).subscribe(() => {
-      this.partners.update(list => list.map(x => x.id === p.id ? { ...x, active: true, status: 'LIVE' } : x));
-      this.flash(this.transloco.translate('admin.partnerActivated'));
-    });
-  }
-
-  suspendPartner(p: AdminPartner): void {
-    this.admin.suspendPartner(p.id).pipe(catchError(() => of(null))).subscribe(() => {
-      this.partners.update(list => list.map(x => x.id === p.id ? { ...x, active: false, status: 'SUSPENDED' } : x));
-      this.flash(this.transloco.translate('admin.partnerSuspended'));
     });
   }
 

@@ -1,0 +1,119 @@
+// Generic entity manager — inherits the admin console visual language.
+:host {
+  --ink: #15171c;
+  --accent: #e04a2f;
+  --line: #e8e8ea;
+  --muted: #8a8f99;
+  display: block;
+  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+}
+
+.em-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.em-new {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--ink); color: #fff; border: none; border-radius: 10px;
+  padding: 0.6rem 1.1rem; font-family: inherit; font-weight: 700; font-size: 0.9rem; cursor: pointer;
+  transition: transform 0.12s ease, background 0.14s ease;
+}
+.em-new:hover { background: var(--accent); transform: translateY(-1px); }
+.em-new .ms { font-size: 19px; }
+.em-count { color: var(--muted); font-size: 0.85rem; font-weight: 600; }
+.em-toast { background: var(--ink); color: #fff; padding: 0.7rem 1.1rem; border-radius: 10px; margin-bottom: 1rem; font-weight: 600; font-size: 0.9rem; }
+
+// ── Table ──────────────────────────────────────────────────────────────
+.table-wrap { background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.em-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.em-table thead th {
+  text-align: left; padding: 0.85rem 1.1rem; background: #fafafb;
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 800;
+  border-bottom: 1px solid var(--line);
+}
+.em-table td { padding: 0.8rem 1.1rem; border-bottom: 1px solid #f1f1f3; vertical-align: middle; color: var(--ink); }
+.em-table tr:last-child td { border-bottom: none; }
+.ta-right { text-align: right; }
+.empty-row { text-align: center; color: var(--muted); padding: 2.5rem; }
+.row-actions { display: flex; gap: 0.4rem; justify-content: flex-end; }
+
+.tag { display: inline-block; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; padding: 4px 9px; border-radius: 999px; }
+.tag-ok { background: #e7f6ec; color: #1a7f43; }
+.tag-off { background: #fdecec; color: #c0392b; }
+.tag-neutral { background: #eef0f4; color: #4a5160; }
+
+.mini {
+  background: #fff; border: 1px solid var(--line); border-radius: 8px;
+  padding: 0.4rem 0.8rem; font-family: inherit; font-weight: 700; font-size: 0.8rem; cursor: pointer;
+  transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+}
+.mini:hover { border-color: #c8c8cc; }
+.mini-danger { color: #c0392b; }
+.mini-danger:hover { background: #fdecec; border-color: #f3c4c4; }
+.mini-ok { color: #1a7f43; }
+.mini-ok:hover { background: #e7f6ec; border-color: #bfe6cd; }
+
+// ── Pager ──────────────────────────────────────────────────────────────
+.pager { display: flex; align-items: center; gap: 1rem; justify-content: flex-end; margin-top: 1.1rem; }
+.pager button { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 0.45rem 1rem; font-family: inherit; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
+.pager button:disabled { opacity: 0.5; cursor: default; }
+.pager span { color: var(--muted); font-size: 0.85rem; }
+
+// ── Modal ──────────────────────────────────────────────────────────────
+.em-overlay {
+  position: fixed; inset: 0; background: rgba(20, 22, 27, 0.55);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 4vh 1rem; z-index: 1000; overflow-y: auto;
+}
+.em-modal {
+  background: #fff; border-radius: 18px; width: min(720px, 100%);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25); overflow: hidden;
+}
+.em-modal-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--line);
+}
+.em-modal-head h3 { margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--ink); }
+.em-close { background: none; border: none; color: var(--muted); cursor: pointer; display: flex; }
+.em-close .ms { font-size: 22px; }
+
+.em-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem 1.1rem;
+  padding: 1.4rem 1.5rem;
+}
+.em-field { display: flex; flex-direction: column; gap: 0.35rem; }
+.em-field-full { grid-column: 1 / -1; }
+.em-label { font-size: 0.78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; }
+.req { color: var(--accent); }
+.em-field input[type='text'],
+.em-field input[type='number'],
+.em-field input[type='date'],
+.em-field input[type='datetime-local'],
+.em-field select,
+.em-field textarea {
+  border: 1px solid var(--line); border-radius: 9px; padding: 0.55rem 0.7rem;
+  font-family: inherit; font-size: 0.9rem; color: var(--ink); background: #fff; width: 100%;
+}
+.em-field input:focus, .em-field select:focus, .em-field textarea:focus {
+  outline: none; border-color: var(--accent);
+}
+.em-field textarea { resize: vertical; }
+.em-check { display: flex; align-items: center; height: 38px; }
+.em-check input { width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; }
+
+.em-error { color: #c0392b; font-size: 0.85rem; font-weight: 600; margin: 0 1.5rem; }
+
+.em-modal-foot {
+  display: flex; justify-content: flex-end; gap: 0.7rem;
+  padding: 1.1rem 1.5rem; border-top: 1px solid var(--line);
+}
+.em-btn-ghost {
+  background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  padding: 0.6rem 1.2rem; font-family: inherit; font-weight: 700; font-size: 0.9rem; cursor: pointer;
+}
+.em-btn-primary {
+  background: var(--accent); color: #fff; border: none; border-radius: 10px;
+  padding: 0.6rem 1.4rem; font-family: inherit; font-weight: 700; font-size: 0.9rem; cursor: pointer;
+}
+.em-btn-primary:disabled { opacity: 0.6; cursor: default; }
+
+@media (max-width: 600px) {
+  .em-grid { grid-template-columns: 1fr; }
+}

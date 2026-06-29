@@ -66,13 +66,7 @@ public class AdminService {
     public Page<AdminPartnerResponse> listPartners(Pageable pageable) {
         Page<Partner> page = partnerRepository.findAll(pageable);
         List<AdminPartnerResponse> content = page.getContent().stream()
-            .map(p -> new AdminPartnerResponse(
-                p.getId(), p.getName(),
-                p.getType() != null ? p.getType().name() : null,
-                p.getCity(),
-                p.getStatus() != null ? p.getStatus().name() : null,
-                p.getContactEmail(), p.isActive(), p.getCreatedAt()
-            ))
+            .map(this::toAdminPartner)
             .toList();
         return new PageImpl<>(content, pageable, page.getTotalElements());
     }
@@ -128,6 +122,49 @@ public class AdminService {
             log.warn("ai_audit_logs table not yet available: {}", ex.getMessage());
             return Page.empty(pageable);
         }
+    }
+
+    /** Creates a new partner directly from the admin panel (no user link). */
+    @Transactional
+    public AdminPartnerResponse createPartner(AdminPartnerUpsertRequest req) {
+        Partner partner = Partner.builder()
+            .type(req.type())
+            .name(req.name())
+            .vatNumber(req.vatNumber())
+            .contactEmail(req.contactEmail())
+            .contactPhone(req.contactPhone())
+            .address(req.address())
+            .city(req.city())
+            .country(req.country() != null ? req.country() : "ITA")
+            .status(PartnerStatus.REGISTERED)
+            .active(req.active() == null || req.active())
+            .build();
+        Partner saved = partnerRepository.save(partner);
+        log.info("Admin created partner {}", saved.getId());
+        return toAdminPartner(saved);
+    }
+
+    /** Updates partner profile fields from the admin panel. */
+    @Transactional
+    public AdminPartnerResponse updatePartner(UUID partnerId, AdminPartnerUpsertRequest req) {
+        Partner partner = partnerRepository.findById(partnerId)
+            .orElseThrow(() -> TravelAiException.notFound(ErrorCode.PARTNER_NOT_FOUND));
+        partner.setType(req.type());
+        partner.setName(req.name());
+        partner.setVatNumber(req.vatNumber());
+        partner.setContactEmail(req.contactEmail());
+        partner.setContactPhone(req.contactPhone());
+        partner.setAddress(req.address());
+        partner.setCity(req.city());
+        if (req.country() != null) {
+            partner.setCountry(req.country());
+        }
+        if (req.active() != null) {
+            partner.setActive(req.active());
+        }
+        Partner saved = partnerRepository.save(partner);
+        log.info("Admin updated partner {}", partnerId);
+        return toAdminPartner(saved);
     }
 
     /** Activates a suspended partner (sets status to LIVE and active=true). */
@@ -199,6 +236,16 @@ public class AdminService {
         return new AdminUserResponse(
             u.getId(), u.getEmail(), u.getFirstName(), u.getLastName(),
             u.getRole(), u.isActive(), u.isEmailVerified(), u.getCreatedAt());
+    }
+
+    private AdminPartnerResponse toAdminPartner(Partner p) {
+        return new AdminPartnerResponse(
+            p.getId(), p.getName(),
+            p.getType() != null ? p.getType().name() : null,
+            p.getCity(),
+            p.getStatus() != null ? p.getStatus().name() : null,
+            p.getContactEmail(), p.getContactPhone(), p.getVatNumber(),
+            p.getAddress(), p.getCountry(), p.isActive(), p.getCreatedAt());
     }
 
     private long safeCountTable(String table) {
