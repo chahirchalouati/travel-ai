@@ -1,28 +1,57 @@
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f7f7f7;
-  --bg-tertiary: #f0f0f0;
-  --brand: #E04A2F;
-  --brand-hover: #c93d25;
-  --brand-light: #FFF0ED;
-  --teal: #00856A;
-  --teal-light: #E6F5F0;
-  --gold: #F5A623;
-  --text-primary: #1a1a1a;
-  --text-secondary: #545454;
-  --text-tertiary: #8a8a8a;
-  --border: #e0e0e0;
-  --border-light: #efefef;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  /* --- Surfaces: warm editorial paper, layered --- */
+  --bg-primary: #FBF7F1;   /* page — warm paper */
+  --bg-secondary: #F3ECE1; /* subtle sand panel */
+  --bg-tertiary: #E9DFD1;  /* deeper sand */
+  --surface: #FFFFFF;      /* crisp card, pops against paper */
+  --surface-ink: #1F1A15;  /* dark editorial surface (hero, footers) */
 
+  /* --- Accents: deepened terracotta + forest, used semantically --- */
+  --brand: #BE4329;        /* clay terracotta */
+  --brand-hover: #A2371F;
+  --brand-light: #F6E6DF;  /* warm tint */
+  --teal: #11664C;         /* deep forest (trust / verified) */
+  --teal-light: #E1ECE5;
+  --gold: #C0892E;         /* aged brass — ratings / highlights */
+  --gold-light: #F5EAD4;
+
+  /* --- Ink: warm near-black ramp --- */
+  --text-primary: #211B14;
+  --text-secondary: #5B5346;
+  --text-tertiary: #938A7B;
+  --text-on-ink: #F4EEE5;  /* text over --surface-ink */
+
+  --border: #E6DCCD;       /* warm hairline */
+  --border-light: #EFE8DC;
+
+  /* --- Shadows: warm-tinted, longer falloff for real depth --- */
+  --shadow-sm: 0 1px 3px rgba(58, 40, 20, 0.07);
+  --shadow-md: 0 6px 20px rgba(58, 40, 20, 0.10);
+  --shadow-lg: 0 18px 48px rgba(48, 32, 16, 0.16);
+
+  /* --- Type: editorial serif display + grotesk body --- */
+  --font-display: 'Fraunces', 'Georgia', 'Times New Roman', serif;
   --font-body: 'Hanken Grotesk', system-ui, sans-serif;
+
+  /* --- Radii scale (intentional, not uniform) --- */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 26px;
+  --radius-pill: 100px;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --duration-fast: 150ms;
   --duration-normal: 300ms;
   --duration-smooth: 400ms;
+}
+
+/* Display-serif utility for editorial headlines. */
+.display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -130,6 +159,29 @@ input[type=range]::-webkit-slider-runnable-track {
   &:hover {
     color: var(--brand);
     background: var(--brand-light);
+  }
+}
+
+/* Scroll reveal (see RevealDirective).
+   Uses a keyframe animation rather than a transition so it never collides with a
+   component's own `transition: transform` (used for hover). `backwards` fill keeps
+   the element hidden through its stagger delay; no `forwards`, so once the reveal
+   finishes the element returns to its normal static styles and hover transforms work. */
+.reveal { opacity: 0; }
+.reveal.reveal--visible {
+  opacity: 1;
+  animation: reveal-rise var(--duration-smooth) var(--ease-out-expo) backwards;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+@keyframes reveal-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.reveal--visible {
+    opacity: 1;
+    animation: none;
   }
 }
 

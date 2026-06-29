@@ -1,56 +1,155 @@
 <section id="hero" aria-labelledby="hero-heading">
-  <div class="container">
-    <div class="hero-content">
-      <h1 id="hero-heading" class="hero-title reveal">
-        Where to next?
+  <div class="hero-grain" aria-hidden="true"></div>
+
+  <div class="container hero-grid">
+    <!-- ===== Left: editorial pitch + prompt ===== -->
+    <div class="hero-lede">
+      <span class="hero-eyebrow reveal">
+        <span class="hero-eyebrow-dot" aria-hidden="true"></span>
+        AI trip designer · not another listings site
+      </span>
+
+      <h1 id="hero-heading" class="hero-title display reveal reveal-delay-1">
+        Don't search a thousand reviews.
+        <em>Get the trip,</em> already planned.
       </h1>
 
-      <p class="hero-subtitle reveal reveal-delay-1">
-        Discover destinations, read reviews, and plan trips with AI
+      <p class="hero-subtitle reveal reveal-delay-2">
+        Describe the trip you want in a sentence. Watch a day-by-day plan —
+        stays, food, and the small local details — build itself in seconds.
       </p>
 
-      <div class="hero-search reveal reveal-delay-2">
+      <div class="hero-search reveal reveal-delay-3">
         <div class="search-bar" role="search">
-          <span class="search-icon ms" aria-hidden="true">search</span>
+          <span class="search-icon ms" aria-hidden="true">auto_awesome</span>
           <input
             type="text"
             class="search-input"
             [value]="searchQuery()"
-            (input)="onInput($any($event.target).value)"
-            (focus)="onFocus()"
-            (blur)="onBlur()"
-            placeholder="Search destinations, trips, experiences..."
+            (input)="searchQuery.set($any($event.target).value)"
+            (keyup.enter)="planTrip()"
+            placeholder="e.g. 10 quiet days in Japan with great food…"
             autocomplete="off"
-            aria-label="Search destinations"
-          >
-          <button
-            class="ask-ai-btn"
-            (click)="askAI()"
-            aria-label="Ask AI"
-          >
-            <span class="ms" aria-hidden="true">auto_awesome</span>
-            Ask AI
+            aria-label="Describe your trip"
+          />
+          <button class="search-submit" (click)="planTrip()" aria-label="Build my itinerary">
+            <span class="ms" aria-hidden="true">arrow_forward</span>
           </button>
-          <button
-            class="search-submit"
-            (click)="planTrip()"
-            [disabled]="isPlanning()"
-            aria-label="Plan my trip"
-          >
-            {{ isPlanning() ? 'Planning...' : 'Search' }}
-            <span class="ms" aria-hidden="true">search</span>
-          </button>
+        </div>
+
+        <div class="hero-quick-picks" role="list" aria-label="Try a trip">
+          <span class="hero-quick-label">Try:</span>
+          @for (p of quickPicks; track p.key) {
+            <button class="quick-pill" role="listitem" (click)="selectPick(p)">
+              <span class="quick-pill-emoji" aria-hidden="true">{{ p.emoji }}</span>
+              <span>{{ p.label }}</span>
+            </button>
+          }
         </div>
       </div>
 
-      <div class="hero-quick-picks reveal reveal-delay-3" role="list" aria-label="Popular destinations">
-        @for (p of quickPicks; track p.dest) {
-          <button class="quick-pill" role="listitem" (click)="setQuickPick(p.dest)">
-            <span class="quick-pill-emoji">{{ p.label.split(' ')[0] }}</span>
-            <span>{{ p.label.split(' ').slice(1).join(' ') }}</span>
+      <ul class="hero-trust reveal reveal-delay-3" role="list">
+        <li><span class="ms" aria-hidden="true">verified</span> Human-checked picks</li>
+        <li><span class="ms" aria-hidden="true">block</span> No pay-to-rank</li>
+        <li><span class="ms" aria-hidden="true">bolt</span> Replans on the fly</li>
+      </ul>
+    </div>
+
+    <!-- ===== Right: the living itinerary ===== -->
+    <div class="hero-stage reveal reveal-delay-2" aria-label="Live itinerary preview">
+      <div class="trip-card" [class.is-thinking]="phase() === 'thinking'">
+        <!-- Card header / brief being typed -->
+        <header class="trip-head">
+          <div class="trip-head-row">
+            <span class="trip-avatar" aria-hidden="true">
+              <span class="ms">auto_awesome</span>
+            </span>
+            <div class="trip-head-text">
+              <span class="trip-brief">{{ typedBrief() }}<span class="caret" aria-hidden="true" [class.hidden]="phase() !== 'thinking'"></span></span>
+              <span class="trip-summary">
+                @if (activeSample()) { {{ activeSample()!.summary }} }
+              </span>
+            </div>
+          </div>
+          <span class="trip-status" [class.is-done]="phase() === 'done'">
+            @if (phase() === 'done') {
+              <span class="ms" aria-hidden="true">check_circle</span> Ready
+            } @else {
+              <span class="dot-pulse" aria-hidden="true"></span> Planning…
+            }
+          </span>
+        </header>
+
+        <div class="trip-body">
+          <!-- Mini map with dropping pins -->
+          <div class="trip-map" aria-hidden="true">
+            <div class="map-grid"></div>
+            <svg class="map-route" viewBox="0 0 100 100" preserveAspectRatio="none">
+              @if (activeSample()) {
+                <polyline [attr.points]="routePoints()" class="route-line" />
+              }
+            </svg>
+            @if (activeSample()) {
+              @for (pin of activeSample()!.pins; track pin.n; let i = $index) {
+                <span
+                  class="map-pin"
+                  [class.shown]="i < pinsShown()"
+                  [style.left.%]="pin.x"
+                  [style.top.%]="pin.y"
+                >
+                  <span class="map-pin-n">{{ pin.n }}</span>
+                </span>
+              }
+            }
+          </div>
+
+          <!-- Day-by-day plan -->
+          <div class="trip-days">
+            @if (activeSample()) {
+              @for (d of activeSample()!.days; track d.day; let di = $index) {
+                <div class="trip-day" [class.shown]="isDayShown(di)">
+                  <div class="trip-day-head">
+                    <span class="trip-day-label">{{ d.day }}</span>
+                    <span class="trip-day-place">{{ d.place }}</span>
+                  </div>
+                  @for (it of d.items; track it.title; let ii = $index) {
+                    <div
+                      class="trip-item"
+                      [class.shown]="isItemShown(di, ii)"
+                      [attr.data-kind]="it.kind"
+                    >
+                      <span class="trip-item-time">{{ it.time }}</span>
+                      <span class="trip-item-icon" [attr.data-kind]="it.kind">
+                        <span class="ms" aria-hidden="true">{{ it.icon }}</span>
+                      </span>
+                      <span class="trip-item-text">
+                        <span class="trip-item-title">{{ it.title }}</span>
+                        <span class="trip-item-meta">{{ it.meta }}</span>
+                      </span>
+                    </div>
+                  }
+                </div>
+              }
+            }
+          </div>
+        </div>
+
+        <footer class="trip-foot" [class.shown]="phase() === 'done'">
+          <button class="trip-cta" (click)="openFullPlan()">
+            Open the full itinerary
+            <span class="ms" aria-hidden="true">arrow_forward</span>
           </button>
-        }
+          <span class="trip-foot-note">Adjust anything — it replans instantly.</span>
+        </footer>
       </div>
+
+      <!-- floating proof chips for depth -->
+      <span class="float-chip float-chip--a" aria-hidden="true">
+        <span class="ms">savings</span> Under budget
+      </span>
+      <span class="float-chip float-chip--b" aria-hidden="true">
+        <span class="ms">star</span> 9.4 avg picks
+      </span>
     </div>
   </div>
 </section>
