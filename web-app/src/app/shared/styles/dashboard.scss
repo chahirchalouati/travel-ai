@@ -1,0 +1,124 @@
+// Shared chrome for account-area pages (trips, bookings, messages, account).
+// Editorial dashboard look: generous header, layered cards, intentional rhythm.
+
+:host {
+  --accent: #e04a2f;
+  --accent-soft: #fff0ed;
+  --ink: #1a1a1a;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --surface: #ffffff;
+  --bg: #f6f6f4;
+  display: block;
+  min-height: 70vh;
+  background: var(--bg);
+  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  color: var(--ink);
+}
+
+.dash-container {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 5rem;
+}
+
+.dash-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.dash-title {
+  font-size: clamp(1.9rem, 1.4rem + 2vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.dash-sub {
+  color: var(--muted);
+  font-size: 1rem;
+  margin: 0.5rem 0 0;
+}
+
+.dash-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.7rem 1.3rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+  box-shadow: 0 6px 18px rgba(224, 74, 47, 0.25);
+}
+.dash-cta:hover { transform: translateY(-1px); box-shadow: 0 10px 26px rgba(224, 74, 47, 0.32); }
+.dash-cta--ghost {
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+.dash-cta--ghost:hover { border-color: var(--ink); box-shadow: none; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: box-shadow 160ms ease, transform 160ms ease, border-color 160ms ease;
+}
+.card:hover { box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08); transform: translateY(-2px); }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.pill--confirmed { background: #e7f6ec; color: #1a7f43; }
+.pill--pending   { background: #fff6e5; color: #b07b00; }
+.pill--cancelled { background: #fdecec; color: #c0392b; }
+.pill--completed { background: #eef0ff; color: #3a4ad0; }
+
+.empty {
+  text-align: center;
+  padding: 4rem 1.5rem;
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: 18px;
+}
+.empty .ms { font-size: 46px; color: var(--accent); }
+.empty h3 { margin: 1rem 0 0.4rem; font-size: 1.3rem; }
+.empty p { color: var(--muted); margin: 0 0 1.5rem; }
+
+.skeleton {
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: 12px;
+}
+@keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+
+// Note: the global `.ms` rule in styles.scss provides the Material Symbols font.

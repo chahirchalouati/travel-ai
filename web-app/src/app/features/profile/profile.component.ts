@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ProfileService } from '../../core/services/profile.service';
-import type { ProfileOverview } from '../../core/services/profile.service';
+import type { ProfileOverview, GalleryPhoto, TravelPlace } from '../../core/services/profile.service';
+import { MediaService } from '../../core/services/media.service';
 import { DEFAULT_AVATAR, DEFAULT_COVER } from './profile.data';
 import type { ReviewResponse } from '../../core/models/api.models';
 import { catchError, of } from 'rxjs';
@@ -253,23 +254,40 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
           }
 
           @if (activeTab() === 'photos') {
+            <input #galleryInput type="file" accept="image/*" style="display:none" (change)="onGalleryAdd($event)">
             <div class="content-head">
               <h3 class="feed-heading" style="margin:0">Photo gallery</h3>
-              <span class="content-count">{{ photoCount() }} photos</span>
+              <button class="add-btn" type="button" (click)="galleryInput.click()" [disabled]="uploadingPhoto()">
+                <span class="ms" style="font-size:18px">{{ uploadingPhoto() ? 'hourglass_top' : 'add_photo_alternate' }}</span>
+                {{ uploadingPhoto() ? 'Uploading…' : 'Add photo' }}
+              </button>
             </div>
             <div class="photo-grid">
+              <button class="photo-add-tile" type="button" (click)="galleryInput.click()" [disabled]="uploadingPhoto()">
+                <span class="ms" style="font-size:30px">add_a_photo</span>
+                <span>Upload</span>
+              </button>
+              @for (p of gallery(); track p.id) {
+                <figure class="photo-tile">
+                  <img [src]="p.url" [alt]="p.caption || 'Travel photo'" class="photo-img" loading="lazy">
+                  <button class="photo-del" type="button" (click)="deleteGalleryPhoto(p)" aria-label="Delete photo">
+                    <span class="ms" style="font-size:16px">delete</span>
+                  </button>
+                </figure>
+              }
               @for (p of photos(); track p) {
                 <figure class="photo-tile">
-                  <img [src]="p" alt="Travel photo" class="photo-img" loading="lazy">
+                  <img [src]="p" alt="Review photo" class="photo-img" loading="lazy">
                 </figure>
-              } @empty {
-                <div class="tab-empty" style="grid-column:1/-1">
-                  <span class="ms tab-empty-icon">photo_library</span>
-                  <h3>No photos yet</h3>
-                  <p>Add photos to your reviews and they'll show up here.</p>
-                </div>
               }
             </div>
+            @if (gallery().length === 0 && photos().length === 0) {
+              <div class="tab-empty">
+                <span class="ms tab-empty-icon">photo_library</span>
+                <h3>No photos yet</h3>
+                <p>Upload your travel photos — they'll appear in your gallery.</p>
+              </div>
+            }
           }
 
           @if (activeTab() === 'reviews') {
@@ -332,22 +350,50 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
               <div class="map-hero-overlay"></div>
               <div class="map-hero-content">
                 <span class="map-hero-eyebrow">Travel passport</span>
-                <h3 class="map-hero-title">{{ placesCount() }} {{ placesCount() === 1 ? 'place' : 'places' }} explored</h3>
-                <p class="map-hero-sub">Built from the places you've reviewed and booked.</p>
+                <h3 class="map-hero-title">{{ totalPlaces() }} {{ totalPlaces() === 1 ? 'place' : 'places' }} explored</h3>
+                <p class="map-hero-sub">Pin the places you've been and build your travel map.</p>
               </div>
             </div>
-            <h3 class="feed-heading">Places visited</h3>
+
+            <div class="content-head">
+              <h3 class="feed-heading" style="margin:0">Places visited</h3>
+              <button class="add-btn" type="button" (click)="toggleAddPlace()">
+                <span class="ms" style="font-size:18px">{{ showAddPlace() ? 'close' : 'add_location_alt' }}</span>
+                {{ showAddPlace() ? 'Cancel' : 'Add place' }}
+              </button>
+            </div>
+
+            @if (showAddPlace()) {
+              <div class="add-place-form">
+                <input class="ap-input" [(ngModel)]="newPlaceName" placeholder="Place (e.g. Lisbon)" maxlength="160">
+                <input class="ap-input" [(ngModel)]="newPlaceCountry" placeholder="Country" maxlength="120">
+                <input class="ap-input ap-note" [(ngModel)]="newPlaceNote" placeholder="A note (optional)" maxlength="500">
+                <button class="ap-save" type="button" [disabled]="!newPlaceName.trim()" (click)="addPlace()">Add</button>
+              </div>
+            }
+
             <div class="stamps-grid">
+              @for (place of placesList(); track place.id) {
+                <div class="stamp stamp--owned">
+                  <span class="ms stamp-pin">location_on</span>
+                  <span class="stamp-country">{{ place.name }}</span>
+                  @if (place.country) { <span class="stamp-sub">{{ place.country }}</span> }
+                  <button class="stamp-del" type="button" (click)="deletePlace(place)" aria-label="Remove place">
+                    <span class="ms" style="font-size:14px">close</span>
+                  </button>
+                </div>
+              }
               @for (place of places(); track place) {
                 <div class="stamp">
                   <span class="ms stamp-pin">location_on</span>
                   <span class="stamp-country">{{ place }}</span>
                 </div>
-              } @empty {
+              }
+              @if (placesList().length === 0 && places().length === 0) {
                 <div class="tab-empty" style="grid-column:1/-1">
                   <span class="ms tab-empty-icon">map</span>
                   <h3>No places yet</h3>
-                  <p>Review hotels and restaurants or book a trip to build your travel map.</p>
+                  <p>Add the places you've been to start your travel map.</p>
                 </div>
               }
             </div>
@@ -475,6 +521,7 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
 export class ProfileComponent implements OnInit {
   readonly authService = inject(AuthService);
   private readonly profileService = inject(ProfileService);
+  private readonly mediaService = inject(MediaService);
   private readonly router = inject(Router);
 
   activeTab = signal<Tab>('activity');
@@ -512,6 +559,19 @@ export class ProfileComponent implements OnInit {
   // Photo uploads
   coverUrl = signal<string | null>(null);
   avatarUrl = signal<string | null>(null);
+  uploadingAvatar = signal(false);
+  uploadingCover = signal(false);
+
+  // Real user-authored content (persisted)
+  readonly gallery = signal<GalleryPhoto[]>([]);
+  readonly placesList = signal<TravelPlace[]>([]);
+  uploadingPhoto = signal(false);
+
+  // Add-place form
+  showAddPlace = signal(false);
+  newPlaceName = '';
+  newPlaceCountry = '';
+  newPlaceNote = '';
 
   // Modals
   showEditModal = signal(false);
@@ -568,9 +628,17 @@ export class ProfileComponent implements OnInit {
       this.router.navigate(['/']);
       return;
     }
-    this.profileService.getOverview().pipe(
-      catchError(() => of(null))
-    ).subscribe(overview => this.overview.set(overview));
+    // Seed avatar/cover from the persisted profile.
+    const u = this.authService.currentUser();
+    if (u?.avatarUrl) this.avatarUrl.set(u.avatarUrl);
+    if (u?.coverUrl) this.coverUrl.set(u.coverUrl);
+
+    this.profileService.getOverview().pipe(catchError(() => of(null)))
+      .subscribe(overview => this.overview.set(overview));
+    this.profileService.listPhotos().pipe(catchError(() => of([] as GalleryPhoto[])))
+      .subscribe(photos => this.gallery.set(photos));
+    this.profileService.listPlaces().pipe(catchError(() => of([] as TravelPlace[])))
+      .subscribe(places => this.placesList.set(places));
   }
 
   // ─── Review card helpers (map ReviewResponse → card fields) ──────────
@@ -596,40 +664,114 @@ export class ProfileComponent implements OnInit {
   onCoverChange(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => this.coverUrl.set(reader.result as string);
-    reader.readAsDataURL(file);
+    this.uploadingCover.set(true);
+    this.mediaService.upload(file, 'covers').pipe(catchError(() => of(null))).subscribe(res => {
+      this.uploadingCover.set(false);
+      if (!res) { this.toast('Upload failed — try again'); return; }
+      this.coverUrl.set(res.url);
+      this.persistMedia({ coverUrl: res.url }, 'Cover photo updated');
+    });
   }
 
   onAvatarChange(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.avatarUrl.set(reader.result as string);
-      this.toast('Avatar updated');
-    };
-    reader.readAsDataURL(file);
+    this.uploadingAvatar.set(true);
+    this.mediaService.upload(file, 'avatars').pipe(catchError(() => of(null))).subscribe(res => {
+      this.uploadingAvatar.set(false);
+      if (!res) { this.toast('Upload failed — try again'); return; }
+      this.avatarUrl.set(res.url);
+      this.persistMedia({ avatarUrl: res.url }, 'Avatar updated');
+    });
   }
+
+  /** Persists a presentation field and syncs the cached user signal. */
+  private persistMedia(update: { avatarUrl?: string; coverUrl?: string; bio?: string; location?: string }, msg: string): void {
+    this.profileService.updateMedia(update).pipe(catchError(() => of(null))).subscribe(() => {
+      const u = this.authService.currentUser();
+      if (u) this.authService.currentUser.set({ ...u, ...update });
+      this.toast(msg);
+    });
+  }
+
+  // ─── Photo gallery (persisted) ───────────────────────────────────────
+  onGalleryAdd(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    (event.target as HTMLInputElement).value = '';
+    this.uploadingPhoto.set(true);
+    this.mediaService.upload(file, 'gallery').pipe(catchError(() => of(null))).subscribe(res => {
+      if (!res) { this.uploadingPhoto.set(false); this.toast('Upload failed — try again'); return; }
+      this.profileService.addPhoto({ url: res.url }).pipe(catchError(() => of(null))).subscribe(photo => {
+        this.uploadingPhoto.set(false);
+        if (photo) { this.gallery.update(list => [photo, ...list]); this.toast('Photo added'); }
+      });
+    });
+  }
+
+  deleteGalleryPhoto(photo: GalleryPhoto): void {
+    this.profileService.deletePhoto(photo.id).pipe(catchError(() => of(null))).subscribe(() => {
+      this.gallery.update(list => list.filter(p => p.id !== photo.id));
+      this.toast('Photo removed');
+    });
+  }
+
+  // ─── Travel-map places (persisted) ───────────────────────────────────
+  toggleAddPlace(): void { this.showAddPlace.update(v => !v); }
+
+  addPlace(): void {
+    const name = this.newPlaceName.trim();
+    if (!name) return;
+    this.profileService.addPlace({
+      name,
+      country: this.newPlaceCountry.trim() || null,
+      note: this.newPlaceNote.trim() || null,
+      visitedOn: new Date().toISOString().slice(0, 10),
+    }).pipe(catchError(() => of(null))).subscribe(place => {
+      if (place) {
+        this.placesList.update(list => [place, ...list]);
+        this.newPlaceName = ''; this.newPlaceCountry = ''; this.newPlaceNote = '';
+        this.showAddPlace.set(false);
+        this.toast('Place added to your map');
+      } else {
+        this.toast('Could not add place');
+      }
+    });
+  }
+
+  deletePlace(place: TravelPlace): void {
+    this.profileService.deletePlace(place.id).pipe(catchError(() => of(null))).subscribe(() => {
+      this.placesList.update(list => list.filter(p => p.id !== place.id));
+      this.toast('Place removed');
+    });
+  }
+
+  readonly totalPlaces = computed(() => this.placesList().length || this.placesCount());
+  readonly totalPhotos = computed(() => this.gallery().length + this.photoCount());
 
   editProfile(): void {
     const u = this.authService.currentUser();
     this.editFirstName = u?.firstName ?? '';
     this.editLastName = u?.lastName ?? '';
+    this.editBio = u?.bio ?? '';
+    this.editCity = u?.location ?? '';
     this.showEditModal.set(true);
   }
 
   saveProfile(): void {
-    const u = this.authService.currentUser();
-    if (u) {
-      this.authService.currentUser.set({
-        ...u,
-        firstName: this.editFirstName.trim() || u.firstName,
-        lastName: this.editLastName.trim() || u.lastName,
+    const firstName = this.editFirstName.trim();
+    const lastName = this.editLastName.trim();
+    const bio = this.editBio.trim();
+    const location = this.editCity.trim();
+
+    this.authService.updateProfile({ firstName, lastName }).pipe(catchError(() => of(null))).subscribe(() => {
+      this.profileService.updateMedia({ bio, location }).pipe(catchError(() => of(null))).subscribe(() => {
+        const u = this.authService.currentUser();
+        if (u) this.authService.currentUser.set({ ...u, bio, location });
+        this.toast('Profile updated');
       });
-    }
+    });
     this.showEditModal.set(false);
-    this.toast('Profile updated');
   }
 
   openSettings(): void {

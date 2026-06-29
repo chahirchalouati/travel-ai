@@ -7,10 +7,11 @@ import { TravelService } from '../../core/services/travel.service';
 import { CatalogService } from '../../core/services/catalog.service';
 import { BookingService } from '../../core/services/booking.service';
 import { PaymentService } from '../../core/services/payment.service';
+import { PlannerMapComponent, PlannerPin } from './planner-map.component';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-type Lang = 'it' | 'en';
+type Lang = 'it' | 'en' | 'fr' | 'es';
 type Stage = 'empty' | 'generating' | 'results' | 'detail';
 type Overlay = null | 'booking' | 'payment' | 'confirmation' | 'concierge';
 type Priority = 'food' | 'stay' | 'bal';
@@ -47,6 +48,23 @@ interface Strings {
   cc_offer_badge: string; cc_offer_title: string; cc_offer_sub: string; cc_offer_cta: string;
   cc_booked: string;
   st_plan: string; st_proposals: string; st_detail: string; st_book: string;
+  sign_out: string; sign_in: string;
+  pill_hotel: string; pill_restaurants: string; pill_flight: string;
+  auth_sign_in: string; auth_register: string; auth_first_name: string; auth_last_name: string;
+  auth_password_placeholder: string; auth_loading: string; auth_create: string;
+  auth_email_required: string; auth_fields_required: string;
+  auth_invalid: string; auth_register_error: string;
+  auth_first_placeholder: string; auth_last_placeholder: string;
+  check_restaurants: string; check_flight: string; check_available: string; check_checking: string;
+  tr_adults: string; tr_children: string;
+  rs_nights: string; rs_ppl: string;
+  rs_prio_food: string; rs_prio_stay: string; rs_prio_bal: string;
+  install_sub: string;
+  conf_hotel: string; conf_restaurants: string; conf_flight: string;
+  rest_recommended: string; flight_roundtrip: string; proposal_why_default: string;
+  hotel_sea: string; local_cuisine: string; bag_included: string; carry_on: string; free_cancel: string;
+  per_person: string; under_budget: string;
+  split_stay: string; split_food: string; split_transport: string;
 }
 
 const STR: Record<Lang, Strings> = {
@@ -70,6 +88,23 @@ const STR: Record<Lang, Strings> = {
     cc_user:'Trovami un tavolo per stasera vicino all\u2019hotel', cc_reply:'Ho trovato un ristorante partner a 4 minuti a piedi dal tuo hotel, con disponibilit\xe0 per 2 stasera alle 20:30.',
     cc_offer_badge:'Partner diretto', cc_offer_title:'Trattoria del Mare', cc_offer_sub:'2 persone \xb7 20:30 \xb7 4 min a piedi \xb7 prenotabile in app', cc_offer_cta:'Prenota il tavolo', cc_booked:'Fatto! Tavolo prenotato per stasera alle 20:30. Conferma inviata.',
     st_plan:'Pianifica', st_proposals:'Proposte', st_detail:'Dettaglio', st_book:'Checkout',
+    sign_out:'Esci', sign_in:'Accedi',
+    pill_hotel:'Hotel', pill_restaurants:'Ristoranti', pill_flight:'Volo',
+    auth_sign_in:'Accedi', auth_register:'Registrati', auth_first_name:'Nome', auth_last_name:'Cognome',
+    auth_password_placeholder:'Almeno 8 caratteri', auth_loading:'Caricamento...', auth_create:'Crea account',
+    auth_email_required:'Inserisci email e password.', auth_fields_required:'Compila tutti i campi.',
+    auth_invalid:'Credenziali non valide.', auth_register_error:'Errore durante la registrazione.',
+    auth_first_placeholder:'Marco', auth_last_placeholder:'Bianchi',
+    check_restaurants:'Ristoranti partner', check_flight:'Volo A/R', check_available:'Disponibile', check_checking:'Verifica…',
+    tr_adults:'adulti', tr_children:'bambini',
+    rs_nights:'notti', rs_ppl:'pers.',
+    rs_prio_food:'priorit\xe0 cibo', rs_prio_stay:'priorit\xe0 alloggio', rs_prio_bal:'bilanciato',
+    install_sub:'3 rate da €',
+    conf_hotel:'Hotel prenotato', conf_restaurants:'Ristoranti confermati', conf_flight:'Volo emesso',
+    rest_recommended:'Ristoranti consigliati', flight_roundtrip:'Volo A/R', proposal_why_default:'Proposta ottimizzata per le tue preferenze.',
+    hotel_sea:' \xb7 mare', local_cuisine:'Cucina locale', bag_included:'Bagaglio incluso', carry_on:'Bagaglio a mano', free_cancel:'Cancellazione gratuita fino a 7 giorni prima.',
+    per_person:'a persona', under_budget:'sotto budget · ',
+    split_stay:'Alloggio', split_food:'Cibo', split_transport:'Trasporti',
   },
   en: {
     restart:'Restart',
@@ -91,6 +126,99 @@ const STR: Record<Lang, Strings> = {
     cc_user:'Find me a table tonight near the hotel', cc_reply:'I found a partner restaurant a 4-minute walk from your hotel, with availability for 2 tonight at 8:30 pm.',
     cc_offer_badge:'Direct partner', cc_offer_title:'Trattoria del Mare', cc_offer_sub:'2 people \xb7 8:30 pm \xb7 4 min walk \xb7 bookable in app', cc_offer_cta:'Book the table', cc_booked:'Done! Table booked for tonight at 8:30 pm. Confirmation sent.',
     st_plan:'Plan', st_proposals:'Proposals', st_detail:'Detail', st_book:'Checkout',
+    sign_out:'Sign out', sign_in:'Sign in',
+    pill_hotel:'Hotel', pill_restaurants:'Restaurants', pill_flight:'Flight',
+    auth_sign_in:'Sign in', auth_register:'Register', auth_first_name:'First name', auth_last_name:'Last name',
+    auth_password_placeholder:'At least 8 characters', auth_loading:'Loading...', auth_create:'Create account',
+    auth_email_required:'Enter your email and password.', auth_fields_required:'Please fill in all fields.',
+    auth_invalid:'Invalid credentials.', auth_register_error:'Registration failed.',
+    auth_first_placeholder:'John', auth_last_placeholder:'Doe',
+    check_restaurants:'Partner restaurants', check_flight:'Round-trip flight', check_available:'Available', check_checking:'Checking…',
+    tr_adults:'adults', tr_children:'children',
+    rs_nights:'nights', rs_ppl:'ppl',
+    rs_prio_food:'food priority', rs_prio_stay:'stay priority', rs_prio_bal:'balanced',
+    install_sub:'3 payments of €',
+    conf_hotel:'Hotel booked', conf_restaurants:'Restaurants confirmed', conf_flight:'Flight issued',
+    rest_recommended:'Recommended restaurants', flight_roundtrip:'Round-trip', proposal_why_default:'Optimised for your preferences.',
+    hotel_sea:' \xb7 sea', local_cuisine:'Local cuisine', bag_included:'Bag included', carry_on:'Carry-on', free_cancel:'Free cancellation up to 7 days before.',
+    per_person:'per person', under_budget:'under budget · ',
+    split_stay:'Stay', split_food:'Food', split_transport:'Transport',
+  },
+  fr: {
+    restart:'Redémarrer',
+    i_title:'Planifiez le voyage', i_sub:'Définissez les paramètres, l\u2019IA fait le reste', i_budget:'Budget', i_required:'obligatoire', i_total:'total', i_dates:'Dates', i_fixed:'Fixes', i_flex:'Flexibles \xb13j', i_nights:'Nuits', i_people:'Voyageurs', i_adults:'Adultes', i_children:'Enfants', i_optional:'optionnel', i_priority:'Priorité de dépense', i_priority_sub:'Sur quoi préférez-vous dépenser plus ?', i_constraints:'Contraintes',
+    prio_food:'Gastronomie', prio_stay:'Hébergement', prio_bal:'Équilibré',
+    c_sea:'Mer', c_pets:'Animaux', c_access:'Accessible', c_family:'Familles',
+    dest_open_t:'Destination ouverte', dest_open_s:'L\u2019IA choisit selon votre budget', dest_set_t:'Ville côtière', dest_set_s:'Suggérée par l\u2019IA \xb7 cliquez pour rouvrir',
+    gen:'Générer des propositions IA', gen_again:'Régénérer les propositions',
+    e_title:'Prêt à composer votre voyage', e_sub:'Définissez budget, dates et priorités dans le panneau de gauche, puis générez. L\u2019IA compose 2\u20133 forfaits complets \u2014 hôtel, restaurants et vol \u2014 dans votre budget.',
+    g_title:'Je compose votre voyage', g_sub:'Les agents IA recherchent en parallèle', g_foot:'agents propriétaires \xb7 cadencés \xb7 budget-aware',
+    ag_orch:'Agent Orchestrateur', ag_orch_t:'Normalise les entrées et le budget', ag_hotel:'Agent Hôtel', ag_hotel_t:'Hébergements compatibles en BDD', ag_rest:'Agent Restaurants', ag_rest_t:'Partenaires directs dans la zone', ag_flight:'Agent Vols', ag_flight_t:'Vols dans le budget restant', ag_rank:'Agent de Classement', ag_rank_t:'Compose 2\u20133 forfaits cohérents',
+    r_title:'Vos propositions', r_recommended:'Recommandé', r_view:'Détail', r_regen:'Nouvelles propositions', fit_in:'dans le budget', fit_over:'hors budget',
+    d_back:'Retour aux propositions', d_breakdown:'Répartition du budget', d_vs_budget:'de votre budget', d_ideal:'Répartition idéale selon vos priorités', d_elements:'Composants du voyage', d_change:'Changer', d_book:'Réserver',
+    b_title:'Réservation', b_checking:'Disponibilité en temps réel', b_traveler:'Voyageur', b_summary:'Résumé des coûts', b_total:'Total', b_continue:'Passer au paiement', b_wait:'Vérification de la disponibilité\u2026',
+    p_title:'Paiement', p_paying:'Vous payez', p_how:'Comment souhaitez-vous payer', p_full:'Paiement intégral', p_full_sub:'Payez tout maintenant', p_install:'Paiement échelonné', p_plan:'Plan en 3 versements', p_now:'Aujourd\u2019hui', p_platform:'La plateforme encaisse la totalité immédiatement, même en versements : le risque d\u2019impayé reste au gateway, jamais aux partenaires.', p_pay_full:'Payer \u20ac', p_pay_install:'Activer Klarna \xb7 \u20ac',
+    c_title:'Voyage confirmé !', c_sub:'Réservations envoyées, confirmations en route par email.', c_concierge:'Travel Concierge', c_concierge_sub:'Votre assistant IA pendant le séjour. Il s\u2019active 3 jours avant le départ.', c_open:'Ouvrir le Concierge (démo)', c_restart:'Recommencer le flux', concept:'CONCEPT',
+    cc_title:'Concierge IA', cc_context:'Je connais déjà votre voyage : hôtel, dates et groupe. Demandez-moi en langage naturel.', cc_suggestion:'Trouvez-moi une table ce soir près de l\u2019hôtel', cc_placeholder:'Écrivez une demande\u2026',
+    cc_greet:'Bonjour Marco ! Je suis votre Concierge pour Amalfi. Je peux vous aider avec les tables, transferts ou activités de dernière minute pendant votre séjour.',
+    cc_user:'Trouvez-moi une table ce soir près de l\u2019hôtel', cc_reply:'J\u2019ai trouvé un restaurant partenaire à 4 minutes à pied de votre hôtel, avec disponibilité pour 2 ce soir à 20h30.',
+    cc_offer_badge:'Partenaire direct', cc_offer_title:'Trattoria del Mare', cc_offer_sub:'2 personnes \xb7 20h30 \xb7 4 min à pied \xb7 réservable dans l\u2019app', cc_offer_cta:'Réserver la table', cc_booked:'C\u2019est fait ! Table réservée pour ce soir à 20h30. Confirmation envoyée.',
+    st_plan:'Planifier', st_proposals:'Propositions', st_detail:'Détail', st_book:'Paiement',
+    sign_out:'Déconnexion', sign_in:'Se connecter',
+    pill_hotel:'Hôtel', pill_restaurants:'Restaurants', pill_flight:'Vol',
+    auth_sign_in:'Se connecter', auth_register:'S\u2019inscrire', auth_first_name:'Prénom', auth_last_name:'Nom',
+    auth_password_placeholder:'Au moins 8 caractères', auth_loading:'Chargement...', auth_create:'Créer un compte',
+    auth_email_required:'Saisissez votre email et mot de passe.', auth_fields_required:'Veuillez remplir tous les champs.',
+    auth_invalid:'Identifiants invalides.', auth_register_error:'Échec de l\u2019inscription.',
+    auth_first_placeholder:'Jean', auth_last_placeholder:'Dupont',
+    check_restaurants:'Restaurants partenaires', check_flight:'Vol A/R', check_available:'Disponible', check_checking:'V\xe9rification…',
+    tr_adults:'adultes', tr_children:'enfants',
+    rs_nights:'nuits', rs_ppl:'pers.',
+    rs_prio_food:'priorit\xe9 gastronomie', rs_prio_stay:'priorit\xe9 h\xe9bergement', rs_prio_bal:'\xe9quilibr\xe9',
+    install_sub:'3 versements de €',
+    conf_hotel:'H\xf4tel r\xe9serv\xe9', conf_restaurants:'Restaurants confirm\xe9s', conf_flight:'Vol \xe9mis',
+    rest_recommended:'Restaurants recommand\xe9s', flight_roundtrip:'Vol A/R', proposal_why_default:'Optimis\xe9 pour vos pr\xe9f\xe9rences.',
+    hotel_sea:' \xb7 mer', local_cuisine:'Cuisine locale', bag_included:'Bagage inclus', carry_on:'Bagage cabine', free_cancel:'Annulation gratuite jusqu\u2019\xe0 7 jours avant.',
+    per_person:'par personne', under_budget:'sous le budget \xb7 ',
+    split_stay:'H\xe9bergement', split_food:'Gastronomie', split_transport:'Transports',
+  },
+  es: {
+    restart:'Reiniciar',
+    i_title:'Planifica el viaje', i_sub:'Configura los parámetros, la IA hace el resto', i_budget:'Presupuesto', i_required:'obligatorio', i_total:'total', i_dates:'Fechas', i_fixed:'Fijas', i_flex:'Flexibles \xb13d', i_nights:'Noches', i_people:'Viajeros', i_adults:'Adultos', i_children:'Niños', i_optional:'opcional', i_priority:'Prioridad de gasto', i_priority_sub:'¿En qué prefieres gastar más?', i_constraints:'Restricciones',
+    prio_food:'Gastronomía', prio_stay:'Alojamiento', prio_bal:'Equilibrado',
+    c_sea:'Mar', c_pets:'Mascotas', c_access:'Accesible', c_family:'Familias',
+    dest_open_t:'Destino abierto', dest_open_s:'La IA elige según tu presupuesto', dest_set_t:'Ciudad costera', dest_set_s:'Sugerida por la IA \xb7 haz clic para reabrir',
+    gen:'Generar propuestas IA', gen_again:'Regenerar propuestas',
+    e_title:'Listo para componer tu viaje', e_sub:'Configura presupuesto, fechas y prioridades en el panel izquierdo, luego genera. La IA compone 2\u20133 paquetes completos \u2014 hotel, restaurantes y vuelo \u2014 dentro de tu presupuesto.',
+    g_title:'Componiendo tu viaje', g_sub:'Los agentes IA buscan en paralelo', g_foot:'agentes propietarios \xb7 con límites \xb7 budget-aware',
+    ag_orch:'Agente Orquestador', ag_orch_t:'Normaliza entradas y presupuesto', ag_hotel:'Agente Hotel', ag_hotel_t:'Alojamientos compatibles en la BDD', ag_rest:'Agente Restaurantes', ag_rest_t:'Socios directos en la zona', ag_flight:'Agente Vuelos', ag_flight_t:'Vuelos en el presupuesto restante', ag_rank:'Agente de Ranking', ag_rank_t:'Compone 2\u20133 paquetes coherentes',
+    r_title:'Tus propuestas', r_recommended:'Recomendada', r_view:'Detalle', r_regen:'Nuevas propuestas', fit_in:'dentro del presupuesto', fit_over:'fuera del presupuesto',
+    d_back:'Volver a propuestas', d_breakdown:'Desglose del presupuesto', d_vs_budget:'de tu presupuesto', d_ideal:'Desglose ideal según tus prioridades', d_elements:'Componentes del viaje', d_change:'Cambiar', d_book:'Reservar',
+    b_title:'Reserva', b_checking:'Disponibilidad en tiempo real', b_traveler:'Viajero', b_summary:'Resumen de costes', b_total:'Total', b_continue:'Ir al pago', b_wait:'Verificando disponibilidad\u2026',
+    p_title:'Pago', p_paying:'Estás pagando', p_how:'¿Cómo quieres pagar?', p_full:'Pago único', p_full_sub:'Paga todo ahora', p_install:'Pago a plazos', p_plan:'Plan en 3 cuotas', p_now:'Hoy', p_platform:'La plataforma cobra el importe total de inmediato, incluso a plazos: el riesgo de impago queda en el gateway, nunca en los socios.', p_pay_full:'Pagar \u20ac', p_pay_install:'Activar Klarna \xb7 \u20ac',
+    c_title:'¡Viaje confirmado!', c_sub:'Reservas enviadas, confirmaciones en camino por email.', c_concierge:'Travel Concierge', c_concierge_sub:'Tu asistente IA durante la estancia. Se activa 3 días antes de la salida.', c_open:'Abrir Concierge (demo)', c_restart:'Reiniciar el flujo', concept:'CONCEPT',
+    cc_title:'Concierge IA', cc_context:'Ya conozco tu viaje: hotel, fechas y grupo. Pregúntame en lenguaje natural.', cc_suggestion:'Encuéntrame una mesa esta noche cerca del hotel', cc_placeholder:'Escribe una solicitud\u2026',
+    cc_greet:'¡Hola Marco! Soy tu Concierge para Amalfi. Puedo ayudarte con mesas, traslados o actividades de último momento durante tu estancia.',
+    cc_user:'Encuéntrame una mesa esta noche cerca del hotel', cc_reply:'He encontrado un restaurante socio a 4 minutos a pie de tu hotel, con disponibilidad para 2 esta noche a las 20:30.',
+    cc_offer_badge:'Socio directo', cc_offer_title:'Trattoria del Mare', cc_offer_sub:'2 personas \xb7 20:30 \xb7 4 min a pie \xb7 reservable en la app', cc_offer_cta:'Reservar la mesa', cc_booked:'¡Hecho! Mesa reservada para esta noche a las 20:30. Confirmación enviada.',
+    st_plan:'Planificar', st_proposals:'Propuestas', st_detail:'Detalle', st_book:'Pago',
+    sign_out:'Cerrar sesión', sign_in:'Iniciar sesión',
+    pill_hotel:'Hotel', pill_restaurants:'Restaurantes', pill_flight:'Vuelo',
+    auth_sign_in:'Iniciar sesión', auth_register:'Registrarse', auth_first_name:'Nombre', auth_last_name:'Apellido',
+    auth_password_placeholder:'Al menos 8 caracteres', auth_loading:'Cargando...', auth_create:'Crear cuenta',
+    auth_email_required:'Ingresa tu email y contraseña.', auth_fields_required:'Por favor completa todos los campos.',
+    auth_invalid:'Credenciales inválidas.', auth_register_error:'Error en el registro.',
+    auth_first_placeholder:'Juan', auth_last_placeholder:'Garc\xeda',
+    check_restaurants:'Restaurantes socios', check_flight:'Vuelo ida y vuelta', check_available:'Disponible', check_checking:'Verificando…',
+    tr_adults:'adultos', tr_children:'ni\xf1os',
+    rs_nights:'noches', rs_ppl:'pers.',
+    rs_prio_food:'prioridad gastronom\xeda', rs_prio_stay:'prioridad alojamiento', rs_prio_bal:'equilibrado',
+    install_sub:'3 pagos de €',
+    conf_hotel:'Hotel reservado', conf_restaurants:'Restaurantes confirmados', conf_flight:'Vuelo emitido',
+    rest_recommended:'Restaurantes recomendados', flight_roundtrip:'Vuelo ida y vuelta', proposal_why_default:'Optimizado para tus preferencias.',
+    hotel_sea:' \xb7 mar', local_cuisine:'Cocina local', bag_included:'Equipaje incluido', carry_on:'Equipaje de mano', free_cancel:'Cancelaci\xf3n gratuita hasta 7 d\xedas antes.',
+    per_person:'por persona', under_budget:'dentro del presupuesto · ',
+    split_stay:'Alojamiento', split_food:'Gastronom\xeda', split_transport:'Transportes',
   }
 };
 
@@ -111,13 +239,14 @@ const IMG = {
 };
 
 function fmt(n: number, lang: Lang): string {
-  return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, lang === 'it' ? '.' : ',');
+  const sep = lang === 'en' ? ',' : '.';
+  return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, sep);
 }
 
 @Component({
   selector: 'app-planner',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PlannerMapComponent],
   templateUrl: './planner.component.html',
   styleUrl: './planner.component.scss'
 })
@@ -202,11 +331,11 @@ export class PlannerComponent implements OnDestroy {
 
   proposals = computed(() => {
     const lang = this.lang(); const it = lang === 'it';
-    const n = this.nights(); const ppl = this.adults() + this.children();
-    const nightsTxt = it ? `${n} notti` : `${n} nights`;
-    const per = (tot: number) => { const v = Math.round(tot / Math.max(1, ppl)); return it ? `€${fmt(v, lang)} a persona` : `€${fmt(v, lang)} per person`; };
-    const budget = this.budget();
     const t = this.t();
+    const n = this.nights(); const ppl = this.adults() + this.children();
+    const nightsTxt = `${n} ${t.rs_nights}`;
+    const per = (tot: number) => { const v = Math.round(tot / Math.max(1, ppl)); return `€${fmt(v, lang)} ${t.per_person}`; };
+    const budget = this.budget();
 
     const mk = (o: {
       id: string; dest: string; title: string; img: string; caption: string;
@@ -223,7 +352,7 @@ export class PlannerComponent implements OnDestroy {
         nights: nightsTxt, perPerson: per(o.total),
         totalStr: fmt(o.total, lang), hotelPrice: fmt(o.hp, lang),
         restPrice: fmt(o.rp, lang), flightPrice: fmt(o.fp, lang),
-        delta: over ? `+€${fmt(diff, lang)}` : (it ? `sotto budget · ` : `under budget · `) + `€${fmt(Math.abs(diff), lang)}`,
+        delta: over ? `+€${fmt(diff, lang)}` : t.under_budget + `€${fmt(Math.abs(diff), lang)}`,
         deltaFg: over ? '#B8492F' : '#2E7D67',
         deltaBg: over ? '#FBEAE4' : '#E7F4EE',
         deltaIcon: over ? 'trending_up' : 'trending_down',
@@ -344,13 +473,29 @@ export class PlannerComponent implements OnDestroy {
     return this.proposals().find(p => p.id === this.selId()) ?? this.proposals()[0];
   });
 
+  mapPins = computed<PlannerPin[]>(() =>
+    this.proposals().map(p => ({
+      id: p.id,
+      dest: p.dest,
+      total: p.totalStr,
+      recommended: p.recommended,
+    }))
+  );
+
+  selectMapPin(id: string): void {
+    this.selId.set(id);
+    if (this.stage() === 'results' || this.stage() === 'detail') {
+      this.stage.set('detail');
+    }
+  }
+
   selSplits = computed(() => {
     const p = this.selectedProposal();
-    const lang = this.lang(); const it = lang === 'it';
+    const lang = this.lang(); const t = this.t();
     const meta: Record<string, { label: string; icon: string; color: string; ideal: number }> = {
-      stay:      { label: it?'Alloggio':'Stay',      icon:'hotel',         color:'#B07B4E', ideal: 35 },
-      food:      { label: it?'Cibo':'Food',           icon:'restaurant',    color:'#C0894B', ideal: 40 },
-      transport: { label: it?'Trasporti':'Transport', icon:'flight_takeoff', color:'#5E8C9E', ideal: 25 },
+      stay:      { label: t.split_stay,      icon:'hotel',          color:'#B07B4E', ideal: 35 },
+      food:      { label: t.split_food,      icon:'restaurant',     color:'#C0894B', ideal: 40 },
+      transport: { label: t.split_transport, icon:'flight_takeoff', color:'#5E8C9E', ideal: 25 },
     };
     return p.splits.map(([k, amt]: [string, number]) => ({
       label: meta[k].label, icon: meta[k].icon, color: meta[k].color,
@@ -381,20 +526,20 @@ export class PlannerComponent implements OnDestroy {
   });
 
   checks = computed(() => {
-    const t = this.t(); const it = this.lang() === 'it';
+    const t = this.t();
     const sel = this.selectedProposal();
     const step = this.checkStep();
     const labels = [
       `Hotel · ${sel.hotel}`,
-      it ? 'Ristoranti partner' : 'Partner restaurants',
-      it ? 'Volo A/R' : 'Round-trip flight',
+      t.check_restaurants,
+      t.check_flight,
     ];
     return labels.map((label, i) => {
       const done = step > i; const active = step === i;
       return {
         label,
         done, active, pending: !done && !active,
-        status: done ? (it ? 'Disponibile' : 'Available') : active ? (it ? 'Verifica…' : 'Checking…') : '—',
+        status: done ? t.check_available : active ? t.check_checking : '—',
         fg: done ? '#2E7D67' : active ? '#B49A7C' : '#C9BBA6',
       };
     });
@@ -450,16 +595,16 @@ export class PlannerComponent implements OnDestroy {
   });
 
   travelerCount = computed(() => {
-    const it = this.lang() === 'it';
+    const t = this.t();
     const a = this.adults(); const c = this.children();
-    return `${a} ${it?'adulti':'adults'}${c ? ` · ${c} ${it?'bambini':'children'}` : ''}`;
+    return `${a} ${t.tr_adults}${c ? ` · ${c} ${t.tr_children}` : ''}`;
   });
 
   resultSummary = computed(() => {
-    const lang = this.lang(); const it = lang === 'it';
+    const t = this.t();
     const p = this.priority();
-    const prioLabel = p === 'food' ? (it?'priorità cibo':'food priority') : p === 'stay' ? (it?'priorità alloggio':'stay priority') : (it?'bilanciato':'balanced');
-    return `€${this.budgetStr()} · ${this.nights()} ${it?'notti':'nights'} · ${this.adults()+this.children()} ${it?'pers.':'ppl'} · ${prioLabel}`;
+    const prioLabel = p === 'food' ? t.rs_prio_food : p === 'stay' ? t.rs_prio_stay : t.rs_prio_bal;
+    return `€${this.budgetStr()} · ${this.nights()} ${t.rs_nights} · ${this.adults()+this.children()} ${t.rs_ppl} · ${prioLabel}`;
   });
 
   rateStr = computed(() => fmt(Math.round(this.selectedProposal().total / 3), this.lang()));
@@ -471,10 +616,7 @@ export class PlannerComponent implements OnDestroy {
       : t.p_pay_install + this.rateStr();
   });
 
-  installSub = computed(() => {
-    const it = this.lang() === 'it';
-    return it ? `3 rate da €${this.rateStr()}` : `3 payments of €${this.rateStr()}`;
-  });
+  installSub = computed(() => `${this.t().install_sub}${this.rateStr()}`);
 
   generateLabel = computed(() => {
     const t = this.t(); const s = this.stage();
@@ -487,16 +629,20 @@ export class PlannerComponent implements OnDestroy {
   });
 
   confirmItems = computed(() => {
-    const it = this.lang() === 'it';
+    const t = this.t();
     return [
-      { label: it ? 'Hotel prenotato' : 'Hotel booked', ref: '#HT-4821' },
-      { label: it ? 'Ristoranti confermati' : 'Restaurants confirmed', ref: '#RS-2207' },
-      { label: it ? 'Volo emesso' : 'Flight issued', ref: '#FL-9034' },
+      { label: t.conf_hotel, ref: '#HT-4821' },
+      { label: t.conf_restaurants, ref: '#RS-2207' },
+      { label: t.conf_flight, ref: '#FL-9034' },
     ];
   });
 
   // ── Actions ───────────────────────────────────────────────────────────────
-  toggleLang(): void { this.lang.set(this.lang() === 'it' ? 'en' : 'it'); }
+  toggleLang(): void {
+    const order: Lang[] = ['en', 'it', 'fr', 'es'];
+    const i = order.indexOf(this.lang());
+    this.lang.set(order[(i + 1) % order.length]);
+  }
 
   restart(): void {
     this._clearTimers();
@@ -516,7 +662,7 @@ export class PlannerComponent implements OnDestroy {
   // ── Auth methods ──────────────────────────────────────────────────────────
   login(): void {
     if (!this.authEmailVal || !this.authPasswordVal) {
-      this.authErrorMsg = this.lang() === 'it' ? 'Inserisci email e password.' : 'Enter your email and password.';
+      this.authErrorMsg = this.t().auth_email_required;
       return;
     }
     this.authLoadingState = true;
@@ -530,14 +676,14 @@ export class PlannerComponent implements OnDestroy {
       },
       error: () => {
         this.authLoadingState = false;
-        this.authErrorMsg = this.lang() === 'it' ? 'Credenziali non valide.' : 'Invalid credentials.';
+        this.authErrorMsg = this.t().auth_invalid;
       }
     });
   }
 
   register(): void {
     if (!this.authFirstNameVal || !this.authLastNameVal || !this.authEmailVal || !this.authPasswordVal) {
-      this.authErrorMsg = this.lang() === 'it' ? 'Compila tutti i campi.' : 'Please fill in all fields.';
+      this.authErrorMsg = this.t().auth_fields_required;
       return;
     }
     this.authLoadingState = true;
@@ -558,8 +704,7 @@ export class PlannerComponent implements OnDestroy {
       },
       error: (err: any) => {
         this.authLoadingState = false;
-        this.authErrorMsg = err?.error?.error
-          ?? (this.lang() === 'it' ? 'Errore durante la registrazione.' : 'Registration failed.');
+        this.authErrorMsg = err?.error?.error ?? this.t().auth_register_error;
       }
     });
   }
@@ -633,7 +778,7 @@ export class PlannerComponent implements OnDestroy {
       )))
     ).subscribe({
       next: results => {
-        const it = this.lang() === 'it';
+        const t = this.t();
         const destImgs: Record<string, string> = {
           default0: IMG.amalfi, default1: IMG.cinque, default2: IMG.sardegna,
           default3: IMG.roma,   default4: IMG.venezia, default5: IMG.firenze,
@@ -652,19 +797,19 @@ export class PlannerComponent implements OnDestroy {
             caption: p.destination,
             recommended: idx === 0,
             total: Number(p.totalCost),
-            hotel: hotel?.name ?? (it ? 'Hotel' : 'Hotel'),
+            hotel: hotel?.name ?? 'Hotel',
             hp: Number(p.hotelCost),
-            rest: it ? 'Ristoranti consigliati' : 'Recommended restaurants',
+            rest: t.rest_recommended,
             rp: Number(p.restaurantCost),
-            flight: flight ? `${flight.airline} · ${flight.flightNumber}` : (it ? 'Volo A/R' : 'Round-trip'),
+            flight: flight ? `${flight.airline} · ${flight.flightNumber}` : t.flight_roundtrip,
             fp: Number(p.flightCost),
-            why: p.aiMotivation ?? (it ? 'Proposta ottimizzata per le tue preferenze.' : 'Optimised for your preferences.'),
+            why: p.aiMotivation ?? t.proposal_why_default,
             hotelMeta: hotel
-              ? `${hotel.city} · ${this.nights()} ${it ? 'notti' : 'nights'}${hotel.seaProximity ? (it ? ' · mare' : ' · sea') : ''}`
+              ? `${hotel.city} · ${this.nights()} ${t.rs_nights}${hotel.seaProximity ? t.hotel_sea : ''}`
               : '',
-            restMeta: it ? 'Cucina locale' : 'Local cuisine',
-            flightMeta: flight?.baggageIncluded ? (it ? 'Bagaglio incluso' : 'Bag included') : (it ? 'Bagaglio a mano' : 'Carry-on'),
-            cancel: it ? 'Cancellazione gratuita fino a 7 giorni prima.' : 'Free cancellation up to 7 days before.',
+            restMeta: t.local_cuisine,
+            flightMeta: flight?.baggageIncluded ? t.bag_included : t.carry_on,
+            cancel: t.free_cancel,
             splits: [
               ['stay', Number(p.hotelCost)],
               ['food', Number(p.restaurantCost)],

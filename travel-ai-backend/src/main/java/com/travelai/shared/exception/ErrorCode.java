@@ -23,6 +23,11 @@ public enum ErrorCode {
     DESTINATION_NOT_FOUND("Destination not found"),
     REVIEW_NOT_FOUND("Review not found"),
     REVIEW_ALREADY_EXISTS("You have already reviewed this item"),
+    CONVERSATION_NOT_FOUND("Conversation not found"),
+    STORY_NOT_FOUND("Travel story not found"),
+    PLACE_NOT_FOUND("Travel place not found"),
+    PHOTO_NOT_FOUND("Photo not found"),
+    SETTING_NOT_FOUND("Platform setting not found"),
     INTERNAL_ERROR("Internal server error");
 
     private final String message;

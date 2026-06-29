@@ -3,9 +3,12 @@ package com.travelai.admin;
 import com.travelai.admin.dto.*;
 import com.travelai.auth.User;
 import com.travelai.auth.UserRepository;
+import com.travelai.auth.UserRole;
 import com.travelai.partner.Partner;
 import com.travelai.partner.PartnerRepository;
 import com.travelai.partner.PartnerStatus;
+import com.travelai.review.Review;
+import com.travelai.review.ReviewRepository;
 import com.travelai.shared.exception.ErrorCode;
 import com.travelai.shared.exception.TravelAiException;
 import jakarta.persistence.EntityManager;
@@ -30,6 +33,7 @@ public class AdminService {
 
     private final UserRepository userRepository;
     private final PartnerRepository partnerRepository;
+    private final ReviewRepository reviewRepository;
     private final EntityManager entityManager;
 
     /** Returns aggregate dashboard statistics. */
@@ -148,7 +152,54 @@ public class AdminService {
         log.info("Admin suspended partner: id={}", partnerId);
     }
 
+    // ── User management ───────────────────────────────────────────────────
+
+    /** Changes a user's role. */
+    @Transactional
+    public AdminUserResponse updateUserRole(UUID userId, UserRole role) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> TravelAiException.notFound(ErrorCode.USER_NOT_FOUND));
+        user.setRole(role);
+        User saved = userRepository.save(user);
+        log.info("Admin changed role of user {} to {}", userId, role);
+        return toAdminUser(saved);
+    }
+
+    /** Activates or bans a user (active=false blocks login). */
+    @Transactional
+    public AdminUserResponse setUserActive(UUID userId, boolean active) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> TravelAiException.notFound(ErrorCode.USER_NOT_FOUND));
+        user.setActive(active);
+        User saved = userRepository.save(user);
+        log.info("Admin set user {} active={}", userId, active);
+        return toAdminUser(saved);
+    }
+
+    // ── Review moderation ─────────────────────────────────────────────────
+
+    /** Returns paginated reviews for moderation. */
+    public Page<AdminReviewResponse> listReviews(Pageable pageable) {
+        return reviewRepository.findAllByOrderByCreatedAtDesc(pageable)
+            .map(AdminReviewResponse::from);
+    }
+
+    /** Permanently deletes a review. */
+    @Transactional
+    public void deleteReview(UUID reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+            .orElseThrow(() -> TravelAiException.notFound(ErrorCode.REVIEW_NOT_FOUND));
+        reviewRepository.delete(review);
+        log.info("Admin deleted review {}", reviewId);
+    }
+
     // ── Helpers ───────────────────────────────────────────────────────────
+
+    private AdminUserResponse toAdminUser(User u) {
+        return new AdminUserResponse(
+            u.getId(), u.getEmail(), u.getFirstName(), u.getLastName(),
+            u.getRole(), u.isActive(), u.isEmailVerified(), u.getCreatedAt());
+    }
 
     private long safeCountTable(String table) {
         try {

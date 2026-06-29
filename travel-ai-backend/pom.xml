@@ -22,6 +22,7 @@
 		<spring-ai.version>1.0.0</spring-ai.version>
 		<jjwt.version>0.12.6</jjwt.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
+		<aws-sdk.version>2.31.6</aws-sdk.version>
 	</properties>
 
 	<dependencyManagement>
@@ -37,6 +38,13 @@
 				<groupId>org.springframework.ai</groupId>
 				<artifactId>spring-ai-bom</artifactId>
 				<version>${spring-ai.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>software.amazon.awssdk</groupId>
+				<artifactId>bom</artifactId>
+				<version>${aws-sdk.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -147,6 +155,12 @@
 		<dependency>
 			<groupId>org.springframework.ai</groupId>
 			<artifactId>spring-ai-starter-vector-store-pgvector</artifactId>
+		</dependency>
+
+		<!-- ─── Object Storage (S3 / MinIO) ────────────────────── -->
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>s3</artifactId>
 		</dependency>
 
 		<!-- ─── Mapping ────────────────────────────────────────── -->

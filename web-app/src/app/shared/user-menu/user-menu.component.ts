@@ -51,6 +51,14 @@ const MENU_ITEMS: MenuItem[] = [
             }
           </ul>
 
+          @if (isAdmin()) {
+            <div class="divider"></div>
+            <button class="menu-item menu-item--admin" role="menuitem" (click)="navigate('/admin')">
+              <span class="ms menu-icon">admin_panel_settings</span>
+              Admin panel
+            </button>
+          }
+
           <div class="divider"></div>
 
           <button class="menu-item menu-item--danger" role="menuitem" (click)="signOut()">
@@ -113,6 +121,10 @@ const MENU_ITEMS: MenuItem[] = [
     .menu-item--danger { color: #E04A2F; }
     .menu-item--danger:hover { background: #FFF0ED; }
 
+    .menu-item--admin { color: #1a1a1a; font-weight: 700; }
+    .menu-item--admin .menu-icon { color: #E04A2F; }
+    .menu-item--admin:hover { background: #FFF0ED; }
+
     .menu-icon { font-size: 18px; color: #8a8a8a; }
     .menu-item--danger .menu-icon { color: #E04A2F; }
 
@@ -140,6 +152,8 @@ export class UserMenuComponent {
     const l = u.lastName?.[0] ?? '';
     return (f + l).toUpperCase() || u.email[0].toUpperCase();
   });
+
+  isAdmin(): boolean { return this.authService.isAdmin(); }
 
   toggle(): void { this.open.update(v => !v); }
 

@@ -15,6 +15,11 @@ spring:
   aop:
     proxy-target-class: true
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 12MB
+
   jpa:
     hibernate:
       ddl-auto: validate
@@ -102,6 +107,17 @@ travel-ai:
     activation-days-before-departure: 3
   notification:
     from-email: noreply@travelai.com
+  storage:
+    # S3-compatible object storage. Local dev points at MinIO; prod overrides via env.
+    endpoint: ${STORAGE_ENDPOINT:http://localhost:9000}
+    public-url: ${STORAGE_PUBLIC_URL:http://localhost:9000}
+    region: ${STORAGE_REGION:us-east-1}
+    bucket: ${STORAGE_BUCKET:travelai-media}
+    access-key: ${STORAGE_ACCESS_KEY:travelai}
+    secret-key: ${STORAGE_SECRET_KEY:travelai-secret}
+    # MinIO needs path-style access (bucket in the path, not the host).
+    path-style-access: ${STORAGE_PATH_STYLE:true}
+    max-file-size-bytes: ${STORAGE_MAX_FILE_SIZE:10485760}  # 10 MB
 
 management:
   endpoints:

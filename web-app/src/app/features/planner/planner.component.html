@@ -1,693 +1,474 @@
-<div class="planner-shell scroll">
-<div class="planner-inner">
+<div class="planner" [attr.data-stage]="stage()">
 
-<!-- TOP BAR -->
-<header class="top-bar">
-  <div class="logo">
-    <div class="logo-icon">T</div>
-    <div class="logo-text">
-      <div class="logo-name">Travel AI</div>
-    </div>
-  </div>
+  <!-- ── Full-bleed destination map ─────────────────────────────────────────── -->
+  <app-planner-map
+    class="map-canvas"
+    [pins]="stage() === 'empty' || stage() === 'generating' ? [] : mapPins()"
+    [selectedId]="selId()"
+    (select)="selectMapPin($event)"
+  ></app-planner-map>
 
-  <nav class="steps-bar" aria-label="Progress steps">
-    @for (st of steps(); track st.label) {
-      <div class="step-item">
-        <div class="step-pill" [class.active]="st.on">
-          <span class="ms step-icon">{{st.icon}}</span>
-          <span class="step-label">{{st.label}}</span>
-        </div>
-        @if (st.arrow) {
-          <span class="ms step-arrow">chevron_right</span>
-        }
-      </div>
+  <!-- ── Flat step tracker ──────────────────────────────────────────────────── -->
+  <nav class="steps">
+    @for (s of steps(); track s.label; let i = $index) {
+      <span class="step" [class.on]="s.on">
+        <span class="step-dot"><span class="ms">{{ s.icon }}</span></span>
+        <span class="step-label">{{ s.label }}</span>
+      </span>
+      @if (s.arrow) { <span class="step-sep" [class.on]="s.on"></span> }
     }
   </nav>
 
-  <div class="top-controls">
-    <button class="ctrl-btn" (click)="toggleLang()" type="button">
-      <span class="ms ctrl-icon">language</span>{{lang().toUpperCase()}}
-    </button>
-    <button class="ctrl-btn" (click)="restart()" type="button">
-      <span class="ms ctrl-icon">replay</span>{{t().restart}}
-    </button>
-    @if (authService.isAuthenticated()) {
-      <button class="ctrl-btn ctrl-btn--auth" (click)="logout()" type="button">
-        <span class="ms ctrl-icon">account_circle</span>{{lang()==='it'?'Esci':'Sign out'}}
-      </button>
-    } @else {
-      <button class="ctrl-btn ctrl-btn--signin" (click)="showAuthModal.set(true)" type="button">
-        <span class="ms ctrl-icon">login</span>{{lang()==='it'?'Accedi':'Sign in'}}
-      </button>
-    }
-  </div>
-</header>
+  <!-- ── LEFT: trip control dock ────────────────────────────────────────────── -->
+  <section class="dock dock--left glass">
+    <header class="dock-title">
+      <h1>{{ t().i_title }}</h1>
+      <p>{{ t().i_sub }}</p>
+    </header>
 
-<!-- WORKSPACE -->
-<div class="workspace">
-
-  <!-- LEFT RAIL -->
-  <aside class="left-rail scroll">
-    <div class="rail-header">
-      <h2 class="rail-title">{{t().i_title}}</h2>
-      <p class="rail-sub">{{t().i_sub}}</p>
-    </div>
-
-    <div class="rail-form">
-
+    <div class="dock-scroll">
       <!-- Budget -->
-      <div class="form-section">
-        <div class="form-section-header">
-          <span class="form-label">{{t().i_budget}}</span>
-          <span class="form-badge">{{t().i_required}}</span>
+      <div class="field">
+        <div class="field-head">
+          <span class="field-label">{{ t().i_budget }}</span>
+          <span class="field-value">€{{ budgetStr() }}<small>{{ t().i_total }}</small></span>
         </div>
-        <div class="budget-value">
-          <span class="budget-amount">&#8364;{{budgetStr()}}</span>
-          <span class="budget-label">{{t().i_total}}</span>
-        </div>
-        <input type="range" min="400" max="4000" step="50" [value]="budget()" (input)="onBudget($event)" [style.--pct]="budgetPct()">
-        <div class="range-labels"><span>&#8364;400</span><span>&#8364;4.000</span></div>
+        <input type="range" min="400" max="4000" step="50"
+               [value]="budget()" (input)="onBudget($event)"
+               [style.--pct]="budgetPct()" />
       </div>
-
-      <div class="form-divider"></div>
 
       <!-- Dates -->
-      <div class="form-section">
-        <span class="form-label">{{t().i_dates}}</span>
-        <div class="toggle-row">
-          <button class="toggle-btn" [class.active]="dateMode()==='fixed'" (click)="dateMode.set('fixed')" type="button">{{t().i_fixed}}</button>
-          <button class="toggle-btn" [class.active]="dateMode()==='flex'" (click)="dateMode.set('flex')" type="button">{{t().i_flex}}</button>
-        </div>
-        <div class="stepper-row">
-          <span class="stepper-label">{{t().i_nights}}</span>
-          <div class="stepper-controls">
-            <button class="stepper-btn minus" (click)="nightsDown()" type="button"><span class="ms">remove</span></button>
-            <span class="stepper-value">{{nights()}}</span>
-            <button class="stepper-btn plus" (click)="nightsUp()" type="button"><span class="ms">add</span></button>
-          </div>
+      <div class="field">
+        <span class="field-label">{{ t().i_dates }}</span>
+        <div class="segmented">
+          <button [class.on]="dateMode() === 'fixed'" (click)="dateMode.set('fixed')">{{ t().i_fixed }}</button>
+          <button [class.on]="dateMode() === 'flex'" (click)="dateMode.set('flex')">{{ t().i_flex }}</button>
         </div>
       </div>
 
-      <div class="form-divider"></div>
-
-      <!-- Travellers -->
-      <div class="form-section">
-        <span class="form-label">{{t().i_people}}</span>
-        <div class="stepper-row stepper-row--bordered">
-          <span class="stepper-label">{{t().i_adults}}</span>
-          <div class="stepper-controls">
-            <button class="stepper-btn minus" (click)="adultsDown()" type="button"><span class="ms">remove</span></button>
-            <span class="stepper-value">{{adults()}}</span>
-            <button class="stepper-btn plus" (click)="adultsUp()" type="button"><span class="ms">add</span></button>
-          </div>
-        </div>
-        <div class="stepper-row">
-          <span class="stepper-label">{{t().i_children}}</span>
-          <div class="stepper-controls">
-            <button class="stepper-btn minus" (click)="childrenDown()" type="button"><span class="ms">remove</span></button>
-            <span class="stepper-value">{{children()}}</span>
-            <button class="stepper-btn plus" (click)="childrenUp()" type="button"><span class="ms">add</span></button>
-          </div>
+      <!-- Nights -->
+      <div class="field field--row">
+        <span class="field-label">{{ t().i_nights }}</span>
+        <div class="stepper">
+          <button (click)="nightsDown()" aria-label="-"><span class="ms">remove</span></button>
+          <span class="stepper-val">{{ nights() }}</span>
+          <button (click)="nightsUp()" aria-label="+"><span class="ms">add</span></button>
         </div>
       </div>
 
-      <div class="form-divider"></div>
-
-      <!-- Destination -->
-      <div class="dest-card" [class.set]="!destOpen()" (click)="toggleDest()">
-        <span class="ms dest-icon" [class.active]="!destOpen()">{{destOpen() ? 'explore' : 'location_on'}}</span>
-        <div class="dest-text">
-          <span class="dest-title">{{destOpen() ? t().dest_open_t : t().dest_set_t}}</span>
-          <span class="dest-sub">{{destOpen() ? t().dest_open_s : t().dest_set_s}}</span>
+      <!-- Travelers -->
+      <div class="field">
+        <span class="field-label">{{ t().i_people }}</span>
+        <div class="travelers">
+          <div class="trav-row">
+            <span class="trav-name">{{ t().i_adults }}</span>
+            <div class="stepper">
+              <button (click)="adultsDown()" aria-label="-"><span class="ms">remove</span></button>
+              <span class="stepper-val">{{ adults() }}</span>
+              <button (click)="adultsUp()" aria-label="+"><span class="ms">add</span></button>
+            </div>
+          </div>
+          <div class="trav-row">
+            <span class="trav-name">{{ t().i_children }} <small>{{ t().i_optional }}</small></span>
+            <div class="stepper">
+              <button (click)="childrenDown()" aria-label="-"><span class="ms">remove</span></button>
+              <span class="stepper-val">{{ children() }}</span>
+              <button (click)="childrenUp()" aria-label="+"><span class="ms">add</span></button>
+            </div>
+          </div>
         </div>
-        <span class="dest-opt">{{t().i_optional}}</span>
       </div>
 
       <!-- Priority -->
-      <div class="form-section">
-        <span class="form-label">{{t().i_priority}}</span>
-        <p class="form-hint">{{t().i_priority_sub}}</p>
-        <div class="prio-row">
-          @for (p of prioOptions(); track p.key) {
-            <button class="prio-pill" [class.active]="p.on" (click)="setPriorityStr(p.key)" type="button">
-              <span class="ms prio-icon">{{p.icon}}</span>
-              <span class="prio-label">{{p.label}}</span>
+      <div class="field">
+        <span class="field-label">{{ t().i_priority }}</span>
+        <span class="field-hint">{{ t().i_priority_sub }}</span>
+        <div class="prio-grid">
+          @for (o of prioOptions(); track o.key) {
+            <button class="prio" [class.on]="o.on" (click)="setPriorityStr(o.key)">
+              <span class="ms">{{ o.icon }}</span>
+              <span>{{ o.label }}</span>
             </button>
           }
         </div>
       </div>
 
       <!-- Constraints -->
-      <div class="form-section">
-        <span class="form-label">{{t().i_constraints}}</span>
-        <div class="chips-row">
+      <div class="field">
+        <span class="field-label">{{ t().i_constraints }}</span>
+        <div class="chip-wrap">
           @for (c of constraintChips(); track c.key) {
-            <button class="chip" [class.active]="c.on" (click)="toggleConstraint(c.key)" type="button">
-              <span class="ms chip-icon">{{c.icon}}</span>{{c.label}}
+            <button class="cchip" [class.on]="c.on" (click)="toggleConstraint(c.key)">
+              <span class="ms">{{ c.icon }}</span>{{ c.label }}
             </button>
           }
         </div>
       </div>
-    </div>
 
-    <!-- Sticky generate button -->
-    <div class="gen-bar">
-      <button class="gen-btn" (click)="generate()" type="button">
-        <span class="ms gen-btn-icon">auto_awesome</span>{{generateLabel()}}
+      <!-- Destination -->
+      <button class="dest" [class.set]="!destOpen()" (click)="toggleDest()">
+        <span class="ms">{{ destOpen() ? 'public' : 'beach_access' }}</span>
+        <span class="dest-body">
+          <span class="dest-t">{{ destOpen() ? t().dest_open_t : t().dest_set_t }}</span>
+          <span class="dest-s">{{ destOpen() ? t().dest_open_s : t().dest_set_s }}</span>
+        </span>
+        <span class="ms dest-toggle">{{ destOpen() ? 'lock_open' : 'tune' }}</span>
       </button>
     </div>
-  </aside>
 
-  <!-- MAIN AREA -->
-  <main class="main-area scroll">
+    <button class="generate" (click)="generate()" [disabled]="stage() === 'generating'">
+      <span class="ms">auto_awesome</span>{{ generateLabel() }}
+    </button>
+  </section>
 
-    <!-- EMPTY -->
-    @if (stage() === 'empty') {
-    <section class="empty-stage">
-      <div class="empty-icon-wrap">
-        <span class="ms empty-icon">travel_explore</span>
-      </div>
-      <h1 class="empty-title">{{t().e_title}}</h1>
-      <p class="empty-sub">{{t().e_sub}}</p>
-      <div class="empty-pills">
-        <div class="empty-pill"><span class="ms empty-pill-icon empty-pill-icon--hotel">hotel</span>Hotel</div>
-        <div class="empty-pill"><span class="ms empty-pill-icon empty-pill-icon--rest">restaurant</span>{{lang()==='it'?'Ristoranti':'Restaurants'}}</div>
-        <div class="empty-pill"><span class="ms empty-pill-icon empty-pill-icon--flight">flight_takeoff</span>{{lang()==='it'?'Volo':'Flight'}}</div>
-      </div>
-    </section>
-    }
+  <!-- ── Empty hint ─────────────────────────────────────────────────────────── -->
+  @if (stage() === 'empty') {
+    <div class="hint glass">
+      <div class="hint-orb"><span class="ms">map</span></div>
+      <h2>{{ t().e_title }}</h2>
+      <p>{{ t().e_sub }}</p>
+    </div>
+  }
 
-    <!-- GENERATING -->
-    @if (stage() === 'generating') {
-    <section class="gen-stage">
-      <div class="gen-progress">
-        <div class="gen-progress-bar" [style.width]="(agentStep() / 5 * 100) + '%'"></div>
-      </div>
-      <div class="gen-spinner">
-        <div class="gen-spinner-ring"></div>
-        <span class="ms gen-spinner-icon">auto_awesome</span>
-      </div>
-      <h2 class="gen-title">{{t().g_title}}</h2>
-      <p class="gen-sub">{{t().g_sub}}</p>
-      <div class="agents-list">
-        @for (a of agents(); track a.name) {
-          <div class="agent-card" [class.active]="a.active" [class.done]="a.done" [class.pending]="a.pending">
-            <div class="agent-icon-wrap" [style.background]="a.done ? '#E6F5F0' : a.active ? '#FFF0ED' : '#f7f7f7'">
-              <span class="ms agent-icon-glyph" [style.color]="a.done ? '#00856A' : a.active ? '#E04A2F' : '#8a8a8a'">{{a.icon}}</span>
-            </div>
-            <div class="agent-info">
-              <span class="agent-name">{{a.name}}</span>
-              <span class="agent-task">{{a.task}}</span>
-            </div>
-            <div class="agent-status">
-              @if (a.done) {
-                <span class="ms agent-check">check_circle</span>
-              } @else if (a.active) {
-                <div class="agent-spinner"></div>
-              } @else {
-                <div class="agent-dot"></div>
-              }
-            </div>
-          </div>
-        }
-      </div>
-      <p class="gen-foot">{{t().g_foot}}</p>
-    </section>
-    }
-
-    <!-- RESULTS -->
-    @if (stage() === 'results') {
-    <section class="results-stage">
-      <div class="results-header">
+  <!-- ── Generating overlay ─────────────────────────────────────────────────── -->
+  @if (stage() === 'generating') {
+    <div class="gen glass">
+      <div class="gen-head">
+        <div class="gen-spinner"><span class="ms">auto_awesome</span></div>
         <div>
-          <h2 class="results-title">{{t().r_title}}</h2>
-          <p class="results-summary">{{resultSummary()}}</p>
+          <h2>{{ t().g_title }}</h2>
+          <p>{{ t().g_sub }}</p>
         </div>
-        <button class="regen-btn" (click)="generate()" type="button">
-          <span class="ms regen-icon">refresh</span>{{t().r_regen}}
-        </button>
       </div>
+      <ul class="agents">
+        @for (a of agents(); track a.name) {
+          <li class="agent" [class.done]="a.done" [class.active]="a.active" [class.pending]="a.pending">
+            <span class="agent-icon" [style.background]="a.iconBg" [style.color]="a.iconFg"><span class="ms">{{ a.icon }}</span></span>
+            <span class="agent-body">
+              <span class="agent-name">{{ a.name }}</span>
+              <span class="agent-task">{{ a.task }}</span>
+            </span>
+            <span class="agent-state">
+              @if (a.done) { <span class="ms">check_circle</span> }
+              @else if (a.active) { <span class="agent-pulse"></span> }
+            </span>
+          </li>
+        }
+      </ul>
+      <p class="gen-foot"><span class="ms">verified_user</span>{{ t().g_foot }}</p>
+    </div>
+  }
 
-      <div class="proposals-grid">
+  <!-- ── RIGHT: proposals list ──────────────────────────────────────────────── -->
+  @if (stage() === 'results') {
+    <aside class="dock dock--right glass">
+      <header class="results-head">
+        <div>
+          <h2>{{ t().r_title }}</h2>
+          <span class="results-sum">{{ resultSummary() }}</span>
+        </div>
+        <button class="mini-btn" (click)="generate()"><span class="ms">refresh</span>{{ t().r_regen }}</button>
+      </header>
+
+      <div class="prop-list">
         @for (p of proposals(); track p.id) {
-          <article class="proposal-card" [class.recommended]="p.recommended" (click)="openDetail(p.id)">
-            <div class="card-image" [style.background]="p.img">
-              @if (p.recommended) {
-                <div class="card-badge">
-                  <span class="ms card-badge-icon">star</span>{{t().r_recommended}}
-                </div>
-              }
+          <article class="prop" [class.rec]="p.recommended" [class.sel]="p.id === selId()"
+                   (click)="selId.set(p.id)">
+            <div class="prop-img" [style.background]="p.img">
+              @if (p.recommended) { <span class="prop-badge"><span class="ms">star</span>{{ t().r_recommended }}</span> }
+              <span class="prop-fit" [style.color]="p.fitFg">{{ p.fitLabel }}</span>
             </div>
-            <div class="card-body">
-              <div class="card-top-row">
-                <h3 class="card-dest">{{p.dest}}</h3>
-                <span class="card-nights">{{p.nights}}</span>
-              </div>
-              <p class="card-title">{{p.title}}</p>
-              <div class="card-price-row">
-                <span class="card-price">&#8364;{{p.totalStr}}</span>
-                <span class="card-per-person">{{p.perPerson}}</span>
-              </div>
-              <div class="card-delta" [style.color]="p.deltaFg" [style.background]="p.deltaBg">
-                <span class="ms card-delta-icon">{{p.deltaIcon}}</span>{{p.delta}}
-              </div>
-              <div class="card-lines">
-                <div class="card-line">
-                  <span class="ms card-line-icon card-line-icon--hotel">hotel</span>
-                  <span class="line-name">{{p.hotel}}</span>
-                  <span class="line-price">&#8364;{{p.hotelPrice}}</span>
+            <div class="prop-body">
+              <div class="prop-top">
+                <div>
+                  <h3>{{ p.title }}</h3>
+                  <span class="prop-cap">{{ p.caption }}</span>
                 </div>
-                <div class="card-line">
-                  <span class="ms card-line-icon card-line-icon--rest">restaurant</span>
-                  <span class="line-name">{{p.rest}}</span>
-                  <span class="line-price">&#8364;{{p.restPrice}}</span>
-                </div>
-                <div class="card-line">
-                  <span class="ms card-line-icon card-line-icon--flight">flight_takeoff</span>
-                  <span class="line-name">{{p.flight}}</span>
-                  <span class="line-price">&#8364;{{p.flightPrice}}</span>
+                <div class="prop-price">
+                  <span class="prop-total">€{{ p.totalStr }}</span>
+                  <span class="prop-per">{{ p.perPerson }}</span>
                 </div>
               </div>
-              <div class="card-view">
-                {{t().r_view}}<span class="ms card-view-arrow">chevron_right</span>
+              <div class="prop-delta" [style.color]="p.deltaFg" [style.background]="p.deltaBg">
+                <span class="ms">{{ p.deltaIcon }}</span>{{ p.delta }}
               </div>
+              <button class="prop-view" (click)="openDetail(p.id); $event.stopPropagation()">
+                {{ t().r_view }}<span class="ms">arrow_forward</span>
+              </button>
             </div>
           </article>
         }
       </div>
-    </section>
-    }
+    </aside>
+  }
 
-    <!-- DETAIL -->
-    @if (stage() === 'detail') {
-    <section class="detail-stage">
-      <button class="back-btn" (click)="backToResults()" type="button">
-        <span class="ms">arrow_back</span>{{t().d_back}}
-      </button>
+  <!-- ── RIGHT: detail ──────────────────────────────────────────────────────── -->
+  @if (stage() === 'detail') {
+    <aside class="dock dock--right dock--detail glass">
+      <button class="back" (click)="backToResults()"><span class="ms">arrow_back</span>{{ t().d_back }}</button>
 
-      <div class="detail-grid">
-        <!-- Left col -->
-        <div class="detail-left">
-          <div class="detail-hero" [style.background]="selectedProposal().img">
-            <div class="detail-hero-overlay"></div>
-            <div class="detail-hero-info">
-              <span class="hero-location"><span class="ms hero-loc-icon">location_on</span>{{selectedProposal().dest}} &middot; {{selectedProposal().nights}}</span>
-              <h2 class="hero-title">{{selectedProposal().title}}</h2>
-            </div>
-          </div>
-
-          <!-- Budget breakdown -->
-          <div class="info-card">
-            <div class="breakdown-header">
-              <span class="form-label">{{t().d_breakdown}}</span>
-              <span class="breakdown-total">&#8364;{{selectedProposal().totalStr}}</span>
-            </div>
-            <div class="breakdown-delta" [style.color]="selectedProposal().deltaFg">{{selectedProposal().delta}} &middot; {{t().d_vs_budget}}</div>
-            <div class="splits-list">
-              @for (s of selSplits(); track s.label) {
-                <div class="split-row">
-                  <div class="split-header">
-                    <span class="ms split-icon" [style.color]="s.color">{{s.icon}}</span>
-                    <span class="split-label">{{s.label}}</span>
-                    <span class="split-amount">&#8364;{{s.amount}}</span>
-                  </div>
-                  <div class="split-track">
-                    <div class="split-fill" [style.width]="s.pct" [style.background]="s.color"></div>
-                    <div class="split-ideal" [style.left]="s.ideal"></div>
-                  </div>
-                </div>
-              }
-            </div>
-            <div class="ideal-legend">
-              <div class="ideal-mark"></div>{{t().d_ideal}}
-            </div>
-          </div>
-        </div>
-
-        <!-- Right col sticky -->
-        <div class="detail-right">
-          <div class="info-card">
-            <span class="form-label">{{t().d_elements}}</span>
-            <div class="elements-list">
-              <div class="element-row">
-                <div class="element-thumb element-thumb--hotel"></div>
-                <div class="element-info">
-                  <span class="element-name">{{selectedProposal().hotel}}</span>
-                  <span class="element-meta">{{selectedProposal().hotelMeta}}</span>
-                </div>
-                <button class="change-btn" (click)="changeElement('hotel')" type="button">{{t().d_change}}</button>
-              </div>
-              <div class="element-row">
-                <div class="element-thumb element-thumb--rest"></div>
-                <div class="element-info">
-                  <span class="element-name">{{selectedProposal().rest}}</span>
-                  <span class="element-meta">{{selectedProposal().restMeta}}</span>
-                </div>
-                <button class="change-btn" (click)="changeElement('restaurant')" type="button">{{t().d_change}}</button>
-              </div>
-              <div class="element-row">
-                <div class="element-thumb element-thumb--flight"></div>
-                <div class="element-info">
-                  <span class="element-name">{{selectedProposal().flight}}</span>
-                  <span class="element-meta">{{selectedProposal().flightMeta}}</span>
-                </div>
-                <button class="change-btn" (click)="changeElement('flight')" type="button">{{t().d_change}}</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="cancel-info">
-            <span class="ms cancel-icon">verified_user</span>{{selectedProposal().cancel}}
-          </div>
-
-          <button class="book-btn" (click)="goBooking()" type="button">
-            {{t().d_book}} &middot; &#8364;{{selectedProposal().totalStr}}<span class="ms book-btn-arrow">arrow_forward</span>
-          </button>
+      <div class="detail-hero" [style.background]="selectedProposal().img">
+        <div class="detail-hero-grad">
+          <h2>{{ selectedProposal().title }}</h2>
+          <span>{{ selectedProposal().caption }}</span>
         </div>
       </div>
-    </section>
-    }
 
-  </main>
-</div>
-</div>
-
-<!-- CHANGE TOAST -->
-@if (changeToast()) {
-<div class="change-toast" role="status">
-  <span class="ms change-toast-icon">search</span>{{changeToast()}}
-</div>
-}
-
-<!-- OVERLAYS -->
-
-<!-- Booking / Payment / Confirmation modal -->
-@if (overlay() === 'booking' || overlay() === 'payment' || overlay() === 'confirmation') {
-<div class="overlay-backdrop" role="dialog" aria-modal="true">
-  <div class="overlay-card scroll">
-
-    <!-- BOOKING -->
-    @if (overlay() === 'booking') {
-    <div class="overlay-inner">
-      <div class="overlay-header">
-        <h2 class="overlay-title">{{t().b_title}}</h2>
-        <button class="close-circle" (click)="closeOverlay()" type="button"><span class="ms">close</span></button>
-      </div>
-
-      <div class="checks-card">
-        <div class="checks-title">
-          <span class="ms checks-title-icon">verified</span>{{t().b_checking}}
+      <div class="detail-scroll">
+        <div class="detail-headline">
+          <div class="detail-total">
+            <span class="detail-total-num">€{{ selectedProposal().totalStr }}</span>
+            <span class="detail-total-sub">{{ selectedProposal().nights }} · {{ travelerCount() }}</span>
+          </div>
+          <span class="detail-delta" [style.color]="selectedProposal().deltaFg" [style.background]="selectedProposal().deltaBg">
+            <span class="ms">{{ selectedProposal().deltaIcon }}</span>{{ selectedProposal().delta }}
+          </span>
         </div>
-        <div class="checks-list">
-          @for (c of checks(); track c.label) {
-            <div class="check-row">
-              <div class="check-indicator">
-                @if (c.done) {
-                  <span class="ms check-done-icon">check_circle</span>
-                } @else if (c.active) {
-                  <div class="check-spinner"></div>
-                } @else {
-                  <div class="check-dot"></div>
-                }
+
+        <p class="detail-why"><span class="ms">tips_and_updates</span>{{ selectedProposal().why }}</p>
+
+        <!-- Budget breakdown -->
+        <h4 class="detail-h">{{ t().d_breakdown }}</h4>
+        <div class="splits">
+          @for (s of selSplits(); track s.label) {
+            <div class="split">
+              <div class="split-head">
+                <span class="split-name"><span class="ms" [style.color]="s.color">{{ s.icon }}</span>{{ s.label }}</span>
+                <span class="split-amt">€{{ s.amount }} <small>{{ s.pct }}</small></span>
               </div>
-              <span class="check-label">{{c.label}}</span>
-              <span class="check-status" [class.done]="c.done" [class.active]="c.active">{{c.status}}</span>
+              <div class="split-bar"><span [style.width]="s.pct" [style.background]="s.color"></span></div>
             </div>
           }
         </div>
-      </div>
 
-      <div class="booking-grid">
-        <div>
-          <span class="booking-section-label">{{t().b_traveler}}</span>
-          <div class="booking-info-card">
-            <div class="booking-info-row"><span class="ms booking-row-icon">person</span><span class="booking-row-value">Marco Bianchi</span></div>
-            <div class="booking-info-row"><span class="ms booking-row-icon">mail</span><span class="booking-row-detail">marco.b&#64;email.it</span></div>
-            <div class="booking-info-row"><span class="ms booking-row-icon">group</span><span class="booking-row-detail">{{travelerCount()}}</span></div>
+        <!-- Components -->
+        <h4 class="detail-h">{{ t().d_elements }}</h4>
+        <div class="components">
+          <div class="comp">
+            <span class="comp-icon comp-icon--stay"><span class="ms">hotel</span></span>
+            <span class="comp-body">
+              <span class="comp-name">{{ selectedProposal().hotel }}</span>
+              <span class="comp-meta">{{ selectedProposal().hotelMeta }}</span>
+            </span>
+            <span class="comp-price">€{{ selectedProposal().hotelPrice }}</span>
+            <button class="comp-change" (click)="changeElement('hotel')">{{ t().d_change }}</button>
+          </div>
+          <div class="comp">
+            <span class="comp-icon comp-icon--food"><span class="ms">restaurant</span></span>
+            <span class="comp-body">
+              <span class="comp-name">{{ selectedProposal().rest }}</span>
+              <span class="comp-meta">{{ selectedProposal().restMeta }}</span>
+            </span>
+            <span class="comp-price">€{{ selectedProposal().restPrice }}</span>
+            <button class="comp-change" (click)="changeElement('restaurant')">{{ t().d_change }}</button>
+          </div>
+          <div class="comp">
+            <span class="comp-icon comp-icon--fly"><span class="ms">flight_takeoff</span></span>
+            <span class="comp-body">
+              <span class="comp-name">{{ selectedProposal().flight }}</span>
+              <span class="comp-meta">{{ selectedProposal().flightMeta }}</span>
+            </span>
+            <span class="comp-price">€{{ selectedProposal().flightPrice }}</span>
+            <button class="comp-change" (click)="changeElement('flight')">{{ t().d_change }}</button>
           </div>
         </div>
-        <div>
-          <span class="booking-section-label">{{t().b_summary}}</span>
-          <div class="booking-summary-card">
-            @for (s of selSplits(); track s.label) {
-              <div class="summary-line">
-                <span>{{s.label}}</span><span class="summary-amount">&#8364;{{s.amount}}</span>
-              </div>
-            }
-            <div class="summary-divider"></div>
-            <div class="summary-total">
-              <span class="total-label">{{t().b_total}}</span>
-              <span class="total-amount">&#8364;{{selectedProposal().totalStr}}</span>
-            </div>
-          </div>
-        </div>
+
+        <p class="detail-cancel"><span class="ms">verified</span>{{ selectedProposal().cancel }}</p>
       </div>
 
-      <button class="continue-btn" [class.ready]="allChecked()" [class.waiting]="!allChecked()" (click)="goPayment()" type="button">
-        {{allChecked() ? t().b_continue : t().b_wait}}
+      <button class="generate detail-book" (click)="goBooking()">
+        <span class="ms">shopping_cart_checkout</span>{{ t().d_book }} · €{{ selectedProposal().totalStr }}
+      </button>
+    </aside>
+  }
+
+  <!-- ── Change toast ───────────────────────────────────────────────────────── -->
+  @if (changeToast()) {
+    <div class="toast glass-dark"><span class="spin ms">progress_activity</span>{{ changeToast() }}</div>
+  }
+
+  <!-- ── Overlays ───────────────────────────────────────────────────────────── -->
+  @if (overlay()) {
+    <div class="modal-scrim" (click)="closeOverlay()"></div>
+  }
+
+  <!-- Booking -->
+  @if (overlay() === 'booking') {
+    <div class="modal glass" role="dialog">
+      <header class="modal-head">
+        <h2>{{ t().b_title }}</h2>
+        <button class="icon-btn" (click)="closeOverlay()"><span class="ms">close</span></button>
+      </header>
+      <p class="modal-sub"><span class="live-dot"></span>{{ t().b_checking }}</p>
+
+      <ul class="checks">
+        @for (c of checks(); track c.label) {
+          <li class="check" [class.done]="c.done" [class.active]="c.active">
+            <span class="check-ic">
+              @if (c.done) { <span class="ms">check</span> }
+              @else if (c.active) { <span class="spin ms">progress_activity</span> }
+              @else { <span class="ms">schedule</span> }
+            </span>
+            <span class="check-label">{{ c.label }}</span>
+            <span class="check-status" [style.color]="c.fg">{{ c.status }}</span>
+          </li>
+        }
+      </ul>
+
+      <div class="modal-summary">
+        <div class="msum-row"><span>{{ t().b_traveler }}</span><strong>{{ travelerCount() }}</strong></div>
+        <div class="msum-row msum-total"><span>{{ t().b_total }}</span><strong>€{{ selectedProposal().totalStr }}</strong></div>
+      </div>
+
+      <button class="generate" (click)="goPayment()" [disabled]="!allChecked()">
+        @if (allChecked()) { {{ t().b_continue }} } @else { {{ t().b_wait }} }
       </button>
     </div>
-    }
+  }
 
-    <!-- PAYMENT -->
-    @if (overlay() === 'payment') {
-    <div class="overlay-inner">
-      <div class="overlay-header">
-        <button class="close-circle" (click)="backToBooking()" type="button"><span class="ms">arrow_back</span></button>
-        <h2 class="overlay-title">{{t().p_title}}</h2>
-        <button class="close-circle" (click)="closeOverlay()" type="button"><span class="ms">close</span></button>
+  <!-- Payment -->
+  @if (overlay() === 'payment') {
+    <div class="modal glass" role="dialog">
+      <header class="modal-head">
+        <button class="icon-btn" (click)="backToBooking()"><span class="ms">arrow_back</span></button>
+        <h2>{{ t().p_title }}</h2>
+        <button class="icon-btn" (click)="closeOverlay()"><span class="ms">close</span></button>
+      </header>
+
+      <div class="pay-amount">
+        <span>{{ t().p_paying }}</span>
+        <strong>€{{ selectedProposal().totalStr }}</strong>
       </div>
 
-      <div class="payment-hero">
-        <span class="pay-label">{{t().p_paying}}</span>
-        <div class="pay-amount">&#8364;{{selectedProposal().totalStr}}</div>
-        <span class="pay-sub">{{selectedProposal().title}} &middot; {{selectedProposal().dest}}</span>
-      </div>
-
-      <span class="form-label pay-how-label">{{t().p_how}}</span>
-      <div class="pay-methods">
-        <button class="pay-method" [class.selected]="payMode()==='full'" (click)="payMode.set('full')" type="button">
-          <div class="pay-radio" [class.selected]="payMode()==='full'">
-            @if (payMode() === 'full') { <div class="pay-radio-dot"></div> }
-          </div>
-          <div class="pay-method-info">
-            <span class="pay-method-title">{{t().p_full}}</span>
-            <span class="pay-method-sub">{{t().p_full_sub}}</span>
-          </div>
-          <span class="ms pay-method-icon">account_balance_wallet</span>
+      <span class="field-label">{{ t().p_how }}</span>
+      <div class="pay-modes">
+        <button class="pay-mode" [class.on]="payMode() === 'full'" (click)="payMode.set('full')">
+          <span class="ms">payments</span>
+          <span class="pay-mode-t">{{ t().p_full }}</span>
+          <span class="pay-mode-s">{{ t().p_full_sub }}</span>
         </button>
-        <button class="pay-method" [class.selected]="payMode()==='install'" (click)="payMode.set('install')" type="button">
-          <div class="pay-radio" [class.selected]="payMode()==='install'">
-            @if (payMode() === 'install') { <div class="pay-radio-dot"></div> }
-          </div>
-          <div class="pay-method-info">
-            <span class="pay-method-title">{{t().p_install}}</span>
-            <span class="pay-method-sub">{{installSub()}}</span>
-          </div>
-          <span class="klarna-badge">Klarna</span>
+        <button class="pay-mode" [class.on]="payMode() === 'install'" (click)="payMode.set('install')">
+          <span class="ms">event_repeat</span>
+          <span class="pay-mode-t">{{ t().p_install }}</span>
+          <span class="pay-mode-s">{{ installSub() }}</span>
         </button>
       </div>
 
       @if (payMode() === 'install') {
-      <div class="install-plan">
-        <div class="install-header"><span>{{t().p_plan}}</span><span class="install-formula">3 &times; &#8364;{{rateStr()}}</span></div>
-        <div class="install-slots">
-          @for (label of installLabels(); track label) {
-            <div class="install-slot">
-              <span class="slot-label">{{label}}</span>
-              <span class="slot-amount">&#8364;{{rateStr()}}</span>
+        <div class="install">
+          @for (l of installLabels(); track l; let i = $index) {
+            <div class="install-step">
+              <span class="install-amt">€{{ rateStr() }}</span>
+              <span class="install-when">{{ l }}</span>
             </div>
           }
         </div>
-      </div>
       }
 
-      <div class="platform-info">
-        <span class="ms platform-icon">info</span>
-        <p class="platform-text">{{t().p_platform}}</p>
-      </div>
+      <p class="pay-note"><span class="ms">shield</span>{{ t().p_platform }}</p>
 
-      <button class="pay-btn" (click)="confirmPay()" type="button">
-        <span class="ms pay-btn-lock">lock</span>{{payBtnLabel()}}
+      <button class="generate" (click)="confirmPay()">
+        <span class="ms">lock</span>{{ payBtnLabel() }}
       </button>
     </div>
-    }
+  }
 
-    <!-- CONFIRMATION -->
-    @if (overlay() === 'confirmation') {
-    <div class="confirm-inner">
-      <div class="confirm-check">
-        <span class="ms confirm-check-icon">check</span>
+  <!-- Confirmation -->
+  @if (overlay() === 'confirmation') {
+    <div class="modal glass modal--center" role="dialog">
+      <div class="conf-orb"><span class="ms">check</span></div>
+      <h2>{{ t().c_title }}</h2>
+      <p class="modal-sub modal-sub--center">{{ t().c_sub }}</p>
+
+      <ul class="conf-items">
+        @for (it of confirmItems(); track it.ref) {
+          <li><span class="ms">check_circle</span><span class="conf-label">{{ it.label }}</span><span class="conf-ref">{{ it.ref }}</span></li>
+        }
+      </ul>
+
+      <div class="conf-concierge">
+        <div class="conf-conc-head"><span class="ms">support_agent</span>
+          <div><strong>{{ t().c_concierge }}</strong><span>{{ t().c_concierge_sub }}</span></div>
+        </div>
+        <button class="generate generate--soft" (click)="openConcierge()"><span class="ms">smart_toy</span>{{ t().c_open }}</button>
       </div>
-      <h2 class="confirm-title">{{t().c_title}}</h2>
-      <p class="confirm-sub">{{t().c_sub}}</p>
 
-      <div class="confirm-items">
-        @for (item of confirmItems(); track item.ref) {
-          <div class="confirm-item">
-            <span class="ms confirm-item-icon">check_circle</span>
-            <span class="confirm-label">{{item.label}}</span>
-            <span class="confirm-ref">{{item.ref}}</span>
-          </div>
+      <button class="text-btn" (click)="restart()"><span class="ms">restart_alt</span>{{ t().c_restart }}</button>
+    </div>
+  }
+
+  <!-- Concierge -->
+  @if (overlay() === 'concierge') {
+    <div class="modal glass modal--chat" role="dialog">
+      <header class="modal-head">
+        <div class="conc-id"><span class="conc-avatar"><span class="ms">smart_toy</span></span>
+          <div><strong>{{ t().cc_title }}</strong><span class="conc-on">online</span></div>
+        </div>
+        <button class="icon-btn" (click)="closeOverlay()"><span class="ms">close</span></button>
+      </header>
+
+      <p class="conc-context">{{ t().cc_context }}</p>
+
+      <div class="conc-thread">
+        @for (m of chatMessages(); track $index) {
+          @if (m.isOffer) {
+            <div class="conc-offer">
+              <div class="conc-offer-img" [style.background]="m.img"></div>
+              <div class="conc-offer-body">
+                <span class="conc-offer-badge">{{ m.badge }}</span>
+                <strong>{{ m.title }}</strong>
+                <span class="conc-offer-sub">{{ m.sub }}</span>
+                <button class="conc-offer-cta" (click)="bookTable()" [disabled]="tableBooked()">{{ m.cta }}</button>
+              </div>
+            </div>
+          } @else {
+            <div class="conc-msg" [style.justify-content]="m.justify">
+              <span class="conc-bubble" [style.background]="m.bg" [style.color]="m.fg" [style.border-radius]="m.radius">{{ m.text }}</span>
+            </div>
+          }
+        }
+        @if (conciergeTyping()) {
+          <div class="conc-msg"><span class="conc-bubble conc-typing"><i></i><i></i><i></i></span></div>
         }
       </div>
 
-      <div class="concierge-promo">
-        <div class="concierge-promo-header">
-          <span class="ms concierge-promo-icon">concierge</span>
-          <span class="concierge-promo-name">{{t().c_concierge}}</span>
-          <span class="concept-badge">{{t().concept}}</span>
-        </div>
-        <p class="concierge-promo-text">{{t().c_concierge_sub}}</p>
-        <button class="concierge-open-btn" (click)="openConcierge()" type="button">
-          <span class="ms">chat</span>{{t().c_open}}
-        </button>
-      </div>
-
-      <button class="restart-link" (click)="restart()" type="button">
-        <span class="ms">replay</span>{{t().c_restart}}
-      </button>
-    </div>
-    }
-
-  </div>
-</div>
-}
-
-<!-- AUTH MODAL -->
-@if (showAuthModal()) {
-<div class="auth-backdrop" role="dialog" aria-modal="true">
-  <div class="auth-card">
-    <button class="ms auth-close" (click)="closeAuthModal()" type="button">close</button>
-
-    <div class="auth-logo">
-      <div class="auth-logo-icon">T</div>
-      <span class="auth-logo-name">Travel AI</span>
-    </div>
-
-    <div class="auth-tabs">
-      <button class="auth-tab" [class.active]="authMode()==='login'" (click)="authMode.set('login')" type="button">
-        {{lang()==='it'?'Accedi':'Sign in'}}
-      </button>
-      <button class="auth-tab" [class.active]="authMode()==='register'" (click)="authMode.set('register')" type="button">
-        {{lang()==='it'?'Registrati':'Register'}}
-      </button>
-    </div>
-
-    @if (authErrorMsg) {
-      <div class="auth-error" role="alert">{{authErrorMsg}}</div>
-    }
-
-    @if (authMode()==='register') {
-      <div class="auth-names">
-        <div class="auth-field">
-          <label>{{lang()==='it'?'Nome':'First name'}}</label>
-          <input [(ngModel)]="authFirstNameVal" [placeholder]="lang()==='it'?'Marco':'John'">
-        </div>
-        <div class="auth-field">
-          <label>{{lang()==='it'?'Cognome':'Last name'}}</label>
-          <input [(ngModel)]="authLastNameVal" [placeholder]="lang()==='it'?'Bianchi':'Doe'">
-        </div>
-      </div>
-    }
-
-    <div class="auth-field">
-      <label>Email</label>
-      <input [(ngModel)]="authEmailVal" type="email" placeholder="email@example.com">
-    </div>
-
-    <div class="auth-field auth-field--last">
-      <label>Password</label>
-      <input [(ngModel)]="authPasswordVal" type="password" [placeholder]="lang()==='it'?'Almeno 8 caratteri':'At least 8 characters'">
-    </div>
-
-    <button class="auth-submit" (click)="authMode()==='login'?login():register()" [disabled]="authLoadingState" type="button">
-      @if (authLoadingState) {
-        {{lang()==='it'?'Caricamento...':'Loading...'}}
-      } @else {
-        {{authMode()==='login'?(lang()==='it'?'Accedi':'Sign in'):(lang()==='it'?'Crea account':'Create account')}}
-      }
-    </button>
-  </div>
-</div>
-}
-
-<!-- Concierge drawer -->
-@if (overlay() === 'concierge') {
-<div class="concierge-backdrop">
-  <div class="concierge-drawer">
-    <!-- Drawer header -->
-    <div class="concierge-header">
-      <div class="concierge-header-row">
-        <div class="concierge-avatar">
-          <span class="ms concierge-avatar-icon">concierge</span>
-        </div>
-        <div class="concierge-info">
-          <span class="concierge-name">{{t().cc_title}}</span>
-          <span class="concierge-meta">{{selectedProposal().dest}} &middot; {{selectedProposal().nights}} &middot; {{travelerCount()}}</span>
-        </div>
-        <span class="concept-badge">{{t().concept}}</span>
-        <button class="close-circle" (click)="closeOverlay()" type="button"><span class="ms">close</span></button>
-      </div>
-      <div class="concierge-context">
-        <span class="ms concierge-context-icon">bolt</span>{{t().cc_context}}
-      </div>
-    </div>
-
-    <!-- Messages -->
-    <div class="messages-area scroll">
-      @for (m of chatMessages(); track $index) {
-        <div class="msg-wrap" [style.justify-content]="m.justify">
-          <div class="msg-content">
-            @if (m.isOffer) {
-              <div class="offer-card">
-                <div class="offer-image" [style.background]="m.img">
-                  <span class="offer-caption">{{m.caption}}</span>
-                </div>
-                <div class="offer-body">
-                  <div class="offer-badge-row">
-                    <span class="ms offer-badge-icon">verified</span>{{m.badge}}
-                  </div>
-                  <h4 class="offer-title">{{m.title}}</h4>
-                  <p class="offer-sub">{{m.sub}}</p>
-                  <button class="offer-book-btn" (click)="bookTable()" type="button">
-                    <span class="ms">event_available</span>{{m.cta}}
-                  </button>
-                </div>
-              </div>
-            }
-            @if (m.isText) {
-              <div class="text-bubble"
-                [class.user-bubble]="m.bg === '#D9694C'"
-                [class.ai-bubble]="m.bg !== '#D9694C'"
-                [style.border-radius]="m.radius">{{m.text}}</div>
-            }
-          </div>
-        </div>
-      }
-      @if (conciergeTyping()) {
-        <div class="typing-indicator">
-          <div class="typing-dots">
-            <div class="typing-dot"></div>
-            <div class="typing-dot"></div>
-            <div class="typing-dot"></div>
-          </div>
-        </div>
-      }
-    </div>
-
-    <!-- Input bar -->
-    <div class="chat-input-bar">
       @if (!suggestionUsed()) {
-        <button class="suggestion-chip" (click)="sendSuggestion()" type="button">
-          <span class="ms suggestion-icon">auto_awesome</span>{{t().cc_suggestion}}
-        </button>
+        <button class="conc-suggest" (click)="sendSuggestion()"><span class="ms">bolt</span>{{ t().cc_suggestion }}</button>
       }
-      <div class="chat-input-row">
-        <span class="chat-placeholder">{{t().cc_placeholder}}</span>
-        <button class="ms send-btn" (click)="sendSuggestion()" type="button">arrow_upward</button>
+      <div class="conc-input">
+        <input [placeholder]="t().cc_placeholder" readonly (click)="sendSuggestion()" />
+        <button (click)="sendSuggestion()"><span class="ms">arrow_upward</span></button>
       </div>
     </div>
-  </div>
+  }
+
+  <!-- ── Auth modal ─────────────────────────────────────────────────────────── -->
+  @if (showAuthModal()) {
+    <div class="modal-scrim" (click)="closeAuthModal()"></div>
+    <div class="modal glass modal--auth" role="dialog">
+      <button class="icon-btn modal-x" (click)="closeAuthModal()"><span class="ms">close</span></button>
+      <div class="auth-logo"><span class="hud-mark"><span class="ms">explore</span></span><span>AI Planner</span></div>
+
+      <div class="auth-tabs">
+        <button [class.on]="authMode() === 'login'" (click)="authMode.set('login')">{{ t().auth_sign_in }}</button>
+        <button [class.on]="authMode() === 'register'" (click)="authMode.set('register')">{{ t().auth_register }}</button>
+      </div>
+
+      @if (authErrorMsg) { <div class="auth-error">{{ authErrorMsg }}</div> }
+
+      @if (authMode() === 'register') {
+        <div class="auth-names">
+          <label class="auth-field"><span>{{ t().auth_first_name }}</span><input [(ngModel)]="authFirstNameVal" [placeholder]="t().auth_first_placeholder"></label>
+          <label class="auth-field"><span>{{ t().auth_last_name }}</span><input [(ngModel)]="authLastNameVal" [placeholder]="t().auth_last_placeholder"></label>
+        </div>
+      }
+      <label class="auth-field"><span>Email</span><input [(ngModel)]="authEmailVal" type="email" placeholder="email@example.com"></label>
+      <label class="auth-field"><span>Password</span><input [(ngModel)]="authPasswordVal" type="password" [placeholder]="t().auth_password_placeholder"></label>
+
+      <button class="generate" (click)="authMode() === 'login' ? login() : register()" [disabled]="authLoadingState">
+        @if (authLoadingState) { {{ t().auth_loading }} } @else { {{ authMode() === 'login' ? t().auth_sign_in : t().auth_create }} }
+      </button>
+    </div>
+  }
 </div>
-}

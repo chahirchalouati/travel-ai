@@ -61,6 +61,19 @@ export class AuthService {
     );
   }
 
+  /** Updates the current user's basic profile and refreshes the cached signal. */
+  updateProfile(req: { firstName: string; lastName: string; phone?: string }): Observable<UserProfileResponse> {
+    return this.http.put<ApiWrapper<UserProfileResponse>>(`${environment.apiUrl}/users/me`, req).pipe(
+      map(res => res.data),
+      tap(profile => this.currentUser.set(profile))
+    );
+  }
+
+  /** True when the signed-in user has the ADMIN role. */
+  isAdmin(): boolean {
+    return this.currentUser()?.role === 'ADMIN';
+  }
+
   getToken(): string | null {
     return localStorage.getItem(TOKEN_KEY);
   }

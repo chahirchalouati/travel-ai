@@ -30,6 +30,11 @@ export interface UserProfileResponse {
   firstName: string;
   lastName: string;
   phone: string | null;
+  avatarUrl: string | null;
+  coverUrl: string | null;
+  bio: string | null;
+  location: string | null;
+  handle: string | null;
   role: string;
   emailVerified: boolean;
   createdAt: string;
