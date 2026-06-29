@@ -1,12 +1,14 @@
 -- V14: Seed test users and additional partners across Italy
--- Password hash is a dummy bcrypt value for seed data only
+-- Test users use a dummy bcrypt value (not loginable). The default ADMIN below
+-- has a REAL bcrypt hash so a fresh database always has a working admin:
+--   email: admin@travelai.it   password: Admin123!
 
 -- ============================================================
 -- 1. USERS (30 total: 25 TRAVELER, 3 PARTNER, 1 OPERATIONS, 1 ADMIN)
 -- ============================================================
 INSERT INTO users (id, email, password_hash, first_name, last_name, phone, role, email_verified, active) VALUES
 -- ADMIN
-('f0000010-0000-0000-0000-000000000001', 'admin@travelai.it', '$2a$10$dummyHashForSeedDataOnly000000000000000000000000000000', 'Marco', 'Bianchi', '+39 02 1234567', 'ADMIN', TRUE, TRUE),
+('f0000010-0000-0000-0000-000000000001', 'admin@travelai.it', '$2a$12$.UaqiuOY4qRsu0xi9jDDieTZTI6qdN478oy1uP0q7hpivKsdx/CpC', 'Marco', 'Bianchi', '+39 02 1234567', 'ADMIN', TRUE, TRUE),
 -- OPERATIONS
 ('f0000010-0000-0000-0000-000000000002', 'ops@travelai.it', '$2a$10$dummyHashForSeedDataOnly000000000000000000000000000000', 'Giulia', 'Rossi', '+39 06 7654321', 'OPERATIONS', TRUE, TRUE),
 -- PARTNER users

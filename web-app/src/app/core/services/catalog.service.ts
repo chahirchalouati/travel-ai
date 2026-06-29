@@ -10,6 +10,22 @@ import type {
   CruiseSearchResult,
 } from '../models/api.models';
 
+/** A single page of catalog search results plus pagination metadata. */
+export interface PagedResult<T> {
+  items: T[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+/** Default page size; must match the backend controller default. */
+export const CATALOG_PAGE_SIZE = 12;
+
+/** An empty page, used as a safe fallback when a search request fails. */
+export function emptyPage<T>(page = 0, total = 0): PagedResult<T> {
+  return { items: [], total, page, limit: CATALOG_PAGE_SIZE };
+}
+
 export interface HotelSearchQuery {
   city?: string;
   checkIn?: string;
@@ -48,29 +64,58 @@ export class CatalogService {
   private readonly http = inject(HttpClient);
   private readonly base = `${environment.apiUrl}/catalog`;
 
-  // ── Search (backend returns raw arrays) ──────────────────────
-  searchHotels(query: HotelSearchQuery): Observable<HotelSearchResult[]> {
-    return this.http.get<HotelSearchResult[]>(`${this.base}/hotels/search`, {
-      params: toParams(query),
-    });
+  // ── Search (paginated; backend wraps results in ApiResponse) ──
+  searchHotels(
+    query: HotelSearchQuery,
+    page = 0,
+    size = CATALOG_PAGE_SIZE,
+  ): Observable<PagedResult<HotelSearchResult>> {
+    return this.searchPaged<HotelSearchResult>('hotels', query, page, size);
   }
 
-  searchFlights(query: FlightSearchQuery): Observable<FlightSearchResult[]> {
-    return this.http.get<FlightSearchResult[]>(`${this.base}/flights/search`, {
-      params: toParams(query),
-    });
+  searchFlights(
+    query: FlightSearchQuery,
+    page = 0,
+    size = CATALOG_PAGE_SIZE,
+  ): Observable<PagedResult<FlightSearchResult>> {
+    return this.searchPaged<FlightSearchResult>('flights', query, page, size);
   }
 
-  searchRestaurants(query: RestaurantSearchQuery): Observable<RestaurantSearchResult[]> {
-    return this.http.get<RestaurantSearchResult[]>(`${this.base}/restaurants/search`, {
-      params: toParams(query),
-    });
+  searchRestaurants(
+    query: RestaurantSearchQuery,
+    page = 0,
+    size = CATALOG_PAGE_SIZE,
+  ): Observable<PagedResult<RestaurantSearchResult>> {
+    return this.searchPaged<RestaurantSearchResult>('restaurants', query, page, size);
   }
 
-  searchCruises(query: CruiseSearchQuery): Observable<CruiseSearchResult[]> {
-    return this.http.get<CruiseSearchResult[]>(`${this.base}/cruises/search`, {
-      params: toParams(query),
-    });
+  searchCruises(
+    query: CruiseSearchQuery,
+    page = 0,
+    size = CATALOG_PAGE_SIZE,
+  ): Observable<PagedResult<CruiseSearchResult>> {
+    return this.searchPaged<CruiseSearchResult>('cruises', query, page, size);
+  }
+
+  /** Shared paginated search: appends page/size and unwraps the ApiResponse envelope. */
+  private searchPaged<T>(
+    resource: string,
+    query: object,
+    page: number,
+    size: number,
+  ): Observable<PagedResult<T>> {
+    return this.http
+      .get<ApiWrapper<T[]>>(`${this.base}/${resource}/search`, {
+        params: toParams({ ...query, page, size }),
+      })
+      .pipe(
+        map(res => ({
+          items: res.data ?? [],
+          total: res.meta?.total ?? (res.data?.length ?? 0),
+          page: res.meta?.page ?? page,
+          limit: res.meta?.limit ?? size,
+        })),
+      );
   }
 
   // ── Detail (wrapped in ApiResponse) ──────────────────────────

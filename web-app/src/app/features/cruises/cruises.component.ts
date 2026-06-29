@@ -1,12 +1,13 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { catchError, of } from 'rxjs';
-import { CatalogService } from '../../core/services/catalog.service';
+import { CatalogService, emptyPage } from '../../core/services/catalog.service';
 import type { CruiseSearchQuery } from '../../core/services/catalog.service';
 import type { CruiseSearchResult } from '../../core/models/api.models';
+import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1599640842225-85d111c60e6b?w=1920&q=80';
@@ -14,7 +15,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-cruises',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule],
+  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, InfiniteScrollDirective],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -65,7 +66,7 @@ const HEADER_IMG =
         </div>
       } @else {
         <div class="results-head">
-          <p class="results-count">{{ results().length }} <span>{{ 'catalog.cruises.found' | transloco }}</span></p>
+          <p class="results-count">{{ total() }} <span>{{ 'catalog.cruises.found' | transloco }}</span></p>
         </div>
         <div class="card-grid">
           @for (c of results(); track c.id) {
@@ -92,6 +93,13 @@ const HEADER_IMG =
             </article>
           }
         </div>
+        @if (hasMore()) {
+          <div class="infinite-sentinel" appInfiniteScroll
+               [scrollDisabled]="loadingMore()" (scrolled)="loadMore()"></div>
+        }
+        @if (loadingMore()) {
+          <div class="loading-more"><span class="loading-more__spinner"></span>{{ 'catalog.loadingMore' | transloco }}</div>
+        }
       }
     </section>
   `,
@@ -104,7 +112,11 @@ export class CruisesComponent implements OnInit {
 
   readonly headerImg = HEADER_IMG;
   readonly results = signal<CruiseSearchResult[]>([]);
+  readonly total = signal(0);
   readonly loading = signal(true);
+  readonly loadingMore = signal(false);
+  readonly hasMore = computed(() => this.results().length < this.total());
+  private page = 0;
 
   departurePort = '';
   cruiseType = '';
@@ -121,21 +133,42 @@ export class CruisesComponent implements OnInit {
   }
 
   runSearch(): void {
+    this.page = 0;
     this.loading.set(true);
-    const query: CruiseSearchQuery = {
+    this.catalog
+      .searchCruises(this.buildQuery(), 0)
+      .pipe(catchError(() => of(emptyPage<CruiseSearchResult>())))
+      .subscribe(res => {
+        this.results.set(res.items);
+        this.total.set(res.total);
+        this.loading.set(false);
+      });
+  }
+
+  loadMore(): void {
+    if (this.loadingMore() || !this.hasMore()) {
+      return;
+    }
+    this.loadingMore.set(true);
+    this.catalog
+      .searchCruises(this.buildQuery(), this.page + 1)
+      .pipe(catchError(() => of(emptyPage<CruiseSearchResult>(this.page, this.total()))))
+      .subscribe(res => {
+        this.page = res.page;
+        this.total.set(res.total);
+        this.results.update(current => [...current, ...res.items]);
+        this.loadingMore.set(false);
+      });
+  }
+
+  private buildQuery(): CruiseSearchQuery {
+    return {
       departurePort: this.departurePort.trim() || undefined,
       cruiseType: this.cruiseType.trim() || undefined,
       departureDate: this.departureDate || undefined,
       passengers: this.passengers || 1,
       maxPrice: this.maxPrice,
     };
-    this.catalog
-      .searchCruises(query)
-      .pipe(catchError(() => of([])))
-      .subscribe(list => {
-        this.results.set(list);
-        this.loading.set(false);
-      });
   }
 
   open(id: string): void {

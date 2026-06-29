@@ -1,12 +1,13 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { catchError, of } from 'rxjs';
-import { CatalogService } from '../../core/services/catalog.service';
+import { CatalogService, emptyPage } from '../../core/services/catalog.service';
 import type { RestaurantSearchQuery } from '../../core/services/catalog.service';
 import type { RestaurantSearchResult } from '../../core/models/api.models';
+import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80';
@@ -14,7 +15,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-restaurants',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule],
+  imports: [CommonModule, FormsModule, TranslocoModule, InfiniteScrollDirective],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -65,7 +66,7 @@ const HEADER_IMG =
         </div>
       } @else {
         <div class="results-head">
-          <p class="results-count">{{ results().length }} <span>{{ 'catalog.restaurants.found' | transloco }}</span></p>
+          <p class="results-count">{{ total() }} <span>{{ 'catalog.restaurants.found' | transloco }}</span></p>
         </div>
         <div class="card-grid">
           @for (r of results(); track r.id) {
@@ -91,6 +92,13 @@ const HEADER_IMG =
             </article>
           }
         </div>
+        @if (hasMore()) {
+          <div class="infinite-sentinel" appInfiniteScroll
+               [scrollDisabled]="loadingMore()" (scrolled)="loadMore()"></div>
+        }
+        @if (loadingMore()) {
+          <div class="loading-more"><span class="loading-more__spinner"></span>{{ 'catalog.loadingMore' | transloco }}</div>
+        }
       }
     </section>
   `,
@@ -103,7 +111,11 @@ export class RestaurantsComponent implements OnInit {
 
   readonly headerImg = HEADER_IMG;
   readonly results = signal<RestaurantSearchResult[]>([]);
+  readonly total = signal(0);
   readonly loading = signal(true);
+  readonly loadingMore = signal(false);
+  readonly hasMore = computed(() => this.results().length < this.total());
+  private page = 0;
 
   city = '';
   cuisineType = '';
@@ -120,21 +132,42 @@ export class RestaurantsComponent implements OnInit {
   }
 
   runSearch(): void {
+    this.page = 0;
     this.loading.set(true);
-    const query: RestaurantSearchQuery = {
+    this.catalog
+      .searchRestaurants(this.buildQuery(), 0)
+      .pipe(catchError(() => of(emptyPage<RestaurantSearchResult>())))
+      .subscribe(res => {
+        this.results.set(res.items);
+        this.total.set(res.total);
+        this.loading.set(false);
+      });
+  }
+
+  loadMore(): void {
+    if (this.loadingMore() || !this.hasMore()) {
+      return;
+    }
+    this.loadingMore.set(true);
+    this.catalog
+      .searchRestaurants(this.buildQuery(), this.page + 1)
+      .pipe(catchError(() => of(emptyPage<RestaurantSearchResult>(this.page, this.total()))))
+      .subscribe(res => {
+        this.page = res.page;
+        this.total.set(res.total);
+        this.results.update(current => [...current, ...res.items]);
+        this.loadingMore.set(false);
+      });
+  }
+
+  private buildQuery(): RestaurantSearchQuery {
+    return {
       city: this.city.trim() || undefined,
       cuisineType: this.cuisineType.trim() || undefined,
       date: this.date || undefined,
       covers: this.covers || 1,
       maxBudgetPerPerson: this.maxBudgetPerPerson,
     };
-    this.catalog
-      .searchRestaurants(query)
-      .pipe(catchError(() => of([])))
-      .subscribe(list => {
-        this.results.set(list);
-        this.loading.set(false);
-      });
   }
 
   priceTier(tier: number): string {

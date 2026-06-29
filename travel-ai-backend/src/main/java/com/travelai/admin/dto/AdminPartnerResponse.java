@@ -10,6 +10,10 @@ public record AdminPartnerResponse(
     String city,
     String status,
     String contactEmail,
+    String contactPhone,
+    String vatNumber,
+    String address,
+    String country,
     boolean active,
     Instant createdAt
 ) {}

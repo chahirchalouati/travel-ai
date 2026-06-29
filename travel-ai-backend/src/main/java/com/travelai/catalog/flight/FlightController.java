@@ -3,6 +3,7 @@ package com.travelai.catalog.flight;
 import com.travelai.catalog.flight.dto.FlightSearchRequest;
 import com.travelai.catalog.flight.dto.FlightSearchResult;
 import com.travelai.shared.domain.ApiResponse;
+import com.travelai.shared.domain.PageSupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +18,11 @@ public class FlightController {
     private final FlightService flightService;
 
     @GetMapping("/search")
-    public List<FlightSearchResult> search(@ModelAttribute FlightSearchRequest request) {
-        return flightService.search(request);
+    public ApiResponse<List<FlightSearchResult>> search(
+            @ModelAttribute FlightSearchRequest request,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
+        return PageSupport.paginate(flightService.search(request), page, size);
     }
 
     @GetMapping("/{id}")

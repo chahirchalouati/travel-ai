@@ -39,6 +39,18 @@ public class AdminController {
         return ResponseEntity.ok(ApiResponse.ok(page, meta));
     }
 
+    @PostMapping("/partners")
+    public ResponseEntity<ApiResponse<AdminPartnerResponse>> createPartner(
+            @Valid @RequestBody AdminPartnerUpsertRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok(adminService.createPartner(request)));
+    }
+
+    @PutMapping("/partners/{id}")
+    public ResponseEntity<ApiResponse<AdminPartnerResponse>> updatePartner(
+            @PathVariable UUID id, @Valid @RequestBody AdminPartnerUpsertRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok(adminService.updatePartner(id, request)));
+    }
+
     @PatchMapping("/partners/{id}/activate")
     public ResponseEntity<Void> activatePartner(@PathVariable UUID id) {
         adminService.activatePartner(id);

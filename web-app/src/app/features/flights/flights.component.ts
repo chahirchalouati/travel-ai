@@ -1,12 +1,13 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { catchError, of } from 'rxjs';
-import { CatalogService } from '../../core/services/catalog.service';
+import { CatalogService, emptyPage } from '../../core/services/catalog.service';
 import type { FlightSearchQuery } from '../../core/services/catalog.service';
 import type { FlightSearchResult } from '../../core/models/api.models';
+import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80';
@@ -14,7 +15,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-flights',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule],
+  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, InfiniteScrollDirective],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -65,7 +66,7 @@ const HEADER_IMG =
         </div>
       } @else {
         <div class="results-head">
-          <p class="results-count">{{ results().length }} <span>{{ 'catalog.flights.found' | transloco }}</span></p>
+          <p class="results-count">{{ total() }} <span>{{ 'catalog.flights.found' | transloco }}</span></p>
         </div>
         <div class="card-grid">
           @for (f of results(); track f.id) {
@@ -101,6 +102,13 @@ const HEADER_IMG =
             </article>
           }
         </div>
+        @if (hasMore()) {
+          <div class="infinite-sentinel" appInfiniteScroll
+               [scrollDisabled]="loadingMore()" (scrolled)="loadMore()"></div>
+        }
+        @if (loadingMore()) {
+          <div class="loading-more"><span class="loading-more__spinner"></span>{{ 'catalog.loadingMore' | transloco }}</div>
+        }
       }
     </section>
   `,
@@ -113,7 +121,11 @@ export class FlightsComponent implements OnInit {
 
   readonly headerImg = HEADER_IMG;
   readonly results = signal<FlightSearchResult[]>([]);
+  readonly total = signal(0);
   readonly loading = signal(true);
+  readonly loadingMore = signal(false);
+  readonly hasMore = computed(() => this.results().length < this.total());
+  private page = 0;
 
   originIata = '';
   destIata = '';
@@ -133,21 +145,42 @@ export class FlightsComponent implements OnInit {
   }
 
   runSearch(): void {
+    this.page = 0;
     this.loading.set(true);
-    const query: FlightSearchQuery = {
+    this.catalog
+      .searchFlights(this.buildQuery(), 0)
+      .pipe(catchError(() => of(emptyPage<FlightSearchResult>())))
+      .subscribe(res => {
+        this.results.set(res.items);
+        this.total.set(res.total);
+        this.loading.set(false);
+      });
+  }
+
+  loadMore(): void {
+    if (this.loadingMore() || !this.hasMore()) {
+      return;
+    }
+    this.loadingMore.set(true);
+    this.catalog
+      .searchFlights(this.buildQuery(), this.page + 1)
+      .pipe(catchError(() => of(emptyPage<FlightSearchResult>(this.page, this.total()))))
+      .subscribe(res => {
+        this.page = res.page;
+        this.total.set(res.total);
+        this.results.update(current => [...current, ...res.items]);
+        this.loadingMore.set(false);
+      });
+  }
+
+  private buildQuery(): FlightSearchQuery {
+    return {
       originIata: this.originIata.trim().toUpperCase() || undefined,
       destIata: this.destIata.trim().toUpperCase() || undefined,
       departureDate: this.departureDate || new Date().toISOString().slice(0, 10),
       passengers: this.passengers || 1,
       maxPrice: this.maxPrice,
     };
-    this.catalog
-      .searchFlights(query)
-      .pipe(catchError(() => of([])))
-      .subscribe(list => {
-        this.results.set(list);
-        this.loading.set(false);
-      });
   }
 
   open(id: string): void {

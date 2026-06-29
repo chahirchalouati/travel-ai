@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { catchError, forkJoin, of } from 'rxjs';
-import { CatalogService } from '../../core/services/catalog.service';
+import { CatalogService, emptyPage } from '../../core/services/catalog.service';
 import { DestinationService } from '../../core/services/destination.service';
 import type {
   HotelSearchResult,
@@ -151,15 +151,19 @@ export class SearchComponent implements OnInit {
 
     // The catalog endpoints require a party-size param to bind their request records,
     // so always send a sensible default alongside the optional location filter.
+    const PREVIEW_SIZE = 8;
     forkJoin({
-      hotels: this.catalog.searchHotels({ city: q || undefined, guests: 2 }).pipe(catchError(() => of([]))),
-      restaurants: this.catalog.searchRestaurants({ city: q || undefined, covers: 2 }).pipe(catchError(() => of([]))),
-      cruises: this.catalog.searchCruises({ departurePort: q || undefined, passengers: 2 }).pipe(catchError(() => of([]))),
+      hotels: this.catalog.searchHotels({ city: q || undefined, guests: 2 }, 0, PREVIEW_SIZE)
+        .pipe(catchError(() => of(emptyPage<HotelSearchResult>()))),
+      restaurants: this.catalog.searchRestaurants({ city: q || undefined, covers: 2 }, 0, PREVIEW_SIZE)
+        .pipe(catchError(() => of(emptyPage<RestaurantSearchResult>()))),
+      cruises: this.catalog.searchCruises({ departurePort: q || undefined, passengers: 2 }, 0, PREVIEW_SIZE)
+        .pipe(catchError(() => of(emptyPage<CruiseSearchResult>()))),
       destinations: this.destinationService.search(q).pipe(catchError(() => of([]))),
     }).subscribe(res => {
-      this.hotels.set(res.hotels.slice(0, 8));
-      this.restaurants.set(res.restaurants.slice(0, 8));
-      this.cruises.set(res.cruises.slice(0, 8));
+      this.hotels.set(res.hotels.items);
+      this.restaurants.set(res.restaurants.items);
+      this.cruises.set(res.cruises.items);
       this.destinations.set(res.destinations.slice(0, 8));
       this.loading.set(false);
     });
