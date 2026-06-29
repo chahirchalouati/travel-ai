@@ -9,6 +9,9 @@ import com.travelai.shared.exception.TravelAiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.document.Document;
+import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +28,10 @@ public class ConciergeService {
 
     private final ChatClient chatClient;
     private final BookingRepository bookingRepository;
+    private final VectorStore vectorStore;
+
+    private static final int CONTEXT_TOP_K = 6;
+    private static final double CONTEXT_SIMILARITY_THRESHOLD = 0.45;
 
     @Transactional(readOnly = true)
     public List<ConciergeRecommendation> getRecommendationsForUser(String userEmail) {
@@ -61,22 +69,45 @@ public class ConciergeService {
     }
 
     private String generateAiSuggestion(Booking booking) {
+        String destination = booking.getDestination() != null ? booking.getDestination() : "Italia";
         try {
+            String context = retrieveDestinationContext(destination);
+            String contextSection = context.isEmpty()
+                ? ""
+                : "\n\nUsa SOLO queste informazioni reali dal nostro catalogo (non inventare nomi di hotel, " +
+                  "ristoranti o luoghi che non compaiono qui):\n" + context;
+
             String prompt = String.format(
                 "Sei un concierge di viaggio italiano esperto. " +
-                "Il cliente sta partendo per %s il %s e tornerà il %s. " +
-                "Genera 3 consigli personalizzati e entusiasmanti in italiano su cosa fare, dove mangiare e cosa visitare. " +
-                "Sii specifico, caldo e coinvolgente. Massimo 150 parole.",
-                booking.getDestination() != null ? booking.getDestination() : "Italia",
-                booking.getCheckIn(),
-                booking.getCheckOut()
+                "Il cliente parte per %s il %s e torna il %s. " +
+                "Genera 3 consigli personalizzati ed entusiasmanti in italiano su cosa fare, dove mangiare e cosa visitare. " +
+                "Sii specifico, caldo e coinvolgente. Massimo 150 parole.%s",
+                destination, booking.getCheckIn(), booking.getCheckOut(), contextSection
             );
             return chatClient.prompt(prompt).call().content();
         } catch (Exception e) {
             log.warn("AI suggestion failed for booking {}: {}", booking.getId(), e.getMessage());
-            return "Il tuo viaggio a " + (booking.getDestination() != null ? booking.getDestination() : "destinazione") +
+            return "Il tuo viaggio a " + destination +
                    " si avvicina! Preparati per un'esperienza indimenticabile. " +
                    "Esplora i luoghi storici, assaggia la cucina locale e goditi ogni momento.";
+        }
+    }
+
+    private String retrieveDestinationContext(String destination) {
+        try {
+            SearchRequest searchRequest = SearchRequest.builder()
+                .query("Hotel, ristoranti e cose da fare a " + destination)
+                .topK(CONTEXT_TOP_K)
+                .similarityThreshold(CONTEXT_SIMILARITY_THRESHOLD)
+                .build();
+            List<Document> results = vectorStore.similaritySearch(searchRequest);
+            if (results == null || results.isEmpty()) {
+                return "";
+            }
+            return results.stream().map(Document::getText).collect(Collectors.joining("\n---\n"));
+        } catch (Exception e) {
+            log.warn("Concierge context retrieval failed for {}: {}", destination, e.getMessage());
+            return "";
         }
     }
 
