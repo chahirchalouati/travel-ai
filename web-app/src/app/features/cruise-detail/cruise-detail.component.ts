@@ -4,11 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { CatalogService } from '../../core/services/catalog.service';
 import type { CruiseSearchResult } from '../../core/models/api.models';
+import { RevealDirective } from '../../shared/reveal/reveal.directive';
 
 @Component({
   selector: 'app-cruise-detail',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, DatePipe, TranslocoModule],
+  imports: [CommonModule, CurrencyPipe, DatePipe, TranslocoModule, RevealDirective],
   template: `
     @if (cruise(); as c) {
       <nav style="padding: 16px 32px; max-width: 1100px; margin: 0 auto;">
@@ -67,7 +68,7 @@ import type { CruiseSearchResult } from '../../core/models/api.models';
 
             <!-- About -->
             @if (c.description) {
-              <section class="info-card">
+              <section class="info-card" appReveal>
                 <h2 class="card-heading">
                   <span class="ms" style="font-size:22px; color:#00856A">info</span>
                   {{ 'cruise.about' | transloco }}
@@ -77,7 +78,7 @@ import type { CruiseSearchResult } from '../../core/models/api.models';
             }
 
             <!-- Schedule -->
-            <section class="info-card">
+            <section class="info-card" appReveal>
               <h2 class="card-heading">
                 <span class="ms" style="font-size:22px; color:#00856A">calendar_month</span>
                 {{ 'cruise.schedule' | transloco }}
@@ -103,7 +104,7 @@ import type { CruiseSearchResult } from '../../core/models/api.models';
 
             <!-- Itinerary -->
             @if (c.itinerary) {
-              <section class="info-card">
+              <section class="info-card" appReveal>
                 <h2 class="card-heading">
                   <span class="ms" style="font-size:22px; color:#00856A">map</span>
                   {{ 'cruise.itinerary' | transloco }}
@@ -113,7 +114,7 @@ import type { CruiseSearchResult } from '../../core/models/api.models';
             }
 
             <!-- What's included -->
-            <section class="info-card">
+            <section class="info-card" appReveal>
               <h2 class="card-heading">
                 <span class="ms" style="font-size:22px; color:#00856A">checklist</span>
                 {{ 'cruise.whatsIncluded' | transloco }}

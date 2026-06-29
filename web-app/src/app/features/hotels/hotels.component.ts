@@ -8,6 +8,7 @@ import { CatalogService, emptyPage } from '../../core/services/catalog.service';
 import type { HotelSearchQuery } from '../../core/services/catalog.service';
 import type { HotelSearchResult } from '../../core/models/api.models';
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
+import { RevealDirective } from '../../shared/reveal/reveal.directive';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920&q=80';
@@ -15,7 +16,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-hotels',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, TranslocoModule, InfiniteScrollDirective],
+  imports: [CommonModule, FormsModule, CurrencyPipe, TranslocoModule, InfiniteScrollDirective, RevealDirective],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -69,7 +70,7 @@ const HEADER_IMG =
         </div>
         <div class="card-grid">
           @for (h of results(); track h.id) {
-            <article class="card" tabindex="0" (click)="open(h.id)" (keydown.enter)="open(h.id)">
+            <article class="card" appReveal [appRevealDelay]="($index % 8) * 50" tabindex="0" (click)="open(h.id)" (keydown.enter)="open(h.id)">
               <div class="card__img-wrap">
                 <img class="card__img" [src]="h.imageUrl" [alt]="h.name" loading="lazy" />
                 @if (h.stars) { <span class="card__badge"><span class="stars">{{ starString(h.stars) }}</span></span> }

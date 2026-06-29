@@ -4,11 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { CatalogService } from '../../core/services/catalog.service';
 import type { HotelSearchResult } from '../../core/models/api.models';
+import { RevealDirective } from '../../shared/reveal/reveal.directive';
 
 @Component({
   selector: 'app-hotel-detail',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, TranslocoModule],
+  imports: [CommonModule, CurrencyPipe, TranslocoModule, RevealDirective],
   template: `
     @if (hotel(); as h) {
       <nav style="padding: 16px 32px; max-width: 1100px; margin: 0 auto;">
@@ -48,12 +49,12 @@ import type { HotelSearchResult } from '../../core/models/api.models';
         <div class="detail-grid">
           <div style="display:flex; flex-direction:column; gap:20px;">
             @if (h.description) {
-              <section class="info-card">
+              <section class="info-card" appReveal>
                 <h2 class="card-heading"><span class="ms" style="font-size:22px; color:#00856A">info</span>{{ 'hotel.about' | transloco }}</h2>
                 <p style="font-size:15px; color:#545454; line-height:1.75; margin:0;">{{ h.description }}</p>
               </section>
             }
-            <section class="info-card">
+            <section class="info-card" appReveal>
               <h2 class="card-heading"><span class="ms" style="font-size:22px; color:#00856A">checklist</span>{{ 'hotel.amenities' | transloco }}</h2>
               <div class="feature-list">
                 <div class="feature-item" [class.feature-item--yes]="h.seaProximity" [class.feature-item--no]="!h.seaProximity">

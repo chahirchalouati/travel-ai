@@ -8,6 +8,7 @@ import { CatalogService, emptyPage } from '../../core/services/catalog.service';
 import type { RestaurantSearchQuery } from '../../core/services/catalog.service';
 import type { RestaurantSearchResult } from '../../core/models/api.models';
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
+import { RevealDirective } from '../../shared/reveal/reveal.directive';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80';
@@ -15,7 +16,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-restaurants',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule, InfiniteScrollDirective],
+  imports: [CommonModule, FormsModule, TranslocoModule, InfiniteScrollDirective, RevealDirective],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -70,7 +71,7 @@ const HEADER_IMG =
         </div>
         <div class="card-grid">
           @for (r of results(); track r.id) {
-            <article class="card" tabindex="0" (click)="open(r.id)" (keydown.enter)="open(r.id)">
+            <article class="card" appReveal [appRevealDelay]="($index % 8) * 50" tabindex="0" (click)="open(r.id)" (keydown.enter)="open(r.id)">
               <div class="card__img-wrap">
                 <img class="card__img" [src]="r.imageUrl" [alt]="r.name" loading="lazy" />
                 <span class="card__badge">{{ priceTier(r.priceTier) }}</span>

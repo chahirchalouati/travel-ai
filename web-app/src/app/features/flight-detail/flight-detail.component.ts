@@ -4,11 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { CatalogService } from '../../core/services/catalog.service';
 import type { FlightSearchResult } from '../../core/models/api.models';
+import { RevealDirective } from '../../shared/reveal/reveal.directive';
 
 @Component({
   selector: 'app-flight-detail',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, DatePipe, TranslocoModule],
+  imports: [CommonModule, CurrencyPipe, DatePipe, TranslocoModule, RevealDirective],
   template: `
     @if (flight(); as f) {
       <nav style="padding: 16px 32px; max-width: 1100px; margin: 0 auto;">
@@ -50,7 +51,7 @@ import type { FlightSearchResult } from '../../core/models/api.models';
           <div style="display:flex; flex-direction:column; gap:20px;">
 
             <!-- Schedule -->
-            <section class="info-card">
+            <section class="info-card" appReveal>
               <h2 class="card-heading">
                 <span class="ms" style="font-size:22px; color:#00856A">schedule</span>
                 {{ 'flight.schedule' | transloco }}
@@ -77,7 +78,7 @@ import type { FlightSearchResult } from '../../core/models/api.models';
             </section>
 
             <!-- Inclusions -->
-            <section class="info-card">
+            <section class="info-card" appReveal>
               <h2 class="card-heading">
                 <span class="ms" style="font-size:22px; color:#00856A">luggage</span>
                 {{ 'flight.inclusions' | transloco }}

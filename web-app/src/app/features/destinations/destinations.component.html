@@ -32,7 +32,7 @@
     } @else {
       <div class="dest-grid">
         @for (dest of filteredDestinations(); track dest.id; let i = $index) {
-          <article class="dest-card" [class.featured]="dest.featured" [routerLink]="['/destinations', dest.id]">
+          <article class="dest-card" appReveal [appRevealDelay]="(i % 8) * 50" [class.featured]="dest.featured" [routerLink]="['/destinations', dest.id]">
             <div class="dest-card-img">
               @if (dest.imageUrl) {
                 <img
