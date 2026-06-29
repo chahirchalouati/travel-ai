@@ -7,5 +7,11 @@ public record AdminDashboardResponse(
     long totalBookingsToday,
     double totalRevenue,
     long activePartners,
-    long pendingPartners
+    long pendingPartners,
+    long totalHotels,
+    long totalFlights,
+    long totalCruises,
+    long totalRestaurants,
+    long totalDestinations,
+    long totalStories
 ) {}

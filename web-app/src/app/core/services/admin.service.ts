@@ -12,6 +12,23 @@ export interface AdminDashboard {
   revenueGrowth: number;
   activePartners: number;
   pendingPartners: number;
+  totalHotels: number;
+  totalFlights: number;
+  totalCruises: number;
+  totalRestaurants: number;
+  totalDestinations: number;
+  totalStories: number;
+}
+
+export interface AdminUserUpsert {
+  email: string;
+  password?: string;
+  firstName: string;
+  lastName: string;
+  phone?: string | null;
+  role: string;
+  emailVerified?: boolean;
+  active?: boolean;
 }
 
 export interface AdminUser {
@@ -39,6 +56,9 @@ export interface AdminPartner {
 export interface AdminBooking {
   id: string;
   userId: string;
+  userEmail: string | null;
+  destination: string | null;
+  bookingReference: string | null;
   status: string;
   totalAmount: number | null;
   createdAt: string | null;
@@ -114,6 +134,20 @@ export class AdminService {
     return this.http
       .get<ApiWrapper<PageWrapper<AdminBooking>>>(`${this.base}/bookings?page=${page}&size=${size}`)
       .pipe(map(r => r.data));
+  }
+
+  setBookingStatus(id: string, status: string): Observable<AdminBooking> {
+    return this.http
+      .patch<ApiWrapper<AdminBooking>>(`${this.base}/bookings/${id}/status`, { status })
+      .pipe(map(r => r.data));
+  }
+
+  createUser(body: AdminUserUpsert): Observable<AdminUser> {
+    return this.http.post<ApiWrapper<AdminUser>>(`${this.base}/users`, body).pipe(map(r => r.data));
+  }
+
+  updateUser(id: string, body: AdminUserUpsert): Observable<AdminUser> {
+    return this.http.put<ApiWrapper<AdminUser>>(`${this.base}/users/${id}`, body).pipe(map(r => r.data));
   }
 
   reviews(page = 0, size = 20): Observable<PageWrapper<AdminReview>> {

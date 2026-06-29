@@ -763,6 +763,23 @@
     "fEmail": "E-mail de contact",
     "fPhone": "Téléphone de contact",
     "fVat": "Numéro de TVA",
-    "fAddress": "Adresse"
+    "fAddress": "Adresse",
+    "catalogContent": "Catalogue et contenu",
+    "manageCatalog": "Gérer le catalogue",
+    "thBookingRef": "Référence",
+    "thDestination": "Destination",
+    "bookingUpdated": "Statut de réservation mis à jour",
+    "newUser": "Nouvel utilisateur",
+    "editUser": "Modifier l'utilisateur",
+    "fPassword": "Mot de passe",
+    "fPasswordKeep": "Mot de passe (laisser vide pour conserver)",
+    "fFirstName": "Prénom",
+    "fLastName": "Nom",
+    "fEmailVerified": "E-mail vérifié",
+    "userFormIncomplete": "Renseignez e-mail, nom et mot de passe.",
+    "fGuideText": "Guide (texte complet)",
+    "fTopAttractions": "Attractions principales",
+    "fFoodReco": "Recommandations gastronomiques",
+    "fTravelTips": "Conseils de voyage"
   }
 }

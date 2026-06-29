@@ -125,6 +125,13 @@ public class DestinationService {
         Destination destination = destinationRepository.findById(id)
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.DESTINATION_NOT_FOUND));
 
+        // Prefer an admin-curated guide when one has been stored.
+        if (destination.getGuideText() != null && !destination.getGuideText().isBlank()) {
+            return new DestinationGuide(
+                    destination.getId(), destination.getName(), destination.getGuideText(),
+                    destination.getTopAttractions(), destination.getFoodRecommendations(), destination.getTravelTips());
+        }
+
         String prompt = ("Generate a comprehensive travel guide for %s, %s. Include: "
                 + "1) Top 5 attractions 2) Must-try local foods 3) Essential travel tips. "
                 + "Be specific, enthusiastic and helpful. Max 300 words.")

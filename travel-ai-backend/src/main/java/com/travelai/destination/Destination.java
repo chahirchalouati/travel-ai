@@ -38,6 +38,18 @@ public class Destination {
     @Column(columnDefinition = "TEXT")
     private String galleryUrls;
 
+    @Column(name = "guide_text", columnDefinition = "TEXT")
+    private String guideText;
+
+    @Column(name = "top_attractions", columnDefinition = "TEXT")
+    private String topAttractions;
+
+    @Column(name = "food_recommendations", columnDefinition = "TEXT")
+    private String foodRecommendations;
+
+    @Column(name = "travel_tips", columnDefinition = "TEXT")
+    private String travelTips;
+
     private String tags;
 
     private String climate;

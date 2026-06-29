@@ -4,6 +4,9 @@ import com.travelai.admin.dto.*;
 import com.travelai.auth.User;
 import com.travelai.auth.UserRepository;
 import com.travelai.auth.UserRole;
+import com.travelai.booking.Booking;
+import com.travelai.booking.BookingRepository;
+import com.travelai.booking.BookingStatus;
 import com.travelai.partner.Partner;
 import com.travelai.partner.PartnerRepository;
 import com.travelai.partner.PartnerStatus;
@@ -17,10 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
@@ -34,6 +37,8 @@ public class AdminService {
     private final UserRepository userRepository;
     private final PartnerRepository partnerRepository;
     private final ReviewRepository reviewRepository;
+    private final BookingRepository bookingRepository;
+    private final PasswordEncoder passwordEncoder;
     private final EntityManager entityManager;
 
     /** Returns aggregate dashboard statistics. */
@@ -46,7 +51,9 @@ public class AdminService {
         );
         long totalBookings = safeCountTable("bookings");
         return new AdminDashboardResponse(
-            totalUsers, totalPartners, totalBookings, 0L, 0.0, activePartners, pendingPartners
+            totalUsers, totalPartners, totalBookings, 0L, 0.0, activePartners, pendingPartners,
+            safeCountTable("hotels"), safeCountTable("flights"), safeCountTable("cruises"),
+            safeCountTable("restaurants"), safeCountTable("destinations"), safeCountTable("travel_stories")
         );
     }
 
@@ -71,29 +78,20 @@ public class AdminService {
         return new PageImpl<>(content, pageable, page.getTotalElements());
     }
 
-    /** Returns paginated bookings via native query (table may not exist yet). */
-    @SuppressWarnings("unchecked")
+    /** Returns paginated bookings. */
     public Page<AdminBookingResponse> listBookings(Pageable pageable) {
-        try {
-            var query = entityManager.createNativeQuery(
-                "SELECT id, user_id, status, total_amount, created_at FROM bookings ORDER BY created_at DESC"
-            );
-            query.setFirstResult((int) pageable.getOffset());
-            query.setMaxResults(pageable.getPageSize());
-            List<Object[]> rows = query.getResultList();
-            long total = safeCountTable("bookings");
-            List<AdminBookingResponse> content = rows.stream().map(r -> new AdminBookingResponse(
-                UUID.fromString(r[0].toString()),
-                UUID.fromString(r[1].toString()),
-                (String) r[2],
-                r[3] != null ? new BigDecimal(r[3].toString()) : null,
-                r[4] != null ? ((Timestamp) r[4]).toInstant() : null
-            )).toList();
-            return new PageImpl<>(content, pageable, total);
-        } catch (Exception ex) {
-            log.warn("bookings table not yet available: {}", ex.getMessage());
-            return Page.empty(pageable);
-        }
+        return bookingRepository.findAll(pageable).map(AdminBookingResponse::from);
+    }
+
+    /** Changes a booking's status (confirm / cancel / complete). */
+    @Transactional
+    public AdminBookingResponse updateBookingStatus(UUID bookingId, BookingStatus status) {
+        Booking booking = bookingRepository.findById(bookingId)
+            .orElseThrow(() -> TravelAiException.notFound(ErrorCode.BOOKING_NOT_FOUND));
+        booking.setStatus(status);
+        Booking saved = bookingRepository.save(booking);
+        log.info("Admin set booking {} status={}", bookingId, status);
+        return AdminBookingResponse.from(saved);
     }
 
     /** Returns paginated AI audit logs via native query (table may not exist yet). */
@@ -190,6 +188,55 @@ public class AdminService {
     }
 
     // ── User management ───────────────────────────────────────────────────
+
+    /** Creates a new user from the admin panel with a hashed password. */
+    @Transactional
+    public AdminUserResponse createUser(AdminUserUpsertRequest req) {
+        if (req.password() == null || req.password().isBlank()) {
+            throw TravelAiException.badRequest(ErrorCode.VALIDATION_ERROR);
+        }
+        if (userRepository.existsByEmail(req.email())) {
+            throw TravelAiException.conflict(ErrorCode.USER_ALREADY_EXISTS);
+        }
+        User user = User.builder()
+            .email(req.email())
+            .passwordHash(passwordEncoder.encode(req.password()))
+            .firstName(req.firstName())
+            .lastName(req.lastName())
+            .phone(req.phone())
+            .role(req.role() != null ? req.role() : UserRole.TRAVELER)
+            .emailVerified(req.emailVerified() != null && req.emailVerified())
+            .active(req.active() == null || req.active())
+            .build();
+        User saved = userRepository.save(user);
+        log.info("Admin created user {}", saved.getId());
+        return toAdminUser(saved);
+    }
+
+    /** Updates a user's profile fields (and optionally resets the password). */
+    @Transactional
+    public AdminUserResponse updateUser(UUID userId, AdminUserUpsertRequest req) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> TravelAiException.notFound(ErrorCode.USER_NOT_FOUND));
+        user.setFirstName(req.firstName());
+        user.setLastName(req.lastName());
+        user.setPhone(req.phone());
+        if (req.role() != null) {
+            user.setRole(req.role());
+        }
+        if (req.active() != null) {
+            user.setActive(req.active());
+        }
+        if (req.emailVerified() != null) {
+            user.setEmailVerified(req.emailVerified());
+        }
+        if (req.password() != null && !req.password().isBlank()) {
+            user.setPasswordHash(passwordEncoder.encode(req.password()));
+        }
+        User saved = userRepository.save(user);
+        log.info("Admin updated user {}", userId);
+        return toAdminUser(saved);
+    }
 
     /** Changes a user's role. */
     @Transactional

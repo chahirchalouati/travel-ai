@@ -763,6 +763,23 @@
     "fEmail": "Email contatto",
     "fPhone": "Telefono contatto",
     "fVat": "Partita IVA",
-    "fAddress": "Indirizzo"
+    "fAddress": "Indirizzo",
+    "catalogContent": "Catalogo e contenuti",
+    "manageCatalog": "Gestisci catalogo",
+    "thBookingRef": "Riferimento",
+    "thDestination": "Destinazione",
+    "bookingUpdated": "Stato prenotazione aggiornato",
+    "newUser": "Nuovo utente",
+    "editUser": "Modifica utente",
+    "fPassword": "Password",
+    "fPasswordKeep": "Password (lascia vuoto per non cambiarla)",
+    "fFirstName": "Nome",
+    "fLastName": "Cognome",
+    "fEmailVerified": "Email verificata",
+    "userFormIncomplete": "Compila email, nome e password.",
+    "fGuideText": "Guida (testo completo)",
+    "fTopAttractions": "Attrazioni principali",
+    "fFoodReco": "Consigli gastronomici",
+    "fTravelTips": "Consigli di viaggio"
   }
 }
