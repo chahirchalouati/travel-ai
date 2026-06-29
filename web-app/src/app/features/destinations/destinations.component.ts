@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DestinationService } from '../../core/services/destination.service';
 import type { DestinationResponse } from '../../core/models/api.models';
+import { RevealDirective } from '../../shared/reveal/reveal.directive';
 
 @Component({
   selector: 'app-destinations',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, RevealDirective],
   templateUrl: './destinations.component.html',
   styleUrl: './destinations.component.scss'
 })

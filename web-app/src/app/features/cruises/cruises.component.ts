@@ -8,6 +8,7 @@ import { CatalogService, emptyPage } from '../../core/services/catalog.service';
 import type { CruiseSearchQuery } from '../../core/services/catalog.service';
 import type { CruiseSearchResult } from '../../core/models/api.models';
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
+import { RevealDirective } from '../../shared/reveal/reveal.directive';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1599640842225-85d111c60e6b?w=1920&q=80';
@@ -15,7 +16,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-cruises',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, InfiniteScrollDirective],
+  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, InfiniteScrollDirective, RevealDirective],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -70,7 +71,7 @@ const HEADER_IMG =
         </div>
         <div class="card-grid">
           @for (c of results(); track c.id) {
-            <article class="card" tabindex="0" (click)="open(c.id)" (keydown.enter)="open(c.id)">
+            <article class="card" appReveal [appRevealDelay]="($index % 8) * 50" tabindex="0" (click)="open(c.id)" (keydown.enter)="open(c.id)">
               <div class="card__img-wrap">
                 <img class="card__img" [src]="c.imageUrl" [alt]="c.name" loading="lazy" />
                 <span class="card__badge">{{ c.durationNights }} {{ 'catalog.cruises.nights' | transloco }}</span>

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { CatalogService } from '../../core/services/catalog.service';
 import type { RestaurantSearchResult } from '../../core/models/api.models';
+import { RevealDirective } from '../../shared/reveal/reveal.directive';
 
 const PRICE_TIER_LABELS: Record<number, string> = {
   1: '$ Budget-friendly',
@@ -15,7 +16,7 @@ const PRICE_TIER_LABELS: Record<number, string> = {
 @Component({
   selector: 'app-restaurant-detail',
   standalone: true,
-  imports: [CommonModule, TranslocoModule],
+  imports: [CommonModule, TranslocoModule, RevealDirective],
   template: `
     @if (restaurant(); as r) {
       <nav style="padding: 16px 32px; max-width: 1100px; margin: 0 auto;">
@@ -85,7 +86,7 @@ const PRICE_TIER_LABELS: Record<number, string> = {
 
             <!-- About -->
             @if (r.description) {
-              <section class="info-card">
+              <section class="info-card" appReveal>
                 <h2 class="card-heading">
                   <span class="ms" style="font-size:22px; color:#00856A">info</span>
                   {{ 'restaurant.about' | transloco }}
@@ -95,7 +96,7 @@ const PRICE_TIER_LABELS: Record<number, string> = {
             }
 
             <!-- What's included -->
-            <section class="info-card">
+            <section class="info-card" appReveal>
               <h2 class="card-heading">
                 <span class="ms" style="font-size:22px; color:#00856A">checklist</span>
                 {{ 'restaurant.amenities' | transloco }}

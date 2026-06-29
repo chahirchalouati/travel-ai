@@ -8,6 +8,7 @@ import { CatalogService, emptyPage } from '../../core/services/catalog.service';
 import type { FlightSearchQuery } from '../../core/services/catalog.service';
 import type { FlightSearchResult } from '../../core/models/api.models';
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
+import { RevealDirective } from '../../shared/reveal/reveal.directive';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80';
@@ -15,7 +16,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-flights',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, InfiniteScrollDirective],
+  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, InfiniteScrollDirective, RevealDirective],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -70,7 +71,7 @@ const HEADER_IMG =
         </div>
         <div class="card-grid">
           @for (f of results(); track f.id) {
-            <article class="card" tabindex="0" (click)="open(f.id)" (keydown.enter)="open(f.id)" style="cursor:pointer">
+            <article class="card" appReveal [appRevealDelay]="($index % 8) * 50" tabindex="0" (click)="open(f.id)" (keydown.enter)="open(f.id)" style="cursor:pointer">
               <div class="card__body" style="padding-top:18px">
                 <div style="display:flex;align-items:center;justify-content:space-between">
                   <h3 class="card__title">{{ f.airline }}</h3>
