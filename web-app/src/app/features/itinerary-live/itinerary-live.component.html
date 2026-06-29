@@ -1,0 +1,118 @@
+<ng-container *transloco="let t">
+  @if (loading()) {
+    <div class="il-loading"><span class="il-spinner"></span></div>
+  } @else if (itinerary()) {
+    @if (itinerary(); as it) {
+    <header class="il-head">
+      <button class="il-back" (click)="back()" [attr.aria-label]="t('itinerary.backToTrips')">
+        <span class="ms">arrow_back</span>
+      </button>
+      <div>
+        <span class="il-eyebrow"><span class="ms">radar</span> {{ t('itinerary.liveBadge') }}</span>
+        <h1 class="il-title">{{ t('itinerary.title') }}</h1>
+        <p class="il-subtitle">{{ t('itinerary.subtitle') }}</p>
+      </div>
+    </header>
+
+    <!-- Alert banner -->
+    @if (hasAlert()) {
+      <div class="il-alert" appReveal>
+        <span class="ms">notifications_active</span>
+        <span>{{ pendingProposals().length }} {{ t('itinerary.alertPending') }}</span>
+      </div>
+    }
+
+    <main class="il-body">
+      <!-- Segment timeline -->
+      <section class="il-section">
+        <h2 class="il-section__title">{{ t('itinerary.yourTrip') }}</h2>
+        <ul class="il-timeline">
+          @for (s of it.segments; track s.id) {
+            <li class="il-segment" [attr.data-status]="s.currentStatus" appReveal>
+              <div class="il-segment__icon"><span class="ms">{{ segmentIcon(s.segmentType) }}</span></div>
+              <div class="il-segment__main">
+                <div class="il-segment__row">
+                  <span class="il-segment__label">{{ s.label || t('itinerary.segmentTypes.' + s.segmentType) }}</span>
+                  <span class="il-status il-status--{{ s.currentStatus }}">
+                    <span class="ms">{{ statusIcon(s.currentStatus) }}</span>
+                    {{ t('itinerary.status.' + s.currentStatus) }}
+                  </span>
+                </div>
+                @if (s.scheduledAt) {
+                  <span class="il-segment__date">{{ s.scheduledAt | date:'EEE, MMM d' }}</span>
+                }
+
+                @if (reportingSegmentId() === s.id) {
+                  <div class="il-report">
+                    <textarea class="il-input" rows="2" [(ngModel)]="reportText" name="reportText"
+                              [placeholder]="t('itinerary.reportPlaceholder')"></textarea>
+                    <div class="il-report__actions">
+                      <button class="il-btn" (click)="cancelReport()">{{ t('itinerary.cancel') }}</button>
+                      <button class="il-btn il-btn--accent" [disabled]="submitting() || !reportText.trim()"
+                              (click)="submitReport(s)">
+                        {{ submitting() ? t('itinerary.submitting') : t('itinerary.reportSubmit') }}
+                      </button>
+                    </div>
+                  </div>
+                } @else {
+                  <button class="il-report-trigger" (click)="startReport(s)">
+                    <span class="ms">report</span> {{ t('itinerary.reportIssue') }}
+                  </button>
+                }
+              </div>
+            </li>
+          }
+        </ul>
+      </section>
+
+      <!-- Proposals -->
+      @if (pendingProposals().length > 0) {
+        <section class="il-section">
+          <h2 class="il-section__title">{{ t('itinerary.proposalsTitle') }}</h2>
+          @for (p of pendingProposals(); track p.id) {
+            <article class="il-proposal" appReveal>
+              <div class="il-proposal__head">
+                <span class="il-proposal__badge"><span class="ms">auto_awesome</span> {{ t('itinerary.aiReplan') }}</span>
+                <span class="il-proposal__expiry">{{ t('itinerary.expires') }} {{ p.expiresAt | date:'MMM d, HH:mm' }}</span>
+              </div>
+              @if (p.aiSummary) { <p class="il-proposal__summary">{{ p.aiSummary }}</p> }
+
+              <ul class="il-changes">
+                @for (c of p.changes; track c.id) {
+                  <li class="il-change">
+                    <span class="il-change__type">{{ t('itinerary.changeTypes.' + c.changeType) }}</span>
+                    @if (c.replacementLabel) {
+                      <span class="il-change__to"><span class="ms">arrow_forward</span> {{ c.replacementLabel }}</span>
+                    }
+                    @if (c.costDelta !== null && c.costDelta !== 0) {
+                      <span class="il-change__cost" [class.is-up]="c.costDelta > 0" [class.is-down]="c.costDelta < 0">
+                        {{ c.costDelta > 0 ? '+' : '' }}{{ c.costDelta | currency:'EUR':'symbol':'1.0-0' }}
+                      </span>
+                    }
+                    @if (c.aiRationale) { <span class="il-change__why">{{ c.aiRationale }}</span> }
+                  </li>
+                }
+              </ul>
+
+              <div class="il-proposal__actions">
+                <button class="il-btn" (click)="reject(p)">
+                  <span class="ms">close</span> {{ t('itinerary.reject') }}
+                </button>
+                <button class="il-btn il-btn--accent" (click)="approve(p)">
+                  <span class="ms">check</span> {{ t('itinerary.approve') }}
+                </button>
+              </div>
+            </article>
+          }
+        </section>
+      }
+    </main>
+    }
+  } @else {
+    <div class="il-empty">
+      <span class="ms">explore_off</span>
+      <h2>{{ t('itinerary.notFound') }}</h2>
+      <button class="il-btn" (click)="back()">{{ t('itinerary.backToTrips') }}</button>
+    </div>
+  }
+</ng-container>

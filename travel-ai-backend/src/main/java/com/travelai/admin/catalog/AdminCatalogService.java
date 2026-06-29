@@ -38,6 +38,7 @@ public class AdminCatalogService {
     private final CruiseRepository cruiseRepository;
     private final RestaurantRepository restaurantRepository;
     private final DestinationRepository destinationRepository;
+    private final com.travelai.attraction.AttractionRepository attractionRepository;
     private final TravelStoryRepository storyRepository;
     private final PartnerRepository partnerRepository;
 
@@ -288,6 +289,57 @@ public class AdminCatalogService {
         d.setPopularityScore(req.popularityScore());
         d.setFeatured(req.featured());
         d.setActive(req.active() == null || req.active());
+    }
+
+    // ── Attractions ────────────────────────────────────────────────────────
+
+    public Page<AdminAttractionDto.View> listAttractions(Pageable pageable) {
+        return attractionRepository.findAll(pageable).map(AdminAttractionDto.View::from);
+    }
+
+    @Transactional
+    public AdminAttractionDto.View createAttraction(AdminAttractionDto.Upsert req) {
+        com.travelai.attraction.Attraction attraction = new com.travelai.attraction.Attraction();
+        applyAttraction(attraction, req);
+        com.travelai.attraction.Attraction saved = attractionRepository.save(attraction);
+        log.info("Admin created attraction {}", saved.getId());
+        return AdminAttractionDto.View.from(saved);
+    }
+
+    @Transactional
+    public AdminAttractionDto.View updateAttraction(UUID id, AdminAttractionDto.Upsert req) {
+        com.travelai.attraction.Attraction attraction = attractionRepository.findById(id)
+                .orElseThrow(() -> TravelAiException.notFound(ErrorCode.ATTRACTION_NOT_FOUND));
+        applyAttraction(attraction, req);
+        return AdminAttractionDto.View.from(attractionRepository.save(attraction));
+    }
+
+    @Transactional
+    public void deleteAttraction(UUID id) {
+        if (!attractionRepository.existsById(id)) {
+            throw TravelAiException.notFound(ErrorCode.ATTRACTION_NOT_FOUND);
+        }
+        attractionRepository.deleteById(id);
+        log.info("Admin deleted attraction {}", id);
+    }
+
+    private void applyAttraction(com.travelai.attraction.Attraction a, AdminAttractionDto.Upsert req) {
+        a.setName(req.name());
+        a.setCategory(req.category());
+        a.setCity(req.city());
+        a.setCountry(req.country());
+        a.setDescription(req.description());
+        a.setImageUrl(req.imageUrl());
+        a.setLatitude(req.latitude());
+        a.setLongitude(req.longitude());
+        a.setPriceLevel(req.priceLevel() == null || req.priceLevel().isBlank() ? "FREE" : req.priceLevel());
+        a.setBasePrice(req.basePrice());
+        a.setDurationMinutes(req.durationMinutes());
+        a.setBookable(req.bookable());
+        a.setTags(req.tags());
+        a.setPopularityScore(req.popularityScore());
+        a.setFeatured(req.featured());
+        a.setActive(req.active() == null || req.active());
     }
 
     // ── Travel stories ────────────────────────────────────────────────────

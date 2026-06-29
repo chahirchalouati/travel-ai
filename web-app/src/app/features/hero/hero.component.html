@@ -1,4 +1,23 @@
-<section id="hero" aria-labelledby="hero-heading">
+<section
+  id="hero"
+  aria-labelledby="hero-heading"
+  [style.--mx]="mx()"
+  [style.--my]="my()"
+  (pointermove)="onPointerMove($event)"
+  (pointerleave)="onPointerLeave()"
+>
+  <!-- Cinematic destination backdrop — crossfades in sync with the live trip -->
+  <div class="hero-canvas" aria-hidden="true">
+    @for (s of samples; track s.key) {
+      <div
+        class="hero-shot"
+        [class.is-active]="s.key === activeSample()?.key"
+        [style.background-image]="'url(' + s.image + ')'"
+      ></div>
+    }
+    <div class="hero-scrim"></div>
+  </div>
+
   <div class="hero-grain" aria-hidden="true"></div>
 
   <div class="container hero-grid">
@@ -26,6 +45,7 @@
             type="text"
             class="search-input"
             [value]="searchQuery()"
+            (focus)="onSearchFocus()"
             (input)="searchQuery.set($any($event.target).value)"
             (keyup.enter)="planTrip()"
             placeholder="e.g. 10 quiet days in Japan with great food…"
@@ -40,7 +60,12 @@
         <div class="hero-quick-picks" role="list" aria-label="Try a trip">
           <span class="hero-quick-label">Try:</span>
           @for (p of quickPicks; track p.key) {
-            <button class="quick-pill" role="listitem" (click)="selectPick(p)">
+            <button
+              class="quick-pill"
+              role="listitem"
+              [class.is-live]="p.key === activeSample()?.key"
+              (click)="selectPick(p)"
+            >
               <span class="quick-pill-emoji" aria-hidden="true">{{ p.emoji }}</span>
               <span>{{ p.label }}</span>
             </button>
@@ -56,7 +81,12 @@
     </div>
 
     <!-- ===== Right: the living itinerary ===== -->
-    <div class="hero-stage reveal reveal-delay-2" aria-label="Live itinerary preview">
+    <div
+      class="hero-stage reveal reveal-delay-2"
+      aria-label="Live itinerary preview"
+      (mouseenter)="onStageEnter()"
+      (mouseleave)="onStageLeave()"
+    >
       <div class="trip-card" [class.is-thinking]="phase() === 'thinking'">
         <!-- Card header / brief being typed -->
         <header class="trip-head">

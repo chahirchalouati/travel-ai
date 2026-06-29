@@ -134,6 +134,25 @@ export interface RestaurantSearchResult {
   partnerId: string;
 }
 
+export interface AttractionResponse {
+  id: string;
+  name: string;
+  category: string;
+  city: string;
+  country: string | null;
+  description: string | null;
+  imageUrl: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  priceLevel: string;
+  basePrice: number | null;
+  durationMinutes: number | null;
+  bookable: boolean;
+  tags: string[];
+  popularityScore: number;
+  featured: boolean;
+}
+
 export interface CruiseSearchResult {
   id: string;
   operator: string;
@@ -362,4 +381,95 @@ export interface PageWrapper<T> {
   totalPages: number;
   size: number;
   number: number;
+}
+
+// ── Reactive Living Itinerary ──────────────────────────────────────
+export type SegmentStatus = 'ON_SCHEDULE' | 'DELAYED' | 'CANCELLED' | 'CLOSED' | 'REBOOKED';
+export type ItineraryProposalStatus = 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED' | 'EXPIRED';
+export type ProposedChangeType =
+  | 'REPLACE_FLIGHT'
+  | 'REPLACE_HOTEL'
+  | 'REPLACE_RESTAURANT'
+  | 'ADJUST_TIME'
+  | 'CANCEL_SEGMENT';
+
+export interface ItinerarySegmentResponse {
+  id: string;
+  segmentType: string;
+  entityId: string;
+  label: string | null;
+  currentStatus: SegmentStatus;
+  scheduledAt: string | null;
+}
+
+export interface ProposedChangeResponse {
+  id: string;
+  segmentId: string;
+  changeType: ProposedChangeType;
+  replacementEntityId: string | null;
+  replacementLabel: string | null;
+  costDelta: number | null;
+  aiRationale: string | null;
+}
+
+export interface ItineraryProposalResponse {
+  id: string;
+  status: ItineraryProposalStatus;
+  aiSummary: string | null;
+  expiresAt: string;
+  createdAt: string;
+  changes: ProposedChangeResponse[];
+}
+
+export interface LiveItineraryResponse {
+  id: string;
+  bookingId: string;
+  watchEnabled: boolean;
+  segments: ItinerarySegmentResponse[];
+  pendingProposals: ItineraryProposalResponse[];
+}
+
+export interface ReportEventRequest {
+  segmentId: string;
+  description: string;
+  disruptionData?: string | null;
+}
+
+// ── Community Q&A / Forum ──────────────────────────────────────────
+export interface ForumQuestionResponse {
+  id: string;
+  authorName: string;
+  title: string;
+  body: string;
+  targetType: string | null;
+  targetId: string | null;
+  location: string | null;
+  answerCount: number;
+  createdAt: string;
+}
+
+export interface ForumAnswerResponse {
+  id: string;
+  authorName: string;
+  body: string;
+  helpfulCount: number;
+  accepted: boolean;
+  createdAt: string;
+}
+
+export interface ForumQuestionDetail {
+  question: ForumQuestionResponse;
+  answers: ForumAnswerResponse[];
+}
+
+export interface AskQuestionRequest {
+  title: string;
+  body: string;
+  targetType?: string | null;
+  targetId?: string | null;
+  location?: string | null;
+}
+
+export interface ForumAnswerRequest {
+  body: string;
 }

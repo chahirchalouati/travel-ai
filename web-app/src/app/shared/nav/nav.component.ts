@@ -42,8 +42,9 @@ export class NavComponent {
     { key: 'nav.tabs.restaurants', route: '/restaurants' },
     { key: 'nav.tabs.cruises', route: '/cruises' },
     { key: 'nav.tabs.flights', route: '/flights' },
-    { key: 'nav.tabs.thingsToDo', route: '/search' },
+    { key: 'nav.tabs.thingsToDo', route: '/attractions' },
     { key: 'nav.tabs.aiPlanner', route: '/planner' },
+    { key: 'nav.tabs.community', route: '/forum' },
     { key: 'nav.tabs.chat', route: '/chat' },
   ];
 

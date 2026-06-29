@@ -4,12 +4,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { DestinationService } from '../../core/services/destination.service';
 import { ReviewService } from '../../core/services/review.service';
+import { AttractionService } from '../../core/services/attraction.service';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
 import type {
   DestinationResponse,
   DestinationGuide,
   ReviewResponse,
   ReviewSummary,
+  AttractionResponse,
 } from '../../core/models/api.models';
 
 const MONTH_NAMES = [
@@ -172,6 +174,40 @@ const MONTH_NAMES = [
               </div>
             </div>
           </section>
+
+          <!-- Things to do -->
+          @if (attractions().length > 0) {
+            <section class="content-card" appReveal>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                <h2 class="section-heading" style="margin-bottom: 0;">{{ 'destDetail.thingsToDo' | transloco }}</h2>
+                <button
+                  style="background: none; border: none; color: #D9694C; font-weight: 700; font-size: 14px; cursor: pointer;"
+                  (click)="seeAllAttractions()"
+                >{{ 'destDetail.seeAllThings' | transloco }} →</button>
+              </div>
+              <div style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory;">
+                @for (a of attractions(); track a.id) {
+                  <article
+                    style="flex: 0 0 230px; scroll-snap-align: start; cursor: pointer; border-radius: 14px; overflow: hidden; background: #fff; border: 1px solid #ececec;"
+                    (click)="openAttraction(a.id)"
+                    tabindex="0"
+                    (keydown.enter)="openAttraction(a.id)"
+                  >
+                    <div style="height: 140px; background-size: cover; background-position: center; position: relative;"
+                         [style.background-image]="'url(' + a.imageUrl + ')'">
+                      <span style="position: absolute; top: 8px; left: 8px; background: rgba(15,118,110,0.92); color: #fff; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 4px;">
+                        {{ 'attractions.categories.' + a.category | transloco }}
+                      </span>
+                    </div>
+                    <div style="padding: 12px 14px;">
+                      <h4 style="margin: 0 0 4px; font-size: 15px; font-weight: 700; color: #1a1a1a;">{{ a.name }}</h4>
+                      <p style="margin: 0; font-size: 13px; color: #8a7c6a; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ a.description }}</p>
+                    </div>
+                  </article>
+                }
+              </div>
+            </section>
+          }
 
           <!-- Reviews -->
           <section class="content-card" appReveal>
@@ -705,6 +741,7 @@ export class DestinationDetailComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly destinationService = inject(DestinationService);
   private readonly reviewService = inject(ReviewService);
+  private readonly attractionService = inject(AttractionService);
   private readonly transloco = inject(TranslocoService);
 
   /** Localized 3-letter month abbreviations from the active language. */
@@ -719,6 +756,7 @@ export class DestinationDetailComponent implements OnInit {
   readonly guide = signal<DestinationGuide | null>(null);
   readonly guideLoading = signal(false);
   readonly guideError = signal<string | null>(null);
+  readonly attractions = signal<AttractionResponse[]>([]);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -728,7 +766,10 @@ export class DestinationDetailComponent implements OnInit {
     }
 
     this.destinationService.getById(id).subscribe({
-      next: (dest) => this.destination.set(dest),
+      next: (dest) => {
+        this.destination.set(dest);
+        this.loadAttractions(dest.name);
+      },
       error: () => this.router.navigate(['/']),
     });
 
@@ -813,6 +854,22 @@ export class DestinationDetailComponent implements OnInit {
         .map((t) => t.trim())
         .filter(Boolean) ?? []
     );
+  }
+
+  private loadAttractions(city: string): void {
+    this.attractionService.search({ city }, 0, 8).subscribe({
+      next: (page) => this.attractions.set(page.items),
+      error: () => {},
+    });
+  }
+
+  openAttraction(id: string): void {
+    this.router.navigate(['/attractions', id]);
+  }
+
+  seeAllAttractions(): void {
+    const city = this.destination()?.name;
+    this.router.navigate(['/attractions'], city ? { queryParams: { city } } : {});
   }
 
   goToPlanner(): void {

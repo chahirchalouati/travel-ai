@@ -3,6 +3,7 @@ package com.travelai.shared.config;
 import com.travelai.auth.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -40,6 +41,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/catalog/**").permitAll()
                         .requestMatchers("/api/destinations/**").permitAll()
+                        .requestMatchers("/api/attractions/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/forum/**").permitAll()
                         .requestMatchers("/api/reviews/target/**").permitAll()
                         .requestMatchers("/api/reviews/recent").permitAll()
                         .requestMatchers("/api/stats/**").permitAll()

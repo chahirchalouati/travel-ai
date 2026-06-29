@@ -34,12 +34,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        String token;
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+        } else if (request.getRequestURI().endsWith("/itinerary/stream")
+                && request.getParameter("access_token") != null) {
+            // SSE: EventSource cannot set the Authorization header, so the live
+            // itinerary stream accepts the JWT as an access_token query parameter.
+            token = request.getParameter("access_token");
+        } else {
             filterChain.doFilter(request, response);
             return;
         }
-
-        String token = authHeader.substring(7);
         String email;
 
         try {

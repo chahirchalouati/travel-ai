@@ -1,0 +1,177 @@
+<ng-container *transloco="let t">
+  @if (loading()) {
+    <div class="ad-loading">
+      <span class="ad-spinner"></span>
+    </div>
+  } @else if (attraction()) {
+    @if (attraction(); as a) {
+    <!-- Hero -->
+    <header class="ad-hero">
+      <div class="ad-hero__bg" [style.background-image]="'url(' + a.imageUrl + ')'"></div>
+      <div class="ad-hero__scrim"></div>
+      <button class="ad-back" (click)="back()" [attr.aria-label]="t('attractions.backToList')">
+        <span class="ms">arrow_back</span>
+      </button>
+      <div class="ad-hero__content">
+        <span class="ad-category">{{ t('attractions.categories.' + a.category) }}</span>
+        <h1 class="ad-title">{{ a.name }}</h1>
+        <p class="ad-location">
+          <span class="ms">location_on</span>{{ a.city }}@if (a.country) {, {{ a.country }}}
+        </p>
+        @if (summary(); as s) {
+          @if (s.totalReviews > 0) {
+            <div class="ad-rating">
+              <span class="ad-rating__score">{{ s.averageRating | number:'1.1-1' }}</span>
+              <span class="ad-stars">
+                @for (st of stars(s.averageRating); track $index) { <span class="ms">star</span> }
+              </span>
+              <span class="ad-rating__count">{{ s.totalReviews }} {{ t('destDetail.reviewsCount') }}</span>
+              @if (s.ranking) {
+                <span class="ad-rank">#{{ s.ranking.rank }} {{ t('attractions.of') }} {{ s.ranking.rankTotal }}</span>
+              }
+            </div>
+          }
+        }
+      </div>
+    </header>
+
+    <main class="ad-body">
+      <!-- Quick facts -->
+      <section class="ad-facts" appReveal>
+        @if (formatDuration(a.durationMinutes); as dur) {
+          <div class="ad-fact"><span class="ms">schedule</span><div><small>{{ t('attractions.duration') }}</small><strong>{{ dur }}</strong></div></div>
+        }
+        <div class="ad-fact">
+          <span class="ms">payments</span>
+          <div>
+            <small>{{ t('attractions.price') }}</small>
+            @if (a.bookable && a.basePrice) {
+              <strong>{{ t('attractions.from') }} {{ a.basePrice | currency:'EUR':'symbol':'1.0-0' }}</strong>
+            } @else {
+              <strong>{{ t('attractions.priceLevel.' + a.priceLevel) }}</strong>
+            }
+          </div>
+        </div>
+        @if (a.bookable) {
+          <div class="ad-fact"><span class="ms">confirmation_number</span><div><small>{{ t('attractions.booking') }}</small><strong>{{ t('attractions.bookable') }}</strong></div></div>
+        }
+      </section>
+
+      @if (a.bookable) {
+        <section class="ad-plan" appReveal>
+          <div>
+            <h3>{{ t('attractions.planTitle') }}</h3>
+            <p>{{ t('attractions.planSubtitle') }}</p>
+          </div>
+          <button class="ad-btn ad-btn--accent" (click)="planWithAi()">
+            <span class="ms">auto_awesome</span> {{ t('attractions.planCta') }}
+          </button>
+        </section>
+      }
+
+      <!-- Description -->
+      @if (a.description) {
+        <section class="ad-section" appReveal>
+          <h2 class="ad-section__title">{{ t('attractions.about') }}</h2>
+          <p class="ad-prose">{{ a.description }}</p>
+          @if (a.tags.length) {
+            <div class="ad-tags">
+              @for (tag of a.tags; track tag) { <span class="ad-tag">{{ tag }}</span> }
+            </div>
+          }
+        </section>
+      }
+
+      <!-- AI review summary -->
+      @if (summary(); as s) {
+        @if (s.aiSummary) {
+          <section class="ad-ai" appReveal>
+            <span class="ad-ai__badge"><span class="ms">auto_awesome</span> {{ t('destDetail.aiSummary') }}</span>
+            <p>{{ s.aiSummary }}</p>
+          </section>
+        }
+      }
+
+      <!-- Reviews -->
+      <section class="ad-section" appReveal>
+        <div class="ad-reviews-head">
+          <h2 class="ad-section__title">{{ t('destDetail.reviews') }}</h2>
+          <button class="ad-btn ad-btn--accent" (click)="toggleForm()">
+            <span class="ms">rate_review</span>
+            {{ isAuthenticated() ? t('attractions.writeReview') : t('attractions.signInToReview') }}
+          </button>
+        </div>
+
+        @if (showForm()) {
+          <form class="ad-form" (ngSubmit)="submitReview()">
+            <div class="ad-form__rating">
+              <span>{{ t('attractions.yourRating') }}</span>
+              <div class="ad-star-pick">
+                @for (n of [1,2,3,4,5]; track n) {
+                  <button type="button" class="ms" [class.is-on]="formRating >= n" (click)="formRating = n"
+                          [attr.aria-label]="n + ' stars'">star</button>
+                }
+              </div>
+            </div>
+            <input class="ad-input" type="text" [(ngModel)]="formTitle" name="title"
+                   [placeholder]="t('attractions.reviewTitlePlaceholder')" maxlength="120" />
+            <textarea class="ad-input ad-textarea" [(ngModel)]="formContent" name="content" rows="4"
+                      [placeholder]="t('attractions.reviewBodyPlaceholder')"
+                      [class.is-error]="formError() === 'content'"></textarea>
+            @if (formError() === 'submit') {
+              <p class="ad-form__err">{{ t('attractions.reviewError') }}</p>
+            }
+            <div class="ad-form__actions">
+              <button type="button" class="ad-btn" (click)="toggleForm()">{{ t('attractions.cancel') }}</button>
+              <button type="submit" class="ad-btn ad-btn--accent" [disabled]="submitting()">
+                {{ submitting() ? t('attractions.submitting') : t('attractions.submitReview') }}
+              </button>
+            </div>
+          </form>
+        }
+
+        @if (hasReviews()) {
+          <ul class="ad-reviews">
+            @for (r of reviews(); track r.id) {
+              <li class="ad-review">
+                <div class="ad-review__head">
+                  <div class="ad-avatar">{{ r.userFirstName.charAt(0) }}</div>
+                  <div class="ad-review__meta">
+                    <span class="ad-review__name">
+                      {{ r.userFirstName }}
+                      @if (r.verified) {
+                        <span class="ad-verified"><span class="ms">verified</span>{{ t('destDetail.verifiedStay') }}</span>
+                      }
+                    </span>
+                    <span class="ad-review__date">{{ r.createdAt | date:'mediumDate' }}</span>
+                  </div>
+                  <span class="ad-stars ad-stars--sm">
+                    @for (st of stars(r.rating); track $index) { <span class="ms">star</span> }
+                  </span>
+                </div>
+                @if (r.title) { <h4 class="ad-review__title">{{ r.title }}</h4> }
+                <p class="ad-review__body">{{ r.content }}</p>
+                <button class="ad-helpful" [class.is-on]="r.helpfulByMe" (click)="markHelpful(r)">
+                  <span class="ms">thumb_up</span>
+                  {{ t('destDetail.helpful') }} @if (r.helpfulCount > 0) { ({{ r.helpfulCount }}) }
+                </button>
+              </li>
+            }
+          </ul>
+        } @else {
+          <div class="ad-no-reviews">
+            <span class="ms">rate_review</span>
+            <p>{{ t('destDetail.noReviews') }}</p>
+          </div>
+        }
+      </section>
+    </main>
+    }
+  } @else {
+    <div class="ad-empty">
+      <span class="ms">explore_off</span>
+      <h2>{{ t('attractions.notFound') }}</h2>
+      <button class="ad-btn" (click)="back()">{{ t('attractions.backToList') }}</button>
+    </div>
+  }
+</ng-container>

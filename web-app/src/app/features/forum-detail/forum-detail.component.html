@@ -1,0 +1,77 @@
+<ng-container *transloco="let t">
+  @if (loading()) {
+    <div class="fd-loading"><span class="fd-spinner"></span></div>
+  } @else {
+    @if (detail(); as d) {
+      <div class="fd-wrap">
+        <button class="fd-back" (click)="back()"><span class="ms">arrow_back</span> {{ t('forum.backToList') }}</button>
+
+        <!-- Question -->
+        <article class="fd-question" appReveal>
+          <h1 class="fd-title">{{ d.question.title }}</h1>
+          <div class="fd-meta">
+            <span class="fd-avatar">{{ d.question.authorName.charAt(0) }}</span>
+            <span>{{ d.question.authorName }}</span>
+            <span class="fd-dot">·</span>
+            <span>{{ d.question.createdAt | date:'mediumDate' }}</span>
+            @if (d.question.location) {
+              <span class="fd-dot">·</span>
+              <span class="fd-loc"><span class="ms">place</span>{{ d.question.location }}</span>
+            }
+          </div>
+          <p class="fd-body">{{ d.question.body }}</p>
+        </article>
+
+        <!-- Answers -->
+        <section class="fd-answers" appReveal>
+          <h2 class="fd-answers__title">
+            {{ answers().length }}
+            {{ answers().length === 1 ? t('forum.answer') : t('forum.answers') }}
+          </h2>
+
+          @if (answers().length === 0) {
+            <p class="fd-no-answers">{{ t('forum.noAnswers') }}</p>
+          } @else {
+            <ul class="fd-answer-list">
+              @for (a of answers(); track a.id) {
+                <li class="fd-answer" [class.is-accepted]="a.accepted">
+                  <div class="fd-answer__head">
+                    <span class="fd-avatar">{{ a.authorName.charAt(0) }}</span>
+                    <span class="fd-answer__name">{{ a.authorName }}</span>
+                    @if (a.accepted) {
+                      <span class="fd-accepted"><span class="ms">verified</span>{{ t('forum.accepted') }}</span>
+                    }
+                    <span class="fd-answer__date">{{ a.createdAt | date:'mediumDate' }}</span>
+                  </div>
+                  <p class="fd-answer__body">{{ a.body }}</p>
+                  <button class="fd-helpful" (click)="markHelpful(a)">
+                    <span class="ms">thumb_up</span>
+                    {{ t('forum.helpful') }} @if (a.helpfulCount > 0) { ({{ a.helpfulCount }}) }
+                  </button>
+                </li>
+              }
+            </ul>
+          }
+        </section>
+
+        <!-- Answer form -->
+        <section class="fd-reply" appReveal>
+          <h3>{{ t('forum.yourAnswer') }}</h3>
+          <textarea class="fd-input" rows="4" [(ngModel)]="answerText" name="answer"
+                    [placeholder]="t('forum.answerPlaceholder')"></textarea>
+          <div class="fd-reply__actions">
+            <button class="fd-btn fd-btn--accent" [disabled]="submitting() || !answerText.trim()" (click)="submitAnswer()">
+              {{ submitting() ? t('forum.posting') : (isAuthenticated() ? t('forum.postAnswer') : t('forum.signInToAnswer')) }}
+            </button>
+          </div>
+        </section>
+      </div>
+    } @else {
+      <div class="fd-empty">
+        <span class="ms">quiz</span>
+        <h2>{{ t('forum.notFound') }}</h2>
+        <button class="fd-btn" (click)="back()">{{ t('forum.backToList') }}</button>
+      </div>
+    }
+  }
+</ng-container>

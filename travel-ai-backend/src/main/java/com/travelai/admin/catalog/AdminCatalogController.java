@@ -148,6 +148,31 @@ public class AdminCatalogController {
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
 
+    // ── Attractions ────────────────────────────────────────────────────────
+
+    @GetMapping("/attractions")
+    public ResponseEntity<ApiResponse<Page<AdminAttractionDto.View>>> listAttractions(Pageable pageable) {
+        return ResponseEntity.ok(paged(service.listAttractions(pageable)));
+    }
+
+    @PostMapping("/attractions")
+    public ResponseEntity<ApiResponse<AdminAttractionDto.View>> createAttraction(
+            @Valid @RequestBody AdminAttractionDto.Upsert req) {
+        return ResponseEntity.ok(ApiResponse.ok(service.createAttraction(req)));
+    }
+
+    @PutMapping("/attractions/{id}")
+    public ResponseEntity<ApiResponse<AdminAttractionDto.View>> updateAttraction(
+            @PathVariable UUID id, @Valid @RequestBody AdminAttractionDto.Upsert req) {
+        return ResponseEntity.ok(ApiResponse.ok(service.updateAttraction(id, req)));
+    }
+
+    @DeleteMapping("/attractions/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteAttraction(@PathVariable UUID id) {
+        service.deleteAttraction(id);
+        return ResponseEntity.ok(ApiResponse.ok(null));
+    }
+
     // ── Travel stories ────────────────────────────────────────────────────
 
     @GetMapping("/stories")

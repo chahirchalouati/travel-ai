@@ -103,7 +103,8 @@
       "flights": "Flights",
       "thingsToDo": "Things to Do",
       "aiPlanner": "AI Planner",
-      "chat": "Chat"
+      "chat": "Chat",
+      "community": "Community"
     },
     "signIn": "Sign In",
     "startPlanning": "Start Planning"
@@ -440,7 +441,9 @@
       "Oct",
       "Nov",
       "Dec"
-    ]
+    ],
+    "thingsToDo": "Things to do",
+    "seeAllThings": "See all"
   },
   "trips": {
     "title": "My trips",
@@ -786,6 +789,125 @@
     "fGuideText": "Guide (full text)",
     "fTopAttractions": "Top attractions",
     "fFoodReco": "Food recommendations",
-    "fTravelTips": "Travel tips"
+    "fTravelTips": "Travel tips",
+    "navAttractions": "Attractions",
+    "entAttraction": "Attraction",
+    "cCategory": "Category",
+    "fCategory": "Category",
+    "fPriceLevel": "Price level",
+    "fDuration": "Duration (min)",
+    "fBookable": "Bookable"
+  },
+  "attractions": {
+    "eyebrow": "Things to Do",
+    "title": "Things to Do",
+    "subtitle": "Landmarks, museums, tours and unforgettable experiences.",
+    "found": "attractions found",
+    "allCategories": "All",
+    "bookable": "Bookable",
+    "from": "from",
+    "of": "of",
+    "about": "About",
+    "duration": "Duration",
+    "price": "Price",
+    "booking": "Booking",
+    "notFound": "Attraction not found",
+    "backToList": "Back to things to do",
+    "writeReview": "Write a review",
+    "signInToReview": "Sign in to review",
+    "yourRating": "Your rating",
+    "reviewTitlePlaceholder": "Title (optional)",
+    "reviewBodyPlaceholder": "Share your experience...",
+    "reviewError": "Could not submit your review. Please try again.",
+    "cancel": "Cancel",
+    "submitting": "Submitting...",
+    "submitReview": "Submit review",
+    "categories": {
+      "LANDMARK": "Landmark",
+      "MUSEUM": "Museum",
+      "PARK": "Park",
+      "TOUR": "Tour",
+      "ACTIVITY": "Activity",
+      "NATURE": "Nature",
+      "NIGHTLIFE": "Nightlife",
+      "SHOPPING": "Shopping",
+      "FOOD": "Food & Drink",
+      "BEACH": "Beach"
+    },
+    "priceLevel": {
+      "FREE": "Free",
+      "LOW": "Budget",
+      "MEDIUM": "Moderate",
+      "HIGH": "Premium"
+    },
+    "planTitle": "Plan this with AI",
+    "planSubtitle": "Add this experience to a smart itinerary built around you.",
+    "planCta": "Plan with AI"
+  },
+  "itinerary": {
+    "notFound": "Live itinerary not available",
+    "backToTrips": "Back to trips",
+    "liveBadge": "Live",
+    "title": "Living Itinerary",
+    "subtitle": "We watch your trip and re-plan around disruptions.",
+    "alertPending": "re-plan(s) awaiting your approval",
+    "yourTrip": "Your trip",
+    "proposalsTitle": "Proposed changes",
+    "aiReplan": "AI re-plan",
+    "expires": "Expires",
+    "reject": "Dismiss",
+    "approve": "Approve",
+    "reportIssue": "Report an issue",
+    "reportPlaceholder": "What happened? (e.g. flight cancelled)",
+    "reportSubmit": "Report & re-plan",
+    "cancel": "Cancel",
+    "submitting": "Sending...",
+    "segmentTypes": {
+      "FLIGHT": "Flight",
+      "HOTEL": "Hotel",
+      "RESTAURANT": "Restaurant"
+    },
+    "status": {
+      "ON_SCHEDULE": "On schedule",
+      "DELAYED": "Disrupted",
+      "CANCELLED": "Cancelled",
+      "CLOSED": "Closed",
+      "REBOOKED": "Rebooked"
+    },
+    "changeTypes": {
+      "REPLACE_FLIGHT": "Replace flight",
+      "REPLACE_HOTEL": "Replace hotel",
+      "REPLACE_RESTAURANT": "Replace restaurant",
+      "ADJUST_TIME": "Adjust time",
+      "CANCEL_SEGMENT": "Cancel"
+    }
+  },
+  "forum": {
+    "eyebrow": "Community",
+    "title": "Traveler Q&A",
+    "subtitle": "Ask the community, share what you know, travel smarter.",
+    "searchPlaceholder": "Search questions...",
+    "askButton": "Ask a question",
+    "signInToAsk": "Sign in to ask",
+    "askTitle": "Ask the community",
+    "titlePlaceholder": "Your question",
+    "bodyPlaceholder": "Add details to get better answers...",
+    "locationPlaceholder": "Location (optional)",
+    "cancel": "Cancel",
+    "posting": "Posting...",
+    "post": "Post question",
+    "emptyTitle": "No questions yet",
+    "emptyBody": "Be the first to ask the community.",
+    "answer": "answer",
+    "answers": "answers",
+    "backToList": "Back to questions",
+    "noAnswers": "No answers yet — be the first to help.",
+    "accepted": "Accepted",
+    "helpful": "Helpful",
+    "yourAnswer": "Your answer",
+    "answerPlaceholder": "Share your experience or advice...",
+    "postAnswer": "Post answer",
+    "signInToAnswer": "Sign in to answer",
+    "notFound": "Question not found"
   }
 }

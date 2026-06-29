@@ -103,7 +103,8 @@
       "flights": "Voli",
       "thingsToDo": "Attività",
       "aiPlanner": "Pianificatore IA",
-      "chat": "Chat"
+      "chat": "Chat",
+      "community": "Community"
     },
     "signIn": "Accedi",
     "startPlanning": "Inizia a pianificare"
@@ -440,7 +441,9 @@
       "Ott",
       "Nov",
       "Dic"
-    ]
+    ],
+    "thingsToDo": "Cosa fare",
+    "seeAllThings": "Vedi tutto"
   },
   "trips": {
     "title": "I miei viaggi",
@@ -786,6 +789,125 @@
     "fGuideText": "Guida (testo completo)",
     "fTopAttractions": "Attrazioni principali",
     "fFoodReco": "Consigli gastronomici",
-    "fTravelTips": "Consigli di viaggio"
+    "fTravelTips": "Consigli di viaggio",
+    "navAttractions": "Attrazioni",
+    "entAttraction": "Attrazione",
+    "cCategory": "Categoria",
+    "fCategory": "Categoria",
+    "fPriceLevel": "Livello prezzo",
+    "fDuration": "Durata (min)",
+    "fBookable": "Prenotabile"
+  },
+  "attractions": {
+    "eyebrow": "Cose da fare",
+    "title": "Cose da fare",
+    "subtitle": "Monumenti, musei, tour ed esperienze indimenticabili.",
+    "found": "attrazioni trovate",
+    "allCategories": "Tutte",
+    "bookable": "Prenotabile",
+    "from": "da",
+    "of": "di",
+    "about": "Informazioni",
+    "duration": "Durata",
+    "price": "Prezzo",
+    "booking": "Prenotazione",
+    "notFound": "Attrazione non trovata",
+    "backToList": "Torna alle cose da fare",
+    "writeReview": "Scrivi una recensione",
+    "signInToReview": "Accedi per recensire",
+    "yourRating": "La tua valutazione",
+    "reviewTitlePlaceholder": "Titolo (facoltativo)",
+    "reviewBodyPlaceholder": "Condividi la tua esperienza...",
+    "reviewError": "Impossibile inviare la recensione. Riprova.",
+    "cancel": "Annulla",
+    "submitting": "Invio...",
+    "submitReview": "Invia recensione",
+    "categories": {
+      "LANDMARK": "Monumento",
+      "MUSEUM": "Museo",
+      "PARK": "Parco",
+      "TOUR": "Tour",
+      "ACTIVITY": "Attività",
+      "NATURE": "Natura",
+      "NIGHTLIFE": "Vita notturna",
+      "SHOPPING": "Shopping",
+      "FOOD": "Cibo e bevande",
+      "BEACH": "Spiaggia"
+    },
+    "priceLevel": {
+      "FREE": "Gratis",
+      "LOW": "Economico",
+      "MEDIUM": "Medio",
+      "HIGH": "Premium"
+    },
+    "planTitle": "Pianifica con l'AI",
+    "planSubtitle": "Aggiungi questa esperienza a un itinerario intelligente su misura.",
+    "planCta": "Pianifica con l'AI"
+  },
+  "itinerary": {
+    "notFound": "Itinerario live non disponibile",
+    "backToTrips": "Torna ai viaggi",
+    "liveBadge": "Live",
+    "title": "Itinerario vivente",
+    "subtitle": "Monitoriamo il tuo viaggio e ripianifichiamo in caso di imprevisti.",
+    "alertPending": "ripianificazioni in attesa di approvazione",
+    "yourTrip": "Il tuo viaggio",
+    "proposalsTitle": "Modifiche proposte",
+    "aiReplan": "Ripianificazione AI",
+    "expires": "Scade",
+    "reject": "Ignora",
+    "approve": "Approva",
+    "reportIssue": "Segnala un problema",
+    "reportPlaceholder": "Cosa è successo? (es. volo cancellato)",
+    "reportSubmit": "Segnala e ripianifica",
+    "cancel": "Annulla",
+    "submitting": "Invio...",
+    "segmentTypes": {
+      "FLIGHT": "Volo",
+      "HOTEL": "Hotel",
+      "RESTAURANT": "Ristorante"
+    },
+    "status": {
+      "ON_SCHEDULE": "In orario",
+      "DELAYED": "Interrotto",
+      "CANCELLED": "Cancellato",
+      "CLOSED": "Chiuso",
+      "REBOOKED": "Riprenotato"
+    },
+    "changeTypes": {
+      "REPLACE_FLIGHT": "Sostituisci volo",
+      "REPLACE_HOTEL": "Sostituisci hotel",
+      "REPLACE_RESTAURANT": "Sostituisci ristorante",
+      "ADJUST_TIME": "Modifica orario",
+      "CANCEL_SEGMENT": "Annulla"
+    }
+  },
+  "forum": {
+    "eyebrow": "Community",
+    "title": "Domande dei viaggiatori",
+    "subtitle": "Chiedi alla community, condividi ciò che sai, viaggia meglio.",
+    "searchPlaceholder": "Cerca domande...",
+    "askButton": "Fai una domanda",
+    "signInToAsk": "Accedi per chiedere",
+    "askTitle": "Chiedi alla community",
+    "titlePlaceholder": "La tua domanda",
+    "bodyPlaceholder": "Aggiungi dettagli per risposte migliori...",
+    "locationPlaceholder": "Luogo (facoltativo)",
+    "cancel": "Annulla",
+    "posting": "Pubblicazione...",
+    "post": "Pubblica domanda",
+    "emptyTitle": "Ancora nessuna domanda",
+    "emptyBody": "Sii il primo a chiedere alla community.",
+    "answer": "risposta",
+    "answers": "risposte",
+    "backToList": "Torna alle domande",
+    "noAnswers": "Ancora nessuna risposta — sii il primo ad aiutare.",
+    "accepted": "Accettata",
+    "helpful": "Utile",
+    "yourAnswer": "La tua risposta",
+    "answerPlaceholder": "Condividi la tua esperienza o un consiglio...",
+    "postAnswer": "Pubblica risposta",
+    "signInToAnswer": "Accedi per rispondere",
+    "notFound": "Domanda non trovata"
   }
 }

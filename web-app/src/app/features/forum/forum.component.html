@@ -1,0 +1,74 @@
+<ng-container *transloco="let t">
+  <header class="fo-header">
+    <div class="fo-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
+    <div class="fo-header__scrim"></div>
+    <span class="fo-eyebrow"><span class="ms">forum</span> {{ t('forum.eyebrow') }}</span>
+    <h1 class="fo-title">{{ t('forum.title') }}</h1>
+    <p class="fo-subtitle">{{ t('forum.subtitle') }}</p>
+
+    <div class="fo-bar">
+      <div class="fo-search">
+        <span class="ms">search</span>
+        <input type="text" [(ngModel)]="search" name="search" (keyup.enter)="load()"
+               [placeholder]="t('forum.searchPlaceholder')" />
+      </div>
+      <button class="fo-ask" (click)="toggleForm()">
+        <span class="ms">edit</span> {{ isAuthenticated() ? t('forum.askButton') : t('forum.signInToAsk') }}
+      </button>
+    </div>
+  </header>
+
+  <main class="fo-body">
+    @if (showForm()) {
+      <form class="fo-form" (ngSubmit)="submit()" appReveal>
+        <h3>{{ t('forum.askTitle') }}</h3>
+        <input class="fo-input" type="text" [(ngModel)]="formTitle" name="title"
+               [placeholder]="t('forum.titlePlaceholder')" maxlength="280" />
+        <textarea class="fo-input fo-textarea" rows="4" [(ngModel)]="formBody" name="body"
+                  [placeholder]="t('forum.bodyPlaceholder')"></textarea>
+        <input class="fo-input" type="text" [(ngModel)]="formLocation" name="location"
+               [placeholder]="t('forum.locationPlaceholder')" />
+        <div class="fo-form__actions">
+          <button type="button" class="fo-btn" (click)="toggleForm()">{{ t('forum.cancel') }}</button>
+          <button type="submit" class="fo-btn fo-btn--accent" [disabled]="submitting() || !formTitle.trim() || !formBody.trim()">
+            {{ submitting() ? t('forum.posting') : t('forum.post') }}
+          </button>
+        </div>
+      </form>
+    }
+
+    @if (loading()) {
+      <div class="fo-skeletons">
+        @for (s of [1,2,3,4]; track s) { <div class="fo-skel"></div> }
+      </div>
+    } @else if (questions().length === 0) {
+      <div class="fo-empty">
+        <span class="ms">quiz</span>
+        <h3>{{ t('forum.emptyTitle') }}</h3>
+        <p>{{ t('forum.emptyBody') }}</p>
+      </div>
+    } @else {
+      <ul class="fo-list">
+        @for (q of questions(); track q.id) {
+          <li class="fo-card" appReveal (click)="open(q.id)" tabindex="0" (keydown.enter)="open(q.id)">
+            <div class="fo-card__main">
+              <h3 class="fo-card__title">{{ q.title }}</h3>
+              <p class="fo-card__body">{{ q.body }}</p>
+              <div class="fo-card__meta">
+                <span class="fo-avatar">{{ q.authorName.charAt(0) }}</span>
+                <span>{{ q.authorName }}</span>
+                <span class="fo-dot">·</span>
+                <span>{{ q.createdAt | date:'mediumDate' }}</span>
+                @if (q.location) { <span class="fo-dot">·</span> <span class="fo-loc"><span class="ms">place</span>{{ q.location }}</span> }
+              </div>
+            </div>
+            <div class="fo-card__answers">
+              <span class="fo-answers__num">{{ q.answerCount }}</span>
+              <span class="fo-answers__lbl">{{ q.answerCount === 1 ? t('forum.answer') : t('forum.answers') }}</span>
+            </div>
+          </li>
+        }
+      </ul>
+    }
+  </main>
+</ng-container>
