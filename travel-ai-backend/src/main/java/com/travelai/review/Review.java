@@ -36,6 +36,19 @@ public class Review {
     @Column(nullable = false)
     private short rating;
 
+    // Optional per-aspect scores (1-5). Null = reviewer skipped the aspect.
+    @Column(name = "rating_service")
+    private Short ratingService;
+
+    @Column(name = "rating_value")
+    private Short ratingValue;
+
+    @Column(name = "rating_cleanliness")
+    private Short ratingCleanliness;
+
+    @Column(name = "rating_location")
+    private Short ratingLocation;
+
     private String title;
 
     @Column(columnDefinition = "TEXT")

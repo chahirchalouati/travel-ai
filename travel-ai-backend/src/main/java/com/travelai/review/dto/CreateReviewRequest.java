@@ -6,6 +6,10 @@ public record CreateReviewRequest(
         String targetType,
         UUID targetId,
         short rating,
+        Short ratingService,
+        Short ratingValue,
+        Short ratingCleanliness,
+        Short ratingLocation,
         String title,
         String content,
         String photoUrls
