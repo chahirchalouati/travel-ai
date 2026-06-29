@@ -21,4 +21,16 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     Optional<Booking> findByIdAndUserEmail(UUID id, String email);
 
     Optional<Booking> findByBookingReference(String reference);
+
+    /**
+     * True when the user has a confirmed or completed booking referencing the given target
+     * (hotel, restaurant, or flight). Used to mark reviews as verified stays.
+     */
+    @Query("""
+            SELECT COUNT(b) > 0 FROM Booking b
+            WHERE b.user.id = :userId
+              AND b.status IN (com.travelai.booking.BookingStatus.CONFIRMED, com.travelai.booking.BookingStatus.COMPLETED)
+              AND (b.hotelId = :targetId OR b.restaurantId = :targetId OR b.flightId = :targetId)
+            """)
+    boolean existsConfirmedBookingForTarget(@Param("userId") UUID userId, @Param("targetId") UUID targetId);
 }

@@ -260,12 +260,23 @@ export interface ReviewResponse {
   targetType: string;
   targetId: string;
   rating: number;
+  ratingService: number | null;
+  ratingValue: number | null;
+  ratingCleanliness: number | null;
+  ratingLocation: number | null;
   title: string;
   content: string;
   photoUrls: string;
   helpfulCount: number;
+  helpfulByMe: boolean;
   verified: boolean;
   createdAt: string;
+}
+
+export interface ReviewRanking {
+  rank: number;
+  rankTotal: number;
+  score: number;
 }
 
 export interface ReviewSummary {
@@ -273,6 +284,11 @@ export interface ReviewSummary {
   targetId: string;
   averageRating: number;
   totalReviews: number;
+  averageService: number | null;
+  averageValue: number | null;
+  averageCleanliness: number | null;
+  averageLocation: number | null;
+  ranking: ReviewRanking | null;
   aiSummary: string;
 }
 
@@ -280,6 +296,10 @@ export interface CreateReviewRequest {
   targetType: string;
   targetId: string;
   rating: number;
+  ratingService?: number | null;
+  ratingValue?: number | null;
+  ratingCleanliness?: number | null;
+  ratingLocation?: number | null;
   title: string;
   content: string;
   photoUrls?: string;

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { DestinationService } from '../../core/services/destination.service';
 import { ReviewService } from '../../core/services/review.service';
+import { RevealDirective } from '../../shared/reveal/reveal.directive';
 import type {
   DestinationResponse,
   DestinationGuide,
@@ -19,7 +20,7 @@ const MONTH_NAMES = [
 @Component({
   selector: 'app-destination-detail',
   standalone: true,
-  imports: [CommonModule, TranslocoModule],
+  imports: [CommonModule, TranslocoModule, RevealDirective],
   template: `
     @if (destination(); as dest) {
       <!-- Back navigation -->
@@ -135,7 +136,7 @@ const MONTH_NAMES = [
         <div style="display: flex; flex-direction: column; gap: 24px;">
 
           <!-- Overview -->
-          <section class="content-card">
+          <section class="content-card" appReveal>
             <h2 class="section-heading">{{ 'destDetail.overview' | transloco }}</h2>
             <p
               style="
@@ -173,7 +174,7 @@ const MONTH_NAMES = [
           </section>
 
           <!-- Reviews -->
-          <section class="content-card">
+          <section class="content-card" appReveal>
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
               <h2 class="section-heading" style="margin-bottom: 0;">{{ 'destDetail.reviews' | transloco }}</h2>
               @if (reviewSummary(); as summary) {
@@ -201,12 +202,35 @@ const MONTH_NAMES = [
                         <span style="font-size: 14px; color: {{ star ? '#F5A623' : '#e0e0e0' }};">&#9733;</span>
                       }
                     </div>
+                    @if (summary.ranking; as rank) {
+                      <span
+                        style="
+                          display: inline-flex; align-items: center; gap: 4px; margin-left: auto;
+                          background: #00856A; color: #fff; border-radius: 999px;
+                          padding: 4px 12px; font-size: 12px; font-weight: 700;
+                          font-family: 'Hanken Grotesk', sans-serif; letter-spacing: 0.3px;
+                        "
+                      >
+                        <span class="ms" style="font-size: 14px;">emoji_events</span>
+                        #{{ rank.rank }} {{ 'destDetail.rankOf' | transloco }} {{ rank.rankTotal }}
+                      </span>
+                    }
                   </div>
                   <p
                     style="
-                      font-size: 14px; color: #545454; line-height: 1.65; margin: 0;
+                      font-size: 14px; color: #545454; line-height: 1.65; margin: 0 0 12px;
                     "
                   >{{ summary.aiSummary }}</p>
+                  @if (summary.averageService || summary.averageValue || summary.averageCleanliness || summary.averageLocation) {
+                    <div style="display: flex; flex-wrap: wrap; gap: 14px;">
+                      @for (aspect of aspectAverages(summary); track aspect.key) {
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                          <span style="font-size: 12px; color: #545454; font-weight: 600;">{{ aspect.label | transloco }}</span>
+                          <span style="font-size: 13px; color: #1a1a1a; font-weight: 800;">{{ aspect.value | number:'1.1-1' }}</span>
+                        </div>
+                      }
+                    </div>
+                  }
                 </div>
               </div>
             } @else {
@@ -250,7 +274,22 @@ const MONTH_NAMES = [
                             style="
                               font-size: 14px; color: #1a1a1a; font-weight: 600;
                             "
-                          >{{ review.userFirstName }}</div>
+                          >
+                            {{ review.userFirstName }}
+                            @if (review.verified) {
+                              <span
+                                title="{{ 'destDetail.verifiedStay' | transloco }}"
+                                style="
+                                  display: inline-flex; align-items: center; gap: 3px; margin-left: 6px;
+                                  color: #00856A; font-size: 11px; font-weight: 700;
+                                  text-transform: uppercase; letter-spacing: 0.4px; vertical-align: middle;
+                                "
+                              >
+                                <span class="ms" style="font-size: 14px;">verified</span>
+                                {{ 'destDetail.verifiedStay' | transloco }}
+                              </span>
+                            }
+                          </div>
                           <div
                             style="
                               font-size: 12px; color: #8a8a8a;
@@ -282,6 +321,7 @@ const MONTH_NAMES = [
                     <button
                       (click)="markHelpful(review.id)"
                       class="helpful-btn"
+                      [class.helpful-btn--active]="review.helpfulByMe"
                     >
                       <span class="ms" style="font-size: 15px;">thumb_up</span>
                       {{ 'destDetail.helpful' | transloco }} ({{ review.helpfulCount }})
@@ -293,7 +333,7 @@ const MONTH_NAMES = [
           </section>
 
           <!-- AI Travel Guide -->
-          <section class="content-card">
+          <section class="content-card" appReveal>
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
               <span
                 class="ms"
@@ -630,6 +670,13 @@ const MONTH_NAMES = [
       color: #E04A2F;
     }
 
+    .helpful-btn--active {
+      background: #FFF0ED;
+      border-color: #E04A2F;
+      color: #E04A2F;
+      font-weight: 700;
+    }
+
     @keyframes shimmer {
       0% { background-position: -400px 0; }
       100% { background-position: 400px 0; }
@@ -714,13 +761,24 @@ export class DestinationDetailComponent implements OnInit {
   }
 
   markHelpful(reviewId: string): void {
-    this.reviewService.markHelpful(reviewId).subscribe(() => {
+    this.reviewService.markHelpful(reviewId).subscribe((updated) => {
       this.reviews.update((rs) =>
         rs.map((r) =>
-          r.id === reviewId ? { ...r, helpfulCount: r.helpfulCount + 1 } : r
+          r.id === reviewId
+            ? { ...r, helpfulCount: updated.helpfulCount, helpfulByMe: updated.helpfulByMe }
+            : r
         )
       );
     });
+  }
+
+  aspectAverages(summary: ReviewSummary): { key: string; label: string; value: number }[] {
+    return [
+      { key: 'service', label: 'destDetail.aspectService', value: summary.averageService },
+      { key: 'value', label: 'destDetail.aspectValue', value: summary.averageValue },
+      { key: 'cleanliness', label: 'destDetail.aspectCleanliness', value: summary.averageCleanliness },
+      { key: 'location', label: 'destDetail.aspectLocation', value: summary.averageLocation },
+    ].filter((a): a is { key: string; label: string; value: number } => a.value != null);
   }
 
   getStars(rating: number): number[] {

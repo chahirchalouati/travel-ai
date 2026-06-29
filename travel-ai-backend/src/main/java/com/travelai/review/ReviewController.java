@@ -34,11 +34,13 @@ public class ReviewController {
 
     @GetMapping("/target/{targetType}/{targetId}")
     public ApiResponse<Page<ReviewResponse>> getReviewsForTarget(
+            @AuthenticationPrincipal UserDetails user,
             @PathVariable String targetType,
             @PathVariable UUID targetId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.ok(reviewService.getReviewsForTarget(targetType, targetId, page, size));
+        UUID viewerId = (user instanceof User travelUser) ? travelUser.getId() : null;
+        return ApiResponse.ok(reviewService.getReviewsForTarget(targetType, targetId, page, size, viewerId));
     }
 
     @GetMapping("/target/{targetType}/{targetId}/summary")
@@ -64,7 +66,12 @@ public class ReviewController {
     }
 
     @PostMapping("/{reviewId}/helpful")
-    public ApiResponse<ReviewResponse> markHelpful(@PathVariable UUID reviewId) {
-        return ApiResponse.ok(reviewService.markHelpful(reviewId));
+    public ApiResponse<ReviewResponse> markHelpful(
+            @AuthenticationPrincipal UserDetails user,
+            @PathVariable UUID reviewId) {
+        if (!(user instanceof User travelUser)) {
+            throw new IllegalStateException("Unexpected principal type: " + user.getClass().getName());
+        }
+        return ApiResponse.ok(reviewService.markHelpful(reviewId, travelUser.getId()));
     }
 }
