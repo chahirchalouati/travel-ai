@@ -1622,3 +1622,120 @@
     .profile-right   { display: none; }
   }
 }
+
+/* ─── Phase 2: gallery upload + travel-map place CRUD ─────────────────── */
+.add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+.add-btn:hover:not(:disabled) { background: var(--brand-hover, #c93d25); transform: translateY(-1px); }
+.add-btn:disabled { opacity: 0.6; cursor: default; }
+
+.photo-add-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  aspect-ratio: 1;
+  border: 2px dashed #d8d8d8;
+  border-radius: 12px;
+  background: #fafafa;
+  color: #8a8a8a;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+.photo-add-tile:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); background: var(--brand-light, #fff0ed); }
+.photo-add-tile:disabled { opacity: 0.6; cursor: default; }
+
+.photo-del {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+.photo-tile:hover .photo-del { opacity: 1; }
+.photo-del:hover { background: #c0392b; }
+
+.add-place-form {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.6fr auto;
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+  padding: 1rem;
+  background: #fafafa;
+  border: 1px solid #ececec;
+  border-radius: 14px;
+}
+.ap-input {
+  border: 1px solid #e0e0e0;
+  border-radius: 9px;
+  padding: 0.6rem 0.8rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+.ap-input:focus { border-color: var(--brand); }
+.ap-save {
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  border-radius: 9px;
+  padding: 0 1.3rem;
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.ap-save:disabled { opacity: 0.55; cursor: default; }
+
+.stamp--owned { position: relative; }
+.stamp-sub { display: block; font-size: 0.72rem; color: #9a9a9a; }
+.stamp-del {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.08);
+  color: #777;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.stamp--owned:hover .stamp-del { opacity: 1; }
+.stamp-del:hover { background: #fdecec; color: #c0392b; }
+
+@media (max-width: 640px) {
+  .add-place-form { grid-template-columns: 1fr; }
+}

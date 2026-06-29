@@ -11,6 +11,11 @@ public record UserProfileResponse(
         String firstName,
         String lastName,
         String phone,
+        String avatarUrl,
+        String coverUrl,
+        String bio,
+        String location,
+        String handle,
         UserRole role,
         boolean emailVerified,
         Instant createdAt

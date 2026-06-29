@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -82,6 +83,32 @@ export const routes: Routes = [
     path: 'profile',
     loadComponent: () =>
       import('./features/profile/profile.component').then(m => m.ProfileComponent),
+  },
+  {
+    path: 'trips',
+    loadComponent: () =>
+      import('./features/trips/trips.component').then(m => m.TripsComponent),
+  },
+  {
+    path: 'bookings',
+    loadComponent: () =>
+      import('./features/bookings/bookings.component').then(m => m.BookingsComponent),
+  },
+  {
+    path: 'messages',
+    loadComponent: () =>
+      import('./features/messages/messages.component').then(m => m.MessagesComponent),
+  },
+  {
+    path: 'account',
+    loadComponent: () =>
+      import('./features/account/account.component').then(m => m.AccountComponent),
+  },
+  {
+    path: 'admin',
+    canActivate: [adminGuard],
+    loadComponent: () =>
+      import('./features/admin/admin.component').then(m => m.AdminComponent),
   },
   { path: '**', redirectTo: '' },
 ];

@@ -2,6 +2,7 @@ package com.travelai.admin;
 
 import com.travelai.admin.dto.*;
 import com.travelai.shared.domain.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -62,5 +63,34 @@ public class AdminController {
         Page<AdminAiLogResponse> page = adminService.listAiLogs(pageable);
         ApiResponse.Meta meta = new ApiResponse.Meta(page.getTotalElements(), page.getNumber(), page.getSize());
         return ResponseEntity.ok(ApiResponse.ok(page, meta));
+    }
+
+    // ── User management ───────────────────────────────────────────────────
+
+    @PatchMapping("/users/{id}/role")
+    public ResponseEntity<ApiResponse<AdminUserResponse>> updateUserRole(
+            @PathVariable UUID id, @Valid @RequestBody UpdateUserRoleRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok(adminService.updateUserRole(id, request.role())));
+    }
+
+    @PatchMapping("/users/{id}/status")
+    public ResponseEntity<ApiResponse<AdminUserResponse>> updateUserStatus(
+            @PathVariable UUID id, @RequestBody UpdateUserStatusRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok(adminService.setUserActive(id, request.active())));
+    }
+
+    // ── Review moderation ─────────────────────────────────────────────────
+
+    @GetMapping("/reviews")
+    public ResponseEntity<ApiResponse<Page<AdminReviewResponse>>> listReviews(Pageable pageable) {
+        Page<AdminReviewResponse> page = adminService.listReviews(pageable);
+        ApiResponse.Meta meta = new ApiResponse.Meta(page.getTotalElements(), page.getNumber(), page.getSize());
+        return ResponseEntity.ok(ApiResponse.ok(page, meta));
+    }
+
+    @DeleteMapping("/reviews/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteReview(@PathVariable UUID id) {
+        adminService.deleteReview(id);
+        return ResponseEntity.ok(ApiResponse.ok(null));
     }
 }

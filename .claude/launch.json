@@ -6,6 +6,18 @@
       "runtimeExecutable": "bash",
       "runtimeArgs": ["-c", "cd web-app && npx ng serve --port 4200"],
       "port": 4200
+    },
+    {
+      "name": "web-report",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd web-app && npx ng serve --port 4310"],
+      "port": 4310
+    },
+    {
+      "name": "web-preview",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd web-app && npx ng serve --port 4211"],
+      "port": 4211
     }
   ]
 }
