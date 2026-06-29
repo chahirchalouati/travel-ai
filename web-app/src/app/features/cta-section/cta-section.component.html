@@ -6,21 +6,20 @@
       </div>
       <div class="cta-text-side">
         <h2 class="cta-title" id="cta-heading">
-          Plan your perfect trip with AI
+          {{ 'cta.title' | transloco }}
         </h2>
         <p class="cta-subtitle">
-          Tell us where you want to go and get a complete, personalised itinerary
-          in under two minutes. Free to start.
+          {{ 'cta.subtitle' | transloco }}
         </p>
         <div class="cta-actions">
           <a routerLink="/planner" class="cta-btn">
-            Plan my first trip
+            {{ 'cta.primary' | transloco }}
             <span class="ms" aria-hidden="true">arrow_forward</span>
           </a>
-          <a routerLink="/chat" class="cta-link">Ask the AI first</a>
+          <a routerLink="/chat" class="cta-link">{{ 'cta.secondary' | transloco }}</a>
         </div>
         <p class="cta-trust">
-          No credit card required &middot; Full itinerary in 2 minutes
+          {{ 'cta.trust' | transloco }}
         </p>
       </div>
     </div>

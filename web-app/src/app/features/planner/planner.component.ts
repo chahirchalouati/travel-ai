@@ -1,6 +1,8 @@
 import { Component, computed, signal, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslocoService } from '@jsverse/transloco';
+import { Subscription } from 'rxjs';
 import { switchMap, forkJoin, of, catchError, timer, take, first } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { TravelService } from '../../core/services/travel.service';
@@ -280,6 +282,16 @@ export class PlannerComponent implements OnDestroy {
   private readonly catalogService = inject(CatalogService);
   private readonly bookingService = inject(BookingService);
   private readonly paymentService = inject(PaymentService);
+  private readonly transloco = inject(TranslocoService);
+  private langSub?: Subscription;
+
+  constructor() {
+    const apply = (l: string) => {
+      if (l === 'it' || l === 'en' || l === 'fr' || l === 'es') this.lang.set(l);
+    };
+    apply(this.transloco.getActiveLang());
+    this.langSub = this.transloco.langChanges$.subscribe(apply);
+  }
 
   // ── Auth modal state ──────────────────────────────────────────────────────
   showAuthModal = signal(false);
@@ -959,5 +971,5 @@ export class PlannerComponent implements OnDestroy {
     this._timers = [];
   }
 
-  ngOnDestroy(): void { this._clearTimers(); }
+  ngOnDestroy(): void { this._clearTimers(); this.langSub?.unsubscribe(); }
 }

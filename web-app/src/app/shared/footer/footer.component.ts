@@ -1,22 +1,23 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslocoModule } from '@jsverse/transloco';
 
 interface FooterLink {
-  label: string;
+  key: string;
   route?: string;
   href?: string;
 }
 
 interface FooterColumn {
-  title: string;
+  titleKey: string;
   links: FooterLink[];
 }
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslocoModule],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss'
 })
@@ -25,33 +26,33 @@ export class FooterComponent {
 
   columns: FooterColumn[] = [
     {
-      title: 'Product',
+      titleKey: 'footer.cols.product',
       links: [
-        { label: 'AI Planner', route: '/planner' },
-        { label: 'Destinations', route: '/' },
-        { label: 'Chat with AI', route: '/chat' },
-        { label: 'Trip Dashboard', route: '/profile' },
-        { label: 'Booking Integration', route: '/planner' },
+        { key: 'footer.links.aiPlanner', route: '/planner' },
+        { key: 'footer.links.destinations', route: '/' },
+        { key: 'footer.links.chatWithAi', route: '/chat' },
+        { key: 'footer.links.tripDashboard', route: '/profile' },
+        { key: 'footer.links.bookingIntegration', route: '/planner' },
       ]
     },
     {
-      title: 'Company',
+      titleKey: 'footer.cols.company',
       links: [
-        { label: 'About us', href: '#' },
-        { label: 'Blog', href: '#' },
-        { label: 'Careers', href: '#' },
-        { label: 'Press', href: '#' },
-        { label: 'Contact', href: '#' },
+        { key: 'footer.links.about', href: '#' },
+        { key: 'footer.links.blog', href: '#' },
+        { key: 'footer.links.careers', href: '#' },
+        { key: 'footer.links.press', href: '#' },
+        { key: 'footer.links.contact', href: '#' },
       ]
     },
     {
-      title: 'Support',
+      titleKey: 'footer.cols.support',
       links: [
-        { label: 'Help Centre', href: '#' },
-        { label: 'Safety', href: '#' },
-        { label: 'Community', href: '#' },
-        { label: 'Partners', href: '#' },
-        { label: 'API', href: '#' },
+        { key: 'footer.links.help', href: '#' },
+        { key: 'footer.links.safety', href: '#' },
+        { key: 'footer.links.community', href: '#' },
+        { key: 'footer.links.partners', href: '#' },
+        { key: 'footer.links.api', href: '#' },
       ]
     },
   ];

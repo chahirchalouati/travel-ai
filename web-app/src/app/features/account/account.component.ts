@@ -3,19 +3,20 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-account',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslocoModule],
   styleUrls: ['../../shared/styles/dashboard.scss'],
   template: `
     <div class="dash-container">
       <header class="dash-head">
         <div>
-          <h1 class="dash-title">Account info</h1>
-          <p class="dash-sub">Manage your identity, contact details and access.</p>
+          <h1 class="dash-title">{{ 'account.title' | transloco }}</h1>
+          <p class="dash-sub">{{ 'account.subtitle' | transloco }}</p>
         </div>
       </header>
 
@@ -39,26 +40,26 @@ import { AuthService } from '../../core/services/auth.service';
           <form class="form" (ngSubmit)="save()">
             <div class="field-row">
               <label class="field">
-                <span>First name</span>
+                <span>{{ 'auth.firstName' | transloco }}</span>
                 <input [(ngModel)]="firstName" name="firstName" required maxlength="100" />
               </label>
               <label class="field">
-                <span>Last name</span>
+                <span>{{ 'auth.lastName' | transloco }}</span>
                 <input [(ngModel)]="lastName" name="lastName" required maxlength="100" />
               </label>
             </div>
             <label class="field">
-              <span>Phone</span>
-              <input [(ngModel)]="phone" name="phone" maxlength="30" placeholder="Add a phone number" />
+              <span>{{ 'account.phone' | transloco }}</span>
+              <input [(ngModel)]="phone" name="phone" maxlength="30" [placeholder]="'account.phonePlaceholder' | transloco" />
             </label>
             <label class="field">
-              <span>Email <small>(read-only)</small></span>
+              <span>{{ 'auth.email' | transloco }} <small>{{ 'account.readonly' | transloco }}</small></span>
               <input [value]="user()?.email" disabled />
             </label>
             <div class="form-actions">
-              <button type="button" class="dash-cta dash-cta--ghost" (click)="reset()" [disabled]="!dirty()">Reset</button>
+              <button type="button" class="dash-cta dash-cta--ghost" (click)="reset()" [disabled]="!dirty()">{{ 'account.reset' | transloco }}</button>
               <button type="submit" class="dash-cta" [disabled]="!dirty() || saving()">
-                {{ saving() ? 'Saving…' : 'Save changes' }}
+                {{ (saving() ? 'account.saving' : 'account.save') | transloco }}
               </button>
             </div>
           </form>
@@ -67,23 +68,23 @@ import { AuthService } from '../../core/services/auth.service';
         <!-- Side rail -->
         <aside class="side">
           <section class="card pad">
-            <h3 class="side-h">Quick links</h3>
-            <button class="side-link" (click)="go('/profile')"><span class="ms">person</span> Public profile</button>
-            <button class="side-link" (click)="go('/trips')"><span class="ms">luggage</span> My trips</button>
-            <button class="side-link" (click)="go('/bookings')"><span class="ms">confirmation_number</span> Bookings</button>
-            <button class="side-link" (click)="go('/messages')"><span class="ms">chat_bubble_outline</span> Messages</button>
+            <h3 class="side-h">{{ 'account.quickLinks' | transloco }}</h3>
+            <button class="side-link" (click)="go('/profile')"><span class="ms">person</span> {{ 'account.publicProfile' | transloco }}</button>
+            <button class="side-link" (click)="go('/trips')"><span class="ms">luggage</span> {{ 'userMenu.myTrips' | transloco }}</button>
+            <button class="side-link" (click)="go('/bookings')"><span class="ms">confirmation_number</span> {{ 'userMenu.bookings' | transloco }}</button>
+            <button class="side-link" (click)="go('/messages')"><span class="ms">chat_bubble_outline</span> {{ 'userMenu.messages' | transloco }}</button>
             @if (isAdmin()) {
-              <button class="side-link admin" (click)="go('/admin')"><span class="ms">admin_panel_settings</span> Admin panel</button>
+              <button class="side-link admin" (click)="go('/admin')"><span class="ms">admin_panel_settings</span> {{ 'userMenu.adminPanel' | transloco }}</button>
             }
           </section>
 
           <section class="card pad">
-            <h3 class="side-h">Status</h3>
-            <div class="status-line"><span class="ms" [class.ok]="user()?.emailVerified">{{ user()?.emailVerified ? 'check_circle' : 'pending' }}</span> Email {{ user()?.emailVerified ? 'verified' : 'unverified' }}</div>
-            <div class="status-line"><span class="ms ok">lock</span> Password protected</div>
+            <h3 class="side-h">{{ 'account.status' | transloco }}</h3>
+            <div class="status-line"><span class="ms" [class.ok]="user()?.emailVerified">{{ user()?.emailVerified ? 'check_circle' : 'pending' }}</span> {{ (user()?.emailVerified ? 'account.emailVerified' : 'account.emailUnverified') | transloco }}</div>
+            <div class="status-line"><span class="ms ok">lock</span> {{ 'account.passwordProtected' | transloco }}</div>
           </section>
 
-          <button class="danger" (click)="signOut()"><span class="ms">logout</span> Sign out</button>
+          <button class="danger" (click)="signOut()"><span class="ms">logout</span> {{ 'userMenu.signOut' | transloco }}</button>
         </aside>
       </div>
     </div>
@@ -126,6 +127,7 @@ import { AuthService } from '../../core/services/auth.service';
 export class AccountComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly transloco = inject(TranslocoService);
 
   readonly user = this.auth.currentUser;
   readonly saving = signal(false);
@@ -135,7 +137,7 @@ export class AccountComponent {
   lastName = this.user()?.lastName ?? '';
   phone = this.user()?.phone ?? '';
 
-  readonly fullName = computed(() => `${this.user()?.firstName ?? ''} ${this.user()?.lastName ?? ''}`.trim() || 'Traveler');
+  readonly fullName = computed(() => `${this.user()?.firstName ?? ''} ${this.user()?.lastName ?? ''}`.trim() || this.transloco.translate('account.travelerFallback'));
   readonly initials = computed(() => {
     const u = this.user();
     if (!u) return '?';
@@ -155,7 +157,7 @@ export class AccountComponent {
       .pipe(catchError(() => of(null)))
       .subscribe(updated => {
         this.saving.set(false);
-        this.flash(updated ? 'Profile updated' : 'Could not save — try again');
+        this.flash(this.transloco.translate(updated ? 'account.profileUpdated' : 'account.saveError'));
       });
   }
 

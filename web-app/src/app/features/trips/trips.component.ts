@@ -2,6 +2,7 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { BookingService } from '../../core/services/booking.service';
 import type { BookingResponse } from '../../core/models/api.models';
 
@@ -12,17 +13,17 @@ interface TripCard extends BookingResponse {
 @Component({
   selector: 'app-trips',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslocoModule],
   styleUrls: ['../../shared/styles/dashboard.scss'],
   template: `
     <div class="dash-container">
       <header class="dash-head">
         <div>
-          <h1 class="dash-title">My trips</h1>
-          <p class="dash-sub">Every journey you've booked, upcoming and past.</p>
+          <h1 class="dash-title">{{ 'trips.title' | transloco }}</h1>
+          <p class="dash-sub">{{ 'trips.subtitle' | transloco }}</p>
         </div>
         <button class="dash-cta" (click)="router.navigate(['/planner'])">
-          <span class="ms">add</span> Plan a new trip
+          <span class="ms">add</span> {{ 'trips.planNew' | transloco }}
         </button>
       </header>
 
@@ -33,15 +34,15 @@ interface TripCard extends BookingResponse {
       } @else if (trips().length === 0) {
         <div class="empty">
           <span class="ms">travel_explore</span>
-          <h3>No trips yet</h3>
-          <p>Plan your first adventure and it will show up right here.</p>
+          <h3>{{ 'trips.emptyTitle' | transloco }}</h3>
+          <p>{{ 'trips.emptyBody' | transloco }}</p>
           <button class="dash-cta" (click)="router.navigate(['/planner'])">
-            <span class="ms">auto_awesome</span> Start with AI Planner
+            <span class="ms">auto_awesome</span> {{ 'trips.emptyCta' | transloco }}
           </button>
         </div>
       } @else {
         @if (upcoming().length) {
-          <h2 class="section-h">Upcoming · {{ upcoming().length }}</h2>
+          <h2 class="section-h">{{ 'trips.upcoming' | transloco }} · {{ upcoming().length }}</h2>
           <div class="grid">
             @for (t of upcoming(); track t.id) {
               <article class="card trip" (click)="open(t)">
@@ -49,7 +50,7 @@ interface TripCard extends BookingResponse {
                   <span class="pill" [class]="pillClass(t.status)">{{ t.status }}</span>
                 </div>
                 <div class="trip-body">
-                  <h3 class="trip-dest">{{ t.destination || 'Trip' }}</h3>
+                  <h3 class="trip-dest">{{ t.destination || ('trips.tripFallback' | transloco) }}</h3>
                   <p class="trip-dates"><span class="ms">calendar_today</span> {{ dateRange(t) }}</p>
                   <div class="trip-foot">
                     <span class="trip-ref">{{ t.bookingReference }}</span>
@@ -62,7 +63,7 @@ interface TripCard extends BookingResponse {
         }
 
         @if (past().length) {
-          <h2 class="section-h" style="margin-top:2.5rem">Past · {{ past().length }}</h2>
+          <h2 class="section-h" style="margin-top:2.5rem">{{ 'trips.past' | transloco }} · {{ past().length }}</h2>
           <div class="grid">
             @for (t of past(); track t.id) {
               <article class="card trip trip--past" (click)="open(t)">
@@ -70,7 +71,7 @@ interface TripCard extends BookingResponse {
                   <span class="pill" [class]="pillClass(t.status)">{{ t.status }}</span>
                 </div>
                 <div class="trip-body">
-                  <h3 class="trip-dest">{{ t.destination || 'Trip' }}</h3>
+                  <h3 class="trip-dest">{{ t.destination || ('trips.tripFallback' | transloco) }}</h3>
                   <p class="trip-dates"><span class="ms">calendar_today</span> {{ dateRange(t) }}</p>
                   <div class="trip-foot">
                     <span class="trip-ref">{{ t.bookingReference }}</span>
@@ -102,6 +103,7 @@ interface TripCard extends BookingResponse {
 export class TripsComponent implements OnInit {
   readonly router = inject(Router);
   private readonly bookings = inject(BookingService);
+  private readonly transloco = inject(TranslocoService);
 
   private static readonly BANNERS = [
     'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&q=80',
@@ -132,7 +134,7 @@ export class TripsComponent implements OnInit {
   }
 
   dateRange(t: BookingResponse): string {
-    if (!t.checkIn) return 'Dates to be confirmed';
+    if (!t.checkIn) return this.transloco.translate('trips.datesTbc');
     const fmt = (d: string) => new Date(d).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
     return t.checkOut ? `${fmt(t.checkIn)} → ${fmt(t.checkOut)}` : fmt(t.checkIn);
   }

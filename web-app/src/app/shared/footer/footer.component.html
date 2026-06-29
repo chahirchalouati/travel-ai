@@ -6,7 +6,7 @@
           <span class="footer-logo-text">Travel<span class="footer-logo-accent">AI</span></span>
           <span class="footer-logo-dot" aria-hidden="true"></span>
         </a>
-        <p class="footer-tagline">Discover destinations, read real reviews, and plan smarter trips with AI-powered recommendations.</p>
+        <p class="footer-tagline">{{ 'footer.tagline' | transloco }}</p>
         <div class="footer-socials">
           @for (s of socials; track s.label) {
             <a href="#" class="social-icon" [attr.aria-label]="s.label" rel="noopener noreferrer">{{ s.icon }}</a>
@@ -14,16 +14,16 @@
         </div>
       </div>
 
-      @for (col of columns; track col.title) {
+      @for (col of columns; track col.titleKey) {
         <div class="footer-column">
-          <div class="footer-col-title">{{ col.title }}</div>
+          <div class="footer-col-title">{{ col.titleKey | transloco }}</div>
           <ul class="footer-links" role="list">
-            @for (link of col.links; track link.label) {
+            @for (link of col.links; track link.key) {
               <li>
                 @if (link.route) {
-                  <a [routerLink]="link.route">{{ link.label }}</a>
+                  <a [routerLink]="link.route">{{ link.key | transloco }}</a>
                 } @else {
-                  <a [href]="link.href">{{ link.label }}</a>
+                  <a [href]="link.href">{{ link.key | transloco }}</a>
                 }
               </li>
             }
@@ -33,15 +33,15 @@
     </div>
 
     <div class="footer-bottom">
-      <p>&copy; {{ year }} TravelAI. All rights reserved.</p>
+      <p>&copy; {{ year }} TravelAI. {{ 'footer.rights' | transloco }}</p>
       <div class="footer-bottom-links">
-        <a href="#">Privacy</a>
+        <a href="#">{{ 'footer.privacy' | transloco }}</a>
         <span class="footer-dot" aria-hidden="true"></span>
-        <a href="#">Terms</a>
+        <a href="#">{{ 'footer.terms' | transloco }}</a>
         <span class="footer-dot" aria-hidden="true"></span>
-        <a href="#">Cookies</a>
+        <a href="#">{{ 'footer.cookies' | transloco }}</a>
         <span class="footer-dot" aria-hidden="true"></span>
-        <a href="#">Accessibility</a>
+        <a href="#">{{ 'footer.accessibility' | transloco }}</a>
       </div>
     </div>
   </div>
