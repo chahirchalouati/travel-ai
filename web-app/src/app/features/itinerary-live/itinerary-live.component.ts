@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -29,6 +29,7 @@ export class ItineraryLiveComponent implements OnInit, OnDestroy {
   private readonly auth = inject(AuthService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
   private stream: EventSource | null = null;
 
   readonly loading = signal(true);
@@ -63,7 +64,7 @@ export class ItineraryLiveComponent implements OnInit, OnDestroy {
             ? this.itineraryService.listProposals(it.id).pipe(catchError(() => of(this.proposals())))
             : of(this.proposals());
         }),
-        takeUntilDestroyed(),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(list => this.proposals.set(list));
   }

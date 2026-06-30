@@ -10,6 +10,7 @@ public record HotelSearchRequest(
         LocalDate checkOut,
         int guests,
         BigDecimal maxBudget,
-        List<String> constraints
+        List<String> constraints,
+        Short minStars
 ) {
 }

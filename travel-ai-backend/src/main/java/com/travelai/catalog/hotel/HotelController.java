@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,9 +23,27 @@ public class HotelController {
     @GetMapping("/search")
     public ApiResponse<List<HotelSearchResult>> search(
             @ModelAttribute HotelSearchRequest request,
+            @RequestParam(required = false) String sort,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "12") int size) {
-        return PageSupport.paginate(hotelService.search(request), page, size);
+        return PageSupport.paginate(hotelService.search(request), comparatorFor(sort), page, size);
+    }
+
+    private static Comparator<HotelSearchResult> comparatorFor(String sort) {
+        if (sort == null || sort.isBlank()) {
+            return null;
+        }
+        return switch (sort) {
+            case "price_asc" -> Comparator.comparing(HotelSearchResult::pricePerNight,
+                    Comparator.nullsLast(Comparator.naturalOrder()));
+            case "price_desc" -> Comparator.comparing(HotelSearchResult::pricePerNight,
+                    Comparator.nullsLast(Comparator.reverseOrder()));
+            case "stars_desc" -> Comparator.comparing(HotelSearchResult::stars,
+                    Comparator.nullsLast(Comparator.reverseOrder()));
+            case "stars_asc" -> Comparator.comparing(HotelSearchResult::stars,
+                    Comparator.nullsLast(Comparator.naturalOrder()));
+            default -> null;
+        };
     }
 
     @GetMapping("/{id}")

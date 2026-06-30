@@ -13,6 +13,7 @@ export interface AttractionSearchQuery {
   category?: string;
   priceLevel?: string;
   bookable?: boolean;
+  sort?: string;
 }
 
 @Injectable({ providedIn: 'root' })

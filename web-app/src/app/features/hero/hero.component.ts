@@ -2,20 +2,24 @@ import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 
 type ItemKind = 'flight' | 'stay' | 'do' | 'eat';
 
 interface ItineraryItem {
   time: string;
   icon: string;
-  title: string;
-  meta: string;
+  /** Transloco key resolved at render time. */
+  titleKey: string;
+  metaKey: string;
   kind: ItemKind;
 }
 
 interface ItineraryDay {
-  day: string;
-  place: string;
+  day: number;
+  /** Transloco key for the place label. */
+  placeKey: string;
   items: ItineraryItem[];
 }
 
@@ -27,8 +31,9 @@ interface MapPin {
 
 interface TripSample {
   key: string;
-  brief: string;
-  summary: string;
+  /** Transloco key for the typed brief line. */
+  briefKey: string;
+  summaryKey: string;
   /** Cinematic backdrop shown behind the stage while this trip builds. */
   image: string;
   days: ItineraryDay[];
@@ -37,19 +42,20 @@ interface TripSample {
 
 interface QuickPick {
   emoji: string;
-  label: string;
+  labelKey: string;
   key: string;
 }
 
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslocoModule],
   templateUrl: './hero.component.html',
   styleUrl: './hero.component.scss',
 })
 export class HeroComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
+  private readonly transloco = inject(TranslocoService);
 
   private readonly reduceMotion =
     typeof window !== 'undefined' &&
@@ -76,34 +82,35 @@ export class HeroComponent implements OnInit, OnDestroy {
   private cycleIndex = 0;
   private autoplay = true;
   private hoverPaused = false;
+  private langSub: Subscription | null = null;
 
   readonly samples: TripSample[] = [
     {
       key: 'japan',
-      brief: '10 days in Japan — temples, food & quiet mornings',
-      summary: 'Kyoto · Hakone · Tokyo',
+      briefKey: 'hero.samples.japan.brief',
+      summaryKey: 'hero.samples.japan.summary',
       image: 'assets/hero/japan.webp',
       days: [
         {
-          day: 'Day 1', place: 'Kyoto',
+          day: 1, placeKey: 'hero.places.kyoto',
           items: [
-            { time: '09:10', icon: 'flight_land', title: 'Land at Kansai (KIX)', meta: 'Haruka express → Kyoto', kind: 'flight' },
-            { time: '14:00', icon: 'hotel', title: 'Ryokan Genhouin', meta: 'Tatami suite · 9.4', kind: 'stay' },
-            { time: '17:30', icon: 'temple_buddhist', title: 'Fushimi Inari at dusk', meta: 'Beat the crowds', kind: 'do' },
+            { time: '09:10', icon: 'flight_land', titleKey: 'hero.samples.japan.items.kansai.title', metaKey: 'hero.samples.japan.items.kansai.meta', kind: 'flight' },
+            { time: '14:00', icon: 'hotel', titleKey: 'hero.samples.japan.items.ryokan.title', metaKey: 'hero.samples.japan.items.ryokan.meta', kind: 'stay' },
+            { time: '17:30', icon: 'temple_buddhist', titleKey: 'hero.samples.japan.items.fushimi.title', metaKey: 'hero.samples.japan.items.fushimi.meta', kind: 'do' },
           ],
         },
         {
-          day: 'Day 2', place: 'Kyoto',
+          day: 2, placeKey: 'hero.places.kyoto',
           items: [
-            { time: '08:00', icon: 'forest', title: 'Arashiyama bamboo grove', meta: 'Go before 9am', kind: 'do' },
-            { time: '13:00', icon: 'ramen_dining', title: 'Omurice at Kichi Kichi', meta: 'Reserved · locals love', kind: 'eat' },
+            { time: '08:00', icon: 'forest', titleKey: 'hero.samples.japan.items.arashiyama.title', metaKey: 'hero.samples.japan.items.arashiyama.meta', kind: 'do' },
+            { time: '13:00', icon: 'ramen_dining', titleKey: 'hero.samples.japan.items.omurice.title', metaKey: 'hero.samples.japan.items.omurice.meta', kind: 'eat' },
           ],
         },
         {
-          day: 'Day 4', place: 'Hakone',
+          day: 4, placeKey: 'hero.places.hakone',
           items: [
-            { time: '11:00', icon: 'train', title: 'Romancecar to Hakone', meta: 'Mt. Fuji views right side', kind: 'do' },
-            { time: '16:00', icon: 'hot_tub', title: 'Onsen ryokan stay', meta: 'Private rotenburo · 9.6', kind: 'stay' },
+            { time: '11:00', icon: 'train', titleKey: 'hero.samples.japan.items.romancecar.title', metaKey: 'hero.samples.japan.items.romancecar.meta', kind: 'do' },
+            { time: '16:00', icon: 'hot_tub', titleKey: 'hero.samples.japan.items.onsen.title', metaKey: 'hero.samples.japan.items.onsen.meta', kind: 'stay' },
           ],
         },
       ],
@@ -111,30 +118,30 @@ export class HeroComponent implements OnInit, OnDestroy {
     },
     {
       key: 'portugal',
-      brief: 'A week along the coast of Portugal',
-      summary: 'Lisbon · Sintra · Algarve',
+      briefKey: 'hero.samples.portugal.brief',
+      summaryKey: 'hero.samples.portugal.summary',
       image: 'assets/hero/portugal.webp',
       days: [
         {
-          day: 'Day 1', place: 'Lisbon',
+          day: 1, placeKey: 'hero.places.lisbon',
           items: [
-            { time: '12:20', icon: 'flight_land', title: 'Arrive Lisbon (LIS)', meta: 'Aerobus → Baixa', kind: 'flight' },
-            { time: '15:00', icon: 'hotel', title: 'Casa do Príncipe', meta: 'Alfama view · 9.2', kind: 'stay' },
-            { time: '19:30', icon: 'restaurant', title: 'Fado dinner in Alfama', meta: 'Tasca do Chico', kind: 'eat' },
+            { time: '12:20', icon: 'flight_land', titleKey: 'hero.samples.portugal.items.lisbon.title', metaKey: 'hero.samples.portugal.items.lisbon.meta', kind: 'flight' },
+            { time: '15:00', icon: 'hotel', titleKey: 'hero.samples.portugal.items.casa.title', metaKey: 'hero.samples.portugal.items.casa.meta', kind: 'stay' },
+            { time: '19:30', icon: 'restaurant', titleKey: 'hero.samples.portugal.items.fado.title', metaKey: 'hero.samples.portugal.items.fado.meta', kind: 'eat' },
           ],
         },
         {
-          day: 'Day 2', place: 'Sintra',
+          day: 2, placeKey: 'hero.places.sintra',
           items: [
-            { time: '09:00', icon: 'castle', title: 'Pena Palace early entry', meta: 'First slot beats lines', kind: 'do' },
-            { time: '14:00', icon: 'local_cafe', title: 'Travesseiros at Piriquita', meta: 'Worth the queue', kind: 'eat' },
+            { time: '09:00', icon: 'castle', titleKey: 'hero.samples.portugal.items.pena.title', metaKey: 'hero.samples.portugal.items.pena.meta', kind: 'do' },
+            { time: '14:00', icon: 'local_cafe', titleKey: 'hero.samples.portugal.items.travesseiros.title', metaKey: 'hero.samples.portugal.items.travesseiros.meta', kind: 'eat' },
           ],
         },
         {
-          day: 'Day 4', place: 'Algarve',
+          day: 4, placeKey: 'hero.places.algarve',
           items: [
-            { time: '10:30', icon: 'sailing', title: 'Benagil sea caves', meta: 'Kayak at low tide', kind: 'do' },
-            { time: '17:00', icon: 'beach_access', title: 'Praia da Marinha', meta: 'Golden hour cliffs', kind: 'do' },
+            { time: '10:30', icon: 'sailing', titleKey: 'hero.samples.portugal.items.benagil.title', metaKey: 'hero.samples.portugal.items.benagil.meta', kind: 'do' },
+            { time: '17:00', icon: 'beach_access', titleKey: 'hero.samples.portugal.items.marinha.title', metaKey: 'hero.samples.portugal.items.marinha.meta', kind: 'do' },
           ],
         },
       ],
@@ -142,29 +149,29 @@ export class HeroComponent implements OnInit, OnDestroy {
     },
     {
       key: 'iceland',
-      brief: 'Iceland ring road in 6 days, chasing the aurora',
-      summary: 'Reykjavík · South Coast · Vík',
+      briefKey: 'hero.samples.iceland.brief',
+      summaryKey: 'hero.samples.iceland.summary',
       image: 'assets/hero/iceland.webp',
       days: [
         {
-          day: 'Day 1', place: 'Reykjavík',
+          day: 1, placeKey: 'hero.places.reykjavik',
           items: [
-            { time: '06:40', icon: 'flight_land', title: 'Land at Keflavík', meta: 'Blue Lagoon on the way', kind: 'flight' },
-            { time: '15:00', icon: 'hotel', title: 'Ion City boutique', meta: 'Aurora wake-up call · 9.1', kind: 'stay' },
+            { time: '06:40', icon: 'flight_land', titleKey: 'hero.samples.iceland.items.keflavik.title', metaKey: 'hero.samples.iceland.items.keflavik.meta', kind: 'flight' },
+            { time: '15:00', icon: 'hotel', titleKey: 'hero.samples.iceland.items.ioncity.title', metaKey: 'hero.samples.iceland.items.ioncity.meta', kind: 'stay' },
           ],
         },
         {
-          day: 'Day 2', place: 'South Coast',
+          day: 2, placeKey: 'hero.places.southCoast',
           items: [
-            { time: '09:00', icon: 'waterfall', title: 'Seljalandsfoss + Skógafoss', meta: 'Walk behind the falls', kind: 'do' },
-            { time: '21:30', icon: 'nightlight', title: 'Aurora hunt', meta: 'KP 4 forecast · clear', kind: 'do' },
+            { time: '09:00', icon: 'waterfall', titleKey: 'hero.samples.iceland.items.waterfalls.title', metaKey: 'hero.samples.iceland.items.waterfalls.meta', kind: 'do' },
+            { time: '21:30', icon: 'nightlight', titleKey: 'hero.samples.iceland.items.aurora.title', metaKey: 'hero.samples.iceland.items.aurora.meta', kind: 'do' },
           ],
         },
         {
-          day: 'Day 3', place: 'Vík',
+          day: 3, placeKey: 'hero.places.vik',
           items: [
-            { time: '10:00', icon: 'landscape', title: 'Reynisfjara black sand', meta: 'Mind the sneaker waves', kind: 'do' },
-            { time: '13:00', icon: 'ramen_dining', title: 'Soup at Black Beach', meta: 'Lamb stew · cosy', kind: 'eat' },
+            { time: '10:00', icon: 'landscape', titleKey: 'hero.samples.iceland.items.reynisfjara.title', metaKey: 'hero.samples.iceland.items.reynisfjara.meta', kind: 'do' },
+            { time: '13:00', icon: 'ramen_dining', titleKey: 'hero.samples.iceland.items.soup.title', metaKey: 'hero.samples.iceland.items.soup.meta', kind: 'eat' },
           ],
         },
       ],
@@ -173,18 +180,25 @@ export class HeroComponent implements OnInit, OnDestroy {
   ];
 
   readonly quickPicks: QuickPick[] = [
-    { emoji: '⛩️', label: 'Japan', key: 'japan' },
-    { emoji: '🌊', label: 'Portugal', key: 'portugal' },
-    { emoji: '❄️', label: 'Iceland', key: 'iceland' },
+    { emoji: '⛩️', labelKey: 'hero.picks.japan', key: 'japan' },
+    { emoji: '🌊', labelKey: 'hero.picks.portugal', key: 'portugal' },
+    { emoji: '❄️', labelKey: 'hero.picks.iceland', key: 'iceland' },
   ];
 
   ngOnInit(): void {
     this.runBuild(this.samples[0]);
+    // Re-run the current build when the language changes so the typed brief,
+    // which is resolved imperatively, picks up the new translation.
+    this.langSub = this.transloco.langChanges$.subscribe(() => {
+      const current = this.activeSample() ?? this.samples[0];
+      this.runBuild(current);
+    });
   }
 
   ngOnDestroy(): void {
     this.clearTimers();
     if (this.cycleTimer) clearTimeout(this.cycleTimer);
+    this.langSub?.unsubscribe();
   }
 
   /** Total revealable items in the active sample. */
@@ -234,8 +248,10 @@ export class HeroComponent implements OnInit, OnDestroy {
     this.pinsShown.set(0);
     this.typedBrief.set('');
 
+    const brief = this.transloco.translate(sample.briefKey);
+
     if (this.reduceMotion) {
-      this.typedBrief.set(sample.brief);
+      this.typedBrief.set(brief);
       this.phase.set('done');
       this.revealed.set(this.totalItems());
       this.pinsShown.set(sample.pins.length);
@@ -245,7 +261,7 @@ export class HeroComponent implements OnInit, OnDestroy {
     this.phase.set('thinking');
 
     // 1) Type the trip brief, character by character.
-    const text = sample.brief;
+    const text = brief;
     const typeSpeed = 26;
     for (let i = 1; i <= text.length; i++) {
       this.after(180 + i * typeSpeed, () => this.typedBrief.set(text.slice(0, i)));
@@ -319,7 +335,7 @@ export class HeroComponent implements OnInit, OnDestroy {
     const sample = this.samples.find((s) => s.key === pick.key) ?? this.samples[0];
     this.cycleIndex = this.samples.indexOf(sample);
     this.stopAutoplay();
-    this.searchQuery.set(sample.brief);
+    this.searchQuery.set(this.transloco.translate(sample.briefKey));
     this.runBuild(sample);
   }
 
@@ -332,9 +348,14 @@ export class HeroComponent implements OnInit, OnDestroy {
   private matchSample(query: string): TripSample {
     const q = query.toLowerCase();
     return (
-      this.samples.find((s) =>
-        [s.key, s.summary, s.brief].some((t) => t.toLowerCase().includes(q) || q.includes(s.key)),
-      ) ?? this.samples[0]
+      this.samples.find((s) => {
+        const haystack = [
+          s.key,
+          this.transloco.translate(s.summaryKey),
+          this.transloco.translate(s.briefKey),
+        ];
+        return haystack.some((t) => t.toLowerCase().includes(q) || q.includes(s.key));
+      }) ?? this.samples[0]
     );
   }
 
@@ -351,7 +372,9 @@ export class HeroComponent implements OnInit, OnDestroy {
   }
 
   openFullPlan(): void {
-    const q = this.searchQuery().trim() || this.activeSample()?.brief || '';
+    const q =
+      this.searchQuery().trim() ||
+      (this.activeSample() ? this.transloco.translate(this.activeSample()!.briefKey) : '');
     this.router.navigate(['/chat'], q ? { queryParams: { q } } : {});
   }
 }

@@ -28,7 +28,8 @@ public class HotelService {
      * Searches available hotels matching budget, dates and constraints.
      */
     @Cacheable(value = "hotels-search",
-            key = "#request.city + '-' + #request.checkIn + '-' + #request.checkOut + '-' + #request.maxBudget")
+            key = "#request.city + '-' + #request.checkIn + '-' + #request.checkOut + '-' + #request.maxBudget"
+                    + " + '-' + #request.minStars + '-' + #request.constraints")
     public List<HotelSearchResult> search(HotelSearchRequest request) {
         // Browse mode: when no dates are supplied (e.g. the public hotels listing),
         // skip availability/budget filtering and simply return active hotels.
@@ -42,6 +43,8 @@ public class HotelService {
         return candidates.stream()
                 .filter(h -> browse || isAvailable(h.getId(), request.checkIn(), request.checkOut()))
                 .filter(h -> meetsConstraints(h, request.constraints()))
+                .filter(h -> request.minStars() == null
+                        || (h.getStars() != null && h.getStars() >= request.minStars()))
                 .filter(h -> request.maxBudget() == null
                         || (h.getBasePriceNight() != null
                         && h.getBasePriceNight()

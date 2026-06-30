@@ -48,6 +48,15 @@ const HEADER_IMG =
           <label for="r-budget">{{ 'catalog.fields.maxPerPerson' | transloco }}</label>
           <input id="r-budget" type="number" min="0" [(ngModel)]="maxBudgetPerPerson" name="budget" placeholder="€" />
         </div>
+        <div class="field">
+          <label for="r-sort">{{ 'catalog.fields.sort' | transloco }}</label>
+          <select id="r-sort" [(ngModel)]="sort" name="sort" (change)="runSearch()">
+            <option value="">{{ 'catalog.sort.relevance' | transloco }}</option>
+            <option value="price_asc">{{ 'catalog.sort.priceAsc' | transloco }}</option>
+            <option value="price_desc">{{ 'catalog.sort.priceDesc' | transloco }}</option>
+            <option value="name_asc">{{ 'catalog.sort.nameAsc' | transloco }}</option>
+          </select>
+        </div>
         <button class="search-submit" type="submit">{{ 'catalog.search' | transloco }}</button>
       </form>
     </header>
@@ -123,6 +132,7 @@ export class RestaurantsComponent implements OnInit {
   date = '';
   covers = 2;
   maxBudgetPerPerson?: number;
+  sort = '';
 
   ngOnInit(): void {
     const q = this.route.snapshot.queryParamMap.get('city') ?? this.route.snapshot.queryParamMap.get('q');
@@ -168,6 +178,7 @@ export class RestaurantsComponent implements OnInit {
       date: this.date || undefined,
       covers: this.covers || 1,
       maxBudgetPerPerson: this.maxBudgetPerPerson,
+      sort: this.sort || undefined,
     };
   }
 

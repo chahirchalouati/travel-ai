@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -25,8 +25,20 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     <!-- HERO — flagship live-itinerary builder -->
     <app-hero />
 
+    <!-- CONTINENT FILTER — narrows the featured & trending strips in place -->
+    @if (continents().length > 0) {
+      <nav class="explore-filter" aria-label="Filter by continent">
+        <button type="button" class="chip" [class.chip--active]="activeContinent() === 'all'"
+                (click)="setContinent('all')">{{ 'explore.filter.all' | transloco }}</button>
+        @for (c of continents(); track c.continent) {
+          <button type="button" class="chip" [class.chip--active]="activeContinent() === c.continent"
+                  (click)="setContinent(c.continent)">{{ c.continent }} · {{ c.destinationCount }}</button>
+        }
+      </nav>
+    }
+
     <!-- FEATURED DESTINATIONS -->
-    @if (featuredDestinations().length > 0) {
+    @if (filteredFeatured().length > 0) {
       <section class="section" aria-labelledby="featured-heading">
         <div class="section-header" appReveal>
           <div>
@@ -37,7 +49,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
           </button>
         </div>
         <div class="featured-scroll">
-          @for (dest of featuredDestinations(); track dest.id) {
+          @for (dest of filteredFeatured(); track dest.id) {
             <article class="dest-card" appReveal [appRevealDelay]="$index * 60" (click)="goToDestination(dest.id)">
               <div class="dest-card__img-wrap">
                 <img
@@ -77,7 +89,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     }
 
     <!-- TRENDING DESTINATIONS -->
-    @if (trendingDestinations().length > 0) {
+    @if (filteredTrending().length > 0) {
       <section class="section section--gray" aria-labelledby="trending-heading">
         <div class="section-header" appReveal>
           <div>
@@ -88,7 +100,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
           </button>
         </div>
         <div class="trending-scroll">
-          @for (dest of trendingDestinations(); track dest.id) {
+          @for (dest of filteredTrending(); track dest.id) {
             <article class="trending-card" appReveal [appRevealDelay]="$index * 60" (click)="goToDestination(dest.id)">
               <div class="trending-card__img-wrap">
                 <img
@@ -190,6 +202,35 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     <app-cta-section />
   `,
   styles: [`
+    /* ── Continent filter ──────────────────────────── */
+    .explore-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      max-width: 1100px;
+      margin: 2rem auto 0;
+      padding: 0 1.5rem;
+    }
+    .explore-filter .chip {
+      padding: 0.5rem 1.1rem;
+      border-radius: 999px;
+      border: 1px solid var(--border, #e3e3e3);
+      background: var(--bg-secondary, #f7f7f7);
+      color: var(--text-secondary, #555);
+      font: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
+    }
+    .explore-filter .chip:hover { border-color: var(--teal, #0a7d72); color: var(--text-primary, #1a1a1a); }
+    .explore-filter .chip--active {
+      background: var(--teal, #0a7d72);
+      border-color: var(--teal, #0a7d72);
+      color: #fff;
+    }
+
     /* ── Design Tokens ─────────────────────────────── */
     :host {
       --bg-primary: #ffffff;
@@ -789,6 +830,20 @@ export class ExploreComponent implements OnInit {
   readonly interestTiles = signal<InterestSummary[]>([]);
   readonly stats = signal<PlatformStats | null>(null);
   readonly searchQuery = signal('');
+  readonly activeContinent = signal('all');
+
+  /** In-page continent filter applied to the featured and trending strips (client-side). */
+  readonly filteredFeatured = computed(() => this.byContinent(this.featuredDestinations()));
+  readonly filteredTrending = computed(() => this.byContinent(this.trendingDestinations()));
+
+  private byContinent(list: DestinationResponse[]): DestinationResponse[] {
+    const c = this.activeContinent();
+    return c === 'all' ? list : list.filter(d => d.continent === c);
+  }
+
+  setContinent(continent: string): void {
+    this.activeContinent.set(continent);
+  }
 
   ngOnInit(): void {
     this.destinationService.getFeatured().pipe(

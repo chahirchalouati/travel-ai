@@ -22,7 +22,16 @@ public class LiveItineraryController {
     private final LiveItineraryService liveItineraryService;
     private final ItineraryStreamService streamService;
 
-    /** Real-time SSE stream of proposal alerts. Auth via access_token query param (EventSource). */
+    /**
+     * Real-time SSE stream of proposal alerts. The browser {@code EventSource} cannot set an
+     * Authorization header, so {@link com.travelai.auth.JwtAuthFilter} accepts the JWT as an
+     * {@code access_token} query parameter for this endpoint only.
+     *
+     * <p>Trade-off: a token in the query string can leak into HTTP access logs. The embedded
+     * server ships with access logging disabled, so nothing logs it by default. If access
+     * logging is ever enabled (reverse proxy or {@code server.tomcat.accesslog}), the
+     * {@code access_token} parameter MUST be masked in the log pattern.
+     */
     @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter stream(@AuthenticationPrincipal UserDetails user) {
         return streamService.subscribe(user.getUsername());

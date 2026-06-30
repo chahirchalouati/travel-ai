@@ -48,6 +48,11 @@ interface TripCard extends BookingResponse {
               <article class="card trip" (click)="open(t)">
                 <div class="trip-banner" [style.background-image]="bannerFor(t)">
                   <span class="pill" [class]="pillClass(t.status)">{{ t.status }}</span>
+                  @if (t.status === 'CONFIRMED') {
+                    <button class="trip-live" (click)="openLive($event, t)">
+                      <span class="ms">radar</span> {{ 'itinerary.liveBadge' | transloco }}
+                    </button>
+                  }
                 </div>
                 <div class="trip-body">
                   <h3 class="trip-dest">{{ t.destination || ('trips.tripFallback' | transloco) }}</h3>
@@ -90,6 +95,9 @@ interface TripCard extends BookingResponse {
     .trip { cursor: pointer; }
     .trip-banner { height: 132px; background-size: cover; background-position: center; position: relative; display: flex; align-items: flex-start; padding: 12px; }
     .trip-banner .pill { background: rgba(255,255,255,0.92); }
+    .trip-live { position: absolute; top: 12px; right: 12px; display: inline-flex; align-items: center; gap: 5px; background: var(--accent-soft); border: 1px solid var(--accent); color: var(--accent); border-radius: 999px; padding: 5px 12px; font-weight: 700; font-size: 0.78rem; cursor: pointer; transition: background 120ms ease, color 120ms ease; }
+    .trip-live:hover { background: var(--accent); color: #fff; }
+    .trip-live .ms { font-size: 15px; }
     .trip--past .trip-banner { filter: grayscale(0.35); }
     .trip-body { padding: 1rem 1.1rem 1.2rem; }
     .trip-dest { margin: 0 0 0.35rem; font-size: 1.18rem; font-weight: 800; letter-spacing: -0.01em; }
@@ -142,6 +150,11 @@ export class TripsComponent implements OnInit {
   pillClass(status: string): string { return `pill--${status.toLowerCase()}`; }
 
   open(t: BookingResponse): void { this.router.navigate(['/bookings'], { fragment: t.id }); }
+
+  openLive(event: Event, t: BookingResponse): void {
+    event.stopPropagation();
+    this.router.navigate(['/trips', t.id, 'live']);
+  }
 
   private hash(s: string): number {
     let h = 0;

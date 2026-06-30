@@ -32,6 +32,16 @@ const HEADER_IMG =
           <input id="a-city" type="text" [(ngModel)]="city" name="city"
                  [placeholder]="'catalog.fields.cityPlaceholder' | transloco" />
         </div>
+        <div class="field">
+          <label for="a-sort">{{ 'catalog.fields.sort' | transloco }}</label>
+          <select id="a-sort" [(ngModel)]="sort" name="sort" (change)="runSearch()">
+            <option value="">{{ 'catalog.sort.relevance' | transloco }}</option>
+            <option value="popularity_desc">{{ 'catalog.sort.popularity' | transloco }}</option>
+            <option value="price_asc">{{ 'catalog.sort.priceAsc' | transloco }}</option>
+            <option value="price_desc">{{ 'catalog.sort.priceDesc' | transloco }}</option>
+            <option value="name_asc">{{ 'catalog.sort.nameAsc' | transloco }}</option>
+          </select>
+        </div>
         <button class="search-submit" type="submit">{{ 'catalog.search' | transloco }}</button>
       </form>
 
@@ -122,6 +132,7 @@ export class AttractionsComponent implements OnInit {
   private page = 0;
 
   city = '';
+  sort = '';
 
   ngOnInit(): void {
     const q = this.route.snapshot.queryParamMap.get('city') ?? this.route.snapshot.queryParamMap.get('q');
@@ -172,6 +183,7 @@ export class AttractionsComponent implements OnInit {
     return {
       city: this.city.trim() || undefined,
       category: this.activeCategory() ?? undefined,
+      sort: this.sort || undefined,
     };
   }
 

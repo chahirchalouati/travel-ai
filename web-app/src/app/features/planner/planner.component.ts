@@ -245,6 +245,15 @@ function fmt(n: number, lang: Lang): string {
   return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, sep);
 }
 
+// ─── Live-planning timing ──────────────────────────────────────────────────────
+// Proposal generation is LLM-bound (the backend writes an AI motivation per
+// package), so it can take ~8–20s+ and is variable. The poll window must be
+// generous enough that live results reliably land before we fall back to demo.
+const PLANNER_POLL_INTERVAL_MS = 2000;
+const PLANNER_POLL_MAX_ATTEMPTS = 30; // 30 × 2s = 60s live-generation window
+const PLANNER_GENERATION_TIMEOUT_MS =
+  PLANNER_POLL_INTERVAL_MS * PLANNER_POLL_MAX_ATTEMPTS;
+
 @Component({
   selector: 'app-planner',
   standalone: true,
@@ -745,12 +754,19 @@ export class PlannerComponent implements OnDestroy {
     this.overlay.set(null);
     this.agentStep.set(0);
     this.useBackendProposals.set(false);
+    this.rawBackendData.set([]);
 
-    [600,1150,1700,2250,2750].forEach((ms, i) => {
+    // Drive the orchestrator animation; the final "ranking" agent holds active
+    // while we wait for the live backend result. We deliberately do NOT auto-jump
+    // to the demo list — that swap only happens once live data lands (or we time out).
+    [600, 1150, 1700, 2250, 2750].forEach((ms, i) => {
       this._timers.push(setTimeout(() => this.agentStep.set(i + 1), ms));
     });
-    // Always transition to results after animation
-    this._timers.push(setTimeout(() => this.stage.set('results'), 3350));
+    // Safety net: never leave the user stuck on the generating animation if the
+    // request itself stalls. Falls back to demo proposals just past the poll window.
+    this._timers.push(setTimeout(() => {
+      if (this.stage() === 'generating') this.stage.set('results');
+    }, PLANNER_GENERATION_TIMEOUT_MS + 5000));
 
     // Compute trip dates
     const dep = new Date();
@@ -774,9 +790,10 @@ export class PlannerComponent implements OnDestroy {
     }).pipe(
       switchMap(req => {
         this.currentRequestId.set(req.id);
-        // Poll every 2s (up to 10 times / 20s) until the backend returns proposals
-        return timer(2000, 2000).pipe(
-          take(10),
+        // Poll until the backend has generated at least one proposal, up to the
+        // full live-generation window (LLM-bound, so this can take ~8–20s+).
+        return timer(PLANNER_POLL_INTERVAL_MS, PLANNER_POLL_INTERVAL_MS).pipe(
+          take(PLANNER_POLL_MAX_ATTEMPTS),
           switchMap(() => this.travelService.getProposals(req.id)),
           first(proposals => proposals.length > 0, [])
         );
@@ -839,13 +856,18 @@ export class PlannerComponent implements OnDestroy {
           this.useBackendProposals.set(true);
           this.selId.set(results[0].proposal.id);
         }
+        // Live data is ready (or the poll window elapsed → demo fallback): reveal results.
+        this.stage.set('results');
       },
       error: err => {
         if (err.status === 401) {
           this.authService.clearAuth();
           this.showAuthModal.set(true);
+          this.stage.set('empty');
+        } else {
+          // Backend unreachable/failed → fall back to demo proposals.
+          this.stage.set('results');
         }
-        // Animation timer already queued; falls back to demo proposals
       }
     });
   }

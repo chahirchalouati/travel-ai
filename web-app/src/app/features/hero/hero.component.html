@@ -25,17 +25,16 @@
     <div class="hero-lede">
       <span class="hero-eyebrow reveal">
         <span class="hero-eyebrow-dot" aria-hidden="true"></span>
-        AI trip designer · not another listings site
+        {{ 'hero.eyebrow' | transloco }}
       </span>
 
       <h1 id="hero-heading" class="hero-title display reveal reveal-delay-1">
-        Don't search a thousand reviews.
-        <em>Get the trip,</em> already planned.
+        {{ 'hero.titleLine1' | transloco }}
+        <em>{{ 'hero.titleEmphasis' | transloco }}</em> {{ 'hero.titleLine2' | transloco }}
       </h1>
 
       <p class="hero-subtitle reveal reveal-delay-2">
-        Describe the trip you want in a sentence. Watch a day-by-day plan —
-        stays, food, and the small local details — build itself in seconds.
+        {{ 'hero.subtitle' | transloco }}
       </p>
 
       <div class="hero-search reveal reveal-delay-3">
@@ -48,17 +47,17 @@
             (focus)="onSearchFocus()"
             (input)="searchQuery.set($any($event.target).value)"
             (keyup.enter)="planTrip()"
-            placeholder="e.g. 10 quiet days in Japan with great food…"
+            [placeholder]="'hero.searchPlaceholder' | transloco"
             autocomplete="off"
-            aria-label="Describe your trip"
+            [attr.aria-label]="'hero.searchAria' | transloco"
           />
-          <button class="search-submit" (click)="planTrip()" aria-label="Build my itinerary">
+          <button class="search-submit" (click)="planTrip()" [attr.aria-label]="'hero.buildAria' | transloco">
             <span class="ms" aria-hidden="true">arrow_forward</span>
           </button>
         </div>
 
-        <div class="hero-quick-picks" role="list" aria-label="Try a trip">
-          <span class="hero-quick-label">Try:</span>
+        <div class="hero-quick-picks" role="list" [attr.aria-label]="'hero.tryAria' | transloco">
+          <span class="hero-quick-label">{{ 'hero.tryLabel' | transloco }}</span>
           @for (p of quickPicks; track p.key) {
             <button
               class="quick-pill"
@@ -67,23 +66,23 @@
               (click)="selectPick(p)"
             >
               <span class="quick-pill-emoji" aria-hidden="true">{{ p.emoji }}</span>
-              <span>{{ p.label }}</span>
+              <span>{{ p.labelKey | transloco }}</span>
             </button>
           }
         </div>
       </div>
 
       <ul class="hero-trust reveal reveal-delay-3" role="list">
-        <li><span class="ms" aria-hidden="true">verified</span> Human-checked picks</li>
-        <li><span class="ms" aria-hidden="true">block</span> No pay-to-rank</li>
-        <li><span class="ms" aria-hidden="true">bolt</span> Replans on the fly</li>
+        <li><span class="ms" aria-hidden="true">verified</span> {{ 'hero.trust.human' | transloco }}</li>
+        <li><span class="ms" aria-hidden="true">block</span> {{ 'hero.trust.noRank' | transloco }}</li>
+        <li><span class="ms" aria-hidden="true">bolt</span> {{ 'hero.trust.replan' | transloco }}</li>
       </ul>
     </div>
 
     <!-- ===== Right: the living itinerary ===== -->
     <div
       class="hero-stage reveal reveal-delay-2"
-      aria-label="Live itinerary preview"
+      [attr.aria-label]="'hero.stageAria' | transloco"
       (mouseenter)="onStageEnter()"
       (mouseleave)="onStageLeave()"
     >
@@ -97,15 +96,15 @@
             <div class="trip-head-text">
               <span class="trip-brief">{{ typedBrief() }}<span class="caret" aria-hidden="true" [class.hidden]="phase() !== 'thinking'"></span></span>
               <span class="trip-summary">
-                @if (activeSample()) { {{ activeSample()!.summary }} }
+                @if (activeSample()) { {{ activeSample()!.summaryKey | transloco }} }
               </span>
             </div>
           </div>
           <span class="trip-status" [class.is-done]="phase() === 'done'">
             @if (phase() === 'done') {
-              <span class="ms" aria-hidden="true">check_circle</span> Ready
+              <span class="ms" aria-hidden="true">check_circle</span> {{ 'hero.status.ready' | transloco }}
             } @else {
-              <span class="dot-pulse" aria-hidden="true"></span> Planning…
+              <span class="dot-pulse" aria-hidden="true"></span> {{ 'hero.status.planning' | transloco }}
             }
           </span>
         </header>
@@ -139,10 +138,10 @@
               @for (d of activeSample()!.days; track d.day; let di = $index) {
                 <div class="trip-day" [class.shown]="isDayShown(di)">
                   <div class="trip-day-head">
-                    <span class="trip-day-label">{{ d.day }}</span>
-                    <span class="trip-day-place">{{ d.place }}</span>
+                    <span class="trip-day-label">{{ 'hero.dayLabel' | transloco: { n: d.day } }}</span>
+                    <span class="trip-day-place">{{ d.placeKey | transloco }}</span>
                   </div>
-                  @for (it of d.items; track it.title; let ii = $index) {
+                  @for (it of d.items; track it.titleKey; let ii = $index) {
                     <div
                       class="trip-item"
                       [class.shown]="isItemShown(di, ii)"
@@ -153,8 +152,8 @@
                         <span class="ms" aria-hidden="true">{{ it.icon }}</span>
                       </span>
                       <span class="trip-item-text">
-                        <span class="trip-item-title">{{ it.title }}</span>
-                        <span class="trip-item-meta">{{ it.meta }}</span>
+                        <span class="trip-item-title">{{ it.titleKey | transloco }}</span>
+                        <span class="trip-item-meta">{{ it.metaKey | transloco }}</span>
                       </span>
                     </div>
                   }
@@ -166,19 +165,19 @@
 
         <footer class="trip-foot" [class.shown]="phase() === 'done'">
           <button class="trip-cta" (click)="openFullPlan()">
-            Open the full itinerary
+            {{ 'hero.openPlan' | transloco }}
             <span class="ms" aria-hidden="true">arrow_forward</span>
           </button>
-          <span class="trip-foot-note">Adjust anything — it replans instantly.</span>
+          <span class="trip-foot-note">{{ 'hero.footNote' | transloco }}</span>
         </footer>
       </div>
 
       <!-- floating proof chips for depth -->
       <span class="float-chip float-chip--a" aria-hidden="true">
-        <span class="ms">savings</span> Under budget
+        <span class="ms">savings</span> {{ 'hero.chipBudget' | transloco }}
       </span>
       <span class="float-chip float-chip--b" aria-hidden="true">
-        <span class="ms">star</span> 9.4 avg picks
+        <span class="ms">star</span> {{ 'hero.chipRating' | transloco }}
       </span>
     </div>
   </div>

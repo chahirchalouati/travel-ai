@@ -30,7 +30,10 @@
       "departurePort": "Port de départ",
       "portPlaceholder": "ex. Barcelone",
       "cruiseType": "Type de croisière",
-      "cruiseTypePlaceholder": "ex. Méditerranée"
+      "cruiseTypePlaceholder": "ex. Méditerranée",
+      "sort": "Trier par",
+      "minStars": "Étoiles min.",
+      "anyStars": "Toutes"
     },
     "amenities": {
       "sea": "Vue mer",
@@ -80,7 +83,18 @@
       "destination": "Destination",
       "hotel": "Hôtel",
       "restaurant": "Restaurant",
-      "cruise": "Croisière"
+      "cruise": "Croisière",
+      "allTypes": "Tous"
+    },
+    "sort": {
+      "relevance": "Pertinence",
+      "priceAsc": "Prix : croissant",
+      "priceDesc": "Prix : décroissant",
+      "starsDesc": "Étoiles : décroissant",
+      "nameAsc": "Nom : A–Z",
+      "departureAsc": "Départ : au plus tôt",
+      "departureDesc": "Départ : au plus tard",
+      "popularity": "Plus populaires"
     }
   },
   "hotel": {
@@ -166,7 +180,10 @@
     "trending": {
       "thisMonth": "% ce mois-ci"
     },
-    "destinations": "destinations"
+    "destinations": "destinations",
+    "filter": {
+      "all": "Tous"
+    }
   },
   "destination": {
     "back": "Retour aux destinations",
@@ -909,5 +926,147 @@
     "postAnswer": "Publier la réponse",
     "signInToAnswer": "Connectez-vous pour répondre",
     "notFound": "Question introuvable"
+  },
+  "hero": {
+    "eyebrow": "Concepteur de voyages IA · pas un énième site d'annonces",
+    "titleLine1": "Ne fouillez pas mille avis.",
+    "titleEmphasis": "Obtenez le voyage,",
+    "titleLine2": "déjà planifié.",
+    "subtitle": "Décrivez le voyage que vous voulez en une phrase. Regardez un programme jour par jour — hébergements, restaurants et petits détails locaux — se construire en quelques secondes.",
+    "searchPlaceholder": "ex. 10 jours paisibles au Japon avec une cuisine excellente…",
+    "searchAria": "Décrivez votre voyage",
+    "buildAria": "Créer mon itinéraire",
+    "tryLabel": "Essayez :",
+    "tryAria": "Essayez un voyage",
+    "trust": {
+      "human": "Sélections vérifiées par des humains",
+      "noRank": "Pas de classement payant",
+      "replan": "Replanifie à la volée"
+    },
+    "stageAria": "Aperçu de l'itinéraire en direct",
+    "status": {
+      "ready": "Prêt",
+      "planning": "Planification…"
+    },
+    "openPlan": "Ouvrir l'itinéraire complet",
+    "footNote": "Modifiez ce que vous voulez — tout se replanifie aussitôt.",
+    "chipBudget": "Sous le budget",
+    "chipRating": "9.4 de moyenne",
+    "dayLabel": "Jour {{n}}",
+    "picks": {
+      "japan": "Japon",
+      "portugal": "Portugal",
+      "iceland": "Islande"
+    },
+    "places": {
+      "kyoto": "Kyoto",
+      "hakone": "Hakone",
+      "lisbon": "Lisbonne",
+      "sintra": "Sintra",
+      "algarve": "Algarve",
+      "reykjavik": "Reykjavík",
+      "southCoast": "Côte Sud",
+      "vik": "Vík"
+    },
+    "samples": {
+      "japan": {
+        "brief": "10 jours au Japon — temples, cuisine et matinées paisibles",
+        "summary": "Kyoto · Hakone · Tokyo",
+        "items": {
+          "kansai": {
+            "title": "Atterrissage à Kansai (KIX)",
+            "meta": "Haruka express → Kyoto"
+          },
+          "ryokan": {
+            "title": "Ryokan Genhouin",
+            "meta": "Suite tatami · 9.4"
+          },
+          "fushimi": {
+            "title": "Fushimi Inari au crépuscule",
+            "meta": "Évitez la foule"
+          },
+          "arashiyama": {
+            "title": "Bambouseraie d'Arashiyama",
+            "meta": "Allez-y avant 9h"
+          },
+          "omurice": {
+            "title": "Omurice chez Kichi Kichi",
+            "meta": "Sur réservation · adoré des locaux"
+          },
+          "romancecar": {
+            "title": "Romancecar pour Hakone",
+            "meta": "Vue sur le Fuji à droite"
+          },
+          "onsen": {
+            "title": "Séjour en ryokan onsen",
+            "meta": "Rotenburo privé · 9.6"
+          }
+        }
+      },
+      "portugal": {
+        "brief": "Une semaine le long de la côte du Portugal",
+        "summary": "Lisbonne · Sintra · Algarve",
+        "items": {
+          "lisbon": {
+            "title": "Arrivée à Lisbonne (LIS)",
+            "meta": "Aerobus → Baixa"
+          },
+          "casa": {
+            "title": "Casa do Príncipe",
+            "meta": "Vue sur l'Alfama · 9.2"
+          },
+          "fado": {
+            "title": "Dîner fado à l'Alfama",
+            "meta": "Tasca do Chico"
+          },
+          "pena": {
+            "title": "Entrée matinale au palais de Pena",
+            "meta": "Le premier créneau évite les files"
+          },
+          "travesseiros": {
+            "title": "Travesseiros chez Piriquita",
+            "meta": "Ça vaut la file"
+          },
+          "benagil": {
+            "title": "Grottes marines de Benagil",
+            "meta": "Kayak à marée basse"
+          },
+          "marinha": {
+            "title": "Praia da Marinha",
+            "meta": "Falaises à l'heure dorée"
+          }
+        }
+      },
+      "iceland": {
+        "brief": "La route circulaire d'Islande en 6 jours, à la poursuite des aurores",
+        "summary": "Reykjavík · Côte Sud · Vík",
+        "items": {
+          "keflavik": {
+            "title": "Atterrissage à Keflavík",
+            "meta": "Blue Lagoon en chemin"
+          },
+          "ioncity": {
+            "title": "Ion City boutique",
+            "meta": "Réveil aurore · 9.1"
+          },
+          "waterfalls": {
+            "title": "Seljalandsfoss + Skógafoss",
+            "meta": "Marchez derrière les chutes"
+          },
+          "aurora": {
+            "title": "Chasse aux aurores",
+            "meta": "Prévision KP 4 · ciel dégagé"
+          },
+          "reynisfjara": {
+            "title": "Sable noir de Reynisfjara",
+            "meta": "Attention aux vagues scélérates"
+          },
+          "soup": {
+            "title": "Soupe à Black Beach",
+            "meta": "Ragoût d'agneau · cosy"
+          }
+        }
+      }
+    }
   }
 }

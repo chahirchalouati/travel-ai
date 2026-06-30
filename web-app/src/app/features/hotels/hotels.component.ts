@@ -47,8 +47,35 @@ const HEADER_IMG =
           <label for="h-budget">{{ 'catalog.fields.maxBudget' | transloco }}</label>
           <input id="h-budget" type="number" min="0" [(ngModel)]="maxBudget" name="maxBudget" placeholder="€" />
         </div>
+        <div class="field">
+          <label for="h-stars">{{ 'catalog.fields.minStars' | transloco }}</label>
+          <select id="h-stars" [(ngModel)]="minStars" name="minStars" (change)="runSearch()">
+            <option [ngValue]="undefined">{{ 'catalog.fields.anyStars' | transloco }}</option>
+            <option [ngValue]="3">3+ ★</option>
+            <option [ngValue]="4">4+ ★</option>
+            <option [ngValue]="5">5 ★</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="h-sort">{{ 'catalog.fields.sort' | transloco }}</label>
+          <select id="h-sort" [(ngModel)]="sort" name="sort" (change)="runSearch()">
+            <option value="">{{ 'catalog.sort.relevance' | transloco }}</option>
+            <option value="price_asc">{{ 'catalog.sort.priceAsc' | transloco }}</option>
+            <option value="price_desc">{{ 'catalog.sort.priceDesc' | transloco }}</option>
+            <option value="stars_desc">{{ 'catalog.sort.starsDesc' | transloco }}</option>
+          </select>
+        </div>
         <button class="search-submit" type="submit">{{ 'catalog.search' | transloco }}</button>
       </form>
+
+      <div class="chip-row">
+        @for (a of AMENITIES; track a.value) {
+          <button type="button" class="chip" [class.chip--active]="isAmenityOn(a.value)"
+                  (click)="toggleAmenity(a.value)">
+            {{ a.labelKey | transloco }}
+          </button>
+        }
+      </div>
     </header>
 
     <section class="results">
@@ -119,11 +146,32 @@ export class HotelsComponent implements OnInit {
   readonly hasMore = computed(() => this.results().length < this.total());
   private page = 0;
 
+  readonly AMENITIES: ReadonlyArray<{ value: string; labelKey: string }> = [
+    { value: 'sea', labelKey: 'catalog.amenities.sea' },
+    { value: 'family', labelKey: 'catalog.amenities.family' },
+    { value: 'pets', labelKey: 'catalog.amenities.pet' },
+    { value: 'accessible', labelKey: 'catalog.amenities.accessible' },
+  ];
+
   city = '';
   checkIn = '';
   checkOut = '';
   guests = 2;
   maxBudget?: number;
+  minStars?: number;
+  sort = '';
+  private readonly amenities = signal<ReadonlySet<string>>(new Set());
+
+  isAmenityOn(value: string): boolean {
+    return this.amenities().has(value);
+  }
+
+  toggleAmenity(value: string): void {
+    const next = new Set(this.amenities());
+    next.has(value) ? next.delete(value) : next.add(value);
+    this.amenities.set(next);
+    this.runSearch();
+  }
 
   ngOnInit(): void {
     const q = this.route.snapshot.queryParamMap.get('city') ?? this.route.snapshot.queryParamMap.get('q');
@@ -169,6 +217,9 @@ export class HotelsComponent implements OnInit {
       checkOut: this.checkOut || undefined,
       guests: this.guests || 1,
       maxBudget: this.maxBudget,
+      minStars: this.minStars,
+      constraints: this.amenities().size ? [...this.amenities()] : undefined,
+      sort: this.sort || undefined,
     };
   }
 

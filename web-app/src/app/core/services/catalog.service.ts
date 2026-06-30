@@ -32,6 +32,9 @@ export interface HotelSearchQuery {
   checkOut?: string;
   guests?: number;
   maxBudget?: number;
+  minStars?: number;
+  constraints?: string[];
+  sort?: string;
 }
 
 export interface FlightSearchQuery {
@@ -40,6 +43,7 @@ export interface FlightSearchQuery {
   departureDate?: string;
   passengers?: number;
   maxPrice?: number;
+  sort?: string;
 }
 
 export interface RestaurantSearchQuery {
@@ -49,6 +53,7 @@ export interface RestaurantSearchQuery {
   covers?: number;
   maxBudgetPerPerson?: number;
   cuisineType?: string;
+  sort?: string;
 }
 
 export interface CruiseSearchQuery {
@@ -144,11 +149,21 @@ export class CatalogService {
   }
 }
 
-/** Builds HttpParams, skipping null/undefined/empty values. */
+/**
+ * Builds HttpParams, skipping null/undefined/empty values. Array values are appended
+ * as repeated params (e.g. {@code constraints=sea&constraints=pets}) so they bind to a
+ * backend {@code List<String>}.
+ */
 function toParams(query: object): HttpParams {
   let params = new HttpParams();
   for (const [key, value] of Object.entries(query)) {
     if (value === null || value === undefined || value === '') {
+      continue;
+    }
+    if (Array.isArray(value)) {
+      for (const item of value) {
+        params = params.append(key, String(item));
+      }
       continue;
     }
     params = params.set(key, String(value));
