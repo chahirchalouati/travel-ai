@@ -116,7 +116,9 @@ public class HotelService {
                 hotel.isFamilyFriendly(),
                 hotel.isSeaProximity(),
                 true,
-                partnerId
+                partnerId,
+                hotel.getLatitude(),
+                hotel.getLongitude()
         );
     }
 }

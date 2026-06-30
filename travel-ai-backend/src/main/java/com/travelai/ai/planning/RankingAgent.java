@@ -73,19 +73,68 @@ public class RankingAgent {
             }
         }
 
-        // Highest-quality stays first, cheaper trips break ties — then one per distinct city.
+        // Anchor on the highest-quality stay, then spread the remaining picks as far apart
+        // geographically as possible (farthest-point selection). This stops the planner from
+        // returning, say, three Italian cities just because Italian 5-star stays happen to be
+        // the cheapest at the top rating — the user sees a genuinely worldwide set.
         candidates.sort(Comparator.comparingDouble((CityCandidate c) -> c.hotel().rating()).reversed()
                 .thenComparing(CityCandidate::total));
 
+        List<CityCandidate> selected = selectGeographicallyDiverse(candidates);
+
         List<RankedProposal> proposals = new ArrayList<>();
         int rank = 100;
-        for (CityCandidate c : candidates) {
-            if (proposals.size() >= MAX_PROPOSALS) {
-                break;
-            }
+        for (CityCandidate c : selected) {
             proposals.add(buildProposal(ctx, c.hotel(), c.restaurant(), c.flight(), c.total(), rank--, c.city()));
         }
         return proposals;
+    }
+
+    /**
+     * Greedy farthest-point sampling: keep the top-rated candidate, then repeatedly add the
+     * candidate that is furthest from everything already chosen, so the proposals span the map.
+     */
+    private List<CityCandidate> selectGeographicallyDiverse(List<CityCandidate> sortedByQuality) {
+        List<CityCandidate> pool = new ArrayList<>(sortedByQuality);
+        List<CityCandidate> selected = new ArrayList<>();
+        if (pool.isEmpty()) {
+            return selected;
+        }
+        selected.add(pool.remove(0));
+
+        while (selected.size() < MAX_PROPOSALS && !pool.isEmpty()) {
+            CityCandidate best = null;
+            double bestMinDistance = -1.0;
+            for (CityCandidate candidate : pool) {
+                double minDistance = selected.stream()
+                        .mapToDouble(s -> distanceKm(candidate.hotel(), s.hotel()))
+                        .min()
+                        .orElse(0.0);
+                if (minDistance > bestMinDistance) {
+                    bestMinDistance = minDistance;
+                    best = candidate;
+                }
+            }
+            // best is never null here: the loop ran at least once over a non-empty pool.
+            selected.add(best);
+            pool.remove(best);
+        }
+        return selected;
+    }
+
+    /** Haversine distance in km; 0 when either hotel is missing coordinates (no spread signal). */
+    private double distanceKm(HotelOption a, HotelOption b) {
+        if (a.latitude() == null || a.longitude() == null || b.latitude() == null || b.longitude() == null) {
+            return 0.0;
+        }
+        double earthRadiusKm = 6371.0;
+        double dLat = Math.toRadians(b.latitude() - a.latitude());
+        double dLon = Math.toRadians(b.longitude() - a.longitude());
+        double lat1 = Math.toRadians(a.latitude());
+        double lat2 = Math.toRadians(b.latitude());
+        double h = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+        return 2 * earthRadiusKm * Math.asin(Math.min(1.0, Math.sqrt(h)));
     }
 
     private List<RankedProposal> rankFallback(AgentContext ctx, List<HotelOption> hotels,

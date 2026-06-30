@@ -17,6 +17,8 @@ public record HotelSearchResult(
         boolean familyFriendly,
         boolean seaProximity,
         boolean available,
-        UUID partnerId
+        UUID partnerId,
+        BigDecimal latitude,
+        BigDecimal longitude
 ) {
 }

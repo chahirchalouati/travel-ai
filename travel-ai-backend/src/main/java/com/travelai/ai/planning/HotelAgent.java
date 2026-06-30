@@ -31,7 +31,9 @@ public class HotelAgent {
                         r.city(),
                         r.pricePerNight(),
                         r.totalPrice(),
-                        r.stars() != null ? r.stars().doubleValue() : 0.0
+                        r.stars() != null ? r.stars().doubleValue() : 0.0,
+                        r.latitude() != null ? r.latitude().doubleValue() : null,
+                        r.longitude() != null ? r.longitude().doubleValue() : null
                 ))
                 .limit(60)
                 .toList();

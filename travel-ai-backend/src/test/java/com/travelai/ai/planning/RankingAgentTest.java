@@ -41,7 +41,20 @@ class RankingAgentTest {
     }
 
     private HotelOption hotel(UUID id, String city, double total, double rating) {
-        return new HotelOption(id, "Hotel " + city, city, BigDecimal.valueOf(total / 5), BigDecimal.valueOf(total), rating);
+        double[] c = coords(city);
+        return new HotelOption(id, "Hotel " + city, city, BigDecimal.valueOf(total / 5),
+                BigDecimal.valueOf(total), rating, c[0], c[1]);
+    }
+
+    private double[] coords(String city) {
+        return switch (city) {
+            case "Rome" -> new double[]{41.9028, 12.4964};
+            case "Milan" -> new double[]{45.4642, 9.1900};
+            case "Florence" -> new double[]{43.7696, 11.2558};
+            case "Paris" -> new double[]{48.8566, 2.3522};
+            case "Tokyo" -> new double[]{35.6762, 139.6503};
+            default -> new double[]{0.0, 0.0};
+        };
     }
 
     private RestaurantOption restaurant(UUID id, String city, double perPerson) {
@@ -85,6 +98,27 @@ class RankingAgentTest {
         List<RankedProposal> proposals = rankingAgent.rank(ctx(BigDecimal.valueOf(5000)), hotels, restaurants, List.of(flight(100)));
 
         assertThat(proposals).extracting(RankedProposal::destination).containsExactlyInAnyOrder("Rome", "Paris");
+    }
+
+    @Test
+    @DisplayName("spreads proposals across distant cities instead of clustering nearby ones")
+    void diversifiesAcrossDistantCities() {
+        List<HotelOption> hotels = List.of(
+                hotel(UUID.randomUUID(), "Rome", 500, 4.9),
+                hotel(UUID.randomUUID(), "Milan", 500, 4.8),
+                hotel(UUID.randomUUID(), "Florence", 500, 4.7),
+                hotel(UUID.randomUUID(), "Tokyo", 500, 4.0));
+        List<RestaurantOption> restaurants = List.of(
+                restaurant(UUID.randomUUID(), "Rome", 50),
+                restaurant(UUID.randomUUID(), "Milan", 50),
+                restaurant(UUID.randomUUID(), "Florence", 50),
+                restaurant(UUID.randomUUID(), "Tokyo", 50));
+
+        List<RankedProposal> proposals = rankingAgent.rank(ctx(BigDecimal.valueOf(5000)), hotels, restaurants, List.of(flight(100)));
+
+        assertThat(proposals).hasSize(3);
+        // Tokyo (far) is surfaced over a third nearby Italian city despite its lower rating.
+        assertThat(proposals).extracting(RankedProposal::destination).contains("Tokyo");
     }
 
     @Test
