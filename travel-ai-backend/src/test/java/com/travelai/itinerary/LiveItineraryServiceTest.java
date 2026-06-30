@@ -7,6 +7,8 @@ import com.travelai.itinerary.dto.ReportEventRequest;
 import com.travelai.itinerary.events.ItineraryApprovedEvent;
 import com.travelai.itinerary.events.ItineraryEventDetectedEvent;
 import com.travelai.messaging.MessagingService;
+import com.travelai.shared.exception.ErrorCode;
+import com.travelai.shared.exception.TravelAiException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
@@ -161,6 +164,54 @@ class LiveItineraryServiceTest {
         assertThat(segment.getCurrentStatus()).isEqualTo(SegmentStatus.REBOOKED);
         verify(messagingService).start(eq(email), any(), any());
         verify(eventPublisher).publishEvent(any(ItineraryApprovedEvent.class));
+    }
+
+    @Test
+    @DisplayName("recordManualEvent on a booking owned by another user is forbidden")
+    void recordManualEvent_foreignBooking_forbidden() {
+        String email = "intruder@example.com";
+        UUID itineraryId = UUID.randomUUID();
+        UUID bookingId = UUID.randomUUID();
+
+        LiveItinerary itinerary = new LiveItinerary();
+        itinerary.setBookingId(bookingId);
+        ReflectionTestUtils.setField(itinerary, "id", itineraryId);
+
+        when(itineraryRepository.findById(itineraryId)).thenReturn(Optional.of(itinerary));
+        when(bookingRepository.findByIdAndUserEmail(bookingId, email)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.recordManualEvent(email, itineraryId,
+                new ReportEventRequest(UUID.randomUUID(), "tampering", null)))
+                .isInstanceOf(TravelAiException.class)
+                .extracting("errorCode").isEqualTo(ErrorCode.ACCESS_DENIED);
+
+        verify(eventPublisher, never()).publishEvent(any());
+    }
+
+    @Test
+    @DisplayName("approve on a non-pending proposal is rejected as a validation error")
+    void approve_nonPendingProposal_validationError() {
+        String email = "traveler@example.com";
+        UUID proposalId = UUID.randomUUID();
+        UUID itineraryId = UUID.randomUUID();
+        UUID bookingId = UUID.randomUUID();
+
+        ItineraryProposal proposal = new ItineraryProposal();
+        proposal.setItineraryId(itineraryId);
+        proposal.setStatus(ItineraryProposalStatus.APPROVED);
+
+        LiveItinerary itinerary = new LiveItinerary();
+        itinerary.setBookingId(bookingId);
+
+        when(proposalRepository.findById(proposalId)).thenReturn(Optional.of(proposal));
+        when(itineraryRepository.findById(itineraryId)).thenReturn(Optional.of(itinerary));
+        when(bookingRepository.findByIdAndUserEmail(bookingId, email)).thenReturn(Optional.of(new Booking()));
+
+        assertThatThrownBy(() -> service.approve(email, proposalId))
+                .isInstanceOf(TravelAiException.class)
+                .extracting("errorCode").isEqualTo(ErrorCode.VALIDATION_ERROR);
+
+        verify(eventPublisher, never()).publishEvent(any());
     }
 
     @Test

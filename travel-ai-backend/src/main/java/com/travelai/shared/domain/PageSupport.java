@@ -1,5 +1,6 @@
 package com.travelai.shared.domain;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -16,6 +17,16 @@ public final class PageSupport {
     private static final int MAX_SIZE = 60;
 
     private PageSupport() {
+    }
+
+    /**
+     * Orders the full result set with {@code comparator} (a no-op when null) before paginating.
+     * Sorting lives here, outside the cached {@code search()} services, so reordering never
+     * pollutes their cache keys.
+     */
+    public static <T> ApiResponse<List<T>> paginate(List<T> all, Comparator<T> comparator, int page, int size) {
+        List<T> ordered = comparator == null ? all : all.stream().sorted(comparator).toList();
+        return paginate(ordered, page, size);
     }
 
     public static <T> ApiResponse<List<T>> paginate(List<T> all, int page, int size) {

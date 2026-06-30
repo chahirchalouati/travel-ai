@@ -16,6 +16,42 @@
       </nav>
     </div>
 
+    <div class="dest-controls">
+      <div class="dest-search">
+        <span class="ms" aria-hidden="true">search</span>
+        <input
+          type="search"
+          [ngModel]="search()"
+          (ngModelChange)="search.set($event)"
+          placeholder="Search destination or country"
+          aria-label="Search destinations"
+        >
+      </div>
+      <select
+        class="dest-select"
+        [ngModel]="activeInterest()"
+        (ngModelChange)="activeInterest.set($event)"
+        aria-label="Filter by interest"
+      >
+        <option value="all">All interests</option>
+        @for (tag of interests(); track tag) {
+          <option [value]="tag">{{ tag }}</option>
+        }
+      </select>
+      <select
+        class="dest-select"
+        [ngModel]="sortBy()"
+        (ngModelChange)="sortBy.set($event)"
+        aria-label="Sort destinations"
+      >
+        <option value="">Sort: featured</option>
+        <option value="popularity_desc">Most popular</option>
+        <option value="price_asc">Price: low to high</option>
+        <option value="price_desc">Price: high to low</option>
+        <option value="name_asc">Name: A–Z</option>
+      </select>
+    </div>
+
     @if (loading()) {
       <div class="dest-grid">
         @for (i of [1,2,3,4,5,6]; track i) {

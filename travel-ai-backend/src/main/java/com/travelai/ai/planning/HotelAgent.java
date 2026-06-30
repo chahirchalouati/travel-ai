@@ -22,7 +22,8 @@ public class HotelAgent {
                 ctx.returnDate(),
                 ctx.adultsCount() + ctx.childrenCount(),
                 ctx.hotelBudget(),
-                ctx.constraints()
+                ctx.constraints(),
+                null
         );
         return hotelService.search(req).stream()
                 .map(r -> new HotelOption(

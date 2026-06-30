@@ -30,7 +30,10 @@
       "departurePort": "Departure port",
       "portPlaceholder": "e.g. Barcelona",
       "cruiseType": "Cruise type",
-      "cruiseTypePlaceholder": "e.g. Mediterranean"
+      "cruiseTypePlaceholder": "e.g. Mediterranean",
+      "sort": "Sort by",
+      "minStars": "Min. stars",
+      "anyStars": "Any"
     },
     "amenities": {
       "sea": "Sea view",
@@ -80,7 +83,18 @@
       "destination": "Destination",
       "hotel": "Hotel",
       "restaurant": "Restaurant",
-      "cruise": "Cruise"
+      "cruise": "Cruise",
+      "allTypes": "All"
+    },
+    "sort": {
+      "relevance": "Relevance",
+      "priceAsc": "Price: low to high",
+      "priceDesc": "Price: high to low",
+      "starsDesc": "Stars: high to low",
+      "nameAsc": "Name: A–Z",
+      "departureAsc": "Departure: earliest",
+      "departureDesc": "Departure: latest",
+      "popularity": "Most popular"
     }
   },
   "hotel": {
@@ -166,7 +180,10 @@
     "trending": {
       "thisMonth": "% this month"
     },
-    "destinations": "destinations"
+    "destinations": "destinations",
+    "filter": {
+      "all": "All"
+    }
   },
   "destination": {
     "back": "Back to destinations",
@@ -909,5 +926,147 @@
     "postAnswer": "Post answer",
     "signInToAnswer": "Sign in to answer",
     "notFound": "Question not found"
+  },
+  "hero": {
+    "eyebrow": "AI trip designer · not another listings site",
+    "titleLine1": "Don't search a thousand reviews.",
+    "titleEmphasis": "Get the trip,",
+    "titleLine2": "already planned.",
+    "subtitle": "Describe the trip you want in a sentence. Watch a day-by-day plan — stays, food, and the small local details — build itself in seconds.",
+    "searchPlaceholder": "e.g. 10 quiet days in Japan with great food…",
+    "searchAria": "Describe your trip",
+    "buildAria": "Build my itinerary",
+    "tryLabel": "Try:",
+    "tryAria": "Try a trip",
+    "trust": {
+      "human": "Human-checked picks",
+      "noRank": "No pay-to-rank",
+      "replan": "Replans on the fly"
+    },
+    "stageAria": "Live itinerary preview",
+    "status": {
+      "ready": "Ready",
+      "planning": "Planning…"
+    },
+    "openPlan": "Open the full itinerary",
+    "footNote": "Adjust anything — it replans instantly.",
+    "chipBudget": "Under budget",
+    "chipRating": "9.4 avg picks",
+    "dayLabel": "Day {{n}}",
+    "picks": {
+      "japan": "Japan",
+      "portugal": "Portugal",
+      "iceland": "Iceland"
+    },
+    "places": {
+      "kyoto": "Kyoto",
+      "hakone": "Hakone",
+      "lisbon": "Lisbon",
+      "sintra": "Sintra",
+      "algarve": "Algarve",
+      "reykjavik": "Reykjavík",
+      "southCoast": "South Coast",
+      "vik": "Vík"
+    },
+    "samples": {
+      "japan": {
+        "brief": "10 days in Japan — temples, food & quiet mornings",
+        "summary": "Kyoto · Hakone · Tokyo",
+        "items": {
+          "kansai": {
+            "title": "Land at Kansai (KIX)",
+            "meta": "Haruka express → Kyoto"
+          },
+          "ryokan": {
+            "title": "Ryokan Genhouin",
+            "meta": "Tatami suite · 9.4"
+          },
+          "fushimi": {
+            "title": "Fushimi Inari at dusk",
+            "meta": "Beat the crowds"
+          },
+          "arashiyama": {
+            "title": "Arashiyama bamboo grove",
+            "meta": "Go before 9am"
+          },
+          "omurice": {
+            "title": "Omurice at Kichi Kichi",
+            "meta": "Reserved · locals love"
+          },
+          "romancecar": {
+            "title": "Romancecar to Hakone",
+            "meta": "Mt. Fuji views right side"
+          },
+          "onsen": {
+            "title": "Onsen ryokan stay",
+            "meta": "Private rotenburo · 9.6"
+          }
+        }
+      },
+      "portugal": {
+        "brief": "A week along the coast of Portugal",
+        "summary": "Lisbon · Sintra · Algarve",
+        "items": {
+          "lisbon": {
+            "title": "Arrive Lisbon (LIS)",
+            "meta": "Aerobus → Baixa"
+          },
+          "casa": {
+            "title": "Casa do Príncipe",
+            "meta": "Alfama view · 9.2"
+          },
+          "fado": {
+            "title": "Fado dinner in Alfama",
+            "meta": "Tasca do Chico"
+          },
+          "pena": {
+            "title": "Pena Palace early entry",
+            "meta": "First slot beats lines"
+          },
+          "travesseiros": {
+            "title": "Travesseiros at Piriquita",
+            "meta": "Worth the queue"
+          },
+          "benagil": {
+            "title": "Benagil sea caves",
+            "meta": "Kayak at low tide"
+          },
+          "marinha": {
+            "title": "Praia da Marinha",
+            "meta": "Golden hour cliffs"
+          }
+        }
+      },
+      "iceland": {
+        "brief": "Iceland ring road in 6 days, chasing the aurora",
+        "summary": "Reykjavík · South Coast · Vík",
+        "items": {
+          "keflavik": {
+            "title": "Land at Keflavík",
+            "meta": "Blue Lagoon on the way"
+          },
+          "ioncity": {
+            "title": "Ion City boutique",
+            "meta": "Aurora wake-up call · 9.1"
+          },
+          "waterfalls": {
+            "title": "Seljalandsfoss + Skógafoss",
+            "meta": "Walk behind the falls"
+          },
+          "aurora": {
+            "title": "Aurora hunt",
+            "meta": "KP 4 forecast · clear"
+          },
+          "reynisfjara": {
+            "title": "Reynisfjara black sand",
+            "meta": "Mind the sneaker waves"
+          },
+          "soup": {
+            "title": "Soup at Black Beach",
+            "meta": "Lamb stew · cosy"
+          }
+        }
+      }
+    }
   }
 }

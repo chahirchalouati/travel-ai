@@ -16,6 +16,8 @@ import type {
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1920&q=80';
 
+type SearchType = 'all' | 'destinations' | 'hotels' | 'restaurants' | 'cruises';
+
 @Component({
   selector: 'app-search',
   standalone: true,
@@ -35,6 +37,15 @@ const HEADER_IMG =
         </div>
         <button class="search-submit" type="submit">{{ 'catalog.search' | transloco }}</button>
       </form>
+
+      <div class="chip-row" style="max-width:620px;margin:0 auto">
+        @for (t of TYPES; track t.id) {
+          <button type="button" class="chip" [class.chip--active]="activeType() === t.id"
+                  (click)="activeType.set(t.id)">
+            {{ t.labelKey | transloco }}{{ countFor(t.id) ? ' · ' + countFor(t.id) : '' }}
+          </button>
+        }
+      </div>
     </header>
 
     <section class="results">
@@ -44,7 +55,7 @@ const HEADER_IMG =
             <div class="skeleton"><div class="skeleton__img"></div><div class="skeleton__line"></div><div class="skeleton__line" style="width:60%"></div></div>
           }
         </div>
-      } @else if (totalCount() === 0) {
+      } @else if (visibleCount() === 0) {
         <div class="state">
           <span class="ms">travel_explore</span>
           <h3>{{ 'catalog.searchResults.noneTitle' | transloco }}</h3>
@@ -53,7 +64,7 @@ const HEADER_IMG =
       } @else {
         <p class="results-count" style="margin-bottom:1.5rem">{{ totalCount() }} <span>{{ 'catalog.searchResults.matches' | transloco }} "{{ activeQuery() }}"</span></p>
 
-        @if (destinations().length) {
+        @if (destinations().length && show('destinations')) {
           <h2 class="group-title">{{ 'catalog.searchResults.destinations' | transloco }}</h2>
           <div class="card-grid" style="margin-bottom:2.5rem">
             @for (d of destinations(); track d.id) {
@@ -65,7 +76,7 @@ const HEADER_IMG =
           </div>
         }
 
-        @if (hotels().length) {
+        @if (hotels().length && show('hotels')) {
           <h2 class="group-title">{{ 'catalog.hotels.title' | transloco }}</h2>
           <div class="card-grid" style="margin-bottom:2.5rem">
             @for (h of hotels(); track h.id) {
@@ -79,7 +90,7 @@ const HEADER_IMG =
           </div>
         }
 
-        @if (restaurants().length) {
+        @if (restaurants().length && show('restaurants')) {
           <h2 class="group-title">{{ 'catalog.restaurants.title' | transloco }}</h2>
           <div class="card-grid" style="margin-bottom:2.5rem">
             @for (r of restaurants(); track r.id) {
@@ -91,7 +102,7 @@ const HEADER_IMG =
           </div>
         }
 
-        @if (cruises().length) {
+        @if (cruises().length && show('cruises')) {
           <h2 class="group-title">{{ 'catalog.cruises.title' | transloco }}</h2>
           <div class="card-grid">
             @for (c of cruises(); track c.id) {
@@ -125,8 +136,35 @@ export class SearchComponent implements OnInit {
   readonly cruises = signal<CruiseSearchResult[]>([]);
   readonly destinations = signal<DestinationResponse[]>([]);
   readonly activeQuery = signal('');
+  readonly activeType = signal<SearchType>('all');
+
+  readonly TYPES: ReadonlyArray<{ id: SearchType; labelKey: string }> = [
+    { id: 'all', labelKey: 'catalog.searchResults.allTypes' },
+    { id: 'destinations', labelKey: 'catalog.searchResults.destinations' },
+    { id: 'hotels', labelKey: 'catalog.hotels.title' },
+    { id: 'restaurants', labelKey: 'catalog.restaurants.title' },
+    { id: 'cruises', labelKey: 'catalog.cruises.title' },
+  ];
 
   query = '';
+
+  show(type: SearchType): boolean {
+    return this.activeType() === 'all' || this.activeType() === type;
+  }
+
+  countFor(type: SearchType): number {
+    switch (type) {
+      case 'destinations': return this.destinations().length;
+      case 'hotels': return this.hotels().length;
+      case 'restaurants': return this.restaurants().length;
+      case 'cruises': return this.cruises().length;
+      case 'all': return this.totalCount();
+    }
+  }
+
+  visibleCount(): number {
+    return this.activeType() === 'all' ? this.totalCount() : this.countFor(this.activeType());
+  }
 
   totalCount(): number {
     return (

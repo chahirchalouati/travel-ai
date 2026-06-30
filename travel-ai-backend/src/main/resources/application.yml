@@ -109,6 +109,10 @@ travel-ai:
       other-pct: 3
   concierge:
     activation-days-before-departure: 3
+  itinerary:
+    # Shared secret for inbound disruption webhooks. Blank in dev (header check skipped);
+    # set ITINERARY_WEBHOOK_SECRET in production to require X-Webhook-Secret on every push.
+    webhook-secret: ${ITINERARY_WEBHOOK_SECRET:}
   notification:
     from-email: noreply@travelai.com
   storage:

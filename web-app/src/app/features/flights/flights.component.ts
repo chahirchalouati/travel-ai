@@ -48,6 +48,16 @@ const HEADER_IMG =
           <label for="f-price">{{ 'catalog.fields.maxPrice' | transloco }}</label>
           <input id="f-price" type="number" min="0" [(ngModel)]="maxPrice" name="maxPrice" placeholder="€" />
         </div>
+        <div class="field">
+          <label for="f-sort">{{ 'catalog.fields.sort' | transloco }}</label>
+          <select id="f-sort" [(ngModel)]="sort" name="sort" (change)="runSearch()">
+            <option value="">{{ 'catalog.sort.relevance' | transloco }}</option>
+            <option value="price_asc">{{ 'catalog.sort.priceAsc' | transloco }}</option>
+            <option value="price_desc">{{ 'catalog.sort.priceDesc' | transloco }}</option>
+            <option value="departure_asc">{{ 'catalog.sort.departureAsc' | transloco }}</option>
+            <option value="departure_desc">{{ 'catalog.sort.departureDesc' | transloco }}</option>
+          </select>
+        </div>
         <button class="search-submit" type="submit">{{ 'catalog.search' | transloco }}</button>
       </form>
     </header>
@@ -133,6 +143,7 @@ export class FlightsComponent implements OnInit {
   departureDate = '';
   passengers = 1;
   maxPrice?: number;
+  sort = '';
 
   ngOnInit(): void {
     const dest = this.route.snapshot.queryParamMap.get('to');
@@ -181,6 +192,7 @@ export class FlightsComponent implements OnInit {
       departureDate: this.departureDate || new Date().toISOString().slice(0, 10),
       passengers: this.passengers || 1,
       maxPrice: this.maxPrice,
+      sort: this.sort || undefined,
     };
   }
 
