@@ -33,7 +33,7 @@ public class HotelAgent {
                         r.totalPrice(),
                         r.stars() != null ? r.stars().doubleValue() : 0.0
                 ))
-                .limit(5)
+                .limit(60)
                 .toList();
     }
 }

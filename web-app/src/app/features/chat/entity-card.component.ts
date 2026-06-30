@@ -74,17 +74,10 @@ export interface EntityAttachment {
         </div>
 
         <div class="card-actions">
-          @if (entity.type === 'destination') {
-            <a class="card-action-btn primary" [routerLink]="['/destination', entity.id]">
-              <span class="ms">explore</span>
-              Explore
-            </a>
-          } @else {
-            <button class="card-action-btn primary">
-              <span class="ms">{{ entity.type === 'hotel' ? 'hotel' : 'restaurant' }}</span>
-              View Details
-            </button>
-          }
+          <a class="card-action-btn primary" [routerLink]="detailLink">
+            <span class="ms">{{ primaryIcon }}</span>
+            {{ primaryLabel }}
+          </a>
           @if (entity.latitude && entity.longitude) {
             <a
               class="card-action-btn secondary"
@@ -316,6 +309,24 @@ export class EntityCardComponent {
       restaurant: 'restaurant',
     };
     return icons[this.entity.type] ?? 'place';
+  }
+
+  /** Router path to the entity's detail page. */
+  get detailLink(): (string | number)[] {
+    const base: Record<EntityAttachment['type'], string> = {
+      destination: '/destination',
+      hotel: '/hotels',
+      restaurant: '/restaurants',
+    };
+    return [base[this.entity.type], this.entity.id];
+  }
+
+  get primaryIcon(): string {
+    return this.entity.type === 'destination' ? 'explore' : this.typeIcon;
+  }
+
+  get primaryLabel(): string {
+    return this.entity.type === 'destination' ? 'Explore' : 'View Details';
   }
 
   get typeLabel(): string {

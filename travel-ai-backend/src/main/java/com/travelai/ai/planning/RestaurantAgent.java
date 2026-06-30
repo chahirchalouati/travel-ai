@@ -36,7 +36,7 @@ public class RestaurantAgent {
                                 : BigDecimal.ZERO,
                         r.priceTier() != null ? r.priceTier().doubleValue() : 0.0
                 ))
-                .limit(5)
+                .limit(60)
                 .toList();
     }
 }

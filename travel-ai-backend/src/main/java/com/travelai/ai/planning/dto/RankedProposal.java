@@ -12,6 +12,7 @@ public record RankedProposal(
         BigDecimal restaurantCost,
         BigDecimal flightCost,
         int rankScore,
-        String aiMotivation
+        String aiMotivation,
+        String destination
 ) {
 }

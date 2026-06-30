@@ -65,7 +65,7 @@ public class PlanningOrchestrator {
                 TravelProposal proposal = new TravelProposal();
                 proposal.setRequest(request);
                 proposal.setStatus(ProposalStatus.READY);
-                proposal.setDestination(request.getDestination());
+                proposal.setDestination(rp.destination() != null ? rp.destination() : request.getDestination());
                 proposal.setHotelId(rp.hotelId());
                 proposal.setRestaurantId(rp.restaurantId());
                 proposal.setFlightId(rp.flightId());
