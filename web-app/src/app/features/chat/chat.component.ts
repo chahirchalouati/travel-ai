@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { ChatService } from '../../core/services/chat.service';
 import { AuthService } from '../../core/services/auth.service';
+import { ActivatedRoute } from '@angular/router';
 import { MarkdownPipe } from '../../shared/pipes/markdown.pipe';
 import { ChatMapComponent, MapPin } from './chat-map.component';
 import { EntityCardComponent, EntityAttachment } from './entity-card.component';
@@ -744,6 +745,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   private readonly chatService = inject(ChatService);
   readonly authService = inject(AuthService);
   private readonly transloco = inject(TranslocoService);
+  private readonly route = inject(ActivatedRoute);
 
   conversations = signal<ConversationResponse[]>([]);
   currentConversationId = signal<string | null>(null);
@@ -786,6 +788,14 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   ngOnInit(): void {
     if (this.authService.isAuthenticated()) {
       this.loadConversations();
+    }
+
+    // The hero search navigates here with `?q=...`; pre-fill and auto-send it
+    // so the conversation actually starts instead of opening an empty chat.
+    const initialQuery = this.route.snapshot.queryParamMap.get('q')?.trim();
+    if (initialQuery) {
+      this.inputText.set(initialQuery);
+      this.send();
     }
   }
 
@@ -960,6 +970,8 @@ export class ChatComponent implements OnInit, AfterViewChecked {
         this.authEmailVal = '';
         this.authPasswordVal = '';
         this.loadConversations();
+        // Auto-send any query the user typed (or arrived with via ?q=) before login.
+        if (this.inputText().trim()) this.send();
       },
       error: () => {
         this.authLoadingState = false;
@@ -989,6 +1001,8 @@ export class ChatComponent implements OnInit, AfterViewChecked {
         this.authFirstNameVal = '';
         this.authLastNameVal = '';
         this.loadConversations();
+        // Auto-send any query the user typed (or arrived with via ?q=) before registering.
+        if (this.inputText().trim()) this.send();
       },
       error: (err: any) => {
         this.authLoadingState = false;
@@ -1033,14 +1047,24 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   }
 
   private extractFollowUps(content: string): string[] {
-    const marker = '**You might also want to ask:**';
-    const idx = content.indexOf(marker);
-    if (idx === -1) return [];
+    // Follow-ups are emitted as a trailing block after a '---' separator, one
+    // '- question?' per line. The header label is localized by the model
+    // (Italian, English, …), so we key off the separator and the question
+    // lines themselves rather than a fixed English marker. Falls back to the
+    // legacy English marker for messages produced before this change.
+    const sections = content.split(/\n-{3,}\s*\n/);
+    let tail = sections.length > 1 ? sections[sections.length - 1] : '';
 
-    const section = content.substring(idx + marker.length);
-    return section
+    if (!tail) {
+      const marker = '**You might also want to ask:**';
+      const idx = content.indexOf(marker);
+      if (idx === -1) return [];
+      tail = content.substring(idx + marker.length);
+    }
+
+    return tail
       .split('\n')
-      .map(line => line.replace(/^[\s-*]+/, '').trim())
+      .map(line => line.replace(/^[\s>*-]+/, '').replace(/\*+/g, '').trim())
       .filter(line => line.length > 0 && line.endsWith('?'))
       .slice(0, 3);
   }

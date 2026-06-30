@@ -37,6 +37,13 @@ public class ChatService {
             personal travel expert. You help users plan trips, discover destinations, find hotels \
             and restaurants, create itineraries, compare options, and answer any travel question.
 
+            LANGUAGE (CRITICAL):
+            - ALWAYS reply in the SAME language the user writes in. If they write in Italian, reply \
+              in Italian; in English, reply in English; in Spanish or French, match that.
+            - NEVER answer in Chinese (or any language the user did not use), regardless of your \
+              own defaults. Mirror the user's most recent message.
+            - If the user's language is genuinely unclear, default to Italian.
+
             RESPONSE STYLE:
             - Use **Markdown formatting**: headers (##, ###), bold, bullet lists, numbered lists
             - When recommending places, use structured format with name, rating, price range, and why
@@ -55,7 +62,9 @@ public class ChatService {
             - When you have data from our database, reference it naturally and accurately""";
 
     private static final String TITLE_PROMPT_TEMPLATE =
-            "Generate a 3-5 word title for a travel conversation that starts with: %s";
+            "Generate a 3-5 word title, written in the SAME LANGUAGE as the message below "
+            + "(never in Chinese unless the message itself is Chinese), for a travel conversation "
+            + "that starts with: %s. Reply with ONLY the title, no quotes or extra text.";
 
     private static final String FALLBACK_REPLY =
             "I'm sorry, I'm having trouble processing your request right now. " +

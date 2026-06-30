@@ -161,7 +161,7 @@ type Mode = 'login' | 'register';
 
     .auth-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-    .auth-field { display: flex; flex-direction: column; gap: 6px; }
+    .auth-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 
     .auth-label {
       font-size: 0.78rem;
@@ -172,6 +172,8 @@ type Mode = 'login' | 'register';
     }
 
     .auth-input {
+      width: 100%;
+      box-sizing: border-box;
       font-family: inherit;
       font-size: 0.95rem;
       color: var(--text-primary);
