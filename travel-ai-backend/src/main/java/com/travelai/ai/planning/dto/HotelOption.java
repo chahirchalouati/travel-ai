@@ -9,6 +9,8 @@ public record HotelOption(
         String city,
         BigDecimal pricePerNight,
         BigDecimal totalCost,
-        double rating
+        double rating,
+        Double latitude,
+        Double longitude
 ) {
 }
