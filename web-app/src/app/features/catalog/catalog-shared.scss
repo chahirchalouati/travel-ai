@@ -300,6 +300,17 @@
   border-radius: 20px;
 }
 
+.tag-pill--ai {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #eef1ff;
+  color: #4338ca;
+  font-weight: 700;
+
+  .ms { color: #6366f1; }
+}
+
 .card__foot {
   display: flex;
   align-items: flex-end;

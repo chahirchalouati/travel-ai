@@ -2,6 +2,7 @@ package com.travelai.catalog.restaurant;
 
 import com.travelai.catalog.restaurant.dto.RestaurantSearchRequest;
 import com.travelai.catalog.restaurant.dto.RestaurantSearchResult;
+import com.travelai.catalog.restaurant.dto.RestaurantSlot;
 import com.travelai.shared.exception.ErrorCode;
 import com.travelai.shared.exception.TravelAiException;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,6 +44,22 @@ public class RestaurantService {
         Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.RESTAURANT_NOT_FOUND));
         return toResult(restaurant);
+    }
+
+    /**
+     * Returns bookable reservation slots for a restaurant on a date that can seat
+     * at least {@code covers}, ordered by time. Empty when nothing is available.
+     */
+    public List<RestaurantSlot> availability(UUID restaurantId, LocalDate date, int covers) {
+        restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> TravelAiException.notFound(ErrorCode.RESTAURANT_NOT_FOUND));
+        short minCovers = (short) Math.max(0, covers - 1); // GreaterThan(covers-1) == >= covers
+        return restaurantAvailabilityRepository
+                .findByRestaurantIdAndDateAndCoversAvailableGreaterThan(restaurantId, date, minCovers)
+                .stream()
+                .sorted(Comparator.comparing(RestaurantAvailability::getTimeSlot))
+                .map(a -> new RestaurantSlot(a.getTimeSlot(), a.getCoversAvailable()))
+                .toList();
     }
 
     // --- private helpers ---

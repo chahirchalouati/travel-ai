@@ -14,6 +14,13 @@ public record FlightSearchResult(
         Instant arrivalAt,
         BigDecimal price,
         short seatsAvailable,
-        boolean baggageIncluded
+        boolean baggageIncluded,
+        // Resolved from the airports reference (V34) so the UI can group flights
+        // by destination country → city. Null when an IATA code is unmapped.
+        String originCity,
+        String originCountry,
+        String destCity,
+        String destCountry,
+        String destCountryCode
 ) {
 }

@@ -209,6 +209,13 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- HTML → PDF for invoices (Flying Saucer + OpenPDF, LGPL) -->
+		<dependency>
+			<groupId>org.xhtmlrenderer</groupId>
+			<artifactId>flying-saucer-pdf-openpdf</artifactId>
+			<version>9.1.22</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

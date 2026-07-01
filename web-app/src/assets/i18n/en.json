@@ -33,7 +33,8 @@
       "cruiseTypePlaceholder": "e.g. Mediterranean",
       "sort": "Sort by",
       "minStars": "Min. stars",
-      "anyStars": "Any"
+      "anyStars": "Any",
+      "return": "Return"
     },
     "amenities": {
       "sea": "Sea view",
@@ -54,7 +55,25 @@
       "found": "flights found",
       "baggageYes": "Baggage included",
       "baggageNo": "No baggage",
-      "seats": "seats left"
+      "seats": "seats left",
+      "countries": "countries",
+      "destinations": "destinations",
+      "routes": "routes",
+      "from": "from",
+      "tripOneway": "One-way",
+      "tripRound": "Round-trip",
+      "tripMulti": "Multi-city",
+      "outbound": "Outbound",
+      "return": "Return",
+      "fareCalendar": "Cheapest fares by day",
+      "filters": "Filters",
+      "maxDuration": "Max duration",
+      "anyDuration": "Any",
+      "clearFilters": "Clear",
+      "addLeg": "Add flight",
+      "leg": "Flight",
+      "removeLeg": "Remove flight",
+      "direct": "Direct"
     },
     "restaurants": {
       "eyebrow": "Dining",
@@ -258,14 +277,19 @@
     "availability": "Availability",
     "availableNow": "Available now",
     "notAvailable": "Not available",
-    "book": "Plan a trip with this restaurant",
+    "book": "Reserve a table",
     "askAi": "Ask AI about this restaurant",
     "priceTiers": {
       "1": "$ Budget-friendly",
       "2": "$$ Moderate",
       "3": "$$$ Upscale",
       "4": "$$$$ Fine Dining"
-    }
+    },
+    "availableTables": "Available tables",
+    "noTables": "No tables for this date",
+    "pickDate": "Date",
+    "guests": "Guests",
+    "reviewsLabel": "reviews"
   },
   "cruise": {
     "back": "Back",
@@ -292,7 +316,9 @@
       "urgency": "Only {{count}} {{unit}} left",
       "cabin": "cabin",
       "cabins": "cabins"
-    }
+    },
+    "day": "Day",
+    "cabinCategories": "Cabin categories"
   },
   "userMenu": {
     "myTrips": "My trips",
@@ -309,7 +335,9 @@
     "error": "Something went wrong. Please try again.",
     "planTrip": "Plan a Trip",
     "askAi": "Ask AI",
-    "climate": "climate"
+    "climate": "climate",
+    "reviews": "reviews",
+    "fitsTrip": "Fits your trip to {{place}}"
   },
   "footer": {
     "tagline": "Discover destinations, read real reviews, and plan smarter trips with AI-powered recommendations.",
@@ -485,7 +513,17 @@
     "cancel": "Cancel",
     "cancelling": "Cancelling…",
     "cancelled": "Booking cancelled",
-    "cancelError": "Could not cancel — please try again"
+    "cancelError": "Could not cancel — please try again",
+    "writeReview": "Write a review",
+    "reviewThanks": "Reviewed",
+    "yourRating": "Your rating",
+    "reviewTitle": "Title",
+    "reviewBody": "Share your experience…",
+    "submitReview": "Submit review",
+    "reviewSaved": "Thanks for your review!",
+    "reviewError": "Could not save your review.",
+    "invoice": "Invoice",
+    "tripInvoice": "Trip invoice"
   },
   "messages": {
     "title": "Messages",
@@ -1068,5 +1106,96 @@
         }
       }
     }
+  },
+  "booking": {
+    "flow": {
+      "step": {
+        "configure": "Configure",
+        "travelers": "Travellers",
+        "review": "Review"
+      },
+      "vertical": {
+        "flight": "Flight",
+        "restaurant": "Restaurant",
+        "cruise": "Cruise"
+      },
+      "choose": {
+        "flight": "Choose your fare",
+        "restaurant": "Table preference",
+        "cruise": "Choose your cabin"
+      },
+      "party": {
+        "flight": "Passengers",
+        "restaurant": "Party size",
+        "cruise": "Guests"
+      },
+      "chooseTime": "Pick a time",
+      "travelersTitle": "Who's travelling?",
+      "travelersHelp": "Names must match the ID used at check-in.",
+      "traveler": "Traveller",
+      "primary": "Lead",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "document": "Document number (optional)",
+      "reviewTitle": "Review your booking",
+      "date": "Date",
+      "aiInsight": "AI tip: prices on this option tend to climb closer to the date — booking now usually locks the better rate.",
+      "confirmedTitle": "You're all set!",
+      "confirmedBody": "A confirmation is on its way. You can manage this reservation any time.",
+      "reference": "Reference",
+      "viewBookings": "View my bookings",
+      "cancel": "Cancel",
+      "back": "Back",
+      "continue": "Continue",
+      "payConfirm": "Pay & confirm",
+      "summary": "Price summary",
+      "serviceFee": "Service fee",
+      "total": "Total",
+      "securedNote": "Secured checkout",
+      "error": "Something went wrong. Please try again.",
+      "errorAuth": "Please sign in to complete your booking.",
+      "emptyTitle": "Nothing to book yet",
+      "emptyBody": "Pick a flight, restaurant or cruise to start a booking.",
+      "emptyCta": "Browse TravelAI",
+      "payVia": "Pay with",
+      "addToTrip": "Add to trip"
+    }
+  },
+  "favorites": {
+    "title": "Wishlist",
+    "subtitle": "Everything you've saved for later.",
+    "emptyTitle": "Nothing saved yet",
+    "emptyBody": "Tap the heart on any flight, restaurant or cruise to save it here.",
+    "emptyCta": "Browse TravelAI",
+    "save": "Save",
+    "saved": "Saved",
+    "remove": "Remove",
+    "type": {
+      "flight": "Flight",
+      "restaurant": "Restaurant",
+      "cruise": "Cruise",
+      "hotel": "Hotel",
+      "attraction": "Attraction"
+    }
+  },
+  "priceWatch": {
+    "watch": "Watch price",
+    "watching": "Watching price"
+  },
+  "tripCart": {
+    "title": "Your trip",
+    "subtitle": "Book your flight, hotel, restaurant and cruise together.",
+    "summary": "Trip summary",
+    "items": "items",
+    "total": "Total",
+    "bookAll": "Book the whole trip",
+    "remove": "Remove",
+    "addMore": "Add another",
+    "emptyTitle": "Your trip is empty",
+    "emptyBody": "Add flights, restaurants or cruises to build a trip and book it in one go.",
+    "emptyCta": "Browse TravelAI",
+    "bookedTitle": "Trip booked!",
+    "bookedBody": "All {{count}} reservations are confirmed.",
+    "viewBookings": "View my bookings"
   }
 }

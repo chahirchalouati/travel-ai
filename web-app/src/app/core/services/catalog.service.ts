@@ -6,8 +6,12 @@ import type {
   ApiWrapper,
   HotelSearchResult,
   FlightSearchResult,
+  FareCalendarDay,
   RestaurantSearchResult,
+  RestaurantSlot,
   CruiseSearchResult,
+  CruiseCabin,
+  CruiseDay,
 } from '../models/api.models';
 
 /** A single page of catalog search results plus pagination metadata. */
@@ -86,6 +90,18 @@ export class CatalogService {
     return this.searchPaged<FlightSearchResult>('flights', query, page, size);
   }
 
+  /** Cheapest fare per day for a route over {@code days} days from {@code from}. */
+  fareCalendar(originIata: string, destIata: string, from: string, days = 30): Observable<FareCalendarDay[]> {
+    const params = new HttpParams()
+      .set('originIata', originIata)
+      .set('destIata', destIata)
+      .set('from', from)
+      .set('days', days);
+    return this.http
+      .get<ApiWrapper<FareCalendarDay[]>>(`${this.base}/flights/fare-calendar`, { params })
+      .pipe(map(res => res.data ?? []));
+  }
+
   searchRestaurants(
     query: RestaurantSearchQuery,
     page = 0,
@@ -142,10 +158,32 @@ export class CatalogService {
       .pipe(map(res => res.data));
   }
 
+  /** Bookable reservation slots for a restaurant on a date that seat {@code covers}. */
+  restaurantAvailability(id: string, date: string, covers: number): Observable<RestaurantSlot[]> {
+    const params = new HttpParams().set('date', date).set('covers', covers);
+    return this.http
+      .get<ApiWrapper<RestaurantSlot[]>>(`${this.base}/restaurants/${id}/availability`, { params })
+      .pipe(map(res => res.data ?? []));
+  }
+
   getCruise(id: string): Observable<CruiseSearchResult> {
     return this.http
       .get<ApiWrapper<CruiseSearchResult>>(`${this.base}/cruises/${id}`)
       .pipe(map(res => res.data));
+  }
+
+  /** Bookable cabin tiers for a cruise (priced from its per-person base). */
+  cruiseCabins(id: string): Observable<CruiseCabin[]> {
+    return this.http
+      .get<ApiWrapper<CruiseCabin[]>>(`${this.base}/cruises/${id}/cabins`)
+      .pipe(map(res => res.data ?? []));
+  }
+
+  /** Day-by-day itinerary for a cruise. */
+  cruiseItinerary(id: string): Observable<CruiseDay[]> {
+    return this.http
+      .get<ApiWrapper<CruiseDay[]>>(`${this.base}/cruises/${id}/itinerary`)
+      .pipe(map(res => res.data ?? []));
   }
 }
 

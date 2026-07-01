@@ -3,144 +3,123 @@ import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
-import { catchError, of } from 'rxjs';
+import { catchError, forkJoin, of } from 'rxjs';
 import { CatalogService, emptyPage } from '../../core/services/catalog.service';
 import type { FlightSearchQuery } from '../../core/services/catalog.service';
-import type { FlightSearchResult } from '../../core/models/api.models';
+import type { FlightSearchResult, FareCalendarDay } from '../../core/models/api.models';
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
+import { TripContextService } from '../../core/services/trip-context.service';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80';
+
+type TripType = 'oneway' | 'round' | 'multi';
+
+/** A single leg of a multi-city itinerary. */
+interface Leg {
+  originIata: string;
+  destIata: string;
+  date: string;
+}
+
+/** Results for one multi-city leg. */
+interface LegResult {
+  readonly leg: Leg;
+  readonly flights: readonly FlightSearchResult[];
+}
+
+/** Flights sharing the same destination city. */
+interface CityGroup {
+  readonly city: string;
+  readonly flights: readonly FlightSearchResult[];
+  readonly fromPrice: number;
+}
+
+/** Destination country with its cities, ordered for display. */
+interface CountryGroup {
+  readonly country: string;
+  readonly countryCode: string | null;
+  readonly flag: string;
+  readonly count: number;
+  readonly fromPrice: number;
+  readonly cities: readonly CityGroup[];
+}
+
+const UNGROUPED_COUNTRY = '—';
+const MAX_LEGS = 5;
 
 @Component({
   selector: 'app-flights',
   standalone: true,
   imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, InfiniteScrollDirective, RevealDirective],
-  template: `
-    <header class="catalog-header">
-      <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
-      <div class="catalog-header__scrim"></div>
-      <span class="catalog-eyebrow"><span class="ms" style="font-size:15px">flight</span> {{ 'catalog.flights.eyebrow' | transloco }}</span>
-      <h1 class="catalog-title">{{ 'catalog.flights.title' | transloco }}</h1>
-      <p class="catalog-subtitle">{{ 'catalog.flights.subtitle' | transloco }}</p>
-
-      <form class="filter-bar" (ngSubmit)="runSearch()">
-        <div class="field">
-          <label for="f-from">{{ 'catalog.fields.from' | transloco }}</label>
-          <input id="f-from" type="text" maxlength="3" [(ngModel)]="originIata" name="origin"
-                 placeholder="LHR" style="text-transform:uppercase" />
-        </div>
-        <div class="field">
-          <label for="f-to">{{ 'catalog.fields.to' | transloco }}</label>
-          <input id="f-to" type="text" maxlength="3" [(ngModel)]="destIata" name="dest"
-                 placeholder="JFK" style="text-transform:uppercase" />
-        </div>
-        <div class="field">
-          <label for="f-date">{{ 'catalog.fields.departure' | transloco }}</label>
-          <input id="f-date" type="date" [(ngModel)]="departureDate" name="date" />
-        </div>
-        <div class="field">
-          <label for="f-pax">{{ 'catalog.fields.passengers' | transloco }}</label>
-          <input id="f-pax" type="number" min="1" [(ngModel)]="passengers" name="pax" />
-        </div>
-        <div class="field">
-          <label for="f-price">{{ 'catalog.fields.maxPrice' | transloco }}</label>
-          <input id="f-price" type="number" min="0" [(ngModel)]="maxPrice" name="maxPrice" placeholder="€" />
-        </div>
-        <div class="field">
-          <label for="f-sort">{{ 'catalog.fields.sort' | transloco }}</label>
-          <select id="f-sort" [(ngModel)]="sort" name="sort" (change)="runSearch()">
-            <option value="">{{ 'catalog.sort.relevance' | transloco }}</option>
-            <option value="price_asc">{{ 'catalog.sort.priceAsc' | transloco }}</option>
-            <option value="price_desc">{{ 'catalog.sort.priceDesc' | transloco }}</option>
-            <option value="departure_asc">{{ 'catalog.sort.departureAsc' | transloco }}</option>
-            <option value="departure_desc">{{ 'catalog.sort.departureDesc' | transloco }}</option>
-          </select>
-        </div>
-        <button class="search-submit" type="submit">{{ 'catalog.search' | transloco }}</button>
-      </form>
-    </header>
-
-    <section class="results">
-      @if (loading()) {
-        <div class="skeleton-grid">
-          @for (s of [1,2,3,4,5,6]; track s) {
-            <div class="skeleton"><div class="skeleton__img"></div><div class="skeleton__line"></div><div class="skeleton__line" style="width:60%"></div></div>
-          }
-        </div>
-      } @else if (results().length === 0) {
-        <div class="state">
-          <span class="ms">flight_takeoff</span>
-          <h3>{{ 'catalog.empty.title' | transloco }}</h3>
-          <p>{{ 'catalog.empty.subtitle' | transloco }}</p>
-        </div>
-      } @else {
-        <div class="results-head">
-          <p class="results-count">{{ total() }} <span>{{ 'catalog.flights.found' | transloco }}</span></p>
-        </div>
-        <div class="card-grid">
-          @for (f of results(); track f.id) {
-            <article class="card" appReveal [appRevealDelay]="($index % 8) * 50" tabindex="0" (click)="open(f.id)" (keydown.enter)="open(f.id)" style="cursor:pointer">
-              <div class="card__body" style="padding-top:18px">
-                <div style="display:flex;align-items:center;justify-content:space-between">
-                  <h3 class="card__title">{{ f.airline }}</h3>
-                  <span class="tag-pill">{{ f.flightNumber }}</span>
-                </div>
-                <div style="display:flex;align-items:center;gap:10px;margin:8px 0">
-                  <div style="text-align:center">
-                    <div style="font-size:1.4rem;font-weight:800;letter-spacing:-0.02em">{{ f.originIata }}</div>
-                    <div style="font-size:0.74rem;color:var(--text-tertiary)">{{ f.departureAt | date:'HH:mm' }}</div>
-                  </div>
-                  <div style="flex:1;height:1px;background:var(--border);position:relative">
-                    <span class="ms" style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);font-size:18px;color:var(--brand);background:var(--bg-primary);padding:0 4px">flight</span>
-                  </div>
-                  <div style="text-align:center">
-                    <div style="font-size:1.4rem;font-weight:800;letter-spacing:-0.02em">{{ f.destIata }}</div>
-                    <div style="font-size:0.74rem;color:var(--text-tertiary)">{{ f.arrivalAt | date:'HH:mm' }}</div>
-                  </div>
-                </div>
-                <p class="card__sub"><span class="ms" style="font-size:14px">calendar_today</span>{{ f.departureAt | date:'EEE, dd MMM yyyy' }}</p>
-                <div class="card__tags">
-                  <span class="tag-pill">{{ f.baggageIncluded ? ('catalog.flights.baggageYes' | transloco) : ('catalog.flights.baggageNo' | transloco) }}</span>
-                  <span class="tag-pill">{{ f.seatsAvailable }} {{ 'catalog.flights.seats' | transloco }}</span>
-                </div>
-                <div class="card__foot">
-                  <span class="card__price">{{ f.price | currency:'EUR':'symbol':'1.0-0' }} <small>/ {{ 'catalog.perPerson' | transloco }}</small></span>
-                  <span class="card__cta">{{ 'catalog.view' | transloco }} <span class="ms" style="font-size:16px">arrow_forward</span></span>
-                </div>
-              </div>
-            </article>
-          }
-        </div>
-        @if (hasMore()) {
-          <div class="infinite-sentinel" appInfiniteScroll
-               [scrollDisabled]="loadingMore()" (scrolled)="loadMore()"></div>
-        }
-        @if (loadingMore()) {
-          <div class="loading-more"><span class="loading-more__spinner"></span>{{ 'catalog.loadingMore' | transloco }}</div>
-        }
-      }
-    </section>
-  `,
-  styleUrl: '../catalog/catalog-shared.scss',
+  templateUrl: './flights.component.html',
+  styleUrls: ['../catalog/catalog-shared.scss', './flights.component.scss'],
 })
 export class FlightsComponent implements OnInit {
   private readonly catalog = inject(CatalogService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly tripContext = inject(TripContextService);
 
   readonly headerImg = HEADER_IMG;
+
+  /** Matching active-trip destination for a flight, or null. */
+  tripFit(f: FlightSearchResult): string | null {
+    return this.tripContext.match(f.destCity ?? f.destIata);
+  }
+
+  // Trip type
+  readonly tripType = signal<TripType>('oneway');
+
+  // One-way / round-trip results
   readonly results = signal<FlightSearchResult[]>([]);
+  readonly inbound = signal<FlightSearchResult[]>([]);
   readonly total = signal(0);
   readonly loading = signal(true);
   readonly loadingMore = signal(false);
   readonly hasMore = computed(() => this.results().length < this.total());
+
+  // Multi-city
+  readonly legs = signal<Leg[]>([
+    { originIata: '', destIata: '', date: new Date().toISOString().slice(0, 10) },
+    { originIata: '', destIata: '', date: new Date().toISOString().slice(0, 10) },
+  ]);
+  readonly legResults = signal<LegResult[]>([]);
+
+  // Fare calendar
+  readonly fareCalendar = signal<FareCalendarDay[]>([]);
+  readonly cheapestFare = computed(() =>
+    this.fareCalendar().reduce((min, d) => (d.minPrice < min ? d.minPrice : min), Infinity));
+
+  // Filters (client-side, applied to loaded results)
+  readonly airlineFilter = signal<Set<string>>(new Set());
+  readonly maxDurationHours = signal<number>(0); // 0 = no limit
+
+  /** Distinct airlines present across the currently loaded outbound results. */
+  readonly availableAirlines = computed(() => {
+    const set = new Set<string>();
+    for (const f of this.results()) {
+      set.add(f.airline);
+    }
+    return [...set].sort();
+  });
+
+  readonly filteredOutbound = computed(() => this.applyFilters(this.results()));
+  private readonly filteredInbound = computed(() => this.applyFilters(this.inbound()));
+
+  readonly grouped = computed<CountryGroup[]>(() => this.groupByCountryCity(this.filteredOutbound()));
+  readonly groupedInbound = computed<CountryGroup[]>(() => this.groupByCountryCity(this.filteredInbound()));
+  readonly countryCount = computed(() => this.grouped().length);
+  readonly destinationCount = computed(() =>
+    this.grouped().reduce((sum, c) => sum + c.cities.length, 0));
+
   private page = 0;
 
   originIata = '';
   destIata = '';
   departureDate = '';
+  returnDate = '';
   passengers = 1;
   maxPrice?: number;
   sort = '';
@@ -150,32 +129,78 @@ export class FlightsComponent implements OnInit {
     if (dest) {
       this.destIata = dest.toUpperCase();
     }
+    this.tripContext.ensureLoaded();
     if (!this.departureDate) {
       this.departureDate = new Date().toISOString().slice(0, 10);
+    }
+    if (!this.returnDate) {
+      this.returnDate = new Date(Date.now() + 7 * 86_400_000).toISOString().slice(0, 10);
     }
     this.runSearch();
   }
 
+  setTripType(type: TripType): void {
+    this.tripType.set(type);
+    this.runSearch();
+  }
+
   runSearch(): void {
+    if (this.tripType() === 'multi') {
+      this.runMultiSearch();
+      return;
+    }
     this.page = 0;
     this.loading.set(true);
+    this.inbound.set([]);
+
     this.catalog
-      .searchFlights(this.buildQuery(), 0)
+      .searchFlights(this.buildQuery(this.originIata, this.destIata, this.departureDate), 0)
       .pipe(catchError(() => of(emptyPage<FlightSearchResult>())))
       .subscribe(res => {
         this.results.set(res.items);
         this.total.set(res.total);
         this.loading.set(false);
       });
+
+    if (this.tripType() === 'round') {
+      this.catalog
+        .searchFlights(this.buildQuery(this.destIata, this.originIata, this.returnDate), 0)
+        .pipe(catchError(() => of(emptyPage<FlightSearchResult>())))
+        .subscribe(res => this.inbound.set(res.items));
+    }
+
+    this.loadFareCalendar();
+  }
+
+  private runMultiSearch(): void {
+    this.loading.set(true);
+    const validLegs = this.legs().filter(l => l.originIata.trim() && l.destIata.trim());
+    if (validLegs.length === 0) {
+      this.legResults.set([]);
+      this.loading.set(false);
+      return;
+    }
+    forkJoin(
+      validLegs.map(leg =>
+        this.catalog
+          .searchFlights(this.buildQuery(leg.originIata, leg.destIata, leg.date), 0)
+          .pipe(catchError(() => of(emptyPage<FlightSearchResult>()))),
+      ),
+    ).subscribe(pages => {
+      this.legResults.set(
+        validLegs.map((leg, i) => ({ leg, flights: pages[i].items })),
+      );
+      this.loading.set(false);
+    });
   }
 
   loadMore(): void {
-    if (this.loadingMore() || !this.hasMore()) {
+    if (this.loadingMore() || !this.hasMore() || this.tripType() === 'multi') {
       return;
     }
     this.loadingMore.set(true);
     this.catalog
-      .searchFlights(this.buildQuery(), this.page + 1)
+      .searchFlights(this.buildQuery(this.originIata, this.destIata, this.departureDate), this.page + 1)
       .pipe(catchError(() => of(emptyPage<FlightSearchResult>(this.page, this.total()))))
       .subscribe(res => {
         this.page = res.page;
@@ -185,15 +210,187 @@ export class FlightsComponent implements OnInit {
       });
   }
 
-  private buildQuery(): FlightSearchQuery {
+  // --- fare calendar ---
+
+  private loadFareCalendar(): void {
+    const o = this.originIata.trim().toUpperCase();
+    const d = this.destIata.trim().toUpperCase();
+    if (!o || !d) {
+      this.fareCalendar.set([]);
+      return;
+    }
+    this.catalog
+      .fareCalendar(o, d, this.departureDate || new Date().toISOString().slice(0, 10), 30)
+      .pipe(catchError(() => of([] as FareCalendarDay[])))
+      .subscribe(days => this.fareCalendar.set(days));
+  }
+
+  pickFareDay(date: string): void {
+    this.departureDate = date;
+    this.runSearch();
+  }
+
+  // --- filters ---
+
+  toggleAirline(airline: string): void {
+    this.airlineFilter.update(current => {
+      const next = new Set(current);
+      if (next.has(airline)) {
+        next.delete(airline);
+      } else {
+        next.add(airline);
+      }
+      return next;
+    });
+  }
+
+  setMaxDuration(hours: number): void {
+    this.maxDurationHours.set(hours);
+  }
+
+  clearFilters(): void {
+    this.airlineFilter.set(new Set());
+    this.maxDurationHours.set(0);
+  }
+
+  readonly hasActiveFilters = computed(() =>
+    this.airlineFilter().size > 0 || this.maxDurationHours() > 0);
+
+  private applyFilters(flights: readonly FlightSearchResult[]): FlightSearchResult[] {
+    const airlines = this.airlineFilter();
+    const maxH = this.maxDurationHours();
+    return flights.filter(f => {
+      if (airlines.size > 0 && !airlines.has(f.airline)) {
+        return false;
+      }
+      if (maxH > 0 && this.durationHours(f) > maxH) {
+        return false;
+      }
+      return true;
+    });
+  }
+
+  durationHours(f: FlightSearchResult): number {
+    return (new Date(f.arrivalAt).getTime() - new Date(f.departureAt).getTime()) / 3_600_000;
+  }
+
+  durationLabel(f: FlightSearchResult): string {
+    const total = this.durationHours(f);
+    const h = Math.floor(total);
+    const m = Math.round((total - h) * 60);
+    return m > 0 ? `${h}h ${m}m` : `${h}h`;
+  }
+
+  // --- multi-city leg editing ---
+
+  addLeg(): void {
+    if (this.legs().length >= MAX_LEGS) {
+      return;
+    }
+    const last = this.legs()[this.legs().length - 1];
+    this.legs.update(ls => [...ls, {
+      originIata: last?.destIata ?? '',
+      destIata: '',
+      date: last?.date ?? new Date().toISOString().slice(0, 10),
+    }]);
+  }
+
+  removeLeg(index: number): void {
+    if (this.legs().length <= 1) {
+      return;
+    }
+    this.legs.update(ls => ls.filter((_, i) => i !== index));
+  }
+
+  updateLeg(index: number, patch: Partial<Leg>): void {
+    this.legs.update(ls => ls.map((l, i) => (i === index ? { ...l, ...patch } : l)));
+  }
+
+  private buildQuery(origin: string, dest: string, date: string): FlightSearchQuery {
     return {
-      originIata: this.originIata.trim().toUpperCase() || undefined,
-      destIata: this.destIata.trim().toUpperCase() || undefined,
-      departureDate: this.departureDate || new Date().toISOString().slice(0, 10),
+      originIata: origin.trim().toUpperCase() || undefined,
+      destIata: dest.trim().toUpperCase() || undefined,
+      departureDate: date || new Date().toISOString().slice(0, 10),
       passengers: this.passengers || 1,
       maxPrice: this.maxPrice,
       sort: this.sort || undefined,
     };
+  }
+
+  // --- grouping helpers ---
+
+  private groupByCountryCity(flights: readonly FlightSearchResult[]): CountryGroup[] {
+    const byCountry = new Map<string, FlightSearchResult[]>();
+    for (const f of flights) {
+      const key = f.destCountry?.trim() || UNGROUPED_COUNTRY;
+      const bucket = byCountry.get(key);
+      if (bucket) {
+        bucket.push(f);
+      } else {
+        byCountry.set(key, [f]);
+      }
+    }
+
+    return [...byCountry.entries()]
+      .map(([country, countryFlights]) => this.toCountryGroup(country, countryFlights))
+      .sort((a, b) => this.compareGroupNames(a.country, b.country));
+  }
+
+  private toCountryGroup(country: string, flights: FlightSearchResult[]): CountryGroup {
+    const byCity = new Map<string, FlightSearchResult[]>();
+    for (const f of flights) {
+      const key = f.destCity?.trim() || f.destIata;
+      const bucket = byCity.get(key);
+      if (bucket) {
+        bucket.push(f);
+      } else {
+        byCity.set(key, [f]);
+      }
+    }
+
+    const cities: CityGroup[] = [...byCity.entries()]
+      .map(([city, cityFlights]) => ({
+        city,
+        flights: cityFlights,
+        fromPrice: this.minPrice(cityFlights),
+      }))
+      .sort((a, b) => this.compareGroupNames(a.city, b.city));
+
+    const code = flights.find(f => f.destCountryCode)?.destCountryCode ?? null;
+    return {
+      country,
+      countryCode: code,
+      flag: this.flagEmoji(code),
+      count: flights.length,
+      fromPrice: this.minPrice(flights),
+      cities,
+    };
+  }
+
+  private minPrice(flights: readonly FlightSearchResult[]): number {
+    return flights.reduce((min, f) => (f.price < min ? f.price : min), Infinity);
+  }
+
+  private compareGroupNames(a: string, b: string): number {
+    if (a === UNGROUPED_COUNTRY) {
+      return 1;
+    }
+    if (b === UNGROUPED_COUNTRY) {
+      return -1;
+    }
+    return a.localeCompare(b);
+  }
+
+  private flagEmoji(code: string | null): string {
+    if (!code || code.length !== 2) {
+      return '🌍';
+    }
+    const base = 0x1f1e6;
+    const upper = code.toUpperCase();
+    return String.fromCodePoint(
+      base + upper.charCodeAt(0) - 65,
+      base + upper.charCodeAt(1) - 65,
+    );
   }
 
   open(id: string): void {

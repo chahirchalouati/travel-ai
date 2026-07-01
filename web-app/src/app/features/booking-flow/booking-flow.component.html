@@ -1,0 +1,239 @@
+@if (store.draft(); as d) {
+  @if (confirmed(); as b) {
+    <!-- Confirmation (draft is kept until the user leaves the funnel) -->
+    <div class="bf">
+      <div class="bf-grid bf-grid--single">
+        <main class="bf-main">
+          <section class="bf-card bf-done">
+            <span class="bf-done__check ms">check_circle</span>
+            <h2 class="bf-h2">{{ 'booking.flow.confirmedTitle' | transloco }}</h2>
+            <p class="bf-help">{{ 'booking.flow.confirmedBody' | transloco }}</p>
+            <p class="bf-ref">{{ 'booking.flow.reference' | transloco }} <strong>{{ b.bookingReference }}</strong></p>
+            <button class="bf-btn bf-btn--primary" (click)="goToBookings()">
+              <span class="ms" style="font-size:18px">confirmation_number</span>
+              {{ 'booking.flow.viewBookings' | transloco }}
+            </button>
+          </section>
+        </main>
+      </div>
+    </div>
+  } @else {
+  <div class="bf">
+    <!-- Stepper -->
+    <ol class="bf-steps" aria-label="Booking steps">
+      @for (s of steps; track s; let i = $index) {
+        @if (s !== 'done') {
+          <li class="bf-step"
+              [class.bf-step--active]="stepIndex() === i"
+              [class.bf-step--done]="stepIndex() > i">
+            <span class="bf-step__dot">
+              @if (stepIndex() > i) { <span class="ms" style="font-size:16px">check</span> }
+              @else { {{ i + 1 }} }
+            </span>
+            <span class="bf-step__label">{{ 'booking.flow.step.' + s | transloco }}</span>
+          </li>
+        }
+      }
+    </ol>
+
+    <div class="bf-grid">
+      <!-- Main column -->
+      <main class="bf-main">
+
+        <!-- STEP 1 — Configure -->
+        @if (step() === 'configure') {
+          <section class="bf-card">
+            <header class="bf-item">
+              @if (d.imageUrl) {
+                <img class="bf-item__img" [src]="d.imageUrl" [alt]="d.title" />
+              } @else {
+                <div class="bf-item__img bf-item__img--icon">
+                  <span class="ms" style="font-size:34px">{{ icon() }}</span>
+                </div>
+              }
+              <div>
+                <span class="bf-eyebrow">{{ 'booking.flow.vertical.' + d.vertical | transloco }}</span>
+                <h1 class="bf-item__title">{{ d.title }}</h1>
+                <p class="bf-item__sub"><span class="ms" style="font-size:15px">place</span>{{ d.subtitle }}</p>
+                @if (d.rating && d.reviewCount) {
+                  <span class="bf-rating"><span class="ms" style="font-size:15px">star</span>{{ d.rating | number:'1.1-1' }} · {{ d.reviewCount }} {{ 'common.reviews' | transloco }}</span>
+                }
+              </div>
+            </header>
+
+            @if (d.timeSlots?.length) {
+              <div class="bf-field">
+                <label class="bf-label">{{ 'booking.flow.chooseTime' | transloco }}</label>
+                <div class="bf-chips">
+                  @for (slot of d.timeSlots; track slot) {
+                    <button type="button" class="bf-chip"
+                            [class.bf-chip--on]="store.selectedTimeSlot() === slot"
+                            (click)="store.selectedTimeSlot.set(slot)">{{ slot }}</button>
+                  }
+                </div>
+              </div>
+            }
+
+            @if (d.options.length) {
+              <div class="bf-field">
+                <label class="bf-label">{{ 'booking.flow.choose.' + d.vertical | transloco }}</label>
+                <div class="bf-options">
+                  @for (o of d.options; track o.id) {
+                    <button type="button" class="bf-option"
+                            [class.bf-option--on]="(store.selectedOption()?.id) === o.id"
+                            (click)="store.selectedOptionId.set(o.id)">
+                      <span class="bf-option__radio"></span>
+                      <span class="bf-option__body">
+                        <span class="bf-option__label">{{ o.label }}</span>
+                        @if (o.note) { <span class="bf-option__note">{{ o.note }}</span> }
+                      </span>
+                      <span class="bf-option__price">
+                        {{ (d.unitPrice * o.multiplier) | currency:d.currency:'symbol':'1.0-0' }}
+                      </span>
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+
+            <div class="bf-field">
+              <label class="bf-label">{{ 'booking.flow.party.' + d.vertical | transloco }}</label>
+              <div class="bf-stepper">
+                <button type="button" class="bf-stepper__btn" (click)="store.setPartySize(store.partySize() - 1)"
+                        [disabled]="store.partySize() <= 1" aria-label="decrease">
+                  <span class="ms">remove</span>
+                </button>
+                <span class="bf-stepper__val">{{ store.partySize() }}</span>
+                <button type="button" class="bf-stepper__btn" (click)="store.setPartySize(store.partySize() + 1)"
+                        aria-label="increase">
+                  <span class="ms">add</span>
+                </button>
+              </div>
+            </div>
+          </section>
+        }
+
+        <!-- STEP 2 — Travelers -->
+        @if (step() === 'travelers') {
+          <section class="bf-card">
+            <h2 class="bf-h2">{{ 'booking.flow.travelersTitle' | transloco }}</h2>
+            <p class="bf-help">{{ 'booking.flow.travelersHelp' | transloco }}</p>
+            @for (t of store.travelers(); track $index) {
+              <fieldset class="bf-traveler">
+                <legend>
+                  {{ 'booking.flow.traveler' | transloco }} {{ $index + 1 }}
+                  @if (t.primary) { <span class="bf-badge">{{ 'booking.flow.primary' | transloco }}</span> }
+                </legend>
+                <div class="bf-row">
+                  <input type="text" class="bf-input" [ngModel]="t.firstName"
+                         (ngModelChange)="store.updateTraveler($index, { firstName: $event })"
+                         [placeholder]="'booking.flow.firstName' | transloco" />
+                  <input type="text" class="bf-input" [ngModel]="t.lastName"
+                         (ngModelChange)="store.updateTraveler($index, { lastName: $event })"
+                         [placeholder]="'booking.flow.lastName' | transloco" />
+                </div>
+                <input type="text" class="bf-input" [ngModel]="t.documentNumber"
+                       (ngModelChange)="store.updateTraveler($index, { documentNumber: $event })"
+                       [placeholder]="'booking.flow.document' | transloco" />
+              </fieldset>
+            }
+          </section>
+        }
+
+        <!-- STEP 3 — Review -->
+        @if (step() === 'review') {
+          <section class="bf-card">
+            <h2 class="bf-h2">{{ 'booking.flow.reviewTitle' | transloco }}</h2>
+
+            <div class="bf-review-line"><span>{{ d.title }}</span><span>{{ d.subtitle }}</span></div>
+            @if (store.selectedOption(); as o) {
+              <div class="bf-review-line"><span>{{ 'booking.flow.choose.' + d.vertical | transloco }}</span><span>{{ o.label }}</span></div>
+            }
+            @if (store.selectedTimeSlot(); as slot) {
+              <div class="bf-review-line"><span>{{ 'booking.flow.chooseTime' | transloco }}</span><span>{{ slot }}</span></div>
+            }
+            @if (d.checkIn) {
+              <div class="bf-review-line"><span>{{ 'booking.flow.date' | transloco }}</span><span>{{ d.checkIn | date:'EEE, dd MMM yyyy' }}</span></div>
+            }
+            <div class="bf-review-line"><span>{{ 'booking.flow.party.' + d.vertical | transloco }}</span><span>{{ store.partySize() }}</span></div>
+
+            <div class="bf-field">
+              <label class="bf-label">{{ 'booking.flow.payVia' | transloco }}</label>
+              <div class="bf-chips">
+                @for (g of gateways; track g) {
+                  <button type="button" class="bf-chip"
+                          [class.bf-chip--on]="gateway() === g"
+                          (click)="gateway.set(g)">{{ g | titlecase }}</button>
+                }
+              </div>
+            </div>
+
+            <div class="bf-ai">
+              <span class="ms" style="font-size:18px">auto_awesome</span>
+              <p>{{ 'booking.flow.aiInsight' | transloco }}</p>
+            </div>
+
+            @if (errorKey()) {
+              <p class="bf-error"><span class="ms" style="font-size:16px">error</span>{{ errorKey()! | transloco }}</p>
+            }
+          </section>
+        }
+
+        <!-- Navigation -->
+        <nav class="bf-nav">
+          @if (step() === 'configure') {
+            <button class="bf-btn bf-btn--ghost" (click)="cancel()">{{ 'booking.flow.cancel' | transloco }}</button>
+          } @else {
+            <button class="bf-btn bf-btn--ghost" (click)="back()">
+              <span class="ms" style="font-size:18px">arrow_back</span>{{ 'booking.flow.back' | transloco }}
+            </button>
+          }
+
+          @if (step() === 'review') {
+            <div class="bf-review-actions">
+              <button class="bf-btn bf-btn--ghost" (click)="addToTrip()" [disabled]="submitting()">
+                <span class="ms" style="font-size:18px">luggage</span>{{ 'booking.flow.addToTrip' | transloco }}
+              </button>
+              <button class="bf-btn bf-btn--primary" (click)="confirm()" [disabled]="submitting()">
+                @if (submitting()) { <span class="bf-spinner"></span> }
+                {{ 'booking.flow.payConfirm' | transloco }}
+              </button>
+            </div>
+          } @else {
+            <button class="bf-btn bf-btn--primary" (click)="next()"
+                    [disabled]="step() === 'travelers' && !store.travelersValid()">
+              {{ 'booking.flow.continue' | transloco }}<span class="ms" style="font-size:18px">arrow_forward</span>
+            </button>
+          }
+        </nav>
+      </main>
+
+      <!-- Price summary rail -->
+      <aside class="bf-summary">
+        <h3 class="bf-summary__title">{{ 'booking.flow.summary' | transloco }}</h3>
+        <div class="bf-summary__line">
+          <span>{{ store.unitPrice() | currency:d.currency:'symbol':'1.0-0' }} × {{ store.partySize() }}</span>
+          <span>{{ store.subtotal() | currency:d.currency:'symbol':'1.0-0' }}</span>
+        </div>
+        <div class="bf-summary__line bf-summary__line--muted">
+          <span>{{ 'booking.flow.serviceFee' | transloco }}</span>
+          <span>{{ store.serviceFee() | currency:d.currency:'symbol':'1.2-2' }}</span>
+        </div>
+        <div class="bf-summary__total">
+          <span>{{ 'booking.flow.total' | transloco }}</span>
+          <span>{{ store.total() | currency:d.currency:'symbol':'1.2-2' }}</span>
+        </div>
+        <p class="bf-summary__note"><span class="ms" style="font-size:14px">lock</span>{{ 'booking.flow.securedNote' | transloco }}</p>
+      </aside>
+    </div>
+  </div>
+  }
+} @else {
+  <!-- No draft: arrived at /book directly -->
+  <div class="bf-empty">
+    <span class="ms">shopping_cart</span>
+    <h2>{{ 'booking.flow.emptyTitle' | transloco }}</h2>
+    <p>{{ 'booking.flow.emptyBody' | transloco }}</p>
+    <button class="bf-btn bf-btn--primary" (click)="cancel()">{{ 'booking.flow.emptyCta' | transloco }}</button>
+  </div>
+}

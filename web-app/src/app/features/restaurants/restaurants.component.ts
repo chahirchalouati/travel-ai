@@ -9,6 +9,7 @@ import type { RestaurantSearchQuery } from '../../core/services/catalog.service'
 import type { RestaurantSearchResult } from '../../core/models/api.models';
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
+import { TripContextService } from '../../core/services/trip-context.service';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80';
@@ -93,6 +94,7 @@ const HEADER_IMG =
                   @if (r.petFriendly) { <span class="tag-pill">{{ 'catalog.amenities.pet' | transloco }}</span> }
                   @if (r.accessible) { <span class="tag-pill">{{ 'catalog.amenities.accessible' | transloco }}</span> }
                   <span class="tag-pill">{{ r.available ? ('catalog.restaurants.available' | transloco) : ('catalog.restaurants.fullyBooked' | transloco) }}</span>
+                  @if (tripFit(r); as place) { <span class="tag-pill tag-pill--ai"><span class="ms" style="font-size:13px;vertical-align:middle">auto_awesome</span> {{ 'common.fitsTrip' | transloco:{ place: place } }}</span> }
                 </div>
                 <div class="card__foot">
                   <span class="card__sub" style="font-weight:600;color:var(--teal)">{{ r.cuisineType }}</span>
@@ -118,8 +120,13 @@ export class RestaurantsComponent implements OnInit {
   private readonly catalog = inject(CatalogService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly tripContext = inject(TripContextService);
 
   readonly headerImg = HEADER_IMG;
+
+  tripFit(r: RestaurantSearchResult): string | null {
+    return this.tripContext.match(r.city);
+  }
   readonly results = signal<RestaurantSearchResult[]>([]);
   readonly total = signal(0);
   readonly loading = signal(true);
@@ -135,6 +142,7 @@ export class RestaurantsComponent implements OnInit {
   sort = '';
 
   ngOnInit(): void {
+    this.tripContext.ensureLoaded();
     const q = this.route.snapshot.queryParamMap.get('city') ?? this.route.snapshot.queryParamMap.get('q');
     if (q) {
       this.city = q;

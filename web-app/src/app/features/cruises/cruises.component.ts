@@ -9,6 +9,7 @@ import type { CruiseSearchQuery } from '../../core/services/catalog.service';
 import type { CruiseSearchResult } from '../../core/models/api.models';
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
+import { TripContextService } from '../../core/services/trip-context.service';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1599640842225-85d111c60e6b?w=1920&q=80';
@@ -85,6 +86,7 @@ const HEADER_IMG =
                 <div class="card__tags">
                   <span class="tag-pill">{{ c.cruiseType }}</span>
                   <span class="tag-pill">{{ c.cabinsAvailable }} {{ 'catalog.cruises.cabins' | transloco }}</span>
+                  @if (tripFit(c); as place) { <span class="tag-pill tag-pill--ai"><span class="ms" style="font-size:13px;vertical-align:middle">auto_awesome</span> {{ 'common.fitsTrip' | transloco:{ place: place } }}</span> }
                 </div>
                 <div class="card__foot">
                   <span class="card__price">{{ c.pricePerPerson | currency:'EUR':'symbol':'1.0-0' }} <small>/ {{ 'catalog.perPerson' | transloco }}</small></span>
@@ -110,8 +112,13 @@ export class CruisesComponent implements OnInit {
   private readonly catalog = inject(CatalogService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly tripContext = inject(TripContextService);
 
   readonly headerImg = HEADER_IMG;
+
+  tripFit(c: CruiseSearchResult): string | null {
+    return this.tripContext.match(c.arrivalPort) ?? this.tripContext.match(c.departurePort);
+  }
   readonly results = signal<CruiseSearchResult[]>([]);
   readonly total = signal(0);
   readonly loading = signal(true);
@@ -126,6 +133,7 @@ export class CruisesComponent implements OnInit {
   maxPrice?: number;
 
   ngOnInit(): void {
+    this.tripContext.ensureLoaded();
     const q = this.route.snapshot.queryParamMap.get('port') ?? this.route.snapshot.queryParamMap.get('q');
     if (q) {
       this.departurePort = q;

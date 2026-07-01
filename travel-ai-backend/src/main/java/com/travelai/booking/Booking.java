@@ -31,6 +31,7 @@ public class Booking extends BaseEntity {
     private UUID hotelId;
     private UUID restaurantId;
     private UUID flightId;
+    private UUID cruiseId;
 
     @Enumerated(STRING)
     private BookingStatus status = BookingStatus.PENDING;
@@ -39,10 +40,28 @@ public class Booking extends BaseEntity {
     private BigDecimal hotelAmount;
     private BigDecimal restaurantAmount;
     private BigDecimal flightAmount;
+    private BigDecimal cruiseAmount;
 
     private String destination;
     private LocalDate checkIn;
     private LocalDate checkOut;
+
+    /** Vertical-specific configuration captured by the booking funnel. */
+    @Column(name = "fare_class")
+    private String fareClass;        // flights: Basic / Standard / Flex
+
+    @Column(name = "time_slot")
+    private String timeSlot;         // restaurants: reserved time, e.g. "19:30"
+
+    @Column(name = "cabin_category")
+    private String cabinCategory;    // cruises: Interior / Ocean View / Balcony / Suite
+
+    @Column(name = "party_size")
+    private Integer partySize;       // travellers / covers / guests
+
+    /** Shared across bookings created together in one bundle checkout. */
+    @Column(name = "trip_group_id")
+    private UUID tripGroupId;
 
     @Column(name = "booking_reference", unique = true)
     private String bookingReference;

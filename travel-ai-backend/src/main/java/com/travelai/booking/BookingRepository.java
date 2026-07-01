@@ -22,6 +22,9 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
 
     Optional<Booking> findByBookingReference(String reference);
 
+    @EntityGraph(attributePaths = {"travelers"})
+    java.util.List<Booking> findByTripGroupIdAndUserEmail(UUID tripGroupId, String email);
+
     /**
      * True when the user has a confirmed or completed booking referencing the given target
      * (hotel, restaurant, or flight). Used to mark reviews as verified stays.

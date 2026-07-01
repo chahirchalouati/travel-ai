@@ -2,11 +2,14 @@ package com.travelai.catalog.restaurant;
 
 import com.travelai.catalog.restaurant.dto.RestaurantSearchRequest;
 import com.travelai.catalog.restaurant.dto.RestaurantSearchResult;
+import com.travelai.catalog.restaurant.dto.RestaurantSlot;
 import com.travelai.shared.domain.ApiResponse;
 import com.travelai.shared.domain.PageSupport;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -45,5 +48,13 @@ public class RestaurantController {
     @GetMapping("/{id}")
     public ApiResponse<RestaurantSearchResult> getById(@PathVariable UUID id) {
         return ApiResponse.ok(restaurantService.getById(id));
+    }
+
+    @GetMapping("/{id}/availability")
+    public ApiResponse<List<RestaurantSlot>> availability(
+            @PathVariable UUID id,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam(defaultValue = "2") int covers) {
+        return ApiResponse.ok(restaurantService.availability(id, date, covers));
     }
 }

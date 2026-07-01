@@ -1,10 +1,16 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
+import { catchError, of } from 'rxjs';
 import { CatalogService } from '../../core/services/catalog.service';
-import type { RestaurantSearchResult } from '../../core/models/api.models';
+import { ReviewService } from '../../core/services/review.service';
+import { TripContextService } from '../../core/services/trip-context.service';
+import { FavoritesService } from '../../core/services/favorites.service';
+import type { RestaurantSearchResult, RestaurantSlot, ReviewSummary } from '../../core/models/api.models';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
+import { BookingDraftService } from '../booking-flow/booking-draft.service';
 
 const PRICE_TIER_LABELS: Record<number, string> = {
   1: '$ Budget-friendly',
@@ -13,16 +19,34 @@ const PRICE_TIER_LABELS: Record<number, string> = {
   4: '$$$$ Fine Dining',
 };
 
+/** Indicative per-cover spend (EUR) by price tier, used to estimate the bill. */
+const TIER_ESTIMATE: Record<number, number> = { 1: 20, 2: 40, 3: 70, 4: 110 };
+
+const RESERVATION_SLOTS = ['12:00', '12:30', '13:00', '13:30', '19:00', '19:30', '20:00', '20:30', '21:00'];
+
+/** Local calendar date as YYYY-MM-DD (avoids the UTC off-by-one of toISOString). */
+function localToday(): string {
+  const d = new Date();
+  const m = `${d.getMonth() + 1}`.padStart(2, '0');
+  const day = `${d.getDate()}`.padStart(2, '0');
+  return `${d.getFullYear()}-${m}-${day}`;
+}
+
 @Component({
   selector: 'app-restaurant-detail',
   standalone: true,
-  imports: [CommonModule, TranslocoModule, RevealDirective],
+  imports: [CommonModule, FormsModule, TranslocoModule, RevealDirective],
   template: `
     @if (restaurant(); as r) {
-      <nav style="padding: 16px 32px; max-width: 1100px; margin: 0 auto;">
+      <nav style="padding: 16px 32px; max-width: 1100px; margin: 0 auto; display:flex; align-items:center; justify-content:space-between;">
         <button (click)="goBack()" class="back-link">
           <span class="ms" style="font-size:18px">arrow_back</span>
           {{ 'restaurant.back' | transloco }}
+        </button>
+        <button class="fav-toggle" [class.fav-toggle--on]="isFav()" (click)="toggleFav(r)"
+                [attr.aria-label]="'favorites.save' | transloco">
+          <span class="ms">{{ isFav() ? 'favorite' : 'favorite_border' }}</span>
+          {{ (isFav() ? 'favorites.saved' : 'favorites.save') | transloco }}
         </button>
       </nav>
 
@@ -53,6 +77,20 @@ const PRICE_TIER_LABELS: Record<number, string> = {
               }
               @if (r.priceTier) {
                 <span class="badge badge--gray">{{ getPriceTierLabel(r.priceTier) }}</span>
+              }
+              @if (summary(); as s) {
+                @if (s.totalReviews > 0) {
+                  <span class="badge badge--rating">
+                    <span class="ms" style="font-size:15px; vertical-align:middle">star</span>
+                    {{ s.averageRating | number:'1.1-1' }} · {{ s.totalReviews }} {{ 'restaurant.reviewsLabel' | transloco }}
+                  </span>
+                }
+              }
+              @if (tripFit(); as place) {
+                <span class="badge badge--ai">
+                  <span class="ms" style="font-size:14px; vertical-align:middle">auto_awesome</span>
+                  {{ 'common.fitsTrip' | transloco:{ place: place } }}
+                </span>
               }
             </div>
             <h1 class="hero-card__name">{{ r.name }}</h1>
@@ -166,8 +204,41 @@ const PRICE_TIER_LABELS: Record<number, string> = {
 
               <div style="height:1px; background:#efefef; margin:20px 0;"></div>
 
-              <button class="btn-book" (click)="goToPlanner()">
-                <span class="ms" style="font-size:20px">travel_explore</span>
+              <!-- Real reservation availability (OpenTable-style slot grid) -->
+              <div class="reserve">
+                <div class="reserve__controls">
+                  <label class="reserve__field">
+                    <span>{{ 'restaurant.pickDate' | transloco }}</span>
+                    <input type="date" [ngModel]="reserveDate()" [min]="today"
+                           (ngModelChange)="onDateChange($event)" />
+                  </label>
+                  <label class="reserve__field">
+                    <span>{{ 'restaurant.guests' | transloco }}</span>
+                    <input type="number" min="1" max="12" [ngModel]="covers()"
+                           (ngModelChange)="onCoversChange($event)" />
+                  </label>
+                </div>
+
+                <span class="reserve__label">{{ 'restaurant.availableTables' | transloco }}</span>
+                @if (loadingSlots()) {
+                  <div class="reserve__chips">
+                    @for (s of [1,2,3,4,5,6]; track s) { <span class="reserve__skel"></span> }
+                  </div>
+                } @else if (slots().length === 0) {
+                  <p class="reserve__empty"><span class="ms" style="font-size:16px">event_busy</span>{{ 'restaurant.noTables' | transloco }}</p>
+                } @else {
+                  <div class="reserve__chips">
+                    @for (slot of slots(); track slot.timeSlot) {
+                      <button type="button" class="reserve__chip"
+                              [class.reserve__chip--on]="selectedSlot() === slot.timeSlot"
+                              (click)="selectedSlot.set(slot.timeSlot)">{{ slot.timeSlot.slice(0, 5) }}</button>
+                    }
+                  </div>
+                }
+              </div>
+
+              <button class="btn-book" (click)="book(r)" [disabled]="!selectedSlot()">
+                <span class="ms" style="font-size:20px">confirmation_number</span>
                 {{ 'restaurant.book' | transloco }}
               </button>
               <button class="btn-chat" (click)="goToChat()">
@@ -207,6 +278,10 @@ const PRICE_TIER_LABELS: Record<number, string> = {
       cursor: pointer; padding: 0; transition: color 150ms ease;
     }
     .back-link:hover { color: #E04A2F; }
+    .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid #e0e0e0; border-radius: 999px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: #545454; cursor: pointer; transition: all 150ms ease; }
+    .fav-toggle:hover { border-color: #E04A2F; color: #E04A2F; }
+    .fav-toggle--on { border-color: #E04A2F; color: #E04A2F; background: #fff1ec; }
+    .fav-toggle .ms { font-size: 18px; }
 
     .hero-card {
       background: #fff; border-radius: 16px; overflow: hidden;
@@ -237,6 +312,10 @@ const PRICE_TIER_LABELS: Record<number, string> = {
     }
     .badge--teal { background: #E6F5F0; color: #00856A; }
     .badge--gray { background: #f7f7f7; color: #545454; border: 1px solid #e0e0e0; }
+    .badge--rating { background: #FFF4E0; color: #B26A00; }
+    .badge--rating .ms { color: #F5A623; }
+    .badge--ai { background: #EEF1FF; color: #4338CA; }
+    .badge--ai .ms { color: #6366F1; }
 
     .hero-card__name {
       font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.2rem);
@@ -300,13 +379,48 @@ const PRICE_TIER_LABELS: Record<number, string> = {
     }
     .meta-value { display: block; font-size: 15px; font-weight: 600; color: #1a1a1a; }
 
+    .reserve { margin-bottom: 18px; }
+    .reserve__controls { display: flex; gap: 10px; margin-bottom: 16px; }
+    .reserve__field { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .reserve__field span {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.4px; color: #8a8a8a;
+    }
+    .reserve__field input {
+      border: 1px solid #e8e8e8; border-radius: 8px; padding: 9px 10px;
+      font-family: inherit; font-size: 14px; color: #1a1a1a;
+    }
+    .reserve__field input:focus { outline: none; border-color: #E04A2F; }
+    .reserve__label {
+      display: block; font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.4px; color: #8a8a8a; margin-bottom: 8px;
+    }
+    .reserve__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .reserve__chip {
+      border: 1px solid #e8e8e8; background: #fff; border-radius: 8px;
+      padding: 8px 13px; font-family: inherit; font-size: 14px; font-weight: 600;
+      color: #1a1a1a; cursor: pointer; transition: all 150ms ease;
+    }
+    .reserve__chip:hover { border-color: #E04A2F; }
+    .reserve__chip--on { background: #E04A2F; border-color: #E04A2F; color: #fff; }
+    .reserve__skel {
+      width: 56px; height: 35px; border-radius: 8px;
+      background: linear-gradient(90deg, #f0f0f0 25%, #e6e6e6 50%, #f0f0f0 75%);
+      background-size: 600px 100%; animation: shimmer 1.6s ease-in-out infinite;
+    }
+    .reserve__empty {
+      display: flex; align-items: center; gap: 6px; margin: 0;
+      font-size: 13px; color: #8a8a8a;
+    }
+
     .btn-book {
       width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
       background: #E04A2F; color: #fff; border: none; border-radius: 10px;
       padding: 14px; font-family: inherit; font-size: 15px; font-weight: 600;
       cursor: pointer; transition: background 150ms ease; margin-bottom: 10px;
     }
-    .btn-book:hover { background: #c93d25; }
+    .btn-book:hover:not(:disabled) { background: #c93d25; }
+    .btn-book:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .btn-chat {
       width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -336,24 +450,108 @@ export class RestaurantDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly catalogService = inject(CatalogService);
+  private readonly reviewService = inject(ReviewService);
+  private readonly tripContext = inject(TripContextService);
+  private readonly favorites = inject(FavoritesService);
+  private readonly bookingDraft = inject(BookingDraftService);
 
   readonly restaurant = signal<RestaurantSearchResult | null>(null);
+  readonly summary = signal<ReviewSummary | null>(null);
+  readonly tripFit = computed(() => this.tripContext.match(this.restaurant()?.city ?? null));
+  readonly isFav = computed(() => {
+    const r = this.restaurant();
+    return r ? this.favorites.has('restaurant', r.id) : false;
+  });
+
+  toggleFav(r: RestaurantSearchResult): void {
+    this.favorites.toggle({
+      type: 'restaurant',
+      id: r.id,
+      title: r.name,
+      subtitle: `${r.city} · ${r.cuisineType}`,
+      imageUrl: r.imageUrl,
+      route: `/restaurants/${r.id}`,
+    });
+  }
+
+  readonly today = localToday();
+  readonly reserveDate = signal(this.today);
+  readonly covers = signal(2);
+  readonly slots = signal<RestaurantSlot[]>([]);
+  readonly loadingSlots = signal(true);
+  readonly selectedSlot = signal<string | null>(null);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) { this.router.navigate(['/']); return; }
 
     this.catalogService.getRestaurant(id).subscribe({
-      next: (r) => this.restaurant.set(r),
+      next: (r) => { this.restaurant.set(r); this.loadSlots(); },
       error: () => this.router.navigate(['/']),
     });
+
+    this.reviewService.getSummary('RESTAURANT', id)
+      .pipe(catchError(() => of(null)))
+      .subscribe(s => this.summary.set(s));
+
+    this.tripContext.ensureLoaded();
   }
 
   getPriceTierLabel(tier: number): string {
     return PRICE_TIER_LABELS[tier] ?? '$$';
   }
 
+  onDateChange(date: string): void {
+    this.reserveDate.set(date || this.today);
+    this.loadSlots();
+  }
+
+  onCoversChange(value: number): void {
+    this.covers.set(Math.max(1, Math.min(12, Math.trunc(value) || 1)));
+    this.loadSlots();
+  }
+
+  /** Fetches real bookable slots for the chosen date and party size. */
+  private loadSlots(): void {
+    const r = this.restaurant();
+    if (!r) { return; }
+    this.loadingSlots.set(true);
+    this.selectedSlot.set(null);
+    this.catalogService
+      .restaurantAvailability(r.id, this.reserveDate(), this.covers())
+      .pipe(catchError(() => of([] as RestaurantSlot[])))
+      .subscribe(slots => {
+        this.slots.set(slots);
+        this.selectedSlot.set(slots[0]?.timeSlot ?? null);
+        this.loadingSlots.set(false);
+      });
+  }
+
   goBack(): void { this.router.navigate(['/']); }
   goToPlanner(): void { this.router.navigate(['/planner']); }
   goToChat(): void { this.router.navigate(['/chat']); }
+
+  /** Seeds the booking funnel with the real chosen date/slot and opens it. */
+  book(r: RestaurantSearchResult): void {
+    const chosen = this.selectedSlot();
+    if (!chosen) { return; }
+    const available = this.slots().map(s => s.timeSlot.slice(0, 5));
+    this.bookingDraft.start({
+      vertical: 'restaurant',
+      itemId: r.id,
+      title: r.name,
+      subtitle: `${r.city} · ${r.cuisineType}`,
+      imageUrl: r.imageUrl,
+      destination: r.city,
+      unitPrice: TIER_ESTIMATE[r.priceTier] ?? 40,
+      currency: 'EUR',
+      checkIn: this.reserveDate(),
+      options: [],
+      timeSlots: available.length ? available : RESERVATION_SLOTS,
+      rating: this.summary()?.totalReviews ? this.summary()?.averageRating : undefined,
+      reviewCount: this.summary()?.totalReviews || undefined,
+    }, this.covers());
+    this.bookingDraft.selectedTimeSlot.set(chosen.slice(0, 5));
+    this.router.navigate(['/book']);
+  }
 }
