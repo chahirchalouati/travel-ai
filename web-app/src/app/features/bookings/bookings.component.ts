@@ -6,6 +6,7 @@ import { catchError, of } from 'rxjs';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { BookingService } from '../../core/services/booking.service';
 import { InvoiceService } from '../../core/services/invoice.service';
+import { CalendarService } from '../../core/services/calendar.service';
 import { ReviewService } from '../../core/services/review.service';
 import type { BookingResponse } from '../../core/models/api.models';
 
@@ -76,6 +77,12 @@ interface ReviewTarget {
                       <span class="ms">luggage</span> {{ 'bookings.tripInvoice' | transloco }}
                     </button>
                   }
+                  <button class="row-ticket" (click)="router.navigate(['/ticket', b.id])">
+                    <span class="ms">confirmation_number</span> {{ 'bookings.ticket' | transloco }}
+                  </button>
+                  <button class="row-calendar" (click)="addToCalendar(b)" [disabled]="downloading() === b.id">
+                    <span class="ms">event_available</span> {{ 'bookings.addToCalendar' | transloco }}
+                  </button>
                 }
                 @if (b.status === 'CONFIRMED' && reviewTarget(b) && !reviewedIds().has(b.id)) {
                   <button class="row-review" (click)="openReview(b)">
@@ -146,6 +153,10 @@ interface ReviewTarget {
     .row-review { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--line); color: var(--accent); border-radius: 999px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease; }
     .row-invoice { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: all 120ms ease; }
     .row-invoice:hover { border-color: var(--accent); color: var(--accent); }
+    .row-ticket, .row-calendar { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--line); color: var(--ink); border-radius: 999px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease, border-color 120ms ease; }
+    .row-ticket:hover, .row-calendar:hover:not(:disabled) { background: #f6f6f6; border-color: var(--ink); }
+    .row-calendar:disabled { opacity: 0.6; cursor: default; }
+    .row-ticket .ms, .row-calendar .ms { font-size: 15px; }
     .row-review:hover { background: var(--accent-soft); }
     .row-review .ms { font-size: 15px; }
     .row-reviewed { display: inline-flex; align-items: center; gap: 4px; color: #00856A; font-weight: 700; font-size: 0.8rem; }
@@ -169,6 +180,7 @@ interface ReviewTarget {
 export class BookingsComponent implements OnInit {
   readonly router = inject(Router);
   readonly invoices = inject(InvoiceService);
+  private readonly calendar = inject(CalendarService);
   private readonly service = inject(BookingService);
   private readonly reviews = inject(ReviewService);
   private readonly transloco = inject(TranslocoService);
@@ -176,6 +188,7 @@ export class BookingsComponent implements OnInit {
   readonly loading = signal(true);
   readonly bookings = signal<BookingResponse[]>([]);
   readonly cancelling = signal<string | null>(null);
+  readonly downloading = signal<string | null>(null);
   readonly toast = signal<string>('');
 
   // Post-stay review form state
@@ -261,6 +274,16 @@ export class BookingsComponent implements OnInit {
     if (b.restaurantId) return 'restaurant';
     if (b.hotelId) return 'hotel';
     return 'luggage';
+  }
+
+  addToCalendar(b: BookingResponse): void {
+    this.downloading.set(b.id);
+    this.calendar.downloadIcs(b.id, b.bookingReference).pipe(catchError(() => of(null))).subscribe(blob => {
+      this.downloading.set(null);
+      if (!blob) {
+        this.flash(this.transloco.translate('bookings.calendarError'));
+      }
+    });
   }
 
   private flash(msg: string): void {

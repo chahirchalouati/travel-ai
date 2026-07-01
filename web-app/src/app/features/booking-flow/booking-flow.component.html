@@ -158,6 +158,19 @@
             <div class="bf-review-line"><span>{{ 'booking.flow.party.' + d.vertical | transloco }}</span><span>{{ store.partySize() }}</span></div>
 
             <div class="bf-field">
+              <label class="bf-label">{{ 'booking.flow.promoPlaceholder' | transloco }}</label>
+              <div class="bf-promo">
+                <input type="text" class="bf-input" [(ngModel)]="promoInput"
+                       [placeholder]="'booking.flow.promoPlaceholder' | transloco"
+                       style="text-transform:uppercase" />
+                <button type="button" class="bf-btn bf-btn--ghost" (click)="applyPromo()">{{ 'booking.flow.promoApply' | transloco }}</button>
+              </div>
+              @if (promoMsgKey(); as m) {
+                <p class="bf-promo__msg" [class.bf-promo__msg--ok]="store.discount() > 0">{{ m | transloco }}</p>
+              }
+            </div>
+
+            <div class="bf-field">
               <label class="bf-label">{{ 'booking.flow.payVia' | transloco }}</label>
               <div class="bf-chips">
                 @for (g of gateways; track g) {
@@ -219,6 +232,12 @@
           <span>{{ 'booking.flow.serviceFee' | transloco }}</span>
           <span>{{ store.serviceFee() | currency:d.currency:'symbol':'1.2-2' }}</span>
         </div>
+        @if (store.discount() > 0) {
+          <div class="bf-summary__line" style="color:#00856a;font-weight:700;">
+            <span>{{ 'booking.flow.discount' | transloco }} @if (store.appliedPromo(); as c) { ({{ c }}) }</span>
+            <span>−{{ store.discount() | currency:d.currency:'symbol':'1.2-2' }}</span>
+          </div>
+        }
         <div class="bf-summary__total">
           <span>{{ 'booking.flow.total' | transloco }}</span>
           <span>{{ store.total() | currency:d.currency:'symbol':'1.2-2' }}</span>

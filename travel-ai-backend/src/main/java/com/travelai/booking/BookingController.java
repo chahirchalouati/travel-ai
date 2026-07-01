@@ -6,7 +6,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +44,19 @@ public class BookingController {
             @AuthenticationPrincipal UserDetails user,
             @PathVariable UUID id) {
         return ApiResponse.ok(bookingService.getBooking(user.getUsername(), id));
+    }
+
+    @GetMapping(value = "/{id}/calendar.ics", produces = "text/calendar")
+    public ResponseEntity<String> calendar(
+            @AuthenticationPrincipal UserDetails user,
+            @PathVariable UUID id) {
+        String ics = bookingService.icsForBooking(user.getUsername(), id);
+        String reference = bookingService.getBooking(user.getUsername(), id).bookingReference();
+        String filename = "booking-" + (reference != null ? reference : id) + ".ics";
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("text/calendar; charset=UTF-8"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                .body(ics);
     }
 
     @PatchMapping("/{id}/cancel")

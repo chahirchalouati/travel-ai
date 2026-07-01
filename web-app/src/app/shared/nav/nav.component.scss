@@ -118,6 +118,30 @@ nav {
   flex-shrink: 0;
 }
 
+.nav-bell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition:
+    color var(--duration-normal) var(--ease-out-expo),
+    background var(--duration-normal) var(--ease-out-expo);
+
+  .ms {
+    font-size: 22px;
+  }
+
+  &:hover,
+  &.active {
+    color: var(--brand);
+    background: var(--bg-tertiary);
+  }
+}
+
 .nav-sign-in {
   font-family: var(--font-body);
   font-size: 0.875rem;

@@ -62,6 +62,9 @@ export class BookingDraftService {
   readonly selectedOptionId = signal<string | null>(null);
   readonly selectedTimeSlot = signal<string | null>(null);
   readonly travelers = signal<TravelerRequest[]>([emptyTraveler(true), emptyTraveler(false)]);
+  /** Applied promo discount (absolute EUR) and the code that produced it. */
+  readonly discount = signal(0);
+  readonly appliedPromo = signal<string | null>(null);
 
   /** Currently selected configuration option, or null when the draft has none. */
   readonly selectedOption = computed<BookingOption | null>(() => {
@@ -83,13 +86,16 @@ export class BookingDraftService {
 
   readonly subtotal = computed(() => this.unitPrice() * this.partySize());
   readonly serviceFee = computed(() => Math.round(this.subtotal() * SERVICE_FEE_RATE * 100) / 100);
-  readonly total = computed(() => this.subtotal() + this.serviceFee());
+  readonly total = computed(() =>
+    Math.max(0, Math.round((this.subtotal() + this.serviceFee() - this.discount()) * 100) / 100));
 
   /** Seeds a fresh draft and resets all funnel selections. */
   start(draft: BookingDraft, party = 2): void {
     this._draft.set(draft);
     this.selectedOptionId.set(draft.options[0]?.id ?? null);
     this.selectedTimeSlot.set(draft.timeSlots?.[0] ?? null);
+    this.discount.set(0);
+    this.appliedPromo.set(null);
     this.setPartySize(party);
   }
 
@@ -111,6 +117,8 @@ export class BookingDraftService {
     this.selectedTimeSlot.set(null);
     this.travelers.set([emptyTraveler(true), emptyTraveler(false)]);
     this.partySize.set(2);
+    this.discount.set(0);
+    this.appliedPromo.set(null);
   }
 
   /** Builds the API payload from the current draft + selections. */

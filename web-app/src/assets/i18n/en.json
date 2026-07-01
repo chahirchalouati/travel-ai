@@ -140,7 +140,8 @@
       "community": "Community"
     },
     "signIn": "Sign In",
-    "startPlanning": "Start Planning"
+    "startPlanning": "Start Planning",
+    "notifications": "Notifications"
   },
   "explore": {
     "hero": {
@@ -523,7 +524,10 @@
     "reviewSaved": "Thanks for your review!",
     "reviewError": "Could not save your review.",
     "invoice": "Invoice",
-    "tripInvoice": "Trip invoice"
+    "tripInvoice": "Trip invoice",
+    "addToCalendar": "Add to calendar",
+    "calendarError": "Could not download the calendar file",
+    "ticket": "Ticket"
   },
   "messages": {
     "title": "Messages",
@@ -1158,7 +1162,14 @@
       "emptyBody": "Pick a flight, restaurant or cruise to start a booking.",
       "emptyCta": "Browse TravelAI",
       "payVia": "Pay with",
-      "addToTrip": "Add to trip"
+      "addToTrip": "Add to trip",
+      "promoPlaceholder": "Discount code",
+      "promoApply": "Apply",
+      "promoApplied": "Discount code applied",
+      "promoInvalid": "This discount code can't be applied",
+      "discount": "Discount",
+      "confirm": "Confirm booking",
+      "processing": "Processing…"
     }
   },
   "favorites": {
@@ -1197,5 +1208,30 @@
     "bookedTitle": "Trip booked!",
     "bookedBody": "All {{count}} reservations are confirmed.",
     "viewBookings": "View my bookings"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "subtitle": "Alerts about your bookings, trips and account.",
+    "empty": "You're all caught up",
+    "emptyBody": "New notifications about your bookings and trips will show up here.",
+    "untitled": "Notification",
+    "viewBookings": "View bookings"
+  },
+  "ticket": {
+    "title": "Digital ticket",
+    "reference": "Booking reference",
+    "dates": "Dates",
+    "guests": "Guests",
+    "travellers": "Travellers",
+    "status": "Status",
+    "print": "Print",
+    "back": "Back to bookings",
+    "notFound": "Ticket not found",
+    "statusValue": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    }
   }
 }

@@ -21,6 +21,7 @@ public enum ErrorCode {
     CRUISE_NOT_FOUND("Cruise not found"),
     WAITLIST_NOT_FOUND("Waitlist entry not found"),
     PRICE_WATCH_NOT_FOUND("Price watch not found"),
+    PROMO_CODE_INVALID("Promo code is not valid"),
     DESTINATION_NOT_FOUND("Destination not found"),
     ATTRACTION_NOT_FOUND("Attraction not found"),
     ITINERARY_NOT_FOUND("Live itinerary not found"),

@@ -212,6 +212,11 @@
 .bf-btn--ghost { background: transparent; color: #545454; border: 1px solid var(--bf-line); }
 .bf-btn--ghost:hover { border-color: #cfcfcf; color: var(--bf-ink); }
 
+.bf-promo { display: flex; gap: 8px; }
+.bf-promo .bf-input { flex: 1; }
+.bf-promo__msg { margin: 8px 0 0; font-size: 13px; color: var(--bf-accent); font-weight: 600; }
+.bf-promo__msg--ok { color: var(--bf-teal); }
+
 .bf-review-actions { display: flex; gap: 10px; }
 @media (max-width: 520px) { .bf-review-actions { flex-direction: column; } }
 

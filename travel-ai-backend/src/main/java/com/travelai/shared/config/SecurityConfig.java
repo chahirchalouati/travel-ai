@@ -45,6 +45,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/forum/**").permitAll()
                         .requestMatchers("/api/reviews/target/**").permitAll()
                         .requestMatchers("/api/reviews/recent").permitAll()
+                        .requestMatchers("/api/promo/**").permitAll()
                         .requestMatchers("/api/stats/**").permitAll()
                         .requestMatchers("/api/stories/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()

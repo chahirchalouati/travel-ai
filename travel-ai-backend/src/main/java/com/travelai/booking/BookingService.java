@@ -17,7 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +28,8 @@ import java.util.UUID;
 @Transactional
 @Slf4j
 public class BookingService {
+
+    private static final DateTimeFormatter ICS_DATE = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     private final BookingRepository bookingRepository;
     private final BookingTravelerRepository travelerRepository;
@@ -183,6 +187,53 @@ public class BookingService {
         return waitlistRepository.findByUserEmail(email).stream()
                 .map(this::toWaitlistResponse)
                 .toList();
+    }
+
+    /**
+     * Builds a minimal valid iCalendar (VCALENDAR/VEVENT) document for a booking
+     * the given user owns. Throws BOOKING_NOT_FOUND if it does not belong to them.
+     */
+    @Transactional(readOnly = true)
+    public String icsForBooking(String email, UUID bookingId) {
+        Booking b = bookingRepository.findByIdAndUserEmail(bookingId, email)
+                .orElseThrow(() -> TravelAiException.notFound(ErrorCode.BOOKING_NOT_FOUND));
+
+        String destination = b.getDestination() != null ? b.getDestination() : "";
+        String reference = b.getBookingReference() != null ? b.getBookingReference() : "";
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("BEGIN:VCALENDAR\r\n");
+        sb.append("VERSION:2.0\r\n");
+        sb.append("PRODID:-//TravelAI//Booking//EN\r\n");
+        sb.append("CALSCALE:GREGORIAN\r\n");
+        sb.append("METHOD:PUBLISH\r\n");
+        sb.append("BEGIN:VEVENT\r\n");
+        sb.append("UID:").append(b.getId()).append("\r\n");
+        sb.append("SUMMARY:").append(escapeIcs("TravelAI · " + destination)).append("\r\n");
+
+        LocalDate checkIn = b.getCheckIn();
+        if (checkIn != null) {
+            LocalDate checkOut = b.getCheckOut() != null ? b.getCheckOut() : checkIn.plusDays(1);
+            sb.append("DTSTART;VALUE=DATE:").append(checkIn.format(ICS_DATE)).append("\r\n");
+            sb.append("DTEND;VALUE=DATE:").append(checkOut.format(ICS_DATE)).append("\r\n");
+        }
+
+        sb.append("DESCRIPTION:").append(escapeIcs("Prenotazione " + reference)).append("\r\n");
+        sb.append("LOCATION:").append(escapeIcs(destination)).append("\r\n");
+        sb.append("END:VEVENT\r\n");
+        sb.append("END:VCALENDAR\r\n");
+        return sb.toString();
+    }
+
+    private static String escapeIcs(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value
+                .replace("\\", "\\\\")
+                .replace(";", "\\;")
+                .replace(",", "\\,")
+                .replace("\n", "\\n");
     }
 
     private BookingResponse toResponse(Booking b) {
