@@ -40,7 +40,7 @@ public class NotificationController {
         Pageable pageable = PageRequest.of(safePage, safeSize);
 
         Page<NotificationView> notifications = notificationLogRepository
-                .findByUserIdOrderByCreatedAtDesc(userId, pageable)
+                .findByUserIdOrderBySentAtDesc(userId, pageable)
                 .map(NotificationView::from);
 
         return ApiResponse.ok(notifications);

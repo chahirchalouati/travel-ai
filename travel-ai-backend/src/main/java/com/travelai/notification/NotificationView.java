@@ -20,6 +20,6 @@ public record NotificationView(
                 log.getSubject(),
                 log.getChannel(),
                 log.getStatus(),
-                log.getCreatedAt());
+                log.getSentAt());
     }
 }

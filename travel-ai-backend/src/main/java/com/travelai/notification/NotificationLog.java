@@ -51,14 +51,6 @@ public class NotificationLog {
     @Column(nullable = false)
     private Instant sentAt;
 
-    /**
-     * Read-only alias mapped to the existing {@code sent_at} column so that
-     * derived queries (e.g. orderByCreatedAtDesc) and the in-app notifications
-     * view can expose a {@code createdAt} timestamp without a new column.
-     */
-    @Column(name = "sent_at", insertable = false, updatable = false)
-    private Instant createdAt;
-
     @PrePersist
     void prePersist() {
         if (sentAt == null) {
