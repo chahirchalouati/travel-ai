@@ -140,7 +140,8 @@
       "community": "Community"
     },
     "signIn": "Accedi",
-    "startPlanning": "Inizia a pianificare"
+    "startPlanning": "Inizia a pianificare",
+    "notifications": "Notifiche"
   },
   "explore": {
     "hero": {
@@ -523,7 +524,10 @@
     "reviewSaved": "Grazie per la recensione!",
     "reviewError": "Impossibile salvare la recensione.",
     "invoice": "Fattura",
-    "tripInvoice": "Fattura viaggio"
+    "tripInvoice": "Fattura viaggio",
+    "addToCalendar": "Aggiungi al calendario",
+    "calendarError": "Impossibile scaricare il file del calendario",
+    "ticket": "Biglietto"
   },
   "messages": {
     "title": "Messaggi",
@@ -1158,7 +1162,14 @@
       "emptyBody": "Scegli un volo, un ristorante o una crociera per iniziare.",
       "emptyCta": "Esplora TravelAI",
       "payVia": "Paga con",
-      "addToTrip": "Aggiungi al viaggio"
+      "addToTrip": "Aggiungi al viaggio",
+      "promoPlaceholder": "Codice sconto",
+      "promoApply": "Applica",
+      "promoApplied": "Codice sconto applicato",
+      "promoInvalid": "Questo codice sconto non può essere applicato",
+      "discount": "Sconto",
+      "confirm": "Conferma prenotazione",
+      "processing": "Elaborazione…"
     }
   },
   "favorites": {
@@ -1197,5 +1208,30 @@
     "bookedTitle": "Viaggio prenotato!",
     "bookedBody": "Tutte le {{count}} prenotazioni sono confermate.",
     "viewBookings": "Vedi le mie prenotazioni"
+  },
+  "notifications": {
+    "title": "Notifiche",
+    "subtitle": "Avvisi su prenotazioni, viaggi e account.",
+    "empty": "Sei aggiornato",
+    "emptyBody": "Le nuove notifiche sulle tue prenotazioni e viaggi appariranno qui.",
+    "untitled": "Notifica",
+    "viewBookings": "Vedi prenotazioni"
+  },
+  "ticket": {
+    "title": "Biglietto digitale",
+    "reference": "Riferimento prenotazione",
+    "dates": "Date",
+    "guests": "Ospiti",
+    "travellers": "Viaggiatori",
+    "status": "Stato",
+    "print": "Stampa",
+    "back": "Torna alle prenotazioni",
+    "notFound": "Biglietto non trovato",
+    "statusValue": {
+      "pending": "In attesa",
+      "confirmed": "Confermata",
+      "completed": "Completata",
+      "cancelled": "Annullata"
+    }
   }
 }

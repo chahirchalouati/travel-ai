@@ -147,6 +147,18 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'notifications',
+    loadComponent: () =>
+      import('./features/notifications/notifications.component').then(
+        m => m.NotificationsComponent
+      ),
+  },
+  {
+    path: 'ticket/:id',
+    loadComponent: () =>
+      import('./features/ticket/ticket.component').then(m => m.TicketComponent),
+  },
+  {
     path: 'messages',
     loadComponent: () =>
       import('./features/messages/messages.component').then(m => m.MessagesComponent),

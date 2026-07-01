@@ -6,6 +6,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { catchError, map, of, switchMap } from 'rxjs';
 import { BookingService } from '../../core/services/booking.service';
 import { PaymentService } from '../../core/services/payment.service';
+import { PromoService } from '../../core/services/promo.service';
 import type { BookingResponse, PaymentGateway } from '../../core/models/api.models';
 import { BookingDraftService } from './booking-draft.service';
 import { TripCartService } from './trip-cart.service';
@@ -34,6 +35,7 @@ export class BookingFlowComponent {
   protected readonly cart = inject(TripCartService);
   private readonly bookings = inject(BookingService);
   private readonly payments = inject(PaymentService);
+  private readonly promo = inject(PromoService);
   private readonly router = inject(Router);
 
   protected readonly step = signal<Step>('configure');
@@ -41,6 +43,28 @@ export class BookingFlowComponent {
   protected readonly errorKey = signal<string | null>(null);
   protected readonly confirmed = signal<BookingResponse | null>(null);
   protected readonly gateway = signal<PaymentGateway>('STRIPE');
+  protected promoInput = '';
+  protected readonly promoMsgKey = signal<string | null>(null);
+
+  /** Validates the entered promo code against the pre-discount amount. */
+  protected applyPromo(): void {
+    const code = this.promoInput.trim();
+    if (!code) {
+      return;
+    }
+    const amount = this.store.subtotal() + this.store.serviceFee();
+    this.promo.validate(code, amount).pipe(catchError(() => of(null))).subscribe(res => {
+      if (res && res.valid) {
+        this.store.discount.set(res.discountAmount);
+        this.store.appliedPromo.set(res.code);
+        this.promoMsgKey.set('booking.flow.promoApplied');
+      } else {
+        this.store.discount.set(0);
+        this.store.appliedPromo.set(null);
+        this.promoMsgKey.set('booking.flow.promoInvalid');
+      }
+    });
+  }
 
   protected readonly steps = STEP_ORDER;
   protected readonly gateways = GATEWAYS;

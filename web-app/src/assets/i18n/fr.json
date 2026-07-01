@@ -140,7 +140,8 @@
       "community": "Communauté"
     },
     "signIn": "Se connecter",
-    "startPlanning": "Commencer à planifier"
+    "startPlanning": "Commencer à planifier",
+    "notifications": "Notifications"
   },
   "explore": {
     "hero": {
@@ -523,7 +524,10 @@
     "reviewSaved": "Merci pour votre avis !",
     "reviewError": "Impossible d'enregistrer l'avis.",
     "invoice": "Facture",
-    "tripInvoice": "Facture du voyage"
+    "tripInvoice": "Facture du voyage",
+    "addToCalendar": "Ajouter au calendrier",
+    "calendarError": "Impossible de télécharger le fichier calendrier",
+    "ticket": "Billet"
   },
   "messages": {
     "title": "Messages",
@@ -1158,7 +1162,14 @@
       "emptyBody": "Choisissez un vol, un restaurant ou une croisière pour commencer.",
       "emptyCta": "Explorer TravelAI",
       "payVia": "Payer avec",
-      "addToTrip": "Ajouter au voyage"
+      "addToTrip": "Ajouter au voyage",
+      "promoPlaceholder": "Code de réduction",
+      "promoApply": "Appliquer",
+      "promoApplied": "Code de réduction appliqué",
+      "promoInvalid": "Ce code de réduction ne peut pas être appliqué",
+      "discount": "Réduction",
+      "confirm": "Confirmer la réservation",
+      "processing": "Traitement…"
     }
   },
   "favorites": {
@@ -1197,5 +1208,30 @@
     "bookedTitle": "Voyage réservé !",
     "bookedBody": "Les {{count}} réservations sont confirmées.",
     "viewBookings": "Voir mes réservations"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "subtitle": "Alertes sur vos réservations, voyages et compte.",
+    "empty": "Vous êtes à jour",
+    "emptyBody": "Les nouvelles notifications sur vos réservations et voyages apparaîtront ici.",
+    "untitled": "Notification",
+    "viewBookings": "Voir les réservations"
+  },
+  "ticket": {
+    "title": "Billet numérique",
+    "reference": "Référence de réservation",
+    "dates": "Dates",
+    "guests": "Voyageurs",
+    "travellers": "Voyageurs",
+    "status": "Statut",
+    "print": "Imprimer",
+    "back": "Retour aux réservations",
+    "notFound": "Billet introuvable",
+    "statusValue": {
+      "pending": "En attente",
+      "confirmed": "Confirmée",
+      "completed": "Terminée",
+      "cancelled": "Annulée"
+    }
   }
 }

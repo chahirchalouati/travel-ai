@@ -20,6 +20,12 @@
     <div class="nav-actions">
       <app-language-switcher />
       @if (auth.isAuthenticated()) {
+        <a routerLink="/notifications"
+           routerLinkActive="active"
+           class="nav-bell"
+           [attr.aria-label]="'nav.notifications' | transloco">
+          <span class="ms" aria-hidden="true">notifications</span>
+        </a>
         <app-user-menu />
       } @else {
         <button class="nav-signin-btn" (click)="openAuth()" type="button">
@@ -52,6 +58,13 @@
          [routerLinkActiveOptions]="{ exact: tab.route === '/' }"
          (click)="closeMenu()">
         {{ tab.key | transloco }}
+      </a>
+    }
+    @if (auth.isAuthenticated()) {
+      <a routerLink="/notifications"
+         routerLinkActive="active"
+         (click)="closeMenu()">
+        {{ 'nav.notifications' | transloco }}
       </a>
     }
     <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid #efefef; display:flex; align-items:center; justify-content:space-between; gap:12px;">

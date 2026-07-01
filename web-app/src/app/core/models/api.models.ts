@@ -262,6 +262,19 @@ export interface CreateBookingRequest {
   travelers: TravelerRequest[];
 }
 
+export interface ValidatePromoRequest {
+  code: string;
+  amount: number;
+}
+
+export interface PromoValidationResponse {
+  valid: boolean;
+  code: string;
+  discountAmount: number;
+  finalAmount: number;
+  message: string;
+}
+
 export interface BookingResponse {
   id: string;
   proposalId: string;
@@ -448,6 +461,18 @@ export interface PageWrapper<T> {
   totalPages: number;
   size: number;
   number: number;
+}
+
+// ── In-app Notifications ───────────────────────────────────────────
+export type NotificationChannel = 'EMAIL' | 'PUSH' | 'IN_APP';
+export type NotificationStatus = 'PENDING' | 'SENT' | 'FAILED';
+
+export interface NotificationView {
+  id: string;
+  subject: string;
+  channel: NotificationChannel;
+  status: NotificationStatus;
+  createdAt: string;
 }
 
 // ── Reactive Living Itinerary ──────────────────────────────────────

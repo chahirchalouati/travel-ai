@@ -140,7 +140,8 @@
       "community": "Comunidad"
     },
     "signIn": "Iniciar sesión",
-    "startPlanning": "Comenzar a planificar"
+    "startPlanning": "Comenzar a planificar",
+    "notifications": "Notificaciones"
   },
   "explore": {
     "hero": {
@@ -523,7 +524,10 @@
     "reviewSaved": "¡Gracias por tu reseña!",
     "reviewError": "No se pudo guardar la reseña.",
     "invoice": "Factura",
-    "tripInvoice": "Factura del viaje"
+    "tripInvoice": "Factura del viaje",
+    "addToCalendar": "Añadir al calendario",
+    "calendarError": "No se pudo descargar el archivo de calendario",
+    "ticket": "Billete"
   },
   "messages": {
     "title": "Mensajes",
@@ -1158,7 +1162,14 @@
       "emptyBody": "Elige un vuelo, restaurante o crucero para empezar.",
       "emptyCta": "Explorar TravelAI",
       "payVia": "Pagar con",
-      "addToTrip": "Añadir al viaje"
+      "addToTrip": "Añadir al viaje",
+      "promoPlaceholder": "Código de descuento",
+      "promoApply": "Aplicar",
+      "promoApplied": "Código de descuento aplicado",
+      "promoInvalid": "Este código de descuento no se puede aplicar",
+      "discount": "Descuento",
+      "confirm": "Confirmar reserva",
+      "processing": "Procesando…"
     }
   },
   "favorites": {
@@ -1197,5 +1208,30 @@
     "bookedTitle": "¡Viaje reservado!",
     "bookedBody": "Las {{count}} reservas están confirmadas.",
     "viewBookings": "Ver mis reservas"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "subtitle": "Avisos sobre tus reservas, viajes y cuenta.",
+    "empty": "Estás al día",
+    "emptyBody": "Las nuevas notificaciones sobre tus reservas y viajes aparecerán aquí.",
+    "untitled": "Notificación",
+    "viewBookings": "Ver reservas"
+  },
+  "ticket": {
+    "title": "Billete digital",
+    "reference": "Referencia de reserva",
+    "dates": "Fechas",
+    "guests": "Viajeros",
+    "travellers": "Viajeros",
+    "status": "Estado",
+    "print": "Imprimir",
+    "back": "Volver a reservas",
+    "notFound": "Billete no encontrado",
+    "statusValue": {
+      "pending": "Pendiente",
+      "confirmed": "Confirmada",
+      "completed": "Completada",
+      "cancelled": "Cancelada"
+    }
   }
 }
