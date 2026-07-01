@@ -1,10 +1,16 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
+import { catchError, of } from 'rxjs';
 import { CatalogService } from '../../core/services/catalog.service';
-import type { CruiseSearchResult } from '../../core/models/api.models';
+import { ReviewService } from '../../core/services/review.service';
+import { PriceWatchService } from '../../core/services/price-watch.service';
+import type { CruiseSearchResult, CruiseCabin, CruiseDay, ReviewSummary } from '../../core/models/api.models';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
+import { BookingDraftService } from '../booking-flow/booking-draft.service';
+import { TripContextService } from '../../core/services/trip-context.service';
+import { FavoritesService } from '../../core/services/favorites.service';
 
 @Component({
   selector: 'app-cruise-detail',
@@ -12,10 +18,15 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
   imports: [CommonModule, CurrencyPipe, DatePipe, TranslocoModule, RevealDirective],
   template: `
     @if (cruise(); as c) {
-      <nav style="padding: 16px 32px; max-width: 1100px; margin: 0 auto;">
+      <nav style="padding: 16px 32px; max-width: 1100px; margin: 0 auto; display:flex; align-items:center; justify-content:space-between;">
         <button (click)="goBack()" class="back-link">
           <span class="ms" style="font-size:18px">arrow_back</span>
           {{ 'cruise.back' | transloco }}
+        </button>
+        <button class="fav-toggle" [class.fav-toggle--on]="isFav()" (click)="toggleFav(c)"
+                [attr.aria-label]="'favorites.save' | transloco">
+          <span class="ms">{{ isFav() ? 'favorite' : 'favorite_border' }}</span>
+          {{ (isFav() ? 'favorites.saved' : 'favorites.save') | transloco }}
         </button>
       </nav>
 
@@ -46,6 +57,20 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
               }
               @if (c.allInclusive) {
                 <span class="badge badge--teal">{{ 'catalog.cruises.allInclusive' | transloco }}</span>
+              }
+              @if (summary(); as s) {
+                @if (s.totalReviews > 0) {
+                  <span class="badge badge--rating">
+                    <span class="ms" style="font-size:14px; vertical-align:middle">star</span>
+                    {{ s.averageRating | number:'1.1-1' }} · {{ s.totalReviews }} {{ 'common.reviews' | transloco }}
+                  </span>
+                }
+              }
+              @if (tripFit(); as place) {
+                <span class="badge badge--ai">
+                  <span class="ms" style="font-size:14px; vertical-align:middle">auto_awesome</span>
+                  {{ 'common.fitsTrip' | transloco:{ place: place } }}
+                </span>
               }
             </div>
             <h1 class="hero-card__name">{{ c.name }}</h1>
@@ -102,14 +127,53 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
               </div>
             </section>
 
-            <!-- Itinerary -->
-            @if (c.itinerary) {
+            <!-- Itinerary: day-by-day timeline (falls back to freeform text) -->
+            @if (itineraryDays().length > 0 || c.itinerary) {
               <section class="info-card" appReveal>
                 <h2 class="card-heading">
                   <span class="ms" style="font-size:22px; color:#00856A">map</span>
                   {{ 'cruise.itinerary' | transloco }}
                 </h2>
-                <p style="font-size:14px; color:#545454; line-height:1.75; margin:0; white-space:pre-line;">{{ c.itinerary }}</p>
+                @if (itineraryDays().length > 0) {
+                  <ol class="cruise-timeline">
+                    @for (day of itineraryDays(); track day.dayNumber) {
+                      <li class="cruise-timeline__item">
+                        <span class="cruise-timeline__day">{{ 'cruise.day' | transloco }} {{ day.dayNumber }}</span>
+                        <div class="cruise-timeline__body">
+                          <span class="cruise-timeline__port">
+                            <span class="ms" style="font-size:15px; vertical-align:middle">{{ day.port === 'At sea' ? 'sailing' : 'anchor' }}</span>
+                            {{ day.port }}
+                          </span>
+                          <span class="cruise-timeline__desc">{{ day.description }}</span>
+                        </div>
+                      </li>
+                    }
+                  </ol>
+                } @else {
+                  <p style="font-size:14px; color:#545454; line-height:1.75; margin:0; white-space:pre-line;">{{ c.itinerary }}</p>
+                }
+              </section>
+            }
+
+            <!-- Cabin categories -->
+            @if (cabins().length > 0) {
+              <section class="info-card" appReveal>
+                <h2 class="card-heading">
+                  <span class="ms" style="font-size:22px; color:#00856A">king_bed</span>
+                  {{ 'cruise.cabinCategories' | transloco }}
+                </h2>
+                <div class="cabin-grid">
+                  @for (cab of cabins(); track cab.name) {
+                    <div class="cabin-card">
+                      <div class="cabin-card__head">
+                        <span class="cabin-card__name">{{ cab.name }}</span>
+                        <span class="cabin-card__price">{{ cab.price | currency:'EUR':'symbol':'1.0-0' }}</span>
+                      </div>
+                      <p class="cabin-card__desc">{{ cab.description }}</p>
+                      <span class="cabin-card__avail">{{ cab.cabinsAvailable }} {{ 'cruise.booking.cabins' | transloco }}</span>
+                    </div>
+                  }
+                </div>
               </section>
             }
 
@@ -189,9 +253,13 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
 
               <div style="height:1px; background:#efefef; margin:16px 0;"></div>
 
-              <button class="btn-book" (click)="goToPlanner()">
-                <span class="ms" style="font-size:20px">travel_explore</span>
+              <button class="btn-book" (click)="book(c)">
+                <span class="ms" style="font-size:20px">confirmation_number</span>
                 {{ 'cruise.booking.book' | transloco }}
+              </button>
+              <button class="btn-watch" [class.btn-watch--on]="watchId()" (click)="toggleWatch(c)">
+                <span class="ms" style="font-size:18px">{{ watchId() ? 'notifications_active' : 'notifications' }}</span>
+                {{ (watchId() ? 'priceWatch.watching' : 'priceWatch.watch') | transloco }}
               </button>
               <button class="btn-chat" (click)="goToChat()">
                 <span class="ms" style="font-size:20px">chat</span>
@@ -238,6 +306,10 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
       cursor: pointer; padding: 0; transition: color 150ms ease;
     }
     .back-link:hover { color: #E04A2F; }
+    .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid #e0e0e0; border-radius: 999px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: #545454; cursor: pointer; transition: all 150ms ease; }
+    .fav-toggle:hover { border-color: #E04A2F; color: #E04A2F; }
+    .fav-toggle--on { border-color: #E04A2F; color: #E04A2F; background: #fff1ec; }
+    .fav-toggle .ms { font-size: 18px; }
 
     .hero-card {
       position: relative; border-radius: 16px; overflow: hidden;
@@ -270,6 +342,10 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
     }
     .badge--teal { background: #00856A; color: #fff; }
     .badge--blue { background: rgba(255,255,255,.2); color: #fff; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,.3); }
+    .badge--ai { display: inline-flex; align-items: center; gap: 4px; background: #EEF1FF; color: #4338CA; }
+    .badge--ai .ms { color: #6366F1; }
+    .badge--rating { display: inline-flex; align-items: center; gap: 4px; background: #FFF4E0; color: #B26A00; }
+    .badge--rating .ms { color: #F5A623; }
 
     .hero-card__name {
       font-size: clamp(1.8rem, 1.2rem + 2vw, 2.6rem);
@@ -385,6 +461,9 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
       cursor: pointer; transition: background 150ms ease; margin-bottom: 10px;
     }
     .btn-book:hover { background: #c93d25; }
+    .btn-watch { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; background: #fff; color: #545454; border: 1px solid #e0e0e0; border-radius: 10px; padding: 12px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 150ms ease; }
+    .btn-watch:hover { border-color: #E04A2F; color: #E04A2F; }
+    .btn-watch--on { border-color: #E04A2F; color: #E04A2F; background: #fff1ec; }
 
     .btn-chat {
       width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -415,26 +494,129 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
       .schedule-divider { flex-direction: row; width: 100%; }
       .divider-line { height: auto; width: 1px; flex: 1; background: #e0e0e0; }
     }
+
+    /* Day-by-day itinerary timeline */
+    .cruise-timeline { list-style: none; margin: 0; padding: 0; }
+    .cruise-timeline__item {
+      display: flex; gap: 14px; padding: 0 0 18px 4px; position: relative;
+    }
+    .cruise-timeline__item:not(:last-child)::before {
+      content: ''; position: absolute; left: 47px; top: 26px; bottom: 0;
+      width: 2px; background: #e8e8e8;
+    }
+    .cruise-timeline__day {
+      flex-shrink: 0; width: 78px; text-align: center;
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
+      color: #00856A; background: #E6F5F0; border-radius: 999px; padding: 6px 0; height: fit-content;
+    }
+    .cruise-timeline__body { display: flex; flex-direction: column; gap: 2px; padding-top: 2px; }
+    .cruise-timeline__port { font-size: 15px; font-weight: 700; color: #1a1a1a; }
+    .cruise-timeline__port .ms { color: #00856A; }
+    .cruise-timeline__desc { font-size: 13px; color: #8a8a8a; line-height: 1.5; }
+
+    /* Cabin categories */
+    .cabin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+    .cabin-card { border: 1px solid #e8e8e8; border-radius: 12px; padding: 14px; }
+    .cabin-card__head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+    .cabin-card__name { font-size: 15px; font-weight: 700; }
+    .cabin-card__price { font-size: 15px; font-weight: 800; color: #E04A2F; }
+    .cabin-card__desc { font-size: 13px; color: #8a8a8a; margin: 6px 0 10px; line-height: 1.5; }
+    .cabin-card__avail { font-size: 12px; font-weight: 600; color: #545454; }
   `],
 })
 export class CruiseDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly catalogService = inject(CatalogService);
+  private readonly bookingDraft = inject(BookingDraftService);
+  private readonly tripContext = inject(TripContextService);
+  private readonly reviewService = inject(ReviewService);
+  private readonly favorites = inject(FavoritesService);
+  private readonly priceWatch = inject(PriceWatchService);
 
+  readonly watchId = signal<string | null>(null);
   readonly cruise = signal<CruiseSearchResult | null>(null);
+
+  toggleWatch(c: CruiseSearchResult): void {
+    const existing = this.watchId();
+    if (existing) {
+      this.priceWatch.remove(existing).pipe(catchError(() => of(undefined)))
+        .subscribe(() => this.watchId.set(null));
+    } else {
+      this.priceWatch.create({ cruiseId: c.id }).pipe(catchError(() => of(null)))
+        .subscribe(w => { if (w) { this.watchId.set(w.id); } });
+    }
+  }
+  readonly cabins = signal<CruiseCabin[]>([]);
+  readonly itineraryDays = signal<CruiseDay[]>([]);
+  readonly summary = signal<ReviewSummary | null>(null);
+  readonly tripFit = computed(() => {
+    const c = this.cruise();
+    return c ? (this.tripContext.match(c.arrivalPort) ?? this.tripContext.match(c.departurePort)) : null;
+  });
+  readonly isFav = computed(() => {
+    const c = this.cruise();
+    return c ? this.favorites.has('cruise', c.id) : false;
+  });
+
+  toggleFav(c: CruiseSearchResult): void {
+    this.favorites.toggle({
+      type: 'cruise',
+      id: c.id,
+      title: c.name,
+      subtitle: `${c.operator} · ${c.shipName}`,
+      imageUrl: c.imageUrl,
+      route: `/cruises/${c.id}`,
+    });
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) { this.router.navigate(['/']); return; }
 
+    this.tripContext.ensureLoaded();
     this.catalogService.getCruise(id).subscribe({
       next: (c) => this.cruise.set(c),
       error: () => this.router.navigate(['/']),
     });
+    this.catalogService.cruiseCabins(id).pipe(catchError(() => of([] as CruiseCabin[])))
+      .subscribe(cabins => this.cabins.set(cabins));
+    this.catalogService.cruiseItinerary(id).pipe(catchError(() => of([] as CruiseDay[])))
+      .subscribe(days => this.itineraryDays.set(days));
+    this.reviewService.getSummary('CRUISE', id).pipe(catchError(() => of(null)))
+      .subscribe(s => this.summary.set(s));
+    this.priceWatch.list().pipe(catchError(() => of([])))
+      .subscribe(ws => this.watchId.set(ws.find(w => w.cruiseId === id)?.id ?? null));
   }
 
   goBack(): void { this.router.navigate(['/']); }
   goToPlanner(): void { this.router.navigate(['/planner']); }
   goToChat(): void { this.router.navigate(['/chat']); }
+
+  /** Seeds the booking funnel with the cruise's real cabin tiers and opens it. */
+  book(c: CruiseSearchResult): void {
+    const cabins = this.cabins();
+    const options = cabins.length > 0
+      ? cabins.map(cab => ({ id: cab.name.toLowerCase().replace(/\s+/g, '-'), label: cab.name, note: cab.description, multiplier: cab.priceMultiplier }))
+      : [
+          { id: 'interior', label: 'Interior', note: 'Cosy cabin, no window', multiplier: 1 },
+          { id: 'ocean', label: 'Ocean View', note: 'Window with sea view', multiplier: 1.25 },
+          { id: 'balcony', label: 'Balcony', note: 'Private balcony', multiplier: 1.55 },
+          { id: 'suite', label: 'Suite', note: 'Suite + premium perks', multiplier: 2.2 },
+        ];
+    this.bookingDraft.start({
+      vertical: 'cruise',
+      itemId: c.id,
+      title: c.name,
+      subtitle: `${c.operator} · ${c.shipName}`,
+      imageUrl: c.imageUrl,
+      destination: c.arrivalPort,
+      unitPrice: c.pricePerPerson,
+      currency: 'EUR',
+      checkIn: c.departureDate,
+      checkOut: c.returnDate,
+      options,
+    });
+    this.router.navigate(['/book']);
+  }
 }

@@ -17,4 +17,7 @@ public interface FlightRepository extends JpaRepository<Flight, UUID> {
 
     List<Flight> findByActiveTrueAndDepartureAtBetweenAndSeatsAvailableGreaterThan(
             Instant from, Instant to, short minSeats);
+
+    List<Flight> findByActiveTrueAndOriginIataAndDestIataAndDepartureAtBetween(
+            String origin, String dest, Instant from, Instant to);
 }

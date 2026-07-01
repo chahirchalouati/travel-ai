@@ -3,6 +3,7 @@ package com.travelai.notification;
 import com.travelai.notification.events.BookingConfirmedEvent;
 import com.travelai.notification.events.PartnerWelcomeEvent;
 import com.travelai.notification.events.PaymentCompletedEvent;
+import com.travelai.notification.events.PriceDropEvent;
 import com.travelai.notification.events.WaitlistAvailableEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,14 @@ public class NotificationService {
     public void onWaitlistAvailable(WaitlistAvailableEvent event) {
         String subject = "Disponibilità — " + event.hotelName();
         String body = buildWaitlistHtml(event);
+        emailService.sendHtml(event.userId(), event.userEmail(), subject, body);
+    }
+
+    /** Notifies user when a watched flight/cruise drops in price. */
+    @ApplicationModuleListener
+    public void onPriceDrop(PriceDropEvent event) {
+        String subject = "Prezzo in calo — " + event.label();
+        String body = buildPriceDropHtml(event);
         emailService.sendHtml(event.userId(), event.userEmail(), subject, body);
     }
 
@@ -90,6 +99,19 @@ public class NotificationService {
                 </body></html>
                 """
                 .formatted(e.hotelName(), e.dateFrom(), e.dateTo());
+    }
+
+    private String buildPriceDropHtml(PriceDropEvent e) {
+        return """
+                <html><body style="font-family:sans-serif;color:#241C15;">
+                <h2 style="color:#D9694C;">Il prezzo è sceso! 📉</h2>
+                <p><strong>%s</strong></p>
+                <p>Da <span style="text-decoration:line-through;color:#8A7C6A;">€%.2f</span>
+                   a <strong style="color:#00856A;">€%.2f</strong>.</p>
+                <p>Accedi all'app per prenotare prima che risalga.</p>
+                </body></html>
+                """
+                .formatted(e.label(), e.oldPrice(), e.newPrice());
     }
 
     private String buildPartnerWelcomeHtml(PartnerWelcomeEvent e) {

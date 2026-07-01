@@ -1,15 +1,24 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { BookingService } from '../../core/services/booking.service';
+import { InvoiceService } from '../../core/services/invoice.service';
+import { ReviewService } from '../../core/services/review.service';
 import type { BookingResponse } from '../../core/models/api.models';
+
+/** Maps a booking to the reviewable catalog entity it represents. */
+interface ReviewTarget {
+  type: 'RESTAURANT' | 'CRUISE' | 'FLIGHT' | 'HOTEL';
+  id: string;
+}
 
 @Component({
   selector: 'app-bookings',
   standalone: true,
-  imports: [CommonModule, TranslocoModule],
+  imports: [CommonModule, FormsModule, TranslocoModule],
   styleUrls: ['../../shared/styles/dashboard.scss'],
   template: `
     <div class="dash-container">
@@ -59,6 +68,22 @@ import type { BookingResponse } from '../../core/models/api.models';
                   <button class="row-live" (click)="router.navigate(['/trips', b.id, 'live'])">
                     <span class="ms">radar</span> {{ 'itinerary.liveBadge' | transloco }}
                   </button>
+                  <button class="row-invoice" (click)="invoices.downloadForBooking(b.id, b.bookingReference)">
+                    <span class="ms">receipt_long</span> {{ 'bookings.invoice' | transloco }}
+                  </button>
+                  @if (b.tripGroupId) {
+                    <button class="row-invoice" (click)="invoices.downloadForTrip(b.tripGroupId)">
+                      <span class="ms">luggage</span> {{ 'bookings.tripInvoice' | transloco }}
+                    </button>
+                  }
+                }
+                @if (b.status === 'CONFIRMED' && reviewTarget(b) && !reviewedIds().has(b.id)) {
+                  <button class="row-review" (click)="openReview(b)">
+                    <span class="ms">rate_review</span> {{ 'bookings.writeReview' | transloco }}
+                  </button>
+                }
+                @if (reviewedIds().has(b.id)) {
+                  <span class="row-reviewed"><span class="ms">check_circle</span> {{ 'bookings.reviewThanks' | transloco }}</span>
                 }
                 @if (b.status === 'PENDING' || b.status === 'CONFIRMED') {
                   <button class="row-cancel" (click)="cancel(b)" [disabled]="cancelling() === b.id">
@@ -66,6 +91,31 @@ import type { BookingResponse } from '../../core/models/api.models';
                   </button>
                 }
               </div>
+
+              @if (reviewing() === b.id) {
+                <div class="review-form">
+                  <span class="review-form__label">{{ 'bookings.yourRating' | transloco }}</span>
+                  <div class="stars">
+                    @for (n of [1,2,3,4,5]; track n) {
+                      <button type="button" class="star" [class.star--on]="draftRating() >= n"
+                              (click)="draftRating.set(n)" [attr.aria-label]="n">
+                        <span class="ms">star</span>
+                      </button>
+                    }
+                  </div>
+                  <input class="review-input" type="text" [(ngModel)]="draftTitle"
+                         [placeholder]="'bookings.reviewTitle' | transloco" maxlength="120" />
+                  <textarea class="review-input" rows="3" [(ngModel)]="draftContent"
+                            [placeholder]="'bookings.reviewBody' | transloco" maxlength="2000"></textarea>
+                  <div class="review-actions">
+                    <button class="review-cancel" (click)="closeReview()">{{ 'booking.flow.cancel' | transloco }}</button>
+                    <button class="review-submit" (click)="submitReview(b)"
+                            [disabled]="submitting() || draftTitle.trim() === '' || draftContent.trim() === ''">
+                      {{ (submitting() ? 'bookings.cancelling' : 'bookings.submitReview') | transloco }}
+                    </button>
+                  </div>
+                </div>
+              }
             </article>
           }
         </div>
@@ -93,12 +143,34 @@ import type { BookingResponse } from '../../core/models/api.models';
     .row-live:hover { background: var(--accent); color: #fff; }
     .row-live .ms { font-size: 15px; }
     .toast { background: var(--ink); color: #fff; padding: 0.7rem 1.1rem; border-radius: 12px; margin-bottom: 1.2rem; font-weight: 600; font-size: 0.9rem; }
-    @media (max-width: 560px) { .row { flex-wrap: wrap; } .row-side { width: 100%; flex-direction: row; justify-content: space-between; } }
+    .row-review { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--line); color: var(--accent); border-radius: 999px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease; }
+    .row-invoice { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: all 120ms ease; }
+    .row-invoice:hover { border-color: var(--accent); color: var(--accent); }
+    .row-review:hover { background: var(--accent-soft); }
+    .row-review .ms { font-size: 15px; }
+    .row-reviewed { display: inline-flex; align-items: center; gap: 4px; color: #00856A; font-weight: 700; font-size: 0.8rem; }
+    .row-reviewed .ms { font-size: 16px; }
+    .row { flex-wrap: wrap; }
+    .review-form { flex-basis: 100%; border-top: 1px dashed var(--line); margin-top: 0.9rem; padding-top: 0.9rem; display: flex; flex-direction: column; gap: 0.6rem; }
+    .review-form__label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); }
+    .stars { display: flex; gap: 2px; }
+    .star { background: none; border: none; cursor: pointer; padding: 2px; color: #d8d8d8; line-height: 0; }
+    .star .ms { font-size: 26px; }
+    .star--on { color: #F5A623; }
+    .review-input { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; font: inherit; font-size: 0.9rem; resize: vertical; }
+    .review-input:focus { outline: none; border-color: var(--accent); }
+    .review-actions { display: flex; justify-content: flex-end; gap: 0.6rem; }
+    .review-cancel { background: none; border: 1px solid var(--line); border-radius: 999px; padding: 7px 16px; font-weight: 700; font-size: 0.82rem; cursor: pointer; }
+    .review-submit { background: var(--accent); color: #fff; border: none; border-radius: 999px; padding: 7px 18px; font-weight: 700; font-size: 0.82rem; cursor: pointer; }
+    .review-submit:disabled { opacity: 0.5; cursor: default; }
+    @media (max-width: 560px) { .row-side { width: 100%; flex-direction: row; justify-content: space-between; flex-wrap: wrap; } }
   `],
 })
 export class BookingsComponent implements OnInit {
   readonly router = inject(Router);
+  readonly invoices = inject(InvoiceService);
   private readonly service = inject(BookingService);
+  private readonly reviews = inject(ReviewService);
   private readonly transloco = inject(TranslocoService);
 
   readonly loading = signal(true);
@@ -106,7 +178,62 @@ export class BookingsComponent implements OnInit {
   readonly cancelling = signal<string | null>(null);
   readonly toast = signal<string>('');
 
+  // Post-stay review form state
+  readonly reviewing = signal<string | null>(null);
+  readonly submitting = signal(false);
+  readonly reviewedIds = signal<Set<string>>(new Set());
+  readonly draftRating = signal(5);
+  draftTitle = '';
+  draftContent = '';
+
   ngOnInit(): void { this.load(); }
+
+  /** The reviewable catalog entity behind a booking, or null. */
+  reviewTarget(b: BookingResponse): ReviewTarget | null {
+    if (b.restaurantId) return { type: 'RESTAURANT', id: b.restaurantId };
+    if (b.cruiseId) return { type: 'CRUISE', id: b.cruiseId };
+    if (b.flightId) return { type: 'FLIGHT', id: b.flightId };
+    if (b.hotelId) return { type: 'HOTEL', id: b.hotelId };
+    return null;
+  }
+
+  openReview(b: BookingResponse): void {
+    this.reviewing.set(b.id);
+    this.draftRating.set(5);
+    this.draftTitle = '';
+    this.draftContent = '';
+  }
+
+  closeReview(): void {
+    this.reviewing.set(null);
+  }
+
+  submitReview(b: BookingResponse): void {
+    const target = this.reviewTarget(b);
+    if (!target || this.submitting()) {
+      return;
+    }
+    this.submitting.set(true);
+    this.reviews
+      .create({
+        targetType: target.type,
+        targetId: target.id,
+        rating: this.draftRating(),
+        title: this.draftTitle.trim(),
+        content: this.draftContent.trim(),
+      })
+      .pipe(catchError(() => of(null)))
+      .subscribe(res => {
+        this.submitting.set(false);
+        if (res) {
+          this.reviewedIds.update(s => new Set(s).add(b.id));
+          this.reviewing.set(null);
+          this.flash(this.transloco.translate('bookings.reviewSaved'));
+        } else {
+          this.flash(this.transloco.translate('bookings.reviewError'));
+        }
+      });
+  }
 
   private load(): void {
     this.loading.set(true);

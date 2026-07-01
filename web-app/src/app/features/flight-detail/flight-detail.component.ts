@@ -1,10 +1,16 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
+import { catchError, of } from 'rxjs';
 import { CatalogService } from '../../core/services/catalog.service';
-import type { FlightSearchResult } from '../../core/models/api.models';
+import { ReviewService } from '../../core/services/review.service';
+import { PriceWatchService } from '../../core/services/price-watch.service';
+import type { FlightSearchResult, ReviewSummary } from '../../core/models/api.models';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
+import { BookingDraftService } from '../booking-flow/booking-draft.service';
+import { TripContextService } from '../../core/services/trip-context.service';
+import { FavoritesService } from '../../core/services/favorites.service';
 
 @Component({
   selector: 'app-flight-detail',
@@ -12,10 +18,15 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
   imports: [CommonModule, CurrencyPipe, DatePipe, TranslocoModule, RevealDirective],
   template: `
     @if (flight(); as f) {
-      <nav style="padding: 16px 32px; max-width: 1100px; margin: 0 auto;">
+      <nav style="padding: 16px 32px; max-width: 1100px; margin: 0 auto; display:flex; align-items:center; justify-content:space-between;">
         <button (click)="goBack()" class="back-link">
           <span class="ms" style="font-size:18px">arrow_back</span>
           {{ 'flight.back' | transloco }}
+        </button>
+        <button class="fav-toggle" [class.fav-toggle--on]="isFav()" (click)="toggleFav(f)"
+                [attr.aria-label]="'favorites.save' | transloco">
+          <span class="ms">{{ isFav() ? 'favorite' : 'favorite_border' }}</span>
+          {{ (isFav() ? 'favorites.saved' : 'favorites.save') | transloco }}
         </button>
       </nav>
 
@@ -28,6 +39,22 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
             <div>
               <h1 class="hero-card__name">{{ f.airline }}</h1>
               <p class="hero-card__flight-no">{{ 'flight.flightNo' | transloco }} {{ f.flightNumber }}</p>
+              <div class="hero-badges">
+                @if (summary(); as s) {
+                  @if (s.totalReviews > 0) {
+                    <span class="rating-badge">
+                      <span class="ms" style="font-size:14px; vertical-align:middle">star</span>
+                      {{ s.averageRating | number:'1.1-1' }} · {{ s.totalReviews }} {{ 'common.reviews' | transloco }}
+                    </span>
+                  }
+                }
+                @if (tripFit(); as place) {
+                  <span class="ai-badge">
+                    <span class="ms" style="font-size:14px; vertical-align:middle">auto_awesome</span>
+                    {{ 'common.fitsTrip' | transloco:{ place: place } }}
+                  </span>
+                }
+              </div>
             </div>
           </div>
 
@@ -139,9 +166,13 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
 
               <div style="height:1px; background:#efefef; margin: 16px 0;"></div>
 
-              <button class="btn-book" (click)="goToPlanner()">
-                <span class="ms" style="font-size:20px">travel_explore</span>
+              <button class="btn-book" (click)="book(f)">
+                <span class="ms" style="font-size:20px">confirmation_number</span>
                 {{ 'flight.booking.book' | transloco }}
+              </button>
+              <button class="btn-watch" [class.btn-watch--on]="watchId()" (click)="toggleWatch(f)">
+                <span class="ms" style="font-size:18px">{{ watchId() ? 'notifications_active' : 'notifications' }}</span>
+                {{ (watchId() ? 'priceWatch.watching' : 'priceWatch.watch') | transloco }}
               </button>
 
               @if (f.seatsAvailable < 10 && f.seatsAvailable > 0) {
@@ -186,6 +217,10 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
       transition: color 150ms ease;
     }
     .back-link:hover { color: #E04A2F; }
+    .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid #e0e0e0; border-radius: 999px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: #545454; cursor: pointer; transition: all 150ms ease; }
+    .fav-toggle:hover { border-color: #E04A2F; color: #E04A2F; }
+    .fav-toggle--on { border-color: #E04A2F; color: #E04A2F; background: #fff1ec; }
+    .fav-toggle .ms { font-size: 18px; }
 
     .hero-card {
       background: #fff;
@@ -212,6 +247,19 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
     .hero-card__flight-no {
       font-size: 14px; color: #8a8a8a; margin: 4px 0 0; font-weight: 500;
     }
+    .hero-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .ai-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 12px; font-weight: 700; color: #4338CA;
+      background: #EEF1FF; border-radius: 999px; padding: 3px 10px;
+    }
+    .ai-badge .ms { color: #6366F1; }
+    .rating-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 12px; font-weight: 700; color: #B26A00;
+      background: #FFF4E0; border-radius: 999px; padding: 3px 10px;
+    }
+    .rating-badge .ms { color: #F5A623; }
 
     .route-display {
       display: flex; align-items: center; gap: 20px;
@@ -340,6 +388,9 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
       cursor: pointer; transition: background 150ms ease;
     }
     .btn-book:hover { background: #c93d25; }
+    .btn-watch { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; background: #fff; color: #545454; border: 1px solid #e0e0e0; border-radius: 10px; padding: 12px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 150ms ease; }
+    .btn-watch:hover { border-color: #E04A2F; color: #E04A2F; }
+    .btn-watch--on { border-color: #E04A2F; color: #E04A2F; background: #fff1ec; }
 
     .urgency-note {
       display: flex; align-items: center; gap: 5px;
@@ -369,8 +420,44 @@ export class FlightDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly catalogService = inject(CatalogService);
+  private readonly bookingDraft = inject(BookingDraftService);
+  private readonly tripContext = inject(TripContextService);
+  private readonly reviewService = inject(ReviewService);
+  private readonly favorites = inject(FavoritesService);
+  private readonly priceWatch = inject(PriceWatchService);
 
   readonly flight = signal<FlightSearchResult | null>(null);
+  readonly summary = signal<ReviewSummary | null>(null);
+  readonly watchId = signal<string | null>(null);
+
+  toggleWatch(f: FlightSearchResult): void {
+    const existing = this.watchId();
+    if (existing) {
+      this.priceWatch.remove(existing).pipe(catchError(() => of(undefined)))
+        .subscribe(() => this.watchId.set(null));
+    } else {
+      this.priceWatch.create({ flightId: f.id }).pipe(catchError(() => of(null)))
+        .subscribe(w => { if (w) { this.watchId.set(w.id); } });
+    }
+  }
+  readonly isFav = computed(() => {
+    const f = this.flight();
+    return f ? this.favorites.has('flight', f.id) : false;
+  });
+
+  toggleFav(f: FlightSearchResult): void {
+    this.favorites.toggle({
+      type: 'flight',
+      id: f.id,
+      title: `${f.airline} ${f.flightNumber}`,
+      subtitle: `${f.originCity ?? f.originIata} → ${f.destCity ?? f.destIata}`,
+      route: `/flights/${f.id}`,
+    });
+  }
+  readonly tripFit = computed(() => {
+    const f = this.flight();
+    return f ? this.tripContext.match(f.destCity ?? f.destIata) : null;
+  });
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -380,6 +467,12 @@ export class FlightDetailComponent implements OnInit {
       next: (f) => this.flight.set(f),
       error: () => this.router.navigate(['/']),
     });
+    this.reviewService.getSummary('FLIGHT', id)
+      .pipe(catchError(() => of(null)))
+      .subscribe(s => this.summary.set(s));
+    this.priceWatch.list().pipe(catchError(() => of([])))
+      .subscribe(ws => this.watchId.set(ws.find(w => w.flightId === id)?.id ?? null));
+    this.tripContext.ensureLoaded();
   }
 
   getDuration(departure: string, arrival: string): string {
@@ -391,4 +484,25 @@ export class FlightDetailComponent implements OnInit {
 
   goBack(): void { this.router.navigate(['/']); }
   goToPlanner(): void { this.router.navigate(['/planner']); }
+
+  /** Seeds the booking funnel with fare bundles and opens it. */
+  book(f: FlightSearchResult): void {
+    const route = `${f.originCity ?? f.originIata} → ${f.destCity ?? f.destIata}`;
+    this.bookingDraft.start({
+      vertical: 'flight',
+      itemId: f.id,
+      title: `${f.airline} ${f.flightNumber}`,
+      subtitle: route,
+      destination: f.destCity ?? f.destIata,
+      unitPrice: f.price,
+      currency: 'EUR',
+      checkIn: f.departureAt.slice(0, 10),
+      options: [
+        { id: 'basic', label: 'Basic', note: 'Carry-on only', multiplier: 1 },
+        { id: 'standard', label: 'Standard', note: 'Checked bag + seat choice', multiplier: 1.18 },
+        { id: 'flex', label: 'Flex', note: 'Refundable + free changes', multiplier: 1.42 },
+      ],
+    }, 1);
+    this.router.navigate(['/book']);
+  }
 }

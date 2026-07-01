@@ -33,7 +33,8 @@
       "cruiseTypePlaceholder": "es. Mediterraneo",
       "sort": "Ordina per",
       "minStars": "Stelle min.",
-      "anyStars": "Tutte"
+      "anyStars": "Tutte",
+      "return": "Ritorno"
     },
     "amenities": {
       "sea": "Vista mare",
@@ -54,7 +55,25 @@
       "found": "voli trovati",
       "baggageYes": "Bagaglio incluso",
       "baggageNo": "Senza bagaglio",
-      "seats": "posti"
+      "seats": "posti",
+      "countries": "paesi",
+      "destinations": "destinazioni",
+      "routes": "tratte",
+      "from": "da",
+      "tripOneway": "Solo andata",
+      "tripRound": "Andata e ritorno",
+      "tripMulti": "Multi-tratta",
+      "outbound": "Andata",
+      "return": "Ritorno",
+      "fareCalendar": "Tariffe più basse per giorno",
+      "filters": "Filtri",
+      "maxDuration": "Durata max",
+      "anyDuration": "Qualsiasi",
+      "clearFilters": "Azzera",
+      "addLeg": "Aggiungi volo",
+      "leg": "Volo",
+      "removeLeg": "Rimuovi volo",
+      "direct": "Diretto"
     },
     "restaurants": {
       "eyebrow": "Ristorazione",
@@ -258,14 +277,19 @@
     "availability": "Disponibilità",
     "availableNow": "Disponibile ora",
     "notAvailable": "Non disponibile",
-    "book": "Pianifica un viaggio con questo ristorante",
+    "book": "Prenota un tavolo",
     "askAi": "Chiedi all'IA di questo ristorante",
     "priceTiers": {
       "1": "€ Economico",
       "2": "€€ Moderato",
       "3": "€€€ Raffinato",
       "4": "€€€€ Alta cucina"
-    }
+    },
+    "availableTables": "Tavoli disponibili",
+    "noTables": "Nessun tavolo per questa data",
+    "pickDate": "Data",
+    "guests": "Coperti",
+    "reviewsLabel": "recensioni"
   },
   "cruise": {
     "back": "Indietro",
@@ -292,7 +316,9 @@
       "urgency": "Solo {{count}} {{unit}} rimaste",
       "cabin": "cabina",
       "cabins": "cabine"
-    }
+    },
+    "day": "Giorno",
+    "cabinCategories": "Categorie di cabina"
   },
   "userMenu": {
     "myTrips": "I miei viaggi",
@@ -309,7 +335,9 @@
     "error": "Qualcosa è andato storto. Per favore riprova.",
     "planTrip": "Pianifica un viaggio",
     "askAi": "Chiedi all'IA",
-    "climate": "clima"
+    "climate": "clima",
+    "reviews": "recensioni",
+    "fitsTrip": "Si adatta al tuo viaggio a {{place}}"
   },
   "footer": {
     "tagline": "Scopri destinazioni, leggi recensioni reali e pianifica viaggi più intelligenti con i suggerimenti dell'IA.",
@@ -485,7 +513,17 @@
     "cancel": "Annulla",
     "cancelling": "Annullamento…",
     "cancelled": "Prenotazione annullata",
-    "cancelError": "Impossibile annullare — riprova"
+    "cancelError": "Impossibile annullare — riprova",
+    "writeReview": "Scrivi recensione",
+    "reviewThanks": "Recensito",
+    "yourRating": "Il tuo voto",
+    "reviewTitle": "Titolo",
+    "reviewBody": "Racconta la tua esperienza…",
+    "submitReview": "Invia recensione",
+    "reviewSaved": "Grazie per la recensione!",
+    "reviewError": "Impossibile salvare la recensione.",
+    "invoice": "Fattura",
+    "tripInvoice": "Fattura viaggio"
   },
   "messages": {
     "title": "Messaggi",
@@ -1068,5 +1106,96 @@
         }
       }
     }
+  },
+  "booking": {
+    "flow": {
+      "step": {
+        "configure": "Configura",
+        "travelers": "Viaggiatori",
+        "review": "Rivedi"
+      },
+      "vertical": {
+        "flight": "Volo",
+        "restaurant": "Ristorante",
+        "cruise": "Crociera"
+      },
+      "choose": {
+        "flight": "Scegli la tariffa",
+        "restaurant": "Preferenza tavolo",
+        "cruise": "Scegli la cabina"
+      },
+      "party": {
+        "flight": "Passeggeri",
+        "restaurant": "Coperti",
+        "cruise": "Ospiti"
+      },
+      "chooseTime": "Scegli un orario",
+      "travelersTitle": "Chi viaggia?",
+      "travelersHelp": "I nomi devono corrispondere al documento usato al check-in.",
+      "traveler": "Viaggiatore",
+      "primary": "Principale",
+      "firstName": "Nome",
+      "lastName": "Cognome",
+      "document": "Numero documento (facoltativo)",
+      "reviewTitle": "Rivedi la prenotazione",
+      "date": "Data",
+      "aiInsight": "Suggerimento IA: i prezzi di questa opzione tendono a salire avvicinandosi alla data — prenotare ora di solito blocca la tariffa migliore.",
+      "confirmedTitle": "Tutto pronto!",
+      "confirmedBody": "Stai per ricevere una conferma. Puoi gestire questa prenotazione quando vuoi.",
+      "reference": "Riferimento",
+      "viewBookings": "Vedi le mie prenotazioni",
+      "cancel": "Annulla",
+      "back": "Indietro",
+      "continue": "Continua",
+      "payConfirm": "Paga e conferma",
+      "summary": "Riepilogo prezzo",
+      "serviceFee": "Costo del servizio",
+      "total": "Totale",
+      "securedNote": "Pagamento sicuro",
+      "error": "Qualcosa è andato storto. Riprova.",
+      "errorAuth": "Accedi per completare la prenotazione.",
+      "emptyTitle": "Niente da prenotare al momento",
+      "emptyBody": "Scegli un volo, un ristorante o una crociera per iniziare.",
+      "emptyCta": "Esplora TravelAI",
+      "payVia": "Paga con",
+      "addToTrip": "Aggiungi al viaggio"
+    }
+  },
+  "favorites": {
+    "title": "Preferiti",
+    "subtitle": "Tutto ciò che hai salvato per dopo.",
+    "emptyTitle": "Ancora niente salvato",
+    "emptyBody": "Tocca il cuore su un volo, ristorante o crociera per salvarlo qui.",
+    "emptyCta": "Esplora TravelAI",
+    "save": "Salva",
+    "saved": "Salvato",
+    "remove": "Rimuovi",
+    "type": {
+      "flight": "Volo",
+      "restaurant": "Ristorante",
+      "cruise": "Crociera",
+      "hotel": "Hotel",
+      "attraction": "Attività"
+    }
+  },
+  "priceWatch": {
+    "watch": "Osserva prezzo",
+    "watching": "Prezzo osservato"
+  },
+  "tripCart": {
+    "title": "Il tuo viaggio",
+    "subtitle": "Prenota volo, hotel, ristorante e crociera insieme.",
+    "summary": "Riepilogo viaggio",
+    "items": "elementi",
+    "total": "Totale",
+    "bookAll": "Prenota tutto il viaggio",
+    "remove": "Rimuovi",
+    "addMore": "Aggiungine un altro",
+    "emptyTitle": "Il tuo viaggio è vuoto",
+    "emptyBody": "Aggiungi voli, ristoranti o crociere per comporre un viaggio e prenotarlo in una volta.",
+    "emptyCta": "Esplora TravelAI",
+    "bookedTitle": "Viaggio prenotato!",
+    "bookedBody": "Tutte le {{count}} prenotazioni sono confermate.",
+    "viewBookings": "Vedi le mie prenotazioni"
   }
 }

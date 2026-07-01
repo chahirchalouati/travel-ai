@@ -118,6 +118,12 @@ export interface FlightSearchResult {
   price: number;
   seatsAvailable: number;
   baggageIncluded: boolean;
+  // Resolved server-side from the airports reference; null when an IATA is unmapped.
+  originCity: string | null;
+  originCountry: string | null;
+  destCity: string | null;
+  destCountry: string | null;
+  destCountryCode: string | null;
 }
 
 export interface RestaurantSearchResult {
@@ -132,6 +138,37 @@ export interface RestaurantSearchResult {
   accessible: boolean;
   available: boolean;
   partnerId: string;
+}
+
+/** Request to watch a flight or cruise for price drops (exactly one id). */
+export interface CreatePriceWatchRequest {
+  flightId?: string;
+  cruiseId?: string;
+  targetPrice?: number;
+}
+
+export interface PriceWatchResponse {
+  id: string;
+  flightId: string | null;
+  cruiseId: string | null;
+  label: string;
+  lastPrice: number;
+  targetPrice: number | null;
+  active: boolean;
+  createdAt: string;
+}
+
+/** Cheapest fare on a departure day for a route (fare-calendar strip). */
+export interface FareCalendarDay {
+  date: string;        // YYYY-MM-DD
+  minPrice: number;
+  flightCount: number;
+}
+
+/** A bookable reservation slot for a restaurant on a given date. */
+export interface RestaurantSlot {
+  timeSlot: string;       // "HH:mm[:ss]"
+  coversAvailable: number;
 }
 
 export interface AttractionResponse {
@@ -172,6 +209,22 @@ export interface CruiseSearchResult {
   allInclusive: boolean;
 }
 
+/** A bookable cabin tier for a cruise. */
+export interface CruiseCabin {
+  name: string;
+  description: string;
+  priceMultiplier: number;
+  price: number;
+  cabinsAvailable: number;
+}
+
+/** One day of a cruise's day-by-day itinerary. */
+export interface CruiseDay {
+  dayNumber: number;
+  port: string;
+  description: string;
+}
+
 export interface TravelerRequest {
   firstName: string;
   lastName: string;
@@ -188,17 +241,24 @@ export interface TravelerResponse {
 }
 
 export interface CreateBookingRequest {
-  proposalId: string;
-  hotelId: string;
+  proposalId?: string;
+  hotelId?: string;
   restaurantId?: string;
   flightId?: string;
+  cruiseId?: string;
   destination: string;
-  checkIn: string;
-  checkOut: string;
+  checkIn?: string;
+  checkOut?: string;
   totalAmount: number;
   hotelAmount?: number;
   restaurantAmount?: number;
   flightAmount?: number;
+  cruiseAmount?: number;
+  fareClass?: string;
+  timeSlot?: string;
+  cabinCategory?: string;
+  partySize?: number;
+  tripGroupId?: string;
   travelers: TravelerRequest[];
 }
 
@@ -208,12 +268,19 @@ export interface BookingResponse {
   hotelId: string;
   restaurantId: string;
   flightId: string;
+  cruiseId: string | null;
   destination: string;
   status: BookingStatus;
   totalAmount: number;
   hotelAmount: number;
   restaurantAmount: number;
   flightAmount: number;
+  cruiseAmount: number | null;
+  fareClass: string | null;
+  timeSlot: string | null;
+  cabinCategory: string | null;
+  partySize: number | null;
+  tripGroupId: string | null;
   bookingReference: string;
   checkIn: string;
   checkOut: string;

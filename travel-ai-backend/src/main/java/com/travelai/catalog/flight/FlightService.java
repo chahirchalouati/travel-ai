@@ -1,5 +1,6 @@
 package com.travelai.catalog.flight;
 
+import com.travelai.catalog.flight.dto.FareCalendarDay;
 import com.travelai.catalog.flight.dto.FlightSearchRequest;
 import com.travelai.catalog.flight.dto.FlightSearchResult;
 import com.travelai.shared.exception.ErrorCode;
@@ -9,9 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
 
 @Service
@@ -20,6 +26,7 @@ import java.util.UUID;
 public class FlightService {
 
     private final FlightRepository flightRepository;
+    private final AirportLookup airportLookup;
 
     /**
      * Searches flights matching origin, destination, departure date and budget.
@@ -48,6 +55,32 @@ public class FlightService {
     }
 
     /**
+     * Cheapest fare per departure day for a route, over {@code days} days from
+     * {@code from}. Days with no flights are omitted. Powers the fare-calendar strip.
+     */
+    @Cacheable(value = "flights-fare-calendar",
+            key = "#originIata + '-' + #destIata + '-' + #from + '-' + #days")
+    public List<FareCalendarDay> fareCalendar(String originIata, String destIata, LocalDate from, int days) {
+        int span = Math.max(1, Math.min(60, days));
+        Instant start = from.atStartOfDay().toInstant(ZoneOffset.UTC);
+        Instant end = from.plusDays(span).atStartOfDay().toInstant(ZoneOffset.UTC);
+
+        List<Flight> flights = flightRepository
+                .findByActiveTrueAndOriginIataAndDestIataAndDepartureAtBetween(originIata, destIata, start, end);
+
+        Map<LocalDate, FareCalendarDay> byDay = new TreeMap<>();
+        for (Flight f : flights) {
+            LocalDate day = f.getDepartureAt().atZone(ZoneOffset.UTC).toLocalDate();
+            byDay.merge(day,
+                    new FareCalendarDay(day, f.getPrice(), 1),
+                    (a, b) -> new FareCalendarDay(day, a.minPrice().min(b.minPrice()), a.flightCount() + b.flightCount()));
+        }
+        return byDay.values().stream()
+                .sorted(Comparator.comparing(FareCalendarDay::date))
+                .toList();
+    }
+
+    /**
      * Returns flight by ID or throws NOT_FOUND.
      */
     public FlightSearchResult getById(UUID id) {
@@ -68,6 +101,8 @@ public class FlightService {
     // --- private helpers ---
 
     private FlightSearchResult toResult(Flight flight) {
+        Airport origin = airportLookup.find(flight.getOriginIata()).orElse(null);
+        Airport dest = airportLookup.find(flight.getDestIata()).orElse(null);
         return new FlightSearchResult(
                 flight.getId(),
                 flight.getAirline(),
@@ -78,7 +113,12 @@ public class FlightService {
                 flight.getArrivalAt(),
                 flight.getPrice(),
                 flight.getSeatsAvailable(),
-                flight.isBaggageIncluded()
+                flight.isBaggageIncluded(),
+                origin == null ? null : origin.getCity(),
+                origin == null ? null : origin.getCountry(),
+                dest == null ? null : dest.getCity(),
+                dest == null ? null : dest.getCountry(),
+                dest == null ? null : dest.getCountryCode()
         );
     }
 }

@@ -126,6 +126,27 @@ export const routes: Routes = [
       import('./features/bookings/bookings.component').then(m => m.BookingsComponent),
   },
   {
+    path: 'book',
+    loadComponent: () =>
+      import('./features/booking-flow/booking-flow.component').then(
+        m => m.BookingFlowComponent
+      ),
+  },
+  {
+    path: 'favorites',
+    loadComponent: () =>
+      import('./features/favorites/favorites.component').then(
+        m => m.FavoritesComponent
+      ),
+  },
+  {
+    path: 'trip-cart',
+    loadComponent: () =>
+      import('./features/booking-flow/trip-cart.component').then(
+        m => m.TripCartComponent
+      ),
+  },
+  {
     path: 'messages',
     loadComponent: () =>
       import('./features/messages/messages.component').then(m => m.MessagesComponent),

@@ -1,0 +1,74 @@
+<div class="tc">
+  @if (references(); as refs) {
+    <!-- Success -->
+    <section class="tc-card tc-done">
+      <span class="tc-done__check ms">luggage</span>
+      <h1 class="tc-h1">{{ 'tripCart.bookedTitle' | transloco }}</h1>
+      <p class="tc-help">{{ 'tripCart.bookedBody' | transloco:{ count: refs.length } }}</p>
+      <ul class="tc-refs">
+        @for (r of refs; track r) { <li><span class="ms" style="font-size:16px">confirmation_number</span> {{ r }}</li> }
+      </ul>
+      <button class="tc-btn tc-btn--primary" (click)="goToBookings()">
+        <span class="ms" style="font-size:18px">confirmation_number</span>{{ 'tripCart.viewBookings' | transloco }}
+      </button>
+    </section>
+  } @else if (cart.items().length === 0) {
+    <!-- Empty -->
+    <section class="tc-empty">
+      <span class="ms">luggage</span>
+      <h2>{{ 'tripCart.emptyTitle' | transloco }}</h2>
+      <p>{{ 'tripCart.emptyBody' | transloco }}</p>
+      <button class="tc-btn tc-btn--primary" (click)="continueShopping()">{{ 'tripCart.emptyCta' | transloco }}</button>
+    </section>
+  } @else {
+    <header class="tc-head">
+      <h1 class="tc-h1">{{ 'tripCart.title' | transloco }}</h1>
+      <p class="tc-help">{{ 'tripCart.subtitle' | transloco }}</p>
+    </header>
+
+    <div class="tc-grid">
+      <main class="tc-items">
+        @for (item of cart.items(); track $index) {
+          <article class="tc-item">
+            <span class="tc-item__icon ms">{{ icon(item.type) }}</span>
+            <div class="tc-item__body">
+              <span class="tc-item__type">{{ ('booking.flow.vertical.' + item.type) | transloco }}</span>
+              <h3 class="tc-item__title">{{ item.title }}</h3>
+              <p class="tc-item__sub">{{ item.subtitle }}</p>
+            </div>
+            <span class="tc-item__price">{{ item.amount | currency:item.currency:'symbol':'1.2-2' }}</span>
+            <button class="tc-item__remove" (click)="cart.removeAt($index)"
+                    [attr.aria-label]="'tripCart.remove' | transloco" [disabled]="submitting()">
+              <span class="ms">close</span>
+            </button>
+          </article>
+        }
+        <button class="tc-add" (click)="continueShopping()">
+          <span class="ms" style="font-size:18px">add</span> {{ 'tripCart.addMore' | transloco }}
+        </button>
+      </main>
+
+      <aside class="tc-summary">
+        <h3 class="tc-summary__title">{{ 'tripCart.summary' | transloco }}</h3>
+        <div class="tc-summary__line">
+          <span>{{ cart.count() }} {{ 'tripCart.items' | transloco }}</span>
+          <span>{{ cart.total() | currency:cart.currency():'symbol':'1.2-2' }}</span>
+        </div>
+        <div class="tc-summary__total">
+          <span>{{ 'tripCart.total' | transloco }}</span>
+          <span>{{ cart.total() | currency:cart.currency():'symbol':'1.2-2' }}</span>
+        </div>
+
+        @if (errorKey()) {
+          <p class="tc-error"><span class="ms" style="font-size:16px">error</span>{{ errorKey()! | transloco }}</p>
+        }
+
+        <button class="tc-btn tc-btn--primary tc-btn--block" (click)="checkout()" [disabled]="submitting()">
+          @if (submitting()) { <span class="tc-spinner"></span> }
+          {{ 'tripCart.bookAll' | transloco }}
+        </button>
+        <p class="tc-summary__note"><span class="ms" style="font-size:14px">lock</span>{{ 'booking.flow.securedNote' | transloco }}</p>
+      </aside>
+    </div>
+  }
+</div>

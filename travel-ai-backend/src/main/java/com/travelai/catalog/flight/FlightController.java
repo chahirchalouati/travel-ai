@@ -1,12 +1,15 @@
 package com.travelai.catalog.flight;
 
+import com.travelai.catalog.flight.dto.FareCalendarDay;
 import com.travelai.catalog.flight.dto.FlightSearchRequest;
 import com.travelai.catalog.flight.dto.FlightSearchResult;
 import com.travelai.shared.domain.ApiResponse;
 import com.travelai.shared.domain.PageSupport;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -44,8 +47,19 @@ public class FlightController {
         };
     }
 
+    @GetMapping("/fare-calendar")
+    public ApiResponse<List<FareCalendarDay>> fareCalendar(
+            @RequestParam String originIata,
+            @RequestParam String destIata,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(defaultValue = "30") int days) {
+        return ApiResponse.ok(flightService.fareCalendar(
+                originIata.toUpperCase(), destIata.toUpperCase(), from, days));
+    }
+
     @GetMapping("/{id}")
     public ApiResponse<FlightSearchResult> getById(@PathVariable UUID id) {
         return ApiResponse.ok(flightService.getById(id));
     }
 }
+
