@@ -46,7 +46,11 @@ public class EmailService {
             logEntry.setErrorMessage(ex.getMessage());
             log.error("Failed to send email to {}: {}", to, ex.getMessage());
         } finally {
-            logRepository.save(logEntry);
+            try {
+                logRepository.save(logEntry);
+            } catch (RuntimeException persistEx) {
+                log.error("Failed to persist NotificationLog for {}: {}", to, persistEx.getMessage());
+            }
         }
     }
 
@@ -78,7 +82,11 @@ public class EmailService {
             logEntry.setErrorMessage(ex.getMessage());
             log.error("Failed to send email+PDF to {}: {}", to, ex.getMessage());
         } finally {
-            logRepository.save(logEntry);
+            try {
+                logRepository.save(logEntry);
+            } catch (RuntimeException persistEx) {
+                log.error("Failed to persist NotificationLog for {}: {}", to, persistEx.getMessage());
+            }
         }
     }
 }
