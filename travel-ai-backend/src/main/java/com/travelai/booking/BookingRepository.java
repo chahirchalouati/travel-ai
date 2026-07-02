@@ -39,4 +39,25 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
               AND (b.hotelId = :targetId OR b.restaurantId = :targetId OR b.flightId = :targetId)
             """)
     boolean existsConfirmedBookingForTarget(@Param("userId") UUID userId, @Param("targetId") UUID targetId);
+
+    /** Aggregated booking revenue for a given status, for the revenue dashboard. */
+    @Query("""
+            SELECT count(b)                          AS bookings,
+                   coalesce(sum(b.totalAmount), 0)    AS gross,
+                   coalesce(sum(b.serviceFeeAmount),0) AS serviceFee,
+                   coalesce(sum(b.commissionAmount),0) AS commission,
+                   coalesce(sum(b.ancillaryAmount), 0) AS ancillary
+            FROM Booking b
+            WHERE b.status = :status
+            """)
+    RevenueAggregate aggregateByStatus(@Param("status") BookingStatus status);
+
+    /** Projection for {@link #aggregateByStatus}. */
+    interface RevenueAggregate {
+        long getBookings();
+        java.math.BigDecimal getGross();
+        java.math.BigDecimal getServiceFee();
+        java.math.BigDecimal getCommission();
+        java.math.BigDecimal getAncillary();
+    }
 }

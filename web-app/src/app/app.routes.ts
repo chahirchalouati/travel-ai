@@ -282,6 +282,15 @@ export const routes: Routes = [
       import('./features/admin/admin.component').then(m => m.AdminComponent),
   },
   {
+    path: 'admin/revenue',
+    canActivate: [adminGuard],
+    data: { seo: { noindex: true } },
+    loadComponent: () =>
+      import('./features/admin-revenue/admin-revenue.component').then(
+        m => m.AdminRevenueComponent
+      ),
+  },
+  {
     path: 'forgot-password',
     data: { seo: { title: 'Reset your password', noindex: true } },
     loadComponent: () =>

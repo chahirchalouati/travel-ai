@@ -1197,6 +1197,23 @@
       }
     }
   },
+  "adminRevenue": {
+    "eyebrow": "Admin",
+    "title": "Ricavi",
+    "lede": "Come guadagna la piattaforma: commissione (markup), costi di servizio, vendita di extra e abbonamenti. Il valore lordo delle prenotazioni è la spesa dei clienti, mostrato come contesto.",
+    "error": "Impossibile caricare i ricavi. È richiesto l'accesso admin.",
+    "totalPlatform": "Ricavo totale della piattaforma",
+    "gross": "Valore lordo prenotazioni",
+    "bookings": "prenotazioni confermate",
+    "mix": "Composizione dei ricavi per fonte",
+    "activeSubs": "{count} abbonamenti Prime attivi",
+    "streams": {
+      "commission": "Commissione",
+      "serviceFee": "Costi di servizio",
+      "ancillary": "Extra",
+      "subscription": "Abbonamenti"
+    }
+  },
   "membership": {
     "eyebrow": "Abbonamento",
     "title": "Travel AI Prime",

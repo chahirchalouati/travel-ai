@@ -353,6 +353,18 @@ export interface SubscribeRequest {
   planCode: string;
 }
 
+/** Admin revenue dashboard summary across every income stream. */
+export interface RevenueSummaryResponse {
+  confirmedBookings: number;
+  grossBookingValue: number;
+  serviceFeeRevenue: number;
+  commissionRevenue: number;
+  ancillaryRevenue: number;
+  activeSubscriptions: number;
+  subscriptionRevenue: number;
+  totalPlatformRevenue: number;
+}
+
 export interface LoyaltyTransactionResponse {
   id: string;
   type: 'EARN' | 'REDEEM' | 'ADJUST';
