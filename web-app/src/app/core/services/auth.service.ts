@@ -69,6 +69,34 @@ export class AuthService {
     );
   }
 
+  /** Requests a password reset email. Backend always answers 200 (no enumeration). */
+  forgotPassword(email: string): Observable<void> {
+    return this.http.post<ApiWrapper<void>>(`${environment.apiUrl}/auth/forgot-password`, { email }).pipe(
+      map(() => undefined as void)
+    );
+  }
+
+  /** Sets a new password using a single-use reset token. */
+  resetPassword(token: string, newPassword: string): Observable<void> {
+    return this.http.post<ApiWrapper<void>>(`${environment.apiUrl}/auth/reset-password`, { token, newPassword }).pipe(
+      map(() => undefined as void)
+    );
+  }
+
+  /** Confirms the email address matching the verification token. */
+  verifyEmail(token: string): Observable<void> {
+    return this.http.post<ApiWrapper<void>>(`${environment.apiUrl}/auth/verify-email`, { token }).pipe(
+      map(() => undefined as void)
+    );
+  }
+
+  /** Re-sends the verification email for the signed-in user. */
+  resendVerification(): Observable<void> {
+    return this.http.post<ApiWrapper<void>>(`${environment.apiUrl}/auth/resend-verification`, {}).pipe(
+      map(() => undefined as void)
+    );
+  }
+
   /** True when the signed-in user has the ADMIN role. */
   isAdmin(): boolean {
     return this.currentUser()?.role === 'ADMIN';

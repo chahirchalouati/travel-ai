@@ -53,6 +53,9 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private boolean emailVerified = false;
 
+    @Column(name = "email_verification_token")
+    private String emailVerificationToken;
+
     @Builder.Default
     @Column(nullable = false)
     private boolean active = true;
