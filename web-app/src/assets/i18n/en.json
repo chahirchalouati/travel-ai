@@ -1233,5 +1233,34 @@
       "completed": "Completed",
       "cancelled": "Cancelled"
     }
+  },
+  "loyalty": {
+    "tier": {
+      "EXPLORER": "Explorer",
+      "VOYAGER": "Voyager",
+      "ELITE": "Elite"
+    },
+    "type": {
+      "EARN": "Points earned",
+      "REDEEM": "Points redeemed",
+      "ADJUST": "Adjustment"
+    },
+    "card": {
+      "subtitle": "Your travel rewards",
+      "points": "points",
+      "progressTo": "Progress to {{tier}}",
+      "pointsToGo": "{{points}} pts to go",
+      "topTier": "You've reached our top tier — enjoy the perks.",
+      "lifetime": "{{points}} lifetime points",
+      "earnRate": "Earning {{rate}}× points",
+      "activity": "Recent activity",
+      "empty": "No points activity yet. Book a trip to start earning."
+    },
+    "checkout": {
+      "toggle": "Use your points",
+      "balance": "{{points}} points available",
+      "applied": "{{points}} points applied — you save {{amount}}",
+      "discountLine": "Points ({{points}})"
+    }
   }
 }

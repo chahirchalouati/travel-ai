@@ -7,6 +7,7 @@ import { catchError, map, of, switchMap } from 'rxjs';
 import { BookingService } from '../../core/services/booking.service';
 import { PaymentService } from '../../core/services/payment.service';
 import { PromoService } from '../../core/services/promo.service';
+import { LoyaltyService } from '../../core/services/loyalty.service';
 import type { BookingResponse, PaymentGateway } from '../../core/models/api.models';
 import { BookingDraftService } from './booking-draft.service';
 import { TripCartService } from './trip-cart.service';
@@ -36,6 +37,7 @@ export class BookingFlowComponent {
   private readonly bookings = inject(BookingService);
   private readonly payments = inject(PaymentService);
   private readonly promo = inject(PromoService);
+  private readonly loyalty = inject(LoyaltyService);
   private readonly router = inject(Router);
 
   protected readonly step = signal<Step>('configure');
@@ -45,6 +47,48 @@ export class BookingFlowComponent {
   protected readonly gateway = signal<PaymentGateway>('STRIPE');
   protected promoInput = '';
   protected readonly promoMsgKey = signal<string | null>(null);
+
+  /** Loyalty points balance (0 until loaded); the toggle shows when ≥ 500. */
+  protected readonly pointsBalance = signal(0);
+  protected readonly redeemOn = signal(false);
+  /** Whether the member has enough points to redeem (500 minimum). */
+  protected readonly canRedeem = computed(() => this.pointsBalance() >= 500);
+
+  constructor() {
+    // Load the balance once so the review step can offer redemption.
+    this.loyalty.summary().pipe(catchError(() => of(null))).subscribe(res => {
+      if (res) {
+        this.pointsBalance.set(res.pointsBalance);
+      }
+    });
+  }
+
+  /**
+   * Toggles points redemption. When enabled, previews the maximum redeemable
+   * points against the current pre-loyalty total and wires the discount into the
+   * draft; when disabled, clears it.
+   */
+  protected toggleRedeem(): void {
+    const on = !this.redeemOn();
+    this.redeemOn.set(on);
+    if (!on) {
+      this.store.redeemedPoints.set(0);
+      this.store.loyaltyDiscount.set(0);
+      return;
+    }
+    // Preview against the total before any loyalty discount (promo already applied).
+    const amount = Math.max(0, this.store.subtotal() + this.store.serviceFee() - this.store.discount());
+    this.loyalty.redeemPreview(amount).pipe(catchError(() => of(null))).subscribe(res => {
+      if (res && res.maxRedeemablePoints >= 500) {
+        this.store.redeemedPoints.set(res.maxRedeemablePoints);
+        this.store.loyaltyDiscount.set(res.discountAmount);
+      } else {
+        this.redeemOn.set(false);
+        this.store.redeemedPoints.set(0);
+        this.store.loyaltyDiscount.set(0);
+      }
+    });
+  }
 
   /** Validates the entered promo code against the pre-discount amount. */
   protected applyPromo(): void {

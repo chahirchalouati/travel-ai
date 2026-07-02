@@ -32,4 +32,6 @@ public record CreateBookingRequest(
         String cabinCategory,
         Integer partySize,
         UUID tripGroupId,
+        /** Loyalty points to spend on this booking; their discount is already reflected in totalAmount. */
+        Integer redeemPoints,
         @NotNull List<TravelerRequest> travelers) {}
