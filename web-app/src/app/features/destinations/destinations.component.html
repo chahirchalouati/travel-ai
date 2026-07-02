@@ -27,29 +27,31 @@
           aria-label="Search destinations"
         >
       </div>
-      <select
+      <app-ui-select
         class="dest-select"
         [ngModel]="activeInterest()"
         (ngModelChange)="activeInterest.set($event)"
-        aria-label="Filter by interest"
-      >
-        <option value="all">All interests</option>
-        @for (tag of interests(); track tag) {
-          <option [value]="tag">{{ tag }}</option>
-        }
-      </select>
-      <select
+        ariaLabel="Filter by interest"
+        [options]="interestOptions()"
+      />
+      <app-ui-select
         class="dest-select"
         [ngModel]="sortBy()"
         (ngModelChange)="sortBy.set($event)"
-        aria-label="Sort destinations"
-      >
-        <option value="">Sort: featured</option>
-        <option value="popularity_desc">Most popular</option>
-        <option value="price_asc">Price: low to high</option>
-        <option value="price_desc">Price: high to low</option>
-        <option value="name_asc">Name: A–Z</option>
-      </select>
+        ariaLabel="Sort destinations"
+        [options]="[
+          { value: '', label: 'Sort: featured' },
+          { value: 'popularity_desc', label: 'Most popular' },
+          { value: 'price_asc', label: 'Price: low to high' },
+          { value: 'price_desc', label: 'Price: high to low' },
+          { value: 'name_asc', label: 'Name: A–Z' }
+        ]"
+      />
+      <app-ui-checkbox
+        label="Featured only"
+        [checked]="featuredOnly()"
+        (checkedChange)="featuredOnly.set($event)"
+      />
     </div>
 
     @if (loading()) {

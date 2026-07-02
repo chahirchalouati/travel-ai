@@ -265,18 +265,14 @@
 .flight-filters__duration {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-secondary);
 
-  select {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 5px 8px;
-    font: inherit;
-    font-size: 0.8rem;
-    background: var(--bg-primary);
+  app-ui-select {
+    width: 150px;
+    flex: 0 0 auto;
   }
 }
 .flight-filters__clear {

@@ -5,11 +5,12 @@ import { RouterLink } from '@angular/router';
 import { DestinationService } from '../../core/services/destination.service';
 import type { DestinationResponse } from '../../core/models/api.models';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
+import { UiSelectComponent, UiCheckboxComponent } from '../../shared/ui';
 
 @Component({
   selector: 'app-destinations',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, RevealDirective],
+  imports: [CommonModule, FormsModule, RouterLink, RevealDirective, UiSelectComponent, UiCheckboxComponent],
   templateUrl: './destinations.component.html',
   styleUrl: './destinations.component.scss'
 })
@@ -21,6 +22,7 @@ export class DestinationsComponent implements OnInit {
   activeInterest = signal('all');
   search = signal('');
   sortBy = signal('');
+  featuredOnly = signal(false);
   loading = signal(true);
 
   filters = [
@@ -43,17 +45,25 @@ export class DestinationsComponent implements OnInit {
     return [...set].sort((a, b) => a.localeCompare(b));
   });
 
+  /** Interest dropdown options ("All interests" + each distinct tag). */
+  readonly interestOptions = computed(() => [
+    { value: 'all', label: 'All interests' },
+    ...this.interests().map(tag => ({ value: tag, label: tag })),
+  ]);
+
   /** Applies continent + interest + text + sort entirely client-side over the loaded set. */
   readonly filteredDestinations = computed(() => {
     const continent = this.activeFilter();
     const interest = this.activeInterest();
     const term = this.search().trim().toLowerCase();
     const sort = this.sortBy();
+    const featuredOnly = this.featuredOnly();
 
     let list = this.destinations().filter(d => {
       if (continent !== 'all' && d.continent !== continent) return false;
       if (interest !== 'all' && !this.parseTags(d.tags).includes(interest)) return false;
       if (term && !(`${d.name} ${d.country}`.toLowerCase().includes(term))) return false;
+      if (featuredOnly && !d.featured) return false;
       return true;
     });
 

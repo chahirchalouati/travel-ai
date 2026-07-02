@@ -10,6 +10,7 @@ import type { RestaurantSearchResult } from '../../core/models/api.models';
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
 import { TripContextService } from '../../core/services/trip-context.service';
+import { UiSelectComponent, UiRangeComponent } from '../../shared/ui';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80';
@@ -17,7 +18,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-restaurants',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule, InfiniteScrollDirective, RevealDirective],
+  imports: [CommonModule, FormsModule, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiSelectComponent, UiRangeComponent],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -45,18 +46,22 @@ const HEADER_IMG =
           <label for="r-covers">{{ 'catalog.fields.covers' | transloco }}</label>
           <input id="r-covers" type="number" min="1" [(ngModel)]="covers" name="covers" />
         </div>
-        <div class="field">
-          <label for="r-budget">{{ 'catalog.fields.maxPerPerson' | transloco }}</label>
-          <input id="r-budget" type="number" min="0" [(ngModel)]="maxBudgetPerPerson" name="budget" placeholder="€" />
+        <div class="field field--range">
+          <label>{{ 'catalog.fields.maxPerPerson' | transloco }}</label>
+          <app-ui-range [(ngModel)]="maxBudgetPerPerson" name="budget" [max]="300" [step]="10"
+                        [ariaLabel]="'catalog.fields.maxPerPerson' | transloco"
+                        [anyLabel]="'catalog.fields.anyPrice' | transloco" />
         </div>
         <div class="field">
-          <label for="r-sort">{{ 'catalog.fields.sort' | transloco }}</label>
-          <select id="r-sort" [(ngModel)]="sort" name="sort" (change)="runSearch()">
-            <option value="">{{ 'catalog.sort.relevance' | transloco }}</option>
-            <option value="price_asc">{{ 'catalog.sort.priceAsc' | transloco }}</option>
-            <option value="price_desc">{{ 'catalog.sort.priceDesc' | transloco }}</option>
-            <option value="name_asc">{{ 'catalog.sort.nameAsc' | transloco }}</option>
-          </select>
+          <label>{{ 'catalog.fields.sort' | transloco }}</label>
+          <app-ui-select [(ngModel)]="sort" name="sort" (ngModelChange)="runSearch()"
+                         [ariaLabel]="'catalog.fields.sort' | transloco"
+                         [options]="[
+                           { value: '', label: ('catalog.sort.relevance' | transloco) },
+                           { value: 'price_asc', label: ('catalog.sort.priceAsc' | transloco) },
+                           { value: 'price_desc', label: ('catalog.sort.priceDesc' | transloco) },
+                           { value: 'name_asc', label: ('catalog.sort.nameAsc' | transloco) }
+                         ]" />
         </div>
         <button class="search-submit" type="submit">{{ 'catalog.search' | transloco }}</button>
       </form>
