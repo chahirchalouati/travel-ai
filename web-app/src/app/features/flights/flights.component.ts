@@ -10,8 +10,9 @@ import type { FlightSearchResult, FareCalendarDay } from '../../core/models/api.
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
 import { TripContextService } from '../../core/services/trip-context.service';
-import { UiSelectComponent, UiCheckboxComponent, UiRangeComponent, UiAutocompleteComponent } from '../../shared/ui';
+import { UiSelectComponent, UiCheckboxComponent, UiAutocompleteComponent, UiDatepickerComponent } from '../../shared/ui';
 import { SuggestService } from '../../core/services/suggest.service';
+import { GUEST_COUNT_OPTIONS } from '../catalog/catalog-options';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80';
@@ -54,7 +55,7 @@ const MAX_LEGS = 5;
 @Component({
   selector: 'app-flights',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiSelectComponent, UiCheckboxComponent, UiRangeComponent, UiAutocompleteComponent],
+  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiSelectComponent, UiCheckboxComponent, UiAutocompleteComponent, UiDatepickerComponent],
   templateUrl: './flights.component.html',
   styleUrls: ['../catalog/catalog-shared.scss', './flights.component.scss'],
 })
@@ -69,6 +70,7 @@ export class FlightsComponent implements OnInit {
   readonly airportSuggest = (q: string) => this.suggest.airports(q);
 
   readonly headerImg = HEADER_IMG;
+  readonly GUEST_OPTIONS = GUEST_COUNT_OPTIONS;
 
   /** Matching active-trip destination for a flight, or null. */
   tripFit(f: FlightSearchResult): string | null {

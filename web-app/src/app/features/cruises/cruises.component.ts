@@ -10,8 +10,9 @@ import type { CruiseSearchResult } from '../../core/models/api.models';
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
 import { TripContextService } from '../../core/services/trip-context.service';
-import { UiRangeComponent, UiAutocompleteComponent } from '../../shared/ui';
+import { UiSelectComponent, UiAutocompleteComponent, UiDatepickerComponent } from '../../shared/ui';
 import { SuggestService } from '../../core/services/suggest.service';
+import { GUEST_COUNT_OPTIONS } from '../catalog/catalog-options';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1599640842225-85d111c60e6b?w=1920&q=80';
@@ -19,7 +20,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-cruises',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiRangeComponent, UiAutocompleteComponent],
+  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiSelectComponent, UiAutocompleteComponent, UiDatepickerComponent],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -43,22 +44,57 @@ const HEADER_IMG =
                                [ariaLabel]="'catalog.fields.cruiseType' | transloco"
                                [placeholder]="'catalog.fields.cruiseTypePlaceholder' | transloco" />
         </div>
+
+        <span class="filter-bar__divider"></span>
+
         <div class="field">
-          <label for="c-date">{{ 'catalog.fields.departure' | transloco }}</label>
-          <input id="c-date" type="date" [(ngModel)]="departureDate" name="date" />
+          <label>{{ 'catalog.fields.departure' | transloco }}</label>
+          <app-ui-datepicker [(ngModel)]="departureDate" name="date"
+                             [ariaLabel]="'catalog.fields.departure' | transloco" />
         </div>
+        <div class="field field--compact">
+          <label>{{ 'catalog.fields.passengers' | transloco }}</label>
+          <app-ui-select [(ngModel)]="passengers" name="pax" (ngModelChange)="runSearch()"
+                         [ariaLabel]="'catalog.fields.passengers' | transloco"
+                         [options]="GUEST_OPTIONS" />
+        </div>
+
+        <span class="filter-bar__break"></span>
+
         <div class="field">
-          <label for="c-pax">{{ 'catalog.fields.passengers' | transloco }}</label>
-          <input id="c-pax" type="number" min="1" [(ngModel)]="passengers" name="pax" />
-        </div>
-        <div class="field field--range">
           <label>{{ 'catalog.fields.maxPrice' | transloco }}</label>
-          <app-ui-range [(ngModel)]="maxPrice" name="maxPrice" [max]="10000" [step]="250"
-                        [ariaLabel]="'catalog.fields.maxPrice' | transloco"
-                        [anyLabel]="'catalog.fields.anyPrice' | transloco" />
+          <app-ui-select [(ngModel)]="maxPrice" name="maxPrice" (ngModelChange)="runSearch()"
+                         [ariaLabel]="'catalog.fields.maxPrice' | transloco"
+                         [options]="[
+                           { value: undefined, label: ('catalog.fields.anyPrice' | transloco) },
+                           { value: 500, label: '≤ €500' },
+                           { value: 1000, label: '≤ €1000' },
+                           { value: 1500, label: '≤ €1500' },
+                           { value: 2000, label: '≤ €2000' },
+                           { value: 3000, label: '≤ €3000' },
+                           { value: 5000, label: '≤ €5000' },
+                           { value: 7500, label: '≤ €7500' },
+                           { value: 10000, label: '≤ €10000' }
+                         ]" />
         </div>
         <button class="search-submit" type="submit"><span class="ms">search</span>{{ 'catalog.search' | transloco }}</button>
       </form>
+
+      <!-- Active filter tags -->
+      @if (activeFilterTags().length > 0) {
+        <div class="active-filters">
+          <span class="active-filters__label"><span class="ms">filter_list</span> {{ 'catalog.activeFilters' | transloco }}</span>
+          @for (tag of activeFilterTags(); track tag.key) {
+            <span class="filter-tag">
+              {{ tag.label }}
+              <button class="filter-tag__remove" (click)="removeFilter(tag.key)"><span class="ms">close</span></button>
+            </span>
+          }
+          <button class="clear-all-btn" type="button" (click)="clearAll()">
+            <span class="ms">delete_sweep</span> {{ 'catalog.clearAll' | transloco }}
+          </button>
+        </div>
+      }
     </header>
 
     <section class="results">
@@ -127,6 +163,7 @@ export class CruisesComponent implements OnInit {
   readonly typeSuggest = (q: string) => this.suggest.cruiseTypes(q);
 
   readonly headerImg = HEADER_IMG;
+  readonly GUEST_OPTIONS = GUEST_COUNT_OPTIONS;
 
   tripFit(c: CruiseSearchResult): string | null {
     return this.tripContext.match(c.arrivalPort) ?? this.tripContext.match(c.departurePort);
@@ -143,6 +180,40 @@ export class CruisesComponent implements OnInit {
   departureDate = '';
   passengers = 2;
   maxPrice?: number;
+
+  readonly activeFilterTags = computed(() => {
+    const tags: { key: string; label: string }[] = [];
+    if (this.departurePort.trim()) {
+      tags.push({ key: 'port', label: this.departurePort });
+    }
+    if (this.cruiseType.trim()) {
+      tags.push({ key: 'type', label: this.cruiseType });
+    }
+    if (this.departureDate) {
+      tags.push({ key: 'date', label: this.departureDate });
+    }
+    if (this.maxPrice !== undefined) {
+      tags.push({ key: 'maxPrice', label: `≤ €${this.maxPrice.toLocaleString()}` });
+    }
+    return tags;
+  });
+
+  removeFilter(key: string): void {
+    if (key === 'port') { this.departurePort = ''; }
+    else if (key === 'type') { this.cruiseType = ''; }
+    else if (key === 'date') { this.departureDate = ''; }
+    else if (key === 'maxPrice') { this.maxPrice = undefined; }
+    this.runSearch();
+  }
+
+  clearAll(): void {
+    this.departurePort = '';
+    this.cruiseType = '';
+    this.departureDate = '';
+    this.passengers = 2;
+    this.maxPrice = undefined;
+    this.runSearch();
+  }
 
   ngOnInit(): void {
     this.tripContext.ensureLoaded();

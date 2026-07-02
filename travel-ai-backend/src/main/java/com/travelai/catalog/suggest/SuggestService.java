@@ -2,6 +2,7 @@ package com.travelai.catalog.suggest;
 
 import com.travelai.attraction.AttractionRepository;
 import com.travelai.catalog.cruise.CruiseRepository;
+import com.travelai.catalog.flight.Airport;
 import com.travelai.catalog.flight.AirportRepository;
 import com.travelai.catalog.hotel.HotelRepository;
 import com.travelai.catalog.restaurant.RestaurantRepository;
@@ -60,17 +61,21 @@ public class SuggestService {
         return plain(query(q, attractionRepository::suggestCities));
     }
 
-    /** Airports as "City (IATA)" with the country as a hint. */
+    /** Airports as "City Name (IATA)" (or "City (IATA)" without a known proper name), country as hint. */
     public List<Suggestion> airports(String q) {
         if (isTooShort(q)) {
             return List.of();
         }
         return airportRepository.suggest(q.trim(), LIMIT).stream()
-                .map(a -> new Suggestion(
-                        a.getIata(),
-                        "%s (%s)".formatted(a.getCity(), a.getIata()),
-                        a.getCountry()))
+                .map(a -> new Suggestion(a.getIata(), airportLabel(a), a.getCountry()))
                 .toList();
+    }
+
+    private static String airportLabel(Airport a) {
+        String cityAndName = (a.getName() == null || a.getName().isBlank())
+                ? a.getCity()
+                : "%s %s".formatted(a.getCity(), a.getName());
+        return "%s (%s)".formatted(cityAndName, a.getIata());
     }
 
     private interface PrefixQuery {

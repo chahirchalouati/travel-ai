@@ -23,34 +23,64 @@
       <div class="field field--primary">
         <label>{{ 'catalog.fields.from' | transloco }}</label>
         <app-ui-autocomplete [(ngModel)]="originIata" name="origin" icon="flight_takeoff"
-                             optionIcon="flight" [fetch]="airportSuggest" [uppercase]="true"
-                             [ariaLabel]="'catalog.fields.from' | transloco" placeholder="LHR" />
+                             optionIcon="flight" [fetch]="airportSuggest"
+                             [ariaLabel]="'catalog.fields.from' | transloco"
+                             [placeholder]="'catalog.fields.fromPlaceholder' | transloco" />
       </div>
       <div class="field field--primary">
         <label>{{ 'catalog.fields.to' | transloco }}</label>
         <app-ui-autocomplete [(ngModel)]="destIata" name="dest" icon="flight_land"
-                             optionIcon="flight" [fetch]="airportSuggest" [uppercase]="true"
-                             [ariaLabel]="'catalog.fields.to' | transloco" placeholder="JFK" />
+                             optionIcon="flight" [fetch]="airportSuggest"
+                             [ariaLabel]="'catalog.fields.to' | transloco"
+                             [placeholder]="'catalog.fields.toPlaceholder' | transloco" />
       </div>
+      <span class="filter-bar__divider"></span>
+
       <div class="field">
-        <label for="f-date">{{ 'catalog.fields.departure' | transloco }}</label>
-        <input id="f-date" type="date" [(ngModel)]="departureDate" name="date" />
+        <label>{{ 'catalog.fields.departure' | transloco }}</label>
+        <app-ui-datepicker [(ngModel)]="departureDate" name="date"
+                           [ariaLabel]="'catalog.fields.departure' | transloco" />
       </div>
       @if (tripType() === 'round') {
         <div class="field">
-          <label for="f-return">{{ 'catalog.fields.return' | transloco }}</label>
-          <input id="f-return" type="date" [(ngModel)]="returnDate" name="return" />
+          <label>{{ 'catalog.fields.return' | transloco }}</label>
+          <app-ui-datepicker [(ngModel)]="returnDate" name="return"
+                             [ariaLabel]="'catalog.fields.return' | transloco" />
+        </div>
+      } @else {
+        <div class="field field--compact">
+          <label>{{ 'catalog.fields.passengers' | transloco }}</label>
+          <app-ui-select [(ngModel)]="passengers" name="pax" (ngModelChange)="runSearch()"
+                         [ariaLabel]="'catalog.fields.passengers' | transloco"
+                         [options]="GUEST_OPTIONS" />
+        </div>
+      }
+
+      <span class="filter-bar__break"></span>
+      @if (tripType() === 'round') {
+        <div class="field field--compact">
+          <label>{{ 'catalog.fields.passengers' | transloco }}</label>
+          <app-ui-select [(ngModel)]="passengers" name="pax" (ngModelChange)="runSearch()"
+                         [ariaLabel]="'catalog.fields.passengers' | transloco"
+                         [options]="GUEST_OPTIONS" />
         </div>
       }
       <div class="field">
-        <label for="f-pax">{{ 'catalog.fields.passengers' | transloco }}</label>
-        <input id="f-pax" type="number" min="1" [(ngModel)]="passengers" name="pax" />
-      </div>
-      <div class="field field--range">
         <label>{{ 'catalog.fields.maxPrice' | transloco }}</label>
-        <app-ui-range [(ngModel)]="maxPrice" name="maxPrice" [max]="3000" [step]="50"
-                      [ariaLabel]="'catalog.fields.maxPrice' | transloco"
-                      [anyLabel]="'catalog.fields.anyPrice' | transloco" />
+        <app-ui-select [(ngModel)]="maxPrice" name="maxPrice" (ngModelChange)="runSearch()"
+                       [ariaLabel]="'catalog.fields.maxPrice' | transloco"
+                       [options]="[
+                         { value: undefined, label: ('catalog.fields.anyPrice' | transloco) },
+                         { value: 100, label: '≤ €100' },
+                         { value: 200, label: '≤ €200' },
+                         { value: 300, label: '≤ €300' },
+                         { value: 500, label: '≤ €500' },
+                         { value: 750, label: '≤ €750' },
+                         { value: 1000, label: '≤ €1000' },
+                         { value: 1500, label: '≤ €1500' },
+                         { value: 2000, label: '≤ €2000' },
+                         { value: 3000, label: '≤ €3000' }
+                       ]" />
       </div>
       <div class="field">
         <label>{{ 'catalog.fields.sort' | transloco }}</label>
@@ -72,13 +102,17 @@
       @for (leg of legs(); track $index) {
         <div class="leg-row">
           <span class="leg-row__num">{{ $index + 1 }}</span>
-          <input type="text" maxlength="3" [ngModel]="leg.originIata" (ngModelChange)="updateLeg($index, { originIata: $event })"
-                 placeholder="LHR" style="text-transform:uppercase" [attr.aria-label]="'catalog.fields.from' | transloco" />
+          <app-ui-autocomplete class="leg-row__airport" [ngModel]="leg.originIata" (ngModelChange)="updateLeg($index, { originIata: $event })"
+                               icon="flight_takeoff" optionIcon="flight" [fetch]="airportSuggest"
+                               [ariaLabel]="'catalog.fields.from' | transloco"
+                               [placeholder]="'catalog.fields.fromPlaceholder' | transloco" />
           <span class="ms" style="font-size:18px;color:#fff">arrow_forward</span>
-          <input type="text" maxlength="3" [ngModel]="leg.destIata" (ngModelChange)="updateLeg($index, { destIata: $event })"
-                 placeholder="JFK" style="text-transform:uppercase" [attr.aria-label]="'catalog.fields.to' | transloco" />
-          <input type="date" [ngModel]="leg.date" (ngModelChange)="updateLeg($index, { date: $event })"
-                 [attr.aria-label]="'catalog.fields.departure' | transloco" />
+          <app-ui-autocomplete class="leg-row__airport" [ngModel]="leg.destIata" (ngModelChange)="updateLeg($index, { destIata: $event })"
+                               icon="flight_land" optionIcon="flight" [fetch]="airportSuggest"
+                               [ariaLabel]="'catalog.fields.to' | transloco"
+                               [placeholder]="'catalog.fields.toPlaceholder' | transloco" />
+          <app-ui-datepicker class="leg-row__date" [ngModel]="leg.date" (ngModelChange)="updateLeg($index, { date: $event })"
+                              [ariaLabel]="'catalog.fields.departure' | transloco" />
           @if (legs().length > 1) {
             <button type="button" class="leg-row__remove" (click)="removeLeg($index)"
                     [attr.aria-label]="'catalog.flights.removeLeg' | transloco"><span class="ms">close</span></button>

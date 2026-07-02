@@ -1,6 +1,8 @@
 {
   "catalog": {
     "search": "Rechercher",
+    "activeFilters": "Filtres",
+    "clearAll": "Tout effacer",
     "loadingMore": "Chargement…",
     "view": "Voir",
     "perNight": "nuit",
@@ -18,7 +20,9 @@
       "guests": "Voyageurs",
       "maxBudget": "Budget max",
       "from": "De",
+      "fromPlaceholder": "ex. Rome",
       "to": "À",
+      "toPlaceholder": "ex. Milan",
       "departure": "Départ",
       "passengers": "Passagers",
       "maxPrice": "Prix max",

@@ -10,8 +10,9 @@ import type { RestaurantSearchResult } from '../../core/models/api.models';
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
 import { TripContextService } from '../../core/services/trip-context.service';
-import { UiSelectComponent, UiRangeComponent, UiAutocompleteComponent } from '../../shared/ui';
+import { UiSelectComponent, UiAutocompleteComponent, UiDatepickerComponent } from '../../shared/ui';
 import { SuggestService } from '../../core/services/suggest.service';
+import { GUEST_COUNT_OPTIONS } from '../catalog/catalog-options';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80';
@@ -19,7 +20,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-restaurants',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiSelectComponent, UiRangeComponent, UiAutocompleteComponent],
+  imports: [CommonModule, FormsModule, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiSelectComponent, UiAutocompleteComponent, UiDatepickerComponent],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -43,19 +44,38 @@ const HEADER_IMG =
                                [ariaLabel]="'catalog.fields.cuisine' | transloco"
                                [placeholder]="'catalog.fields.cuisinePlaceholder' | transloco" />
         </div>
+
+        <span class="filter-bar__divider"></span>
+
         <div class="field">
-          <label for="r-date">{{ 'catalog.fields.date' | transloco }}</label>
-          <input id="r-date" type="date" [(ngModel)]="date" name="date" />
+          <label>{{ 'catalog.fields.date' | transloco }}</label>
+          <app-ui-datepicker [(ngModel)]="date" name="date"
+                             [ariaLabel]="'catalog.fields.date' | transloco" />
         </div>
+        <div class="field field--compact">
+          <label>{{ 'catalog.fields.covers' | transloco }}</label>
+          <app-ui-select [(ngModel)]="covers" name="covers" (ngModelChange)="runSearch()"
+                         [ariaLabel]="'catalog.fields.covers' | transloco"
+                         [options]="GUEST_OPTIONS" />
+        </div>
+
+        <span class="filter-bar__break"></span>
+
         <div class="field">
-          <label for="r-covers">{{ 'catalog.fields.covers' | transloco }}</label>
-          <input id="r-covers" type="number" min="1" [(ngModel)]="covers" name="covers" />
-        </div>
-        <div class="field field--range">
           <label>{{ 'catalog.fields.maxPerPerson' | transloco }}</label>
-          <app-ui-range [(ngModel)]="maxBudgetPerPerson" name="budget" [max]="300" [step]="10"
-                        [ariaLabel]="'catalog.fields.maxPerPerson' | transloco"
-                        [anyLabel]="'catalog.fields.anyPrice' | transloco" />
+          <app-ui-select [(ngModel)]="maxBudgetPerPerson" name="budget" (ngModelChange)="runSearch()"
+                         [ariaLabel]="'catalog.fields.maxPerPerson' | transloco"
+                         [options]="[
+                           { value: undefined, label: ('catalog.fields.anyPrice' | transloco) },
+                           { value: 20, label: '≤ €20' },
+                           { value: 30, label: '≤ €30' },
+                           { value: 50, label: '≤ €50' },
+                           { value: 75, label: '≤ €75' },
+                           { value: 100, label: '≤ €100' },
+                           { value: 150, label: '≤ €150' },
+                           { value: 200, label: '≤ €200' },
+                           { value: 300, label: '≤ €300' }
+                         ]" />
         </div>
         <div class="field">
           <label>{{ 'catalog.fields.sort' | transloco }}</label>
@@ -70,6 +90,22 @@ const HEADER_IMG =
         </div>
         <button class="search-submit" type="submit"><span class="ms">search</span>{{ 'catalog.search' | transloco }}</button>
       </form>
+
+      <!-- Active filter tags -->
+      @if (activeFilterTags().length > 0) {
+        <div class="active-filters">
+          <span class="active-filters__label"><span class="ms">filter_list</span> {{ 'catalog.activeFilters' | transloco }}</span>
+          @for (tag of activeFilterTags(); track tag.key) {
+            <span class="filter-tag">
+              {{ tag.label }}
+              <button class="filter-tag__remove" (click)="removeFilter(tag.key)"><span class="ms">close</span></button>
+            </span>
+          }
+          <button class="clear-all-btn" type="button" (click)="clearAll()">
+            <span class="ms">delete_sweep</span> {{ 'catalog.clearAll' | transloco }}
+          </button>
+        </div>
+      }
     </header>
 
     <section class="results">
@@ -137,6 +173,7 @@ export class RestaurantsComponent implements OnInit {
   readonly cuisineSuggest = (q: string) => this.suggest.cuisines(q);
 
   readonly headerImg = HEADER_IMG;
+  readonly GUEST_OPTIONS = GUEST_COUNT_OPTIONS;
 
   tripFit(r: RestaurantSearchResult): string | null {
     return this.tripContext.match(r.city);
@@ -154,6 +191,41 @@ export class RestaurantsComponent implements OnInit {
   covers = 2;
   maxBudgetPerPerson?: number;
   sort = '';
+
+  readonly activeFilterTags = computed(() => {
+    const tags: { key: string; label: string }[] = [];
+    if (this.city.trim()) {
+      tags.push({ key: 'city', label: this.city });
+    }
+    if (this.cuisineType.trim()) {
+      tags.push({ key: 'cuisine', label: this.cuisineType });
+    }
+    if (this.date) {
+      tags.push({ key: 'date', label: this.date });
+    }
+    if (this.maxBudgetPerPerson !== undefined) {
+      tags.push({ key: 'budget', label: `≤ €${this.maxBudgetPerPerson}/pp` });
+    }
+    return tags;
+  });
+
+  removeFilter(key: string): void {
+    if (key === 'city') { this.city = ''; }
+    else if (key === 'cuisine') { this.cuisineType = ''; }
+    else if (key === 'date') { this.date = ''; }
+    else if (key === 'budget') { this.maxBudgetPerPerson = undefined; }
+    this.runSearch();
+  }
+
+  clearAll(): void {
+    this.city = '';
+    this.cuisineType = '';
+    this.date = '';
+    this.covers = 2;
+    this.maxBudgetPerPerson = undefined;
+    this.sort = '';
+    this.runSearch();
+  }
 
   ngOnInit(): void {
     this.tripContext.ensureLoaded();

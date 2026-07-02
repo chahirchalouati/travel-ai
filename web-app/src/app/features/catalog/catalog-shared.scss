@@ -95,8 +95,8 @@
   background: linear-gradient(180deg, #ffffff 0%, var(--bg-secondary, #fafafa) 140%);
   border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: var(--radius-lg);
-  padding: 20px 20px 22px;
-  max-width: 1000px;
+  padding: 22px 22px 24px;
+  max-width: 1060px;
   margin: 0 auto;
   box-shadow: 0 28px 70px -20px rgba(15, 18, 22, 0.55), 0 2px 6px rgba(15, 18, 22, 0.12);
   text-align: left;
@@ -104,7 +104,7 @@
   animation: panel-rise 520ms var(--ease) both;
 }
 
-/* Terracotta hairline accent along the top edge of the panel */
+/* Terracotta → gold gradient hairline accent along the top edge */
 .filter-bar::before {
   content: '';
   position: absolute;
@@ -119,6 +119,39 @@
 
 @keyframes panel-rise {
   from { opacity: 0; transform: translateY(16px); }
+}
+
+/* ── Field groups — visual sections inside the bar ──── */
+.filter-bar__group {
+  display: contents;
+}
+
+.filter-bar__divider {
+  display: none;
+}
+
+/* Show a vertical divider between groups on wider screens */
+@media (min-width: 800px) {
+  .filter-bar__divider {
+    display: block;
+    width: 1px;
+    height: 36px;
+    background: var(--border);
+    align-self: flex-end;
+    margin-bottom: 4px;
+    opacity: 0.6;
+  }
+}
+
+/* Forces a deterministic row break inside the wrapping filter bar so the
+   trailing fields + submit button always land together on their own row,
+   instead of the button orphaning alone once the leading fields fill a line. */
+.filter-bar__break {
+  flex-basis: 100%;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .field {
@@ -138,9 +171,8 @@
   color: var(--brand, #e04a2f);
 }
 
-.field--range {
-  flex: 1.2 1 190px;
-  justify-content: flex-end;
+.field--compact {
+  flex: 0 1 130px;
 }
 
 .field label {
@@ -177,6 +209,7 @@
 
 .search-submit {
   flex: 0 0 auto;
+  margin-left: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -218,6 +251,96 @@
 @media (prefers-reduced-motion: reduce) {
   .filter-bar { animation: none; }
   .search-submit:hover { transform: none; }
+}
+
+/* ── Active filter tags (below filter-bar or below header) ─ */
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  max-width: 1060px;
+  margin: 14px auto 0;
+  animation: tags-in 300ms var(--ease) both;
+}
+
+@keyframes tags-in {
+  from { opacity: 0; transform: translateY(-6px); }
+}
+
+.active-filters__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.7);
+  .ms { font-size: 14px; }
+}
+
+.filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px 5px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  backdrop-filter: blur(6px);
+  cursor: default;
+  animation: tag-pop 200ms var(--ease) both;
+}
+
+@keyframes tag-pop {
+  from { opacity: 0; transform: scale(0.85); }
+}
+
+.filter-tag__remove {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
+  transition: background 120ms ease;
+  .ms { font-size: 12px; }
+}
+
+.filter-tag__remove:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.clear-all-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px dashed rgba(255, 255, 255, 0.5);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 150ms ease, border-color 150ms ease;
+  .ms { font-size: 14px; }
+}
+
+.clear-all-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.7);
 }
 
 /* ── Results area ───────────────────────────────────── */
@@ -464,13 +587,28 @@
   100% { background-position: -200% 0; }
 }
 
+/* ── Responsive — stacked filter bar ──────────────── */
 @media (max-width: 640px) {
   .filter-bar {
     flex-direction: column;
     align-items: stretch;
+    gap: 12px;
+    padding: 18px 16px 20px;
+  }
+  .filter-bar__divider {
+    display: none !important;
+  }
+  .field {
+    flex-basis: auto !important;
+  }
+  .field--primary {
+    flex-basis: auto !important;
   }
   .search-submit {
     width: 100%;
+  }
+  .active-filters {
+    padding: 0 16px;
   }
 }
 

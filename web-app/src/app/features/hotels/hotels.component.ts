@@ -9,8 +9,9 @@ import type { HotelSearchQuery } from '../../core/services/catalog.service';
 import type { HotelSearchResult } from '../../core/models/api.models';
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
-import { UiSelectComponent, UiCheckboxComponent, UiRangeComponent, UiAutocompleteComponent } from '../../shared/ui';
+import { UiSelectComponent, UiCheckboxComponent, UiAutocompleteComponent, UiDatepickerComponent } from '../../shared/ui';
 import { SuggestService } from '../../core/services/suggest.service';
+import { GUEST_COUNT_OPTIONS } from '../catalog/catalog-options';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920&q=80';
@@ -18,7 +19,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-hotels',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiSelectComponent, UiCheckboxComponent, UiRangeComponent, UiAutocompleteComponent],
+  imports: [CommonModule, FormsModule, CurrencyPipe, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiSelectComponent, UiCheckboxComponent, UiAutocompleteComponent, UiDatepickerComponent],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -28,6 +29,7 @@ const HEADER_IMG =
       <p class="catalog-subtitle">{{ 'catalog.hotels.subtitle' | transloco }}</p>
 
       <form class="filter-bar" (ngSubmit)="runSearch()">
+        <!-- Primary search group -->
         <div class="field field--primary">
           <label>{{ 'catalog.fields.city' | transloco }}</label>
           <app-ui-autocomplete [(ngModel)]="city" name="city" icon="location_on"
@@ -35,23 +37,50 @@ const HEADER_IMG =
                                [ariaLabel]="'catalog.fields.city' | transloco"
                                [placeholder]="'catalog.fields.cityPlaceholder' | transloco" />
         </div>
+
+        <span class="filter-bar__divider"></span>
+
+        <!-- Dates group -->
         <div class="field">
-          <label for="h-in">{{ 'catalog.fields.checkIn' | transloco }}</label>
-          <input id="h-in" type="date" [(ngModel)]="checkIn" name="checkIn" />
+          <label>{{ 'catalog.fields.checkIn' | transloco }}</label>
+          <app-ui-datepicker [(ngModel)]="checkIn" name="checkIn"
+                             [ariaLabel]="'catalog.fields.checkIn' | transloco" />
         </div>
         <div class="field">
-          <label for="h-out">{{ 'catalog.fields.checkOut' | transloco }}</label>
-          <input id="h-out" type="date" [(ngModel)]="checkOut" name="checkOut" />
+          <label>{{ 'catalog.fields.checkOut' | transloco }}</label>
+          <app-ui-datepicker [(ngModel)]="checkOut" name="checkOut"
+                             [ariaLabel]="'catalog.fields.checkOut' | transloco" />
         </div>
+
+        <span class="filter-bar__divider"></span>
+
+        <!-- Options group -->
+        <div class="field field--compact">
+          <label>{{ 'catalog.fields.guests' | transloco }}</label>
+          <app-ui-select [(ngModel)]="guests" name="guests" (ngModelChange)="runSearch()"
+                         [ariaLabel]="'catalog.fields.guests' | transloco"
+                         [options]="GUEST_OPTIONS" />
+        </div>
+
+        <span class="filter-bar__break"></span>
+
         <div class="field">
-          <label for="h-guests">{{ 'catalog.fields.guests' | transloco }}</label>
-          <input id="h-guests" type="number" min="1" [(ngModel)]="guests" name="guests" />
-        </div>
-        <div class="field field--range">
           <label>{{ 'catalog.fields.maxBudget' | transloco }}</label>
-          <app-ui-range [(ngModel)]="maxBudget" name="maxBudget" [max]="2000" [step]="50"
-                        [ariaLabel]="'catalog.fields.maxBudget' | transloco"
-                        [anyLabel]="'catalog.fields.anyPrice' | transloco" />
+          <app-ui-select [(ngModel)]="maxBudget" name="maxBudget" (ngModelChange)="runSearch()"
+                         [ariaLabel]="'catalog.fields.maxBudget' | transloco"
+                         [options]="[
+                           { value: undefined, label: ('catalog.fields.anyPrice' | transloco) },
+                           { value: 50, label: '≤ €50' },
+                           { value: 100, label: '≤ €100' },
+                           { value: 150, label: '≤ €150' },
+                           { value: 200, label: '≤ €200' },
+                           { value: 300, label: '≤ €300' },
+                           { value: 500, label: '≤ €500' },
+                           { value: 750, label: '≤ €750' },
+                           { value: 1000, label: '≤ €1000' },
+                           { value: 1500, label: '≤ €1500' },
+                           { value: 2000, label: '≤ €2000' }
+                         ]" />
         </div>
         <div class="field">
           <label>{{ 'catalog.fields.minStars' | transloco }}</label>
@@ -78,6 +107,7 @@ const HEADER_IMG =
         <button class="search-submit" type="submit"><span class="ms">search</span>{{ 'catalog.search' | transloco }}</button>
       </form>
 
+      <!-- Amenity checkboxes -->
       <div class="filter-checks">
         @for (a of AMENITIES; track a.value) {
           <app-ui-checkbox [label]="a.labelKey | transloco"
@@ -85,6 +115,22 @@ const HEADER_IMG =
                            (checkedChange)="toggleAmenity(a.value)" />
         }
       </div>
+
+      <!-- Active filter tags -->
+      @if (activeFilterTags().length > 0) {
+        <div class="active-filters">
+          <span class="active-filters__label"><span class="ms">filter_list</span> {{ 'catalog.activeFilters' | transloco }}</span>
+          @for (tag of activeFilterTags(); track tag.key) {
+            <span class="filter-tag">
+              {{ tag.label }}
+              <button class="filter-tag__remove" (click)="removeFilter(tag.key)"><span class="ms">close</span></button>
+            </span>
+          }
+          <button class="clear-all-btn" type="button" (click)="clearAll()">
+            <span class="ms">delete_sweep</span> {{ 'catalog.clearAll' | transloco }}
+          </button>
+        </div>
+      }
     </header>
 
     <section class="results">
@@ -152,6 +198,7 @@ export class HotelsComponent implements OnInit {
   readonly citySuggest = (q: string) => this.suggest.hotelCities(q);
 
   readonly headerImg = HEADER_IMG;
+  readonly GUEST_OPTIONS = GUEST_COUNT_OPTIONS;
   readonly results = signal<HotelSearchResult[]>([]);
   readonly total = signal(0);
   readonly loading = signal(true);
@@ -175,6 +222,33 @@ export class HotelsComponent implements OnInit {
   sort = '';
   private readonly amenities = signal<ReadonlySet<string>>(new Set());
 
+  /** Compute active filter tags for the summary strip. */
+  readonly activeFilterTags = computed(() => {
+    const tags: { key: string; label: string }[] = [];
+    if (this.city.trim()) {
+      tags.push({ key: 'city', label: this.city });
+    }
+    if (this.checkIn) {
+      tags.push({ key: 'checkIn', label: `From: ${this.checkIn}` });
+    }
+    if (this.checkOut) {
+      tags.push({ key: 'checkOut', label: `To: ${this.checkOut}` });
+    }
+    if (this.maxBudget !== undefined) {
+      tags.push({ key: 'maxBudget', label: `≤ €${this.maxBudget}` });
+    }
+    if (this.minStars !== undefined) {
+      tags.push({ key: 'minStars', label: `${this.minStars}+ ★` });
+    }
+    for (const a of this.amenities()) {
+      const def = this.AMENITIES.find(am => am.value === a);
+      if (def) {
+        tags.push({ key: `amenity:${a}`, label: a });
+      }
+    }
+    return tags;
+  });
+
   isAmenityOn(value: string): boolean {
     return this.amenities().has(value);
   }
@@ -183,6 +257,33 @@ export class HotelsComponent implements OnInit {
     const next = new Set(this.amenities());
     next.has(value) ? next.delete(value) : next.add(value);
     this.amenities.set(next);
+    this.runSearch();
+  }
+
+  removeFilter(key: string): void {
+    if (key === 'city') { this.city = ''; }
+    else if (key === 'checkIn') { this.checkIn = ''; }
+    else if (key === 'checkOut') { this.checkOut = ''; }
+    else if (key === 'maxBudget') { this.maxBudget = undefined; }
+    else if (key === 'minStars') { this.minStars = undefined; }
+    else if (key.startsWith('amenity:')) {
+      const v = key.replace('amenity:', '');
+      const next = new Set(this.amenities());
+      next.delete(v);
+      this.amenities.set(next);
+    }
+    this.runSearch();
+  }
+
+  clearAll(): void {
+    this.city = '';
+    this.checkIn = '';
+    this.checkOut = '';
+    this.guests = 2;
+    this.maxBudget = undefined;
+    this.minStars = undefined;
+    this.sort = '';
+    this.amenities.set(new Set());
     this.runSearch();
   }
 

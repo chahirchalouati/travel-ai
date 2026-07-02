@@ -1,6 +1,8 @@
 {
   "catalog": {
     "search": "Cerca",
+    "activeFilters": "Filtri",
+    "clearAll": "Cancella tutto",
     "loadingMore": "Caricamento…",
     "view": "Vedi",
     "perNight": "notte",
@@ -18,7 +20,9 @@
       "guests": "Ospiti",
       "maxBudget": "Budget max",
       "from": "Da",
+      "fromPlaceholder": "es. Roma",
       "to": "A",
+      "toPlaceholder": "es. Milano",
       "departure": "Partenza",
       "passengers": "Passeggeri",
       "maxPrice": "Prezzo max",

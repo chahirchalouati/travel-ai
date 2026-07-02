@@ -28,9 +28,14 @@ public class Airport {
     @Column(nullable = false, length = 120)
     private String city;
 
+    /** Proper airport name (e.g. "Fiumicino"), null when no widely-known name exists. */
+    @Column(length = 120)
+    private String name;
+
     @Column(nullable = false, length = 120)
     private String country;
 
     @Column(name = "country_code", length = 2, nullable = false)
     private String countryCode;
+
 }
