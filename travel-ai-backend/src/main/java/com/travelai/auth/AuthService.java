@@ -4,12 +4,16 @@ import com.travelai.auth.dto.AuthResponse;
 import com.travelai.auth.dto.LoginRequest;
 import com.travelai.auth.dto.RefreshRequest;
 import com.travelai.auth.dto.RegisterRequest;
+import com.travelai.notification.events.EmailVerificationRequestedEvent;
+import com.travelai.notification.events.PasswordResetRequestedEvent;
 import com.travelai.shared.config.JwtProperties;
 import com.travelai.shared.config.JwtService;
 import com.travelai.shared.exception.ErrorCode;
 import com.travelai.shared.exception.TravelAiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -17,7 +21,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.Instant;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -25,12 +31,19 @@ import java.time.Instant;
 @RequiredArgsConstructor
 public class AuthService {
 
+    private static final Duration RESET_TOKEN_TTL = Duration.ofHours(1);
+
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final JwtService jwtService;
     private final JwtProperties jwtProperties;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final ApplicationEventPublisher eventPublisher;
+
+    @Value("${app.frontend-base-url:http://localhost:4200}")
+    private String frontendBaseUrl;
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.email())) {
@@ -47,8 +60,12 @@ public class AuthService {
                 .active(true)
                 .build();
 
+        user.setEmailVerificationToken(UUID.randomUUID().toString());
+
         User savedUser = userRepository.save(user);
         log.info("Registered new user: {}", savedUser.getEmail());
+
+        publishVerificationEmail(savedUser);
 
         String accessToken = jwtService.generateAccessToken(savedUser);
         String refreshToken = jwtService.generateRefreshToken(savedUser);
@@ -102,6 +119,84 @@ public class AuthService {
                     refreshTokenRepository.save(token);
                     log.info("Revoked refresh token for user: {}", token.getUser().getEmail());
                 });
+    }
+
+    /**
+     * Starts the password reset flow. Deliberately silent when the email is
+     * unknown, so the endpoint cannot be used to enumerate accounts.
+     */
+    public void forgotPassword(String email) {
+        userRepository.findByEmail(email).ifPresentOrElse(user -> {
+            PasswordResetToken resetToken = PasswordResetToken.builder()
+                    .user(user)
+                    .token(UUID.randomUUID().toString())
+                    .expiresAt(Instant.now().plus(RESET_TOKEN_TTL))
+                    .build();
+            passwordResetTokenRepository.save(resetToken);
+
+            String resetLink = frontendBaseUrl + "/reset-password?token=" + resetToken.getToken();
+            eventPublisher.publishEvent(new PasswordResetRequestedEvent(
+                    user.getId(), user.getEmail(), user.getFirstName(), resetLink));
+            log.info("Password reset requested for user: {}", user.getEmail());
+        }, () -> log.info("Password reset requested for unknown email"));
+    }
+
+    /** Validates a single-use reset token, updates the password and revokes all refresh tokens. */
+    public void resetPassword(String tokenValue, String newPassword) {
+        PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(tokenValue)
+                .orElseThrow(() -> TravelAiException.badRequest(ErrorCode.TOKEN_INVALID));
+
+        if (resetToken.isUsed()) {
+            throw TravelAiException.badRequest(ErrorCode.TOKEN_INVALID);
+        }
+        if (resetToken.isExpired()) {
+            throw TravelAiException.badRequest(ErrorCode.TOKEN_EXPIRED);
+        }
+
+        User user = resetToken.getUser();
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        resetToken.markUsed();
+        passwordResetTokenRepository.save(resetToken);
+
+        refreshTokenRepository.deleteByUser(user);
+        log.info("Password reset completed for user: {}", user.getEmail());
+    }
+
+    /** Marks the account matching the verification token as verified. */
+    public void verifyEmail(String tokenValue) {
+        User user = userRepository.findByEmailVerificationToken(tokenValue)
+                .orElseThrow(() -> TravelAiException.badRequest(ErrorCode.TOKEN_INVALID));
+
+        user.setEmailVerified(true);
+        user.setEmailVerificationToken(null);
+        userRepository.save(user);
+        log.info("Email verified for user: {}", user.getEmail());
+    }
+
+    /** Re-sends the verification email for the authenticated user; no-op when already verified. */
+    public void resendVerification(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> TravelAiException.notFound(ErrorCode.USER_NOT_FOUND));
+
+        if (user.isEmailVerified()) {
+            log.info("Verification resend skipped, already verified: {}", user.getEmail());
+            return;
+        }
+
+        if (user.getEmailVerificationToken() == null) {
+            user.setEmailVerificationToken(UUID.randomUUID().toString());
+            userRepository.save(user);
+        }
+        publishVerificationEmail(user);
+        log.info("Verification email re-sent to: {}", user.getEmail());
+    }
+
+    private void publishVerificationEmail(User user) {
+        String verifyLink = frontendBaseUrl + "/verify-email?token=" + user.getEmailVerificationToken();
+        eventPublisher.publishEvent(new EmailVerificationRequestedEvent(
+                user.getId(), user.getEmail(), user.getFirstName(), verifyLink));
     }
 
     private void saveRefreshToken(User user, String token) {
