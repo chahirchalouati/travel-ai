@@ -1233,5 +1233,38 @@
       "completed": "Completed",
       "cancelled": "Cancelled"
     }
+  },
+  "tripBudget": {
+    "title": "Trip budget",
+    "setPrompt": "Set a budget for this trip",
+    "amountPlaceholder": "Amount",
+    "descriptionPlaceholder": "Description (optional)",
+    "save": "Set budget",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "spent": "Spent",
+    "budget": "Budget",
+    "remaining": "Remaining",
+    "overBudget": "Over budget",
+    "ofBudgetUsed": "of budget used",
+    "breakdown": "Where it's going",
+    "noSpendYet": "No spending recorded yet.",
+    "addExpense": "Add an expense",
+    "category": "Category",
+    "date": "Date",
+    "delete": "Delete",
+    "categories": {
+      "VOLI": "Flights",
+      "HOTEL": "Hotels",
+      "RISTORANTI": "Dining",
+      "CROCIERE": "Cruises",
+      "ATTRAZIONI": "Attractions",
+      "FOOD": "Food & drink",
+      "TRANSPORT": "Transport",
+      "SHOPPING": "Shopping",
+      "ACTIVITIES": "Activities",
+      "OTHER": "Other"
+    }
   }
 }

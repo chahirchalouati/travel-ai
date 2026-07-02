@@ -527,6 +527,45 @@ export interface ReportEventRequest {
   disruptionData?: string | null;
 }
 
+// ── Trip budget & spending summary ─────────────────────────────────
+export type TripExpenseCategory = 'FOOD' | 'TRANSPORT' | 'SHOPPING' | 'ACTIVITIES' | 'OTHER';
+
+export interface CategorySpend {
+  category: string;
+  amount: number;
+  count: number;
+}
+
+export interface TripBudgetSummaryResponse {
+  budget: number | null;
+  currency: string;
+  totalSpent: number;
+  remaining: number | null;
+  percentUsed: number | null;
+  breakdown: CategorySpend[];
+}
+
+export interface TripExpenseResponse {
+  id: string;
+  category: TripExpenseCategory;
+  description: string | null;
+  amount: number;
+  spentOn: string | null;
+  createdAt: string;
+}
+
+export interface TripExpenseRequest {
+  category: TripExpenseCategory;
+  description?: string | null;
+  amount: number;
+  spentOn?: string | null;
+}
+
+export interface TripRefResponse {
+  tripId: string;
+  destination: string | null;
+}
+
 // ── Community Q&A / Forum ──────────────────────────────────────────
 export interface ForumQuestionResponse {
   id: string;

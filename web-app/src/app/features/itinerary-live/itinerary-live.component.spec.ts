@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 import { ItineraryLiveComponent } from './itinerary-live.component';
 import { ItineraryService } from '../../core/services/itinerary.service';
 import { AuthService } from '../../core/services/auth.service';
+import { TripBudgetService } from '../../core/services/trip-budget.service';
 import type {
   LiveItineraryResponse,
   ItineraryProposalResponse,
@@ -59,6 +60,7 @@ describe('ItineraryLiveComponent', () => {
       providers: [
         { provide: ItineraryService, useValue: service },
         { provide: AuthService, useValue: { getToken: () => null } },
+        { provide: TripBudgetService, useValue: { resolveTripForBooking: () => of(null) } },
         { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } },
         {
           provide: ActivatedRoute,

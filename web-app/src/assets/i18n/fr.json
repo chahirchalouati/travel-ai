@@ -1233,5 +1233,38 @@
       "completed": "Terminée",
       "cancelled": "Annulée"
     }
+  },
+  "tripBudget": {
+    "title": "Budget du voyage",
+    "setPrompt": "Définir un budget pour ce voyage",
+    "amountPlaceholder": "Montant",
+    "descriptionPlaceholder": "Description (facultatif)",
+    "save": "Définir le budget",
+    "saving": "Enregistrement...",
+    "cancel": "Annuler",
+    "edit": "Modifier",
+    "spent": "Dépensé",
+    "budget": "Budget",
+    "remaining": "Restant",
+    "overBudget": "Dépassé",
+    "ofBudgetUsed": "du budget utilisé",
+    "breakdown": "Répartition",
+    "noSpendYet": "Aucune dépense enregistrée pour l'instant.",
+    "addExpense": "Ajouter une dépense",
+    "category": "Catégorie",
+    "date": "Date",
+    "delete": "Supprimer",
+    "categories": {
+      "VOLI": "Vols",
+      "HOTEL": "Hôtels",
+      "RISTORANTI": "Restauration",
+      "CROCIERE": "Croisières",
+      "ATTRAZIONI": "Attractions",
+      "FOOD": "Nourriture & boissons",
+      "TRANSPORT": "Transport",
+      "SHOPPING": "Achats",
+      "ACTIVITIES": "Activités",
+      "OTHER": "Autre"
+    }
   }
 }
