@@ -36,6 +36,7 @@ public enum ErrorCode {
     PLACE_NOT_FOUND("Travel place not found"),
     PHOTO_NOT_FOUND("Photo not found"),
     SETTING_NOT_FOUND("Platform setting not found"),
+    EXPENSE_NOT_FOUND("Trip expense not found"),
     INTERNAL_ERROR("Internal server error");
 
     private final String message;

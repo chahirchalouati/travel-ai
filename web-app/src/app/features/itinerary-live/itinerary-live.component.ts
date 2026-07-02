@@ -7,6 +7,8 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { catchError, interval, of, switchMap } from 'rxjs';
 import { ItineraryService } from '../../core/services/itinerary.service';
 import { AuthService } from '../../core/services/auth.service';
+import { TripBudgetService } from '../../core/services/trip-budget.service';
+import { TripBudgetCardComponent } from '../trip-budget/trip-budget-card.component';
 import type {
   LiveItineraryResponse,
   ItinerarySegmentResponse,
@@ -20,13 +22,14 @@ const POLL_INTERVAL_MS = 20000;
 @Component({
   selector: 'app-itinerary-live',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, RevealDirective],
+  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, RevealDirective, TripBudgetCardComponent],
   templateUrl: './itinerary-live.component.html',
   styleUrl: './itinerary-live.component.scss',
 })
 export class ItineraryLiveComponent implements OnInit, OnDestroy {
   private readonly itineraryService = inject(ItineraryService);
   private readonly auth = inject(AuthService);
+  private readonly budgetService = inject(TripBudgetService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
@@ -35,6 +38,8 @@ export class ItineraryLiveComponent implements OnInit, OnDestroy {
   readonly loading = signal(true);
   readonly itinerary = signal<LiveItineraryResponse | null>(null);
   readonly proposals = signal<ItineraryProposalResponse[]>([]);
+  /** Trip (travel request) this booking belongs to, for the budget card. */
+  readonly tripId = signal<string | null>(null);
 
   readonly reportingSegmentId = signal<string | null>(null);
   readonly submitting = signal(false);
@@ -54,6 +59,12 @@ export class ItineraryLiveComponent implements OnInit, OnDestroy {
       return;
     }
     this.load();
+
+    // Resolve the owning trip so the budget card can render (booking -> travel request).
+    this.budgetService
+      .resolveTripForBooking(this.bookingId)
+      .pipe(catchError(() => of(null)), takeUntilDestroyed(this.destroyRef))
+      .subscribe(ref => this.tripId.set(ref?.tripId ?? null));
 
     // Poll proposals so newly generated re-plans surface without a manual refresh.
     interval(POLL_INTERVAL_MS)

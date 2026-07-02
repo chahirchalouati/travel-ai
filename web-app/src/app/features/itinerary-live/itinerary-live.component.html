@@ -23,6 +23,13 @@
     }
 
     <main class="il-body">
+      <!-- Trip budget & spending summary -->
+      @if (tripId(); as tid) {
+        <section class="il-section" appReveal>
+          <app-trip-budget-card [tripId]="tid" />
+        </section>
+      }
+
       <!-- Segment timeline -->
       <section class="il-section">
         <h2 class="il-section__title">{{ t('itinerary.yourTrip') }}</h2>
