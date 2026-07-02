@@ -1337,5 +1337,24 @@
       "applied": "{{points}} puntos aplicados — ahorras {{amount}}",
       "discountLine": "Puntos ({{points}})"
     }
+  },
+  "cancellation": {
+    "action": "Cancelar reserva",
+    "dialogTitle": "¿Cancelar esta reserva?",
+    "previewLoading": "Comprobando la política de reembolso…",
+    "refundLine": "Se te reembolsará el {{ percent }}% —",
+    "noRefund": "No corresponde reembolso en esta fase.",
+    "policyTitle": "Política de reembolso",
+    "tierFull": "7+ días antes de la entrada: reembolso del 100%",
+    "tierPartial": "De 2 a 6 días antes: reembolso del 50%",
+    "tierNone": "Menos de 2 días antes: sin reembolso",
+    "reasonPlaceholder": "Motivo (opcional)",
+    "keep": "Mantener reserva",
+    "confirm": "Confirmar cancelación",
+    "notCancellable": "Esta reserva ya no se puede cancelar.",
+    "error": "No se pudo cancelar — inténtalo de nuevo",
+    "cancelledWithRefund": "Reserva cancelada — €{{ amount }} reembolsados",
+    "cancelledNoRefund": "Reserva cancelada",
+    "refundedBadge": "Reembolsado"
   }
 }

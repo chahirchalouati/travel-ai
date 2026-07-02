@@ -8,7 +8,7 @@ import { BookingService } from '../../core/services/booking.service';
 import { InvoiceService } from '../../core/services/invoice.service';
 import { CalendarService } from '../../core/services/calendar.service';
 import { ReviewService } from '../../core/services/review.service';
-import type { BookingResponse } from '../../core/models/api.models';
+import type { BookingResponse, CancellationPreview } from '../../core/models/api.models';
 
 /** Maps a booking to the reviewable catalog entity it represents. */
 interface ReviewTarget {
@@ -93,11 +93,66 @@ interface ReviewTarget {
                   <span class="row-reviewed"><span class="ms">check_circle</span> {{ 'bookings.reviewThanks' | transloco }}</span>
                 }
                 @if (b.status === 'PENDING' || b.status === 'CONFIRMED') {
-                  <button class="row-cancel" (click)="cancel(b)" [disabled]="cancelling() === b.id">
-                    {{ (cancelling() === b.id ? 'bookings.cancelling' : 'bookings.cancel') | transloco }}
+                  <button class="row-cancel" (click)="openCancel(b)" [disabled]="cancelling() === b.id">
+                    {{ (cancelling() === b.id ? 'bookings.cancelling' : 'cancellation.action') | transloco }}
                   </button>
                 }
+                @if (b.status === 'CANCELLED' && b.refundAmount != null && b.refundAmount > 0) {
+                  <span class="row-refunded">
+                    <span class="ms">undo</span>
+                    {{ 'cancellation.refundedBadge' | transloco }} {{ b.refundAmount | currency }}
+                  </span>
+                }
               </div>
+
+              @if (cancelDialogFor() === b.id) {
+                <div class="cancel-form">
+                  @if (cancelPreview(); as p) {
+                    <span class="cancel-form__label">{{ 'cancellation.dialogTitle' | transloco }}</span>
+                    @if (p.cancellable) {
+                      @if (p.refundAmount > 0) {
+                        <p class="cancel-refund">
+                          <span class="ms">payments</span>
+                          {{ 'cancellation.refundLine' | transloco: { percent: p.refundPercent } }}
+                          <strong>{{ p.refundAmount | currency }}</strong>
+                        </p>
+                      } @else {
+                        <p class="cancel-refund cancel-refund--none">
+                          <span class="ms">money_off</span> {{ 'cancellation.noRefund' | transloco }}
+                        </p>
+                      }
+                      <div class="cancel-policy">
+                        <span class="cancel-policy__title">{{ 'cancellation.policyTitle' | transloco }}</span>
+                        <ul>
+                          <li>{{ 'cancellation.tierFull' | transloco }}</li>
+                          <li>{{ 'cancellation.tierPartial' | transloco }}</li>
+                          <li>{{ 'cancellation.tierNone' | transloco }}</li>
+                        </ul>
+                      </div>
+                      <textarea class="review-input" rows="2" [(ngModel)]="cancelReason"
+                                [placeholder]="'cancellation.reasonPlaceholder' | transloco" maxlength="500"></textarea>
+                      <div class="review-actions">
+                        <button class="review-cancel" (click)="closeCancel()">{{ 'cancellation.keep' | transloco }}</button>
+                        <button class="cancel-confirm" (click)="confirmCancel(b)" [disabled]="cancelling() === b.id">
+                          {{ (cancelling() === b.id ? 'bookings.cancelling' : 'cancellation.confirm') | transloco }}
+                        </button>
+                      </div>
+                    } @else {
+                      <p class="cancel-note">{{ 'cancellation.notCancellable' | transloco }}</p>
+                      <div class="review-actions">
+                        <button class="review-cancel" (click)="closeCancel()">{{ 'cancellation.keep' | transloco }}</button>
+                      </div>
+                    }
+                  } @else if (previewLoading()) {
+                    <p class="cancel-note">{{ 'cancellation.previewLoading' | transloco }}</p>
+                  } @else {
+                    <p class="cancel-note">{{ 'cancellation.error' | transloco }}</p>
+                    <div class="review-actions">
+                      <button class="review-cancel" (click)="closeCancel()">{{ 'cancellation.keep' | transloco }}</button>
+                    </div>
+                  }
+                </div>
+              }
 
               @if (reviewing() === b.id) {
                 <div class="review-form">
@@ -161,6 +216,20 @@ interface ReviewTarget {
     .row-review .ms { font-size: 15px; }
     .row-reviewed { display: inline-flex; align-items: center; gap: 4px; color: #00856A; font-weight: 700; font-size: 0.8rem; }
     .row-reviewed .ms { font-size: 16px; }
+    .row-refunded { display: inline-flex; align-items: center; gap: 4px; color: #00856A; font-weight: 700; font-size: 0.8rem; }
+    .row-refunded .ms { font-size: 16px; }
+    .cancel-form { flex-basis: 100%; border-top: 1px dashed var(--line); margin-top: 0.9rem; padding-top: 0.9rem; display: flex; flex-direction: column; gap: 0.7rem; }
+    .cancel-form__label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); }
+    .cancel-note { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .cancel-refund { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 0.95rem; }
+    .cancel-refund .ms { font-size: 18px; color: #00856A; }
+    .cancel-refund strong { color: #00856A; }
+    .cancel-refund--none .ms { color: var(--muted); }
+    .cancel-policy { background: #faf8f5; border: 1px solid var(--line); border-radius: 10px; padding: 0.6rem 0.9rem; }
+    .cancel-policy__title { display: block; font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); margin-bottom: 0.3rem; }
+    .cancel-policy ul { margin: 0; padding-left: 1.1rem; color: var(--muted); font-size: 0.84rem; line-height: 1.5; }
+    .cancel-confirm { background: #c0392b; color: #fff; border: none; border-radius: 999px; padding: 7px 18px; font-weight: 700; font-size: 0.82rem; cursor: pointer; }
+    .cancel-confirm:disabled { opacity: 0.5; cursor: default; }
     .row { flex-wrap: wrap; }
     .review-form { flex-basis: 100%; border-top: 1px dashed var(--line); margin-top: 0.9rem; padding-top: 0.9rem; display: flex; flex-direction: column; gap: 0.6rem; }
     .review-form__label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); }
@@ -198,6 +267,12 @@ export class BookingsComponent implements OnInit {
   readonly draftRating = signal(5);
   draftTitle = '';
   draftContent = '';
+
+  // Cancellation dialog state
+  readonly cancelDialogFor = signal<string | null>(null);
+  readonly previewLoading = signal(false);
+  readonly cancelPreview = signal<CancellationPreview | null>(null);
+  cancelReason = '';
 
   ngOnInit(): void { this.load(); }
 
@@ -256,15 +331,43 @@ export class BookingsComponent implements OnInit {
     });
   }
 
-  cancel(b: BookingResponse): void {
+  /** Opens the cancellation dialog and fetches the refund preview. */
+  openCancel(b: BookingResponse): void {
+    this.cancelDialogFor.set(b.id);
+    this.cancelPreview.set(null);
+    this.cancelReason = '';
+    this.previewLoading.set(true);
+    this.service.cancellationPreview(b.id).pipe(catchError(() => of(null))).subscribe(preview => {
+      this.previewLoading.set(false);
+      this.cancelPreview.set(preview);
+    });
+  }
+
+  closeCancel(): void {
+    this.cancelDialogFor.set(null);
+    this.cancelPreview.set(null);
+    this.cancelReason = '';
+  }
+
+  /** Confirms cancellation, optimistically applies the returned booking + refund. */
+  confirmCancel(b: BookingResponse): void {
+    if (this.cancelling() === b.id) {
+      return;
+    }
     this.cancelling.set(b.id);
-    this.service.cancel(b.id).pipe(catchError(() => of(null))).subscribe(updated => {
+    this.service.cancel(b.id, this.cancelReason).pipe(catchError(() => of(null))).subscribe(result => {
       this.cancelling.set(null);
-      if (updated) {
-        this.bookings.update(list => list.map(x => (x.id === b.id ? updated : x)));
-        this.flash(this.transloco.translate('bookings.cancelled'));
+      if (result) {
+        this.bookings.update(list => list.map(x => (x.id === b.id ? result.booking : x)));
+        this.closeCancel();
+        const msg = result.refundAmount > 0
+          ? this.transloco.translate('cancellation.cancelledWithRefund', {
+              amount: result.refundAmount.toFixed(2),
+            })
+          : this.transloco.translate('cancellation.cancelledNoRefund');
+        this.flash(msg);
       } else {
-        this.flash(this.transloco.translate('bookings.cancelError'));
+        this.flash(this.transloco.translate('cancellation.error'));
       }
     });
   }

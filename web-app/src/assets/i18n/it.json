@@ -1337,5 +1337,24 @@
       "applied": "{{points}} punti applicati — risparmi {{amount}}",
       "discountLine": "Punti ({{points}})"
     }
+  },
+  "cancellation": {
+    "action": "Annulla prenotazione",
+    "dialogTitle": "Annullare questa prenotazione?",
+    "previewLoading": "Verifica della politica di rimborso…",
+    "refundLine": "Ti verrà rimborsato il {{ percent }}% —",
+    "noRefund": "Nessun rimborso previsto in questa fase.",
+    "policyTitle": "Politica di rimborso",
+    "tierFull": "7+ giorni prima del check-in: rimborso del 100%",
+    "tierPartial": "Da 2 a 6 giorni prima: rimborso del 50%",
+    "tierNone": "Meno di 2 giorni prima: nessun rimborso",
+    "reasonPlaceholder": "Motivo (facoltativo)",
+    "keep": "Mantieni prenotazione",
+    "confirm": "Conferma annullamento",
+    "notCancellable": "Questa prenotazione non può più essere annullata.",
+    "error": "Impossibile annullare — riprova",
+    "cancelledWithRefund": "Prenotazione annullata — €{{ amount }} rimborsati",
+    "cancelledNoRefund": "Prenotazione annullata",
+    "refundedBadge": "Rimborsato"
   }
 }
