@@ -565,3 +565,17 @@ export interface AskQuestionRequest {
 export interface ForumAnswerRequest {
   body: string;
 }
+
+// ── Auth recovery (password reset + email verification) ─────────────────────
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  newPassword: string;
+}
+
+export interface VerifyEmailRequest {
+  token: string;
+}

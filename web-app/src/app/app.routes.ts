@@ -174,5 +174,26 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/admin/admin.component').then(m => m.AdminComponent),
   },
+  {
+    path: 'forgot-password',
+    loadComponent: () =>
+      import('./features/auth-recovery/forgot-password.component').then(
+        m => m.ForgotPasswordComponent
+      ),
+  },
+  {
+    path: 'reset-password',
+    loadComponent: () =>
+      import('./features/auth-recovery/reset-password.component').then(
+        m => m.ResetPasswordComponent
+      ),
+  },
+  {
+    path: 'verify-email',
+    loadComponent: () =>
+      import('./features/auth-recovery/verify-email.component').then(
+        m => m.VerifyEmailComponent
+      ),
+  },
   { path: '**', redirectTo: '' },
 ];
