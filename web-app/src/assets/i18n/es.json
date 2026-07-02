@@ -1241,5 +1241,39 @@
     "empty": "Aún no hay paradas que mostrar",
     "emptyHint": "Tus paradas aparecerán aquí cuando tu itinerario tenga ubicaciones.",
     "missing": "{{count}} parada(s) sin ubicación"
+  },
+  "tripCollab": {
+    "title": "Compañeros de viaje",
+    "subtitle": "Invita a personas a ver y votar este viaje",
+    "empty": "Aún no hay compañeros. Invita a alguien a planificar juntos.",
+    "emailPlaceholder": "companero@email.com",
+    "invite": "Invitar",
+    "inviteSent": "Invitación enviada.",
+    "inviteError": "No se pudo enviar la invitación.",
+    "remove": "Quitar compañero",
+    "role": {
+      "VIEWER": "Observador",
+      "EDITOR": "Editor"
+    },
+    "status": {
+      "PENDING": "Pendiente",
+      "ACCEPTED": "Aceptado",
+      "DECLINED": "Rechazado"
+    },
+    "vote": {
+      "aria": "Votar esta parada",
+      "up": "Votar a favor",
+      "down": "Votar en contra",
+      "voters": "votos"
+    },
+    "accept": {
+      "working": "Uniéndose al viaje...",
+      "loginTitle": "Inicia sesión para aceptar",
+      "loginBody": "Inicia sesión con el correo invitado y vuelve a abrir el enlace de invitación.",
+      "goHome": "Iniciar sesión",
+      "errorTitle": "Invitación no válida",
+      "errorBody": "Esta invitación no es válida o ya se ha usado.",
+      "goTrips": "Ir a mis viajes"
+    }
   }
 }

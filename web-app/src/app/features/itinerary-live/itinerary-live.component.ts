@@ -7,27 +7,38 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { catchError, interval, of, switchMap } from 'rxjs';
 import { ItineraryService } from '../../core/services/itinerary.service';
 import { AuthService } from '../../core/services/auth.service';
+import { BookingService } from '../../core/services/booking.service';
+import { TripCollabService } from '../../core/services/trip-collab.service';
 import type {
   LiveItineraryResponse,
   ItinerarySegmentResponse,
   ItineraryProposalResponse,
   SegmentStatus,
+  SegmentVotesResponse,
+  BookingResponse,
 } from '../../core/models/api.models';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
 import { TripMapComponent } from './trip-map.component';
+import { TripCompanionsComponent } from '../trip-collab/trip-companions.component';
+import { SegmentVoteComponent } from '../trip-collab/segment-vote.component';
 
 const POLL_INTERVAL_MS = 20000;
 
 @Component({
   selector: 'app-itinerary-live',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, RevealDirective, TripMapComponent],
+  imports: [
+    CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, RevealDirective,
+    TripMapComponent, TripCompanionsComponent, SegmentVoteComponent,
+  ],
   templateUrl: './itinerary-live.component.html',
   styleUrl: './itinerary-live.component.scss',
 })
 export class ItineraryLiveComponent implements OnInit, OnDestroy {
   private readonly itineraryService = inject(ItineraryService);
   private readonly auth = inject(AuthService);
+  private readonly bookings = inject(BookingService);
+  private readonly collab = inject(TripCollabService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
@@ -36,6 +47,11 @@ export class ItineraryLiveComponent implements OnInit, OnDestroy {
   readonly loading = signal(true);
   readonly itinerary = signal<LiveItineraryResponse | null>(null);
   readonly proposals = signal<ItineraryProposalResponse[]>([]);
+
+  /** True when the current user owns the booking (owns invite/remove controls). */
+  readonly isOwner = signal(false);
+  /** Vote state per segment id, refreshed alongside the itinerary. */
+  readonly votes = signal<Record<string, SegmentVotesResponse>>({});
 
   readonly reportingSegmentId = signal<string | null>(null);
   readonly submitting = signal(false);
@@ -82,8 +98,35 @@ export class ItineraryLiveComponent implements OnInit, OnDestroy {
         if (it) {
           this.refreshProposals();
           this.connectStream();
+          this.loadVotes();
+          this.resolveOwnership();
         }
       });
+  }
+
+  /** Owner = the booking appears in the user's own bookings list. */
+  private resolveOwnership(): void {
+    this.bookings
+      .list()
+      .pipe(catchError(() => of([] as BookingResponse[])))
+      .subscribe(list => this.isOwner.set(list.some(b => b.id === this.bookingId)));
+  }
+
+  private loadVotes(): void {
+    this.collab
+      .listVotes(this.bookingId)
+      .pipe(catchError(() => of([] as SegmentVotesResponse[])))
+      .subscribe(list => {
+        const map: Record<string, SegmentVotesResponse> = {};
+        for (const v of list) {
+          map[v.segmentId] = v;
+        }
+        this.votes.set(map);
+      });
+  }
+
+  voteFor(segmentId: string): SegmentVotesResponse | undefined {
+    return this.votes()[segmentId];
   }
 
   /** Subscribe to instant proposal alerts via SSE; the 20s poll remains as fallback. */
