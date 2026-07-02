@@ -52,6 +52,42 @@ public class JwtService {
                 .compact();
     }
 
+    /** Claim marking a token's intended, scoped purpose (e.g. an MFA challenge). */
+    private static final String PURPOSE_CLAIM = "purpose";
+    private static final String MFA_PURPOSE = "mfa";
+    /** Short-lived window for completing a 2FA challenge after password success. */
+    private static final long MFA_TOKEN_TTL_MS = 5 * 60 * 1000L;
+
+    /**
+     * Mints a short-lived, single-purpose token identifying the user mid-login,
+     * issued after the password check but before the 2FA code is verified.
+     */
+    public String generateMfaChallengeToken(String email) {
+        long now = System.currentTimeMillis();
+        return Jwts.builder()
+                .subject(email)
+                .claim(PURPOSE_CLAIM, MFA_PURPOSE)
+                .issuedAt(new Date(now))
+                .expiration(new Date(now + MFA_TOKEN_TTL_MS))
+                .signWith(key())
+                .compact();
+    }
+
+    /**
+     * Validates an MFA challenge token and returns the subject email.
+     * Throws {@code TOKEN_INVALID} when the signature, purpose or expiry fails.
+     */
+    public String extractMfaChallengeEmail(String token) {
+        Claims claims = parseClaims(token);
+        if (!MFA_PURPOSE.equals(claims.get(PURPOSE_CLAIM, String.class))) {
+            throw TravelAiException.unauthorized(ErrorCode.TOKEN_INVALID);
+        }
+        if (claims.getExpiration() == null || claims.getExpiration().before(new Date())) {
+            throw TravelAiException.unauthorized(ErrorCode.TOKEN_EXPIRED);
+        }
+        return claims.getSubject();
+    }
+
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }

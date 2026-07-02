@@ -2,6 +2,7 @@ package com.travelai.auth;
 
 import com.travelai.auth.dto.AuthResponse;
 import com.travelai.auth.dto.LoginRequest;
+import com.travelai.auth.dto.LoginResponse;
 import com.travelai.auth.dto.RefreshRequest;
 import com.travelai.auth.dto.RegisterRequest;
 import com.travelai.auth.social.GoogleTokenVerifier;
@@ -45,6 +46,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final ApplicationEventPublisher eventPublisher;
     private final GoogleTokenVerifier googleTokenVerifier;
+    private final TwoFactorService twoFactorService;
 
     @Value("${app.frontend-base-url:http://localhost:4200}")
     private String frontendBaseUrl;
@@ -91,6 +93,61 @@ public class AuthService {
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.USER_NOT_FOUND));
 
+        return issueTokens(user);
+    }
+
+    /**
+     * Login entry point that honours two-factor auth. Behaves exactly like
+     * {@link #login} when the account has no 2FA (returns full tokens); when 2FA
+     * is enabled it verifies the password, then returns a short-lived challenge
+     * ({@code mfaRequired=true} + {@code mfaToken}) instead of tokens. The caller
+     * must complete {@link #verifyMfaChallenge}.
+     */
+    public LoginResponse loginWithMfa(LoginRequest request) {
+        authenticateCredentials(request);
+
+        User user = userRepository.findByEmail(request.email())
+                .orElseThrow(() -> TravelAiException.notFound(ErrorCode.USER_NOT_FOUND));
+
+        if (user.isMfaEnabled()) {
+            String mfaToken = jwtService.generateMfaChallengeToken(user.getEmail());
+            log.info("2FA challenge issued for user: {}", user.getEmail());
+            return LoginResponse.challenge(mfaToken);
+        }
+
+        return LoginResponse.tokens(issueTokens(user));
+    }
+
+    /**
+     * Completes a 2FA login challenge: validates the short-lived mfaToken and the
+     * TOTP (or recovery) code, then issues the real access + refresh tokens.
+     */
+    public LoginResponse verifyMfaChallenge(String mfaToken, String code) {
+        String email = jwtService.extractMfaChallengeEmail(mfaToken);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> TravelAiException.notFound(ErrorCode.USER_NOT_FOUND));
+
+        if (!twoFactorService.verifyChallenge(user, code)) {
+            log.warn("2FA challenge verification failed for user: {}", email);
+            throw TravelAiException.unauthorized(ErrorCode.MFA_CODE_INVALID);
+        }
+
+        log.info("2FA challenge verified, tokens issued for user: {}", email);
+        return LoginResponse.tokens(issueTokens(user));
+    }
+
+    private void authenticateCredentials(LoginRequest request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.email(), request.password())
+            );
+        } catch (AuthenticationException ex) {
+            log.warn("Login failed for email: {}", request.email());
+            throw TravelAiException.unauthorized(ErrorCode.INVALID_CREDENTIALS);
+        }
+    }
+
+    private AuthResponse issueTokens(User user) {
         refreshTokenRepository.deleteByUser(user);
 
         String accessToken = jwtService.generateAccessToken(user);
