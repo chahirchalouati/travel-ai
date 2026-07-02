@@ -41,6 +41,7 @@ class LiveItineraryServiceTest {
     @Mock private ItineraryProposalRepository proposalRepository;
     @Mock private ProposedChangeRepository changeRepository;
     @Mock private BookingRepository bookingRepository;
+    @Mock private com.travelai.tripcollab.TripAccessService tripAccessService;
     @Mock private AiRateLimiter aiRateLimiter;
     @Mock private MessagingService messagingService;
     @Mock private ApplicationEventPublisher eventPublisher;
@@ -51,7 +52,8 @@ class LiveItineraryServiceTest {
     void setUp() {
         service = new LiveItineraryService(
                 itineraryRepository, segmentRepository, eventRepository, proposalRepository,
-                changeRepository, bookingRepository, aiRateLimiter, messagingService, eventPublisher);
+                changeRepository, bookingRepository, tripAccessService, aiRateLimiter,
+                messagingService, eventPublisher);
     }
 
     private Booking bookingWith(UUID hotelId, UUID flightId, UUID restaurantId) {
@@ -111,7 +113,6 @@ class LiveItineraryServiceTest {
 
         when(aiRateLimiter.tryAcquire(email)).thenReturn(true);
         when(itineraryRepository.findById(itineraryId)).thenReturn(Optional.of(itinerary));
-        when(bookingRepository.findByIdAndUserEmail(bookingId, email)).thenReturn(Optional.of(new Booking()));
         when(segmentRepository.findById(segmentId)).thenReturn(Optional.of(segment));
         when(eventRepository.save(any(ItineraryEvent.class))).thenAnswer(i -> i.getArgument(0));
 
@@ -153,7 +154,6 @@ class LiveItineraryServiceTest {
 
         when(proposalRepository.findById(proposalId)).thenReturn(Optional.of(proposal));
         when(itineraryRepository.findById(itineraryId)).thenReturn(Optional.of(itinerary));
-        when(bookingRepository.findByIdAndUserEmail(bookingId, email)).thenReturn(Optional.of(new Booking()));
         when(changeRepository.findByProposalId(proposalId)).thenReturn(List.of(change));
         when(segmentRepository.findById(segmentId)).thenReturn(Optional.of(segment));
 
@@ -178,7 +178,8 @@ class LiveItineraryServiceTest {
         ReflectionTestUtils.setField(itinerary, "id", itineraryId);
 
         when(itineraryRepository.findById(itineraryId)).thenReturn(Optional.of(itinerary));
-        when(bookingRepository.findByIdAndUserEmail(bookingId, email)).thenReturn(Optional.empty());
+        when(tripAccessService.requireEdit(bookingId, email))
+                .thenThrow(TravelAiException.forbidden(ErrorCode.ACCESS_DENIED));
 
         assertThatThrownBy(() -> service.recordManualEvent(email, itineraryId,
                 new ReportEventRequest(UUID.randomUUID(), "tampering", null)))
@@ -205,7 +206,6 @@ class LiveItineraryServiceTest {
 
         when(proposalRepository.findById(proposalId)).thenReturn(Optional.of(proposal));
         when(itineraryRepository.findById(itineraryId)).thenReturn(Optional.of(itinerary));
-        when(bookingRepository.findByIdAndUserEmail(bookingId, email)).thenReturn(Optional.of(new Booking()));
 
         assertThatThrownBy(() -> service.approve(email, proposalId))
                 .isInstanceOf(TravelAiException.class)
@@ -231,7 +231,6 @@ class LiveItineraryServiceTest {
 
         when(proposalRepository.findById(proposalId)).thenReturn(Optional.of(proposal));
         when(itineraryRepository.findById(itineraryId)).thenReturn(Optional.of(itinerary));
-        when(bookingRepository.findByIdAndUserEmail(bookingId, email)).thenReturn(Optional.of(new Booking()));
 
         service.reject(email, proposalId);
 

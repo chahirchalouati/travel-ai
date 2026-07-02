@@ -1233,5 +1233,39 @@
       "completed": "Completata",
       "cancelled": "Annullata"
     }
+  },
+  "tripCollab": {
+    "title": "Compagni di viaggio",
+    "subtitle": "Invita altre persone a vedere e votare questo viaggio",
+    "empty": "Ancora nessun compagno. Invita qualcuno a pianificare insieme.",
+    "emailPlaceholder": "compagno@email.com",
+    "invite": "Invita",
+    "inviteSent": "Invito inviato.",
+    "inviteError": "Impossibile inviare l'invito.",
+    "remove": "Rimuovi compagno",
+    "role": {
+      "VIEWER": "Spettatore",
+      "EDITOR": "Editore"
+    },
+    "status": {
+      "PENDING": "In attesa",
+      "ACCEPTED": "Accettato",
+      "DECLINED": "Rifiutato"
+    },
+    "vote": {
+      "aria": "Vota questa tappa",
+      "up": "Vota a favore",
+      "down": "Vota contro",
+      "voters": "voti"
+    },
+    "accept": {
+      "working": "Adesione al viaggio...",
+      "loginTitle": "Accedi per accettare",
+      "loginBody": "Accedi con l'email invitata, poi riapri il link di invito.",
+      "goHome": "Accedi",
+      "errorTitle": "Invito non valido",
+      "errorBody": "Questo invito non è valido o è già stato usato.",
+      "goTrips": "Vai ai miei viaggi"
+    }
   }
 }
