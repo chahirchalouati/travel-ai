@@ -1233,5 +1233,13 @@
       "completed": "Terminée",
       "cancelled": "Annulée"
     }
+  },
+  "tripMap": {
+    "title": "Carte du voyage",
+    "all": "Tous les jours",
+    "day": "Jour {{n}}",
+    "empty": "Aucune étape à afficher pour le moment",
+    "emptyHint": "Vos étapes apparaîtront ici dès que votre itinéraire aura des lieux.",
+    "missing": "{{count}} étape(s) sans localisation"
   }
 }

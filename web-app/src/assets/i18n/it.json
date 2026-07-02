@@ -1233,5 +1233,13 @@
       "completed": "Completata",
       "cancelled": "Annullata"
     }
+  },
+  "tripMap": {
+    "title": "Mappa del viaggio",
+    "all": "Tutti i giorni",
+    "day": "Giorno {{n}}",
+    "empty": "Nessuna tappa da mostrare per ora",
+    "emptyHint": "Le tue tappe appariranno qui quando l'itinerario avrà delle posizioni.",
+    "missing": "{{count}} tappa/e senza posizione"
   }
 }
