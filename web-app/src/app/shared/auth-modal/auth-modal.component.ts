@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../core/services/auth.service';
 
@@ -54,6 +55,14 @@ type Mode = 'login' | 'register';
                    [(ngModel)]="password" [attr.autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'"
                    placeholder="••••••••" required>
           </div>
+
+          @if (mode() === 'login') {
+            <div class="auth-forgot">
+              <button type="button" class="auth-link" (click)="goForgotPassword()">
+                {{ 'authRecovery.forgotLink' | transloco }}
+              </button>
+            </div>
+          }
 
           @if (error()) {
             <div class="auth-error" role="alert">
@@ -250,6 +259,9 @@ type Mode = 'login' | 'register';
     }
     .auth-link:hover { text-decoration: underline; }
 
+    .auth-forgot { display: flex; justify-content: flex-end; margin-top: -6px; }
+    .auth-forgot .auth-link { font-size: 0.82rem; font-weight: 600; }
+
     @media (max-width: 420px) {
       .auth-row { grid-template-columns: 1fr; }
     }
@@ -261,6 +273,7 @@ export class AuthModalComponent {
 
   private readonly authService = inject(AuthService);
   private readonly transloco = inject(TranslocoService);
+  private readonly router = inject(Router);
 
   readonly mode = signal<Mode>('login');
   readonly loading = signal(false);
@@ -279,6 +292,11 @@ export class AuthModalComponent {
   onClose(): void {
     if (this.loading()) return;
     this.close.emit();
+  }
+
+  goForgotPassword(): void {
+    this.close.emit();
+    this.router.navigate(['/forgot-password']);
   }
 
   submit(): void {

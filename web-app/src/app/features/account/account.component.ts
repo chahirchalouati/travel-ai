@@ -25,6 +25,19 @@ import type { LoyaltySummaryResponse } from '../../core/models/api.models';
 
       @if (toast()) { <div class="toast">{{ toast() }}</div> }
 
+      @if (user() && !user()!.emailVerified) {
+        <div class="verify-banner" role="status">
+          <span class="ms">mark_email_unread</span>
+          <div class="verify-banner-text">
+            <strong>{{ 'authRecovery.bannerTitle' | transloco }}</strong>
+            <span>{{ 'authRecovery.bannerBody' | transloco }}</span>
+          </div>
+          <button type="button" class="verify-banner-btn" (click)="resendVerification()" [disabled]="resending()">
+            {{ (resending() ? 'authRecovery.resending' : 'authRecovery.resend') | transloco }}
+          </button>
+        </div>
+      }
+
       <div class="account-grid">
         <!-- Identity card -->
         <section class="card pad">
@@ -210,6 +223,14 @@ import type { LoyaltySummaryResponse } from '../../core/models/api.models';
     .ms.earn, .loyalty-tx__pts.earn { color: #1a7f43; }
     .ms.redeem, .loyalty-tx__pts.redeem { color: var(--accent); }
     .loyalty-empty { color: var(--muted); font-size: 0.88rem; margin: 0.3rem 0 0; }
+    .verify-banner { display: flex; align-items: center; gap: 12px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 0.8rem 1.1rem; margin-bottom: 1.2rem; }
+    .verify-banner .ms { color: #c2620a; font-size: 22px; flex: none; }
+    .verify-banner-text { display: flex; flex-direction: column; gap: 2px; font-size: 0.88rem; color: #7c4a10; }
+    .verify-banner-text strong { font-size: 0.92rem; color: #6b3c07; }
+    .verify-banner-btn { margin-left: auto; flex: none; background: #c2620a; color: #fff; border: none; border-radius: 999px; padding: 0.5rem 1rem; font-family: inherit; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: background 120ms ease; }
+    .verify-banner-btn:hover:not(:disabled) { background: #a5520a; }
+    .verify-banner-btn:disabled { opacity: 0.7; cursor: default; }
+    @media (max-width: 560px) { .verify-banner { flex-wrap: wrap; } .verify-banner-btn { margin-left: 0; } }
     @media (max-width: 820px) { .account-grid { grid-template-columns: 1fr; } .field-row { grid-template-columns: 1fr; } .loyalty { grid-column: auto; } }
   `],
 })
@@ -221,6 +242,7 @@ export class AccountComponent {
 
   readonly user = this.auth.currentUser;
   readonly saving = signal(false);
+  readonly resending = signal(false);
   readonly toast = signal('');
   readonly loyalty = signal<LoyaltySummaryResponse | null>(null);
 
@@ -285,6 +307,21 @@ export class AccountComponent {
     this.firstName = u?.firstName ?? '';
     this.lastName = u?.lastName ?? '';
     this.phone = u?.phone ?? '';
+  }
+
+  resendVerification(): void {
+    if (this.resending()) return;
+    this.resending.set(true);
+    this.auth.resendVerification().subscribe({
+      next: () => {
+        this.resending.set(false);
+        this.flash(this.transloco.translate('authRecovery.resendDone'));
+      },
+      error: () => {
+        this.resending.set(false);
+        this.flash(this.transloco.translate('authRecovery.resendErr'));
+      },
+    });
   }
 
   go(route: string): void { this.router.navigate([route]); }
