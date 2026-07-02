@@ -296,3 +296,38 @@ docker compose down
 - New public endpoints must be allow-listed in `shared/config/SecurityConfig.java` as
   `/api/<path>/**`. The `/profile` page needs a real JWT (register via
   `POST /api/auth/register`, set `accessToken` as `localStorage.ai_access_token`).
+
+---
+
+## Project Claude Code config (`.claude/`)
+
+This repo ships a project-scoped Claude Code setup. Read the relevant rule/skill
+before doing work in that area — they encode the conventions the codebase actually
+follows.
+
+**Rules** (`.claude/rules/` — read on demand):
+- `backend-conventions.md` — Spring Modulith modules (`com.travelai.*`), layering,
+  Flyway numbering, `SecurityConfig` allowlist, server-authoritative pricing.
+- `frontend-conventions.md` — Angular 19 standalone, `shared/ui` primitives,
+  4-language i18n (en/es/fr/it, French default).
+- `project-workflow.md` — full-stack feature checklist, run & verify.
+
+**Skills** (`.claude/skills/`):
+- `travelai-conventions` — canonical backend + frontend conventions reference.
+- `travelai-rag-concierge` — AI concierge RAG pipeline (Ollama `qwen2.5:7b` +
+  `nomic-embed-text`, ~0.45 similarity threshold, idempotent ingestion).
+
+**Agents** (`.claude/agents/`): `travelai-module-builder` (backend module scaffolder),
+`travelai-feature-builder` (Angular feature scaffolder).
+
+**Commands** (`.claude/commands/`): `/feature` (full-stack feature end-to-end),
+`/verify` (build + test both sides), `/new-migration` (next Flyway `V<n>`),
+`/i18n-sync` (reconcile the four i18n bundles), `/reingest` (rebuild the RAG store),
+`/dev-up` (bring up the whole stack).
+
+**Hooks** (`.claude/hooks/`, wired in `.claude/settings.json`):
+- `guard-file-size.mjs` — blocks source writes over 800 lines.
+- `i18n-validate.mjs` — blocks invalid i18n JSON and warns on en/es/fr/it key drift.
+
+Node-only; no external formatter/linter is configured in this repo. Personal
+permissions stay in `.claude/settings.local.json` (untracked).

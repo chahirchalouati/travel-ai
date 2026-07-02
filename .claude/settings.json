@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard-file-size.mjs\"",
+            "description": "Block source files over 800 lines (Travel AI convention)"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/i18n-validate.mjs\"",
+            "description": "Validate i18n bundle JSON and warn on en/es/fr/it key drift"
+          }
+        ]
+      }
+    ]
+  }
+}
