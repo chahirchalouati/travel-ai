@@ -6,6 +6,7 @@ import com.travelai.auth.dto.LoginRequest;
 import com.travelai.auth.dto.RefreshRequest;
 import com.travelai.auth.dto.RegisterRequest;
 import com.travelai.auth.dto.ResetPasswordRequest;
+import com.travelai.auth.dto.SocialLoginRequest;
 import com.travelai.auth.dto.VerifyEmailRequest;
 import com.travelai.shared.domain.ApiResponse;
 import jakarta.validation.Valid;
@@ -44,6 +45,17 @@ public class AuthController {
     public ResponseEntity<ApiResponse<Void>> logout(@Valid @RequestBody RefreshRequest request) {
         authService.logout(request.refreshToken());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ApiResponse.ok(null));
+    }
+
+    /**
+     * Sign in / sign up with Google. Body carries the Google ID token obtained
+     * client-side; the token is verified server-side before issuing our JWTs.
+     * Public endpoint (covered by the {@code /api/auth/**} allow-list).
+     */
+    @PostMapping("/social/google")
+    public ResponseEntity<ApiResponse<AuthResponse>> googleLogin(@Valid @RequestBody SocialLoginRequest request) {
+        AuthResponse response = authService.loginWithGoogle(request.idToken());
+        return ResponseEntity.ok(ApiResponse.ok(response));
     }
 
     /** Always answers 200 to avoid user enumeration. */

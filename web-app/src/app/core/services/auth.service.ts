@@ -36,6 +36,19 @@ export class AuthService {
     );
   }
 
+  /**
+   * Signs in with a Google ID token (from Google Identity Services). Mirrors
+   * login(): stores tokens, then fetches the profile so currentUser and the
+   * verify-email banner logic populate identically to email/password sign-in.
+   */
+  loginWithGoogle(idToken: string): Observable<AuthResponse> {
+    return this.http.post<ApiWrapper<AuthResponse>>(`${environment.apiUrl}/auth/social/google`, { idToken }).pipe(
+      map(res => res.data),
+      tap(auth => this.storeTokens(auth)),
+      switchMap(auth => this.fetchProfile().pipe(map(() => auth), catchError(() => of(auth))))
+    );
+  }
+
   logout(): Observable<void> {
     const refreshToken = localStorage.getItem(REFRESH_KEY);
     return this.http.post<ApiWrapper<void>>(`${environment.apiUrl}/auth/logout`, { refreshToken }).pipe(
