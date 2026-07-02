@@ -7,7 +7,9 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { DatePipe } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
 import { LoyaltyService } from '../../core/services/loyalty.service';
-import type { LoyaltySummaryResponse } from '../../core/models/api.models';
+import type { LoyaltySummaryResponse, TwoFactorSetupResponse } from '../../core/models/api.models';
+
+type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
 
 @Component({
   selector: 'app-account',
@@ -139,6 +141,84 @@ import type { LoyaltySummaryResponse } from '../../core/models/api.models';
           </section>
         }
 
+        <!-- Two-factor authentication -->
+        <section class="card pad security">
+          <div class="security-head">
+            <span class="security-icon" [class.on]="user()?.mfaEnabled"><span class="ms">{{ user()?.mfaEnabled ? 'verified_user' : 'shield' }}</span></span>
+            <div>
+              <h3 class="security-title">{{ 'twoFactor.title' | transloco }}</h3>
+              <p class="security-sub">{{ 'twoFactor.subtitle' | transloco }}</p>
+            </div>
+            <span class="security-badge" [class.on]="user()?.mfaEnabled">
+              {{ (user()?.mfaEnabled ? 'twoFactor.statusOn' : 'twoFactor.statusOff') | transloco }}
+            </span>
+          </div>
+
+          @if (user()?.mfaEnabled) {
+            @if (mfaView() === 'idle') {
+              <p class="security-body">{{ 'twoFactor.enabledBody' | transloco }}</p>
+              <button type="button" class="dash-cta dash-cta--ghost security-danger" (click)="beginDisable()">
+                {{ 'twoFactor.disable' | transloco }}
+              </button>
+            } @else if (mfaView() === 'disable') {
+              <p class="security-body">{{ 'twoFactor.disablePrompt' | transloco }}</p>
+              <label class="field">
+                <span>{{ 'twoFactor.codeLabel' | transloco }}</span>
+                <input [(ngModel)]="mfaCode" name="disableCode" inputmode="text" autocomplete="one-time-code"
+                       [placeholder]="'twoFactor.codePlaceholder' | transloco" />
+              </label>
+              @if (mfaError()) { <p class="security-err">{{ mfaError() }}</p> }
+              <div class="form-actions">
+                <button type="button" class="dash-cta dash-cta--ghost" (click)="cancelMfa()">{{ 'account.reset' | transloco }}</button>
+                <button type="button" class="dash-cta security-danger" (click)="confirmDisable()" [disabled]="mfaBusy()">
+                  {{ (mfaBusy() ? 'twoFactor.working' : 'twoFactor.disable') | transloco }}
+                </button>
+              </div>
+            }
+          } @else {
+            @if (mfaView() === 'idle') {
+              <p class="security-body">{{ 'twoFactor.disabledBody' | transloco }}</p>
+              <button type="button" class="dash-cta" (click)="beginSetup()" [disabled]="mfaBusy()">
+                {{ (mfaBusy() ? 'twoFactor.working' : 'twoFactor.enable') | transloco }}
+              </button>
+            } @else if (mfaView() === 'setup') {
+              @if (setupData(); as s) {
+              <p class="security-body">{{ 'twoFactor.setupStep1' | transloco }}</p>
+              @if (s.qrDataUri) {
+                <img class="security-qr" [src]="s.qrDataUri" [alt]="'twoFactor.qrAlt' | transloco" width="180" height="180" />
+              }
+              <p class="security-secret-label">{{ 'twoFactor.manualEntry' | transloco }}</p>
+              <code class="security-secret">{{ s.secret }}</code>
+
+              <label class="field security-code-field">
+                <span>{{ 'twoFactor.setupStep2' | transloco }}</span>
+                <input [(ngModel)]="mfaCode" name="enableCode" inputmode="text" autocomplete="one-time-code"
+                       [placeholder]="'twoFactor.codePlaceholder' | transloco" />
+              </label>
+              @if (mfaError()) { <p class="security-err">{{ mfaError() }}</p> }
+              <div class="form-actions">
+                <button type="button" class="dash-cta dash-cta--ghost" (click)="cancelMfa()">{{ 'account.reset' | transloco }}</button>
+                <button type="button" class="dash-cta" (click)="confirmEnable()" [disabled]="mfaBusy()">
+                  {{ (mfaBusy() ? 'twoFactor.working' : 'twoFactor.confirmEnable') | transloco }}
+                </button>
+              </div>
+              }
+            } @else if (mfaView() === 'recovery') {
+              <div class="security-recovery-head">
+                <span class="ms">check_circle</span>
+                <strong>{{ 'twoFactor.enabledDone' | transloco }}</strong>
+              </div>
+              <p class="security-body">{{ 'twoFactor.recoveryIntro' | transloco }}</p>
+              <ul class="security-recovery">
+                @for (code of recoveryCodes(); track code) {
+                  <li>{{ code }}</li>
+                }
+              </ul>
+              <button type="button" class="dash-cta" (click)="finishRecovery()">{{ 'twoFactor.recoverySaved' | transloco }}</button>
+            }
+          }
+        </section>
+
         <!-- Side rail -->
         <aside class="side">
           <section class="card pad">
@@ -223,6 +303,28 @@ import type { LoyaltySummaryResponse } from '../../core/models/api.models';
     .ms.earn, .loyalty-tx__pts.earn { color: #1a7f43; }
     .ms.redeem, .loyalty-tx__pts.redeem { color: var(--accent); }
     .loyalty-empty { color: var(--muted); font-size: 0.88rem; margin: 0.3rem 0 0; }
+    /* Two-factor security card — main column, below loyalty. */
+    .security { grid-column: 1; }
+    .security-head { display: flex; align-items: flex-start; gap: 1rem; padding-bottom: 1.1rem; margin-bottom: 1.1rem; border-bottom: 1px solid var(--line); }
+    .security-icon { width: 44px; height: 44px; flex: none; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: #f1f1ef; color: var(--muted); }
+    .security-icon.on { background: #e4f5ea; color: #1a7f43; }
+    .security-icon .ms { font-size: 22px; }
+    .security-title { margin: 0; font-size: 1.05rem; font-weight: 800; }
+    .security-sub { margin: 0.3rem 0 0; color: var(--muted); font-size: 0.85rem; }
+    .security-badge { margin-left: auto; flex: none; align-self: center; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; padding: 5px 11px; border-radius: 999px; background: #f1f1ef; color: var(--muted); }
+    .security-badge.on { background: #e4f5ea; color: #1a7f43; }
+    .security-body { margin: 0 0 1rem; color: #444; font-size: 0.92rem; line-height: 1.5; }
+    .security-qr { display: block; border: 1px solid var(--line); border-radius: 12px; padding: 8px; background: #fff; margin: 0 0 0.9rem; }
+    .security-secret-label { margin: 0 0 0.3rem; font-size: 0.78rem; font-weight: 700; color: #555; }
+    .security-secret { display: inline-block; font-family: 'SF Mono', ui-monospace, monospace; font-size: 0.95rem; letter-spacing: 0.08em; background: #f6f6f4; border: 1px solid var(--line); border-radius: 8px; padding: 0.5rem 0.8rem; margin-bottom: 1rem; word-break: break-all; }
+    .security-code-field { margin-bottom: 0.5rem; }
+    .security-err { color: var(--accent); font-size: 0.85rem; font-weight: 600; margin: 0.2rem 0 0.6rem; }
+    .security-danger { color: var(--accent); border-color: var(--accent); }
+    .security-recovery-head { display: flex; align-items: center; gap: 8px; font-size: 1rem; color: #1a7f43; margin-bottom: 0.6rem; }
+    .security-recovery-head .ms { font-size: 20px; }
+    .security-recovery { list-style: none; margin: 0 0 1rem; padding: 0.9rem 1rem; background: #f6f6f4; border: 1px dashed var(--line); border-radius: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1.2rem; }
+    .security-recovery li { font-family: 'SF Mono', ui-monospace, monospace; font-size: 0.95rem; letter-spacing: 0.06em; color: var(--ink); }
+    @media (max-width: 480px) { .security-recovery { grid-template-columns: 1fr; } }
     .verify-banner { display: flex; align-items: center; gap: 12px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 0.8rem 1.1rem; margin-bottom: 1.2rem; }
     .verify-banner .ms { color: #c2620a; font-size: 22px; flex: none; }
     .verify-banner-text { display: flex; flex-direction: column; gap: 2px; font-size: 0.88rem; color: #7c4a10; }
@@ -231,7 +333,7 @@ import type { LoyaltySummaryResponse } from '../../core/models/api.models';
     .verify-banner-btn:hover:not(:disabled) { background: #a5520a; }
     .verify-banner-btn:disabled { opacity: 0.7; cursor: default; }
     @media (max-width: 560px) { .verify-banner { flex-wrap: wrap; } .verify-banner-btn { margin-left: 0; } }
-    @media (max-width: 820px) { .account-grid { grid-template-columns: 1fr; } .field-row { grid-template-columns: 1fr; } .loyalty { grid-column: auto; } }
+    @media (max-width: 820px) { .account-grid { grid-template-columns: 1fr; } .field-row { grid-template-columns: 1fr; } .loyalty { grid-column: auto; } .security { grid-column: auto; } }
   `],
 })
 export class AccountComponent {
@@ -245,6 +347,14 @@ export class AccountComponent {
   readonly resending = signal(false);
   readonly toast = signal('');
   readonly loyalty = signal<LoyaltySummaryResponse | null>(null);
+
+  // Two-factor auth state
+  readonly mfaView = signal<MfaView>('idle');
+  readonly mfaBusy = signal(false);
+  readonly mfaError = signal('');
+  readonly setupData = signal<TwoFactorSetupResponse | null>(null);
+  readonly recoveryCodes = signal<string[]>([]);
+  mfaCode = '';
 
   constructor() {
     this.loyaltyService.summary().pipe(catchError(() => of(null))).subscribe(res => this.loyalty.set(res));
@@ -328,6 +438,94 @@ export class AccountComponent {
 
   signOut(): void {
     this.auth.logout().subscribe({ complete: () => this.router.navigate(['/']) });
+  }
+
+  // ── Two-factor authentication ──────────────────────────────────────────────
+
+  beginSetup(): void {
+    this.mfaError.set('');
+    this.mfaBusy.set(true);
+    this.auth.setup2fa().subscribe({
+      next: data => {
+        this.mfaBusy.set(false);
+        this.setupData.set(data);
+        this.mfaCode = '';
+        this.mfaView.set('setup');
+      },
+      error: () => {
+        this.mfaBusy.set(false);
+        this.flash(this.transloco.translate('twoFactor.errGeneric'));
+      },
+    });
+  }
+
+  confirmEnable(): void {
+    const code = this.mfaCode.trim();
+    if (!code) {
+      this.mfaError.set(this.transloco.translate('twoFactor.errCodeRequired'));
+      return;
+    }
+    this.mfaBusy.set(true);
+    this.mfaError.set('');
+    this.auth.enable2fa(code).subscribe({
+      next: res => {
+        this.mfaBusy.set(false);
+        this.recoveryCodes.set(res.recoveryCodes);
+        this.setupData.set(null);
+        this.mfaCode = '';
+        this.mfaView.set('recovery');
+      },
+      error: (err: unknown) => {
+        this.mfaBusy.set(false);
+        this.mfaError.set(this.transloco.translate(this.isCodeError(err) ? 'twoFactor.errCodeInvalid' : 'twoFactor.errGeneric'));
+      },
+    });
+  }
+
+  finishRecovery(): void {
+    this.recoveryCodes.set([]);
+    this.mfaView.set('idle');
+    this.flash(this.transloco.translate('twoFactor.enabledDone'));
+  }
+
+  beginDisable(): void {
+    this.mfaError.set('');
+    this.mfaCode = '';
+    this.mfaView.set('disable');
+  }
+
+  confirmDisable(): void {
+    const code = this.mfaCode.trim();
+    if (!code) {
+      this.mfaError.set(this.transloco.translate('twoFactor.errCodeRequired'));
+      return;
+    }
+    this.mfaBusy.set(true);
+    this.mfaError.set('');
+    this.auth.disable2fa(code).subscribe({
+      next: () => {
+        this.mfaBusy.set(false);
+        this.mfaCode = '';
+        this.mfaView.set('idle');
+        this.flash(this.transloco.translate('twoFactor.disabledDone'));
+      },
+      error: (err: unknown) => {
+        this.mfaBusy.set(false);
+        this.mfaError.set(this.transloco.translate(this.isCodeError(err) ? 'twoFactor.errCodeInvalid' : 'twoFactor.errGeneric'));
+      },
+    });
+  }
+
+  cancelMfa(): void {
+    this.mfaView.set('idle');
+    this.setupData.set(null);
+    this.mfaCode = '';
+    this.mfaError.set('');
+  }
+
+  private isCodeError(err: unknown): boolean {
+    const status = (err as { status?: number })?.status;
+    return status === 400 || status === 401;
   }
 
   private flash(msg: string): void {
