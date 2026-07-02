@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Private / auth-gated areas (no SEO value, keep out of the index)
+Disallow: /account
+Disallow: /profile
+Disallow: /bookings
+Disallow: /book
+Disallow: /trip-cart
+Disallow: /trips
+Disallow: /favorites
+Disallow: /notifications
+Disallow: /messages
+Disallow: /ticket
+Disallow: /admin
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /verify-email
+
+Sitemap: /sitemap.xml
