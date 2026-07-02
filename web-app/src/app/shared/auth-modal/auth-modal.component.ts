@@ -4,8 +4,16 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../core/services/auth.service';
+import { environment } from '../../../environments/environment';
 
 type Mode = 'login' | 'register';
+
+/** Minimal shape of the Google Identity Services credential callback response. */
+interface GoogleCredentialResponse {
+  credential: string;
+}
+
+const GIS_SRC = 'https://accounts.google.com/gsi/client';
 
 @Component({
   selector: 'app-auth-modal',
@@ -79,6 +87,22 @@ type Mode = 'login' | 'register';
             }
           </button>
         </form>
+
+        @if (googleEnabled) {
+          <div class="auth-divider" role="separator">
+            <span>{{ 'socialAuth.orDivider' | transloco }}</span>
+          </div>
+
+          <button type="button" class="auth-social" (click)="signInWithGoogle()" [disabled]="loading()">
+            <svg class="auth-social-icon" viewBox="0 0 18 18" aria-hidden="true">
+              <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62Z"/>
+              <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 0 0 9 18Z"/>
+              <path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.95H.96a9 9 0 0 0 0 8.1l3.01-2.33Z"/>
+              <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.46 3.44 1.35l2.58-2.58A9 9 0 0 0 .96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58Z"/>
+            </svg>
+            {{ 'socialAuth.continueWithGoogle' | transloco }}
+          </button>
+        }
 
         <p class="auth-switch">
           @if (mode() === 'login') {
@@ -240,6 +264,50 @@ type Mode = 'login' | 'register';
     }
     @keyframes authSpin { to { transform: rotate(360deg); } }
 
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 18px 0 14px;
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .auth-social {
+      width: 100%;
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+    }
+    .auth-social:hover:not(:disabled) {
+      background: #f7f7f7;
+      border-color: #cfcfcf;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+    .auth-social:disabled { opacity: 0.7; cursor: default; }
+    .auth-social-icon { width: 18px; height: 18px; flex-shrink: 0; }
+
     .auth-switch {
       text-align: center;
       font-size: 0.88rem;
@@ -278,6 +346,11 @@ export class AuthModalComponent {
   readonly mode = signal<Mode>('login');
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+
+  /** True only when a Google client id is configured — otherwise the button is hidden. */
+  readonly googleEnabled = !!environment.googleClientId;
+
+  private gisReady = false;
 
   firstName = '';
   lastName = '';
@@ -332,6 +405,70 @@ export class AuthModalComponent {
         this.loading.set(false);
         this.error.set(this.messageFor(err));
       },
+    });
+  }
+
+  /** Loads Google Identity Services on demand and triggers the credential prompt. */
+  async signInWithGoogle(): Promise<void> {
+    if (!this.googleEnabled || this.loading()) return;
+    this.error.set(null);
+    try {
+      await this.ensureGis();
+      const google = (window as unknown as { google?: any }).google;
+      google.accounts.id.initialize({
+        client_id: environment.googleClientId,
+        callback: (resp: GoogleCredentialResponse) => this.onGoogleCredential(resp),
+      });
+      google.accounts.id.prompt();
+    } catch {
+      this.error.set(this.transloco.translate('socialAuth.socialError'));
+    }
+  }
+
+  private onGoogleCredential(resp: GoogleCredentialResponse): void {
+    if (!resp?.credential) {
+      this.error.set(this.transloco.translate('socialAuth.socialError'));
+      return;
+    }
+    this.loading.set(true);
+    this.error.set(null);
+    this.authService.loginWithGoogle(resp.credential).subscribe({
+      next: () => {
+        this.loading.set(false);
+        this.authenticated.emit();
+        this.close.emit();
+      },
+      error: () => {
+        this.loading.set(false);
+        this.error.set(this.transloco.translate('socialAuth.socialError'));
+      },
+    });
+  }
+
+  /** Injects the GIS script once; resolves when the global is available. */
+  private ensureGis(): Promise<void> {
+    if (this.gisReady && (window as unknown as { google?: unknown }).google) {
+      return Promise.resolve();
+    }
+    return new Promise<void>((resolve, reject) => {
+      const existing = document.querySelector<HTMLScriptElement>(`script[src="${GIS_SRC}"]`);
+      if (existing) {
+        if ((window as unknown as { google?: unknown }).google) {
+          this.gisReady = true;
+          resolve();
+        } else {
+          existing.addEventListener('load', () => { this.gisReady = true; resolve(); });
+          existing.addEventListener('error', () => reject(new Error('GIS load failed')));
+        }
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = GIS_SRC;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => { this.gisReady = true; resolve(); };
+      script.onerror = () => reject(new Error('GIS load failed'));
+      document.head.appendChild(script);
     });
   }
 

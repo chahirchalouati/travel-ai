@@ -84,6 +84,13 @@ server:
 
 app:
   frontend-url: ${APP_FRONTEND_URL:http://localhost:4200}
+  oauth:
+    google:
+      # OAuth 2.0 Web client id from Google Cloud Console. Empty by default →
+      # the social-login endpoint returns a clear 4xx (feature disabled) and the
+      # frontend hides the "Continue with Google" button. Never commit a secret;
+      # only the (non-secret) client id lives here, via env GOOGLE_CLIENT_ID.
+      client-id: ${GOOGLE_CLIENT_ID:}
 
 security:
   jwt:
