@@ -24,6 +24,30 @@ export interface AuthResponse {
   role: string;
 }
 
+/**
+ * Login outcome. Backward-compatible superset of AuthResponse: when
+ * `mfaRequired` is false the token fields are populated as before; when true,
+ * only `mfaToken` is set and the caller must complete `/auth/2fa/verify`.
+ */
+export interface LoginResponse {
+  mfaRequired: boolean;
+  mfaToken: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
+  expiresIn: number | null;
+  role: string | null;
+}
+
+export interface TwoFactorSetupResponse {
+  secret: string;
+  otpauthUri: string;
+  qrDataUri: string | null;
+}
+
+export interface TwoFactorEnableResponse {
+  recoveryCodes: string[];
+}
+
 export interface UserProfileResponse {
   id: string;
   email: string;
@@ -37,6 +61,7 @@ export interface UserProfileResponse {
   handle: string | null;
   role: string;
   emailVerified: boolean;
+  mfaEnabled: boolean;
   createdAt: string;
 }
 

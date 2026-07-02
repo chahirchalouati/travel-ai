@@ -2,7 +2,16 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, catchError, of, map, switchMap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import type { ApiWrapper, AuthResponse, LoginRequest, RegisterRequest, UserProfileResponse } from '../models/api.models';
+import type {
+  ApiWrapper,
+  AuthResponse,
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  TwoFactorEnableResponse,
+  TwoFactorSetupResponse,
+  UserProfileResponse,
+} from '../models/api.models';
 
 const TOKEN_KEY = 'ai_access_token';
 const REFRESH_KEY = 'ai_refresh_token';
@@ -20,12 +29,58 @@ export class AuthService {
     }
   }
 
-  login(req: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<ApiWrapper<AuthResponse>>(`${environment.apiUrl}/auth/login`, req).pipe(
+  /**
+   * Password login. Resolves to a {@link LoginResponse}: when `mfaRequired` is
+   * true, no tokens are stored — the caller must collect a 6-digit code and call
+   * {@link verify2fa}. Otherwise tokens are stored and the profile fetched, as before.
+   */
+  login(req: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<ApiWrapper<LoginResponse>>(`${environment.apiUrl}/auth/login`, req).pipe(
       map(res => res.data),
-      tap(auth => this.storeTokens(auth)),
-      switchMap(auth => this.fetchProfile().pipe(map(() => auth), catchError(() => of(auth))))
+      switchMap(res => this.completeLogin(res))
     );
+  }
+
+  /** Completes a 2FA login challenge with a TOTP or recovery code. */
+  verify2fa(mfaToken: string, code: string): Observable<LoginResponse> {
+    return this.http.post<ApiWrapper<LoginResponse>>(`${environment.apiUrl}/auth/2fa/verify`, { mfaToken, code }).pipe(
+      map(res => res.data),
+      switchMap(res => this.completeLogin(res))
+    );
+  }
+
+  /** Begins 2FA enrolment: returns the secret + QR (does not enable yet). */
+  setup2fa(): Observable<TwoFactorSetupResponse> {
+    return this.http.post<ApiWrapper<TwoFactorSetupResponse>>(`${environment.apiUrl}/auth/2fa/setup`, {}).pipe(
+      map(res => res.data)
+    );
+  }
+
+  /** Verifies the first code and enables 2FA, returning one-time recovery codes. */
+  enable2fa(code: string): Observable<TwoFactorEnableResponse> {
+    return this.http.post<ApiWrapper<TwoFactorEnableResponse>>(`${environment.apiUrl}/auth/2fa/enable`, { code }).pipe(
+      map(res => res.data),
+      switchMap(res => this.fetchProfile().pipe(map(() => res), catchError(() => of(res))))
+    );
+  }
+
+  /** Disables 2FA after verifying a TOTP or recovery code. */
+  disable2fa(code: string): Observable<void> {
+    return this.http.post<ApiWrapper<void>>(`${environment.apiUrl}/auth/2fa/disable`, { code }).pipe(
+      switchMap(() => this.fetchProfile().pipe(map(() => undefined as void), catchError(() => of(undefined as void))))
+    );
+  }
+
+  /**
+   * Finalises a login result. When a challenge is pending, returns it untouched
+   * so the UI can prompt for a code; otherwise stores tokens and loads the profile.
+   */
+  private completeLogin(res: LoginResponse): Observable<LoginResponse> {
+    if (res.mfaRequired) {
+      return of(res);
+    }
+    this.storeLoginTokens(res);
+    return this.fetchProfile().pipe(map(() => res), catchError(() => of(res)));
   }
 
   register(req: RegisterRequest): Observable<AuthResponse> {
@@ -127,6 +182,15 @@ export class AuthService {
     localStorage.setItem(TOKEN_KEY, auth.accessToken);
     localStorage.setItem(REFRESH_KEY, auth.refreshToken);
     this.isAuthenticated.set(true);
+  }
+
+  /** Stores tokens from a completed (non-challenge) login result. */
+  private storeLoginTokens(res: LoginResponse): void {
+    if (res.accessToken && res.refreshToken) {
+      localStorage.setItem(TOKEN_KEY, res.accessToken);
+      localStorage.setItem(REFRESH_KEY, res.refreshToken);
+      this.isAuthenticated.set(true);
+    }
   }
 
   private clearTokens(): void {

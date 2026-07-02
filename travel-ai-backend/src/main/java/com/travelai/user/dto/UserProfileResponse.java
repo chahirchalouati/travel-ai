@@ -18,5 +18,6 @@ public record UserProfileResponse(
         String handle,
         UserRole role,
         boolean emailVerified,
+        boolean mfaEnabled,
         Instant createdAt
 ) {}

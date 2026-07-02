@@ -60,6 +60,15 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private boolean active = true;
 
+    /** True once the user has verified a TOTP code and enabled two-factor auth. */
+    @Builder.Default
+    @Column(name = "mfa_enabled", nullable = false)
+    private boolean mfaEnabled = false;
+
+    /** Base32 TOTP shared secret. Set during setup; only enforced once mfaEnabled. */
+    @Column(name = "mfa_secret", length = 64)
+    private String mfaSecret;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));

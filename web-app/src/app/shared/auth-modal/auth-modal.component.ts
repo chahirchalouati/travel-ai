@@ -30,6 +30,38 @@ const GIS_SRC = 'https://accounts.google.com/gsi/client';
           <span class="auth-logo">Travel<span class="auth-logo-accent">AI</span></span>
         </div>
 
+        @if (mfaStep()) {
+          <h2 class="auth-title">{{ 'twoFactor.challengeTitle' | transloco }}</h2>
+          <p class="auth-sub">{{ 'twoFactor.challengeSub' | transloco }}</p>
+
+          <form class="auth-form" (ngSubmit)="submitMfa()">
+            <div class="auth-field">
+              <label class="auth-label" for="auth-mfa">{{ 'twoFactor.codeLabel' | transloco }}</label>
+              <input id="auth-mfa" class="auth-input auth-code" type="text" name="mfaCode"
+                     inputmode="text" autocomplete="one-time-code" autofocus
+                     [(ngModel)]="mfaCode" [placeholder]="'twoFactor.codePlaceholder' | transloco" required>
+            </div>
+
+            @if (error()) {
+              <div class="auth-error" role="alert">
+                <span class="ms" style="font-size:16px">error</span>
+                {{ error() }}
+              </div>
+            }
+
+            <button class="auth-submit" type="submit" [disabled]="loading()">
+              @if (loading()) {
+                <span class="auth-spinner"></span>
+              } @else {
+                {{ 'twoFactor.verify' | transloco }}
+              }
+            </button>
+          </form>
+
+          <p class="auth-switch">
+            <button type="button" class="auth-link" (click)="cancelMfa()">{{ 'twoFactor.backToLogin' | transloco }}</button>
+          </p>
+        } @else {
         <h2 class="auth-title">{{ (mode() === 'login' ? 'auth.welcomeBack' : 'auth.createAccount') | transloco }}</h2>
         <p class="auth-sub">
           {{ (mode() === 'login' ? 'auth.subLogin' : 'auth.subRegister') | transloco }}
@@ -113,6 +145,7 @@ const GIS_SRC = 'https://accounts.google.com/gsi/client';
             <button type="button" class="auth-link" (click)="setMode('login')">{{ 'auth.signIn' | transloco }}</button>
           }
         </p>
+        }
       </div>
     </div>
   `,
@@ -218,6 +251,14 @@ const GIS_SRC = 'https://accounts.google.com/gsi/client';
       transition: border-color 150ms ease, background 150ms ease;
     }
     .auth-input:focus { border-color: var(--brand); background: #fff; }
+
+    .auth-code {
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.35em;
+      font-variant-numeric: tabular-nums;
+    }
 
     .auth-error {
       display: flex;
@@ -346,6 +387,8 @@ export class AuthModalComponent {
   readonly mode = signal<Mode>('login');
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+  /** When set, the modal shows the 2FA code-entry step after a password login. */
+  readonly mfaStep = signal(false);
 
   /** True only when a Google client id is configured — otherwise the button is hidden. */
   readonly googleEnabled = !!environment.googleClientId;
@@ -356,6 +399,8 @@ export class AuthModalComponent {
   lastName = '';
   email = '';
   password = '';
+  mfaCode = '';
+  private mfaToken: string | null = null;
 
   setMode(mode: Mode): void {
     this.mode.set(mode);
@@ -365,6 +410,13 @@ export class AuthModalComponent {
   onClose(): void {
     if (this.loading()) return;
     this.close.emit();
+  }
+
+  cancelMfa(): void {
+    this.mfaStep.set(false);
+    this.mfaToken = null;
+    this.mfaCode = '';
+    this.error.set(null);
   }
 
   goForgotPassword(): void {
@@ -386,20 +438,35 @@ export class AuthModalComponent {
     this.loading.set(true);
     this.error.set(null);
 
-    const request$ = this.mode() === 'login'
-      ? this.authService.login({ email, password: this.password })
-      : this.authService.register({
-          email,
-          password: this.password,
-          firstName: this.firstName.trim(),
-          lastName: this.lastName.trim(),
-        });
+    if (this.mode() === 'login') {
+      this.authService.login({ email, password: this.password }).subscribe({
+        next: res => {
+          this.loading.set(false);
+          if (res.mfaRequired) {
+            this.mfaToken = res.mfaToken;
+            this.mfaCode = '';
+            this.mfaStep.set(true);
+            return;
+          }
+          this.finishAuth();
+        },
+        error: (err: unknown) => {
+          this.loading.set(false);
+          this.error.set(this.messageFor(err));
+        },
+      });
+      return;
+    }
 
-    request$.subscribe({
+    this.authService.register({
+      email,
+      password: this.password,
+      firstName: this.firstName.trim(),
+      lastName: this.lastName.trim(),
+    }).subscribe({
       next: () => {
         this.loading.set(false);
-        this.authenticated.emit();
-        this.close.emit();
+        this.finishAuth();
       },
       error: (err: unknown) => {
         this.loading.set(false);
@@ -445,6 +512,29 @@ export class AuthModalComponent {
     });
   }
 
+  submitMfa(): void {
+    const code = this.mfaCode.trim();
+    if (!code || !this.mfaToken) {
+      this.error.set(this.transloco.translate('twoFactor.errCodeRequired'));
+      return;
+    }
+    this.loading.set(true);
+    this.error.set(null);
+
+    this.authService.verify2fa(this.mfaToken, code).subscribe({
+      next: () => {
+        this.loading.set(false);
+        this.finishAuth();
+      },
+      error: (err: unknown) => {
+        this.loading.set(false);
+        const status = (err as { status?: number })?.status;
+        this.error.set(this.transloco.translate(
+          status === 401 || status === 400 ? 'twoFactor.errCodeInvalid' : 'auth.errGeneric'));
+      },
+    });
+  }
+
   /** Injects the GIS script once; resolves when the global is available. */
   private ensureGis(): Promise<void> {
     if (this.gisReady && (window as unknown as { google?: unknown }).google) {
@@ -470,6 +560,13 @@ export class AuthModalComponent {
       script.onerror = () => reject(new Error('GIS load failed'));
       document.head.appendChild(script);
     });
+  }
+
+  private finishAuth(): void {
+    this.mfaStep.set(false);
+    this.mfaToken = null;
+    this.authenticated.emit();
+    this.close.emit();
   }
 
   private messageFor(err: unknown): string {
