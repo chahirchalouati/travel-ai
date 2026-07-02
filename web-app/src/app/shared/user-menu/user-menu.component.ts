@@ -14,6 +14,7 @@ const MENU_ITEMS: MenuItem[] = [
   { key: 'userMenu.myTrips',     icon: 'luggage',             route: '/trips' },
   { key: 'userMenu.profile',     icon: 'person',              route: '/profile' },
   { key: 'userMenu.bookings',    icon: 'confirmation_number', route: '/bookings' },
+  { key: 'userMenu.membership',  icon: 'workspace_premium',   route: '/membership' },
   { key: 'userMenu.messages',    icon: 'chat_bubble_outline', route: '/messages' },
   { key: 'userMenu.accountInfo', icon: 'manage_accounts',     route: '/account' },
 ];

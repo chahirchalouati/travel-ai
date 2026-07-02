@@ -296,7 +296,61 @@ export interface CreateBookingRequest {
   tripGroupId?: string;
   /** Loyalty points to spend on this booking (discount already reflected in totalAmount). */
   redeemPoints?: number;
+  /** Chosen paid add-ons (priced server-side; sum already reflected in totalAmount). */
+  ancillaries?: AncillarySelection[];
   travelers: TravelerRequest[];
+}
+
+/** A purchasable add-on offered at checkout (insurance, baggage, seat, …). */
+export interface AncillaryOption {
+  code: string;
+  label: string;
+  description?: string;
+  vertical: string | null;
+  price: number;
+  currency: string;
+}
+
+/** A client's request to add an ancillary option, quantity chosen at checkout. */
+export interface AncillarySelection {
+  code: string;
+  quantity: number;
+}
+
+/** A purchased add-on as returned on a booking. */
+export interface BookingAncillaryResponse {
+  code: string;
+  label: string;
+  unitPrice: number;
+  quantity: number;
+  currency: string;
+}
+
+/** A sellable membership plan (Travel AI Prime). */
+export interface SubscriptionPlanResponse {
+  code: string;
+  name: string;
+  description?: string;
+  price: number;
+  currency: string;
+  billingInterval: string;
+  serviceFeeWaived: boolean;
+  memberDiscountPct: number;
+}
+
+/** The caller's membership status and active benefits. */
+export interface MembershipResponse {
+  active: boolean;
+  planCode: string | null;
+  planName: string | null;
+  startedAt: string | null;
+  renewsAt: string | null;
+  serviceFeeWaived: boolean;
+  memberDiscountPct: number;
+}
+
+export interface SubscribeRequest {
+  planCode: string;
 }
 
 export interface LoyaltyTransactionResponse {
@@ -365,6 +419,8 @@ export interface BookingResponse {
   checkOut: string;
   travelers: TravelerResponse[];
   refundAmount: number | null;
+  ancillaryAmount: number | null;
+  ancillaries: BookingAncillaryResponse[];
   createdAt: string;
 }
 

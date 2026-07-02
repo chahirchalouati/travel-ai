@@ -54,6 +54,10 @@ public class Hotel {
 
     private BigDecimal basePriceNight;
 
+    /** Supplier cost; the markup (basePriceNight − netPrice) is the commission. */
+    @Column(name = "net_price")
+    private BigDecimal netPrice;
+
     @Column(nullable = false)
     @Builder.Default
     private boolean active = true;

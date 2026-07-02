@@ -41,6 +41,10 @@ public class Flight {
     @Column(nullable = false)
     private BigDecimal price;
 
+    /** Supplier cost; the markup (price − netPrice) is the platform's commission. */
+    @Column(name = "net_price")
+    private BigDecimal netPrice;
+
     @Column(nullable = false)
     private short seatsAvailable;
 

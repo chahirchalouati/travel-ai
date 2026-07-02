@@ -1,12 +1,16 @@
 package com.travelai.booking;
 
+import com.travelai.ancillary.AncillaryService;
+import com.travelai.ancillary.dto.ResolvedAncillary;
 import com.travelai.auth.User;
 import com.travelai.auth.UserRepository;
 import com.travelai.booking.dto.*;
 import com.travelai.catalog.cruise.CruiseRepository;
 import com.travelai.catalog.flight.FlightRepository;
+import com.travelai.catalog.hotel.HotelRepository;
 import com.travelai.catalog.restaurant.RestaurantAvailabilityRepository;
 import com.travelai.loyalty.LoyaltyService;
+import com.travelai.subscription.SubscriptionService;
 import com.travelai.notification.events.BookingConfirmedEvent;
 import com.travelai.shared.exception.ErrorCode;
 import com.travelai.shared.exception.TravelAiException;
@@ -34,14 +38,20 @@ public class BookingService {
 
     private final BookingRepository bookingRepository;
     private final BookingTravelerRepository travelerRepository;
+    private final BookingAncillaryRepository ancillaryRepository;
     private final WaitlistEntryRepository waitlistRepository;
     private final UserRepository userRepository;
     private final FlightRepository flightRepository;
     private final CruiseRepository cruiseRepository;
+    private final HotelRepository hotelRepository;
     private final RestaurantAvailabilityRepository restaurantAvailabilityRepository;
     private final LoyaltyService loyaltyService;
+    private final AncillaryService ancillaryService;
+    private final SubscriptionService subscriptionService;
     private final RefundRepository refundRepository;
     private final ApplicationEventPublisher eventPublisher;
+
+    private static final java.math.BigDecimal SERVICE_FEE_RATE = new java.math.BigDecimal("0.06");
 
     public BookingResponse createBooking(String userEmail, CreateBookingRequest req) {
         User user = userRepository.findByEmail(userEmail)
@@ -92,6 +102,28 @@ public class BookingService {
                 travelerRepository.save(traveler);
                 saved.getTravelers().add(traveler);
             }
+        }
+
+        // Ancillary add-ons: resolve codes/quantities against the server-authoritative
+        // catalogue, persist a priced line item per add-on, and record the total for
+        // revenue reporting. The client already reflects this sum in totalAmount.
+        List<ResolvedAncillary> resolved = ancillaryService.resolve(req.ancillaries());
+        if (!resolved.isEmpty()) {
+            java.math.BigDecimal ancillaryTotal = java.math.BigDecimal.ZERO;
+            for (ResolvedAncillary r : resolved) {
+                BookingAncillary line = new BookingAncillary();
+                line.setBooking(saved);
+                line.setCode(r.code());
+                line.setLabel(r.label());
+                line.setUnitPrice(r.unitPrice());
+                line.setQuantity(r.quantity());
+                line.setCurrency(r.currency());
+                ancillaryRepository.save(line);
+                saved.getAncillaries().add(line);
+                ancillaryTotal = ancillaryTotal.add(r.lineTotal());
+            }
+            saved.setAncillaryAmount(ancillaryTotal);
+            saved = bookingRepository.save(saved);
         }
 
         return toResponse(saved);
@@ -255,6 +287,9 @@ public class BookingService {
                         t.getDocumentNumber(),
                         t.isPrimary()))
                 .toList();
+        List<BookingAncillaryResponse> ancillaries = b.getAncillaries().stream()
+                .map(BookingAncillaryResponse::from)
+                .toList();
         return new BookingResponse(
                 b.getId(),
                 b.getProposalId(),
@@ -279,6 +314,8 @@ public class BookingService {
                 b.getCheckOut(),
                 travelers,
                 refundAmount,
+                b.getAncillaryAmount(),
+                ancillaries,
                 b.getCreatedAt());
     }
 

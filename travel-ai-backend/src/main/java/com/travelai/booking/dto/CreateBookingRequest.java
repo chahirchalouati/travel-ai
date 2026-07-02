@@ -1,5 +1,6 @@
 package com.travelai.booking.dto;
 
+import com.travelai.ancillary.dto.AncillarySelection;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
@@ -34,4 +35,6 @@ public record CreateBookingRequest(
         UUID tripGroupId,
         /** Loyalty points to spend on this booking; their discount is already reflected in totalAmount. */
         Integer redeemPoints,
+        /** Optional paid add-ons; priced server-side and already reflected in totalAmount. */
+        List<AncillarySelection> ancillaries,
         @NotNull List<TravelerRequest> travelers) {}

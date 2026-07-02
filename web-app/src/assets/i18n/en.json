@@ -326,6 +326,7 @@
     "myTrips": "My trips",
     "profile": "Profile",
     "bookings": "Bookings",
+    "membership": "Travel AI Prime",
     "messages": "Messages",
     "accountInfo": "Account info",
     "signOut": "Sign out",
@@ -1170,7 +1171,53 @@
       "promoInvalid": "This discount code can't be applied",
       "discount": "Discount",
       "confirm": "Confirm booking",
-      "processing": "Processing…"
+      "processing": "Processing…",
+      "ancillaries": {
+        "title": "Add extras",
+        "help": "Optional services to make the trip smoother.",
+        "summaryLine": "Extras",
+        "items": {
+          "INSURANCE": "Travel insurance",
+          "TRANSFER": "Airport transfer",
+          "BAGGAGE": "Checked baggage",
+          "SEAT": "Seat selection",
+          "PRIORITY": "Priority boarding",
+          "EXCURSION": "Shore excursion",
+          "WINE": "Wine pairing"
+        },
+        "desc": {
+          "INSURANCE": "Medical, cancellation and baggage cover for the whole trip.",
+          "TRANSFER": "Private door-to-door transfer to and from the airport.",
+          "BAGGAGE": "Add a 23 kg checked bag per traveller.",
+          "SEAT": "Choose your seat in advance.",
+          "PRIORITY": "Board first and secure overhead cabin space.",
+          "EXCURSION": "Guided excursion at one of the ports of call.",
+          "WINE": "Sommelier-selected wine pairing for the table."
+        }
+      }
+    }
+  },
+  "membership": {
+    "eyebrow": "Membership",
+    "title": "Travel AI Prime",
+    "lede": "Zero service fees on every booking plus a members-only discount. Built for people who travel often.",
+    "interval": { "ANNUAL": "year", "MONTHLY": "month" },
+    "subscribe": "Subscribe to Prime",
+    "subscribeSignedOut": "Sign in to subscribe",
+    "cancel": "Cancel membership",
+    "cancelNote": "Cancel anytime; benefits stay active until your renewal date.",
+    "priceNote": "Renews automatically. Cancel anytime.",
+    "active": { "title": "Prime active", "renews": "Renews on" },
+    "benefits": {
+      "fee": { "title": "Zero service fees", "body": "Removes the 6% platform service fee on every booking." },
+      "discount": { "title": "Member discount", "body": "An exclusive discount applied automatically to your total." },
+      "priority": { "title": "Priority support", "body": "Front-of-queue help for support and trip changes." },
+      "watch": { "title": "Unlimited price alerts", "body": "Watch as many flights and cruises as you like." },
+      "concierge": { "title": "AI concierge", "body": "Personalised trip suggestions from our assistant." }
+    },
+    "checkout": {
+      "feeWaived": "Included with Prime",
+      "memberDiscount": "Prime discount"
     }
   },
   "favorites": {

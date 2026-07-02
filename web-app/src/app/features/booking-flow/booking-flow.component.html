@@ -157,6 +157,26 @@
             }
             <div class="bf-review-line"><span>{{ 'booking.flow.party.' + d.vertical | transloco }}</span><span>{{ store.partySize() }}</span></div>
 
+            @if (store.ancillaryOptions().length) {
+              <div class="bf-field bf-addons">
+                <label class="bf-label">{{ 'booking.flow.ancillaries.title' | transloco }}</label>
+                <p class="bf-help">{{ 'booking.flow.ancillaries.help' | transloco }}</p>
+                <div class="bf-addon-list">
+                  @for (o of store.ancillaryOptions(); track o.code) {
+                    <label class="bf-addon" [class.bf-addon--on]="store.isAncillarySelected(o.code)">
+                      <input type="checkbox" [checked]="store.isAncillarySelected(o.code)"
+                             (change)="store.toggleAncillary(o.code)" />
+                      <span class="bf-addon__body">
+                        <span class="bf-addon__label">{{ ('booking.flow.ancillaries.items.' + o.code) | transloco }}</span>
+                        <span class="bf-addon__note">{{ ('booking.flow.ancillaries.desc.' + o.code) | transloco }}</span>
+                      </span>
+                      <span class="bf-addon__price">+{{ o.price | currency:o.currency:'symbol':'1.2-2' }}</span>
+                    </label>
+                  }
+                </div>
+              </div>
+            }
+
             <div class="bf-field">
               <label class="bf-label">{{ 'booking.flow.promoPlaceholder' | transloco }}</label>
               <div class="bf-promo">
@@ -247,8 +267,26 @@
         </div>
         <div class="bf-summary__line bf-summary__line--muted">
           <span>{{ 'booking.flow.serviceFee' | transloco }}</span>
-          <span>{{ store.serviceFee() | currency:d.currency:'symbol':'1.2-2' }}</span>
+          @if (primeActive()) {
+            <span style="color:#00856a;font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.04em;">
+              {{ 'membership.checkout.feeWaived' | transloco }}
+            </span>
+          } @else {
+            <span>{{ store.serviceFee() | currency:d.currency:'symbol':'1.2-2' }}</span>
+          }
         </div>
+        @if (store.memberDiscount() > 0) {
+          <div class="bf-summary__line" style="color:#00856a;font-weight:700;">
+            <span>{{ 'membership.checkout.memberDiscount' | transloco }}</span>
+            <span>−{{ store.memberDiscount() | currency:d.currency:'symbol':'1.2-2' }}</span>
+          </div>
+        }
+        @if (store.ancillaryTotal() > 0) {
+          <div class="bf-summary__line bf-summary__line--muted">
+            <span>{{ 'booking.flow.ancillaries.summaryLine' | transloco }}</span>
+            <span>{{ store.ancillaryTotal() | currency:d.currency:'symbol':'1.2-2' }}</span>
+          </div>
+        }
         @if (store.discount() > 0) {
           <div class="bf-summary__line" style="color:#00856a;font-weight:700;">
             <span>{{ 'booking.flow.discount' | transloco }} @if (store.appliedPromo(); as c) { ({{ c }}) }</span>

@@ -8,6 +8,8 @@ import { BookingService } from '../../core/services/booking.service';
 import { PaymentService } from '../../core/services/payment.service';
 import { PromoService } from '../../core/services/promo.service';
 import { LoyaltyService } from '../../core/services/loyalty.service';
+import { AncillaryService } from '../../core/services/ancillary.service';
+import { SubscriptionService } from '../../core/services/subscription.service';
 import type { BookingResponse, PaymentGateway } from '../../core/models/api.models';
 import { BookingDraftService } from './booking-draft.service';
 import { TripCartService } from './trip-cart.service';
@@ -38,7 +40,12 @@ export class BookingFlowComponent {
   private readonly payments = inject(PaymentService);
   private readonly promo = inject(PromoService);
   private readonly loyalty = inject(LoyaltyService);
+  private readonly ancillary = inject(AncillaryService);
+  private readonly subscriptions = inject(SubscriptionService);
   private readonly router = inject(Router);
+
+  /** Whether the signed-in member has Travel AI Prime (for the review banner). */
+  protected readonly primeActive = this.store.primeActive;
 
   protected readonly step = signal<Step>('configure');
   protected readonly submitting = signal(false);
@@ -60,6 +67,20 @@ export class BookingFlowComponent {
       if (res) {
         this.pointsBalance.set(res.pointsBalance);
       }
+    });
+
+    // Load the add-on catalogue for this booking's vertical.
+    const vertical = this.store.draft()?.vertical;
+    if (vertical) {
+      this.ancillary.list(vertical).pipe(catchError(() => of([]))).subscribe(options => {
+        this.store.ancillaryOptions.set(options);
+      });
+    }
+
+    // Apply Travel AI Prime benefits (fee waiver + member discount) when active.
+    this.subscriptions.me().pipe(catchError(() => of(null))).subscribe(m => {
+      this.store.primeActive.set(m?.active === true && m.serviceFeeWaived);
+      this.store.memberDiscountPct.set(m?.active ? m.memberDiscountPct : 0);
     });
   }
 

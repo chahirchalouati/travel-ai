@@ -42,6 +42,18 @@ public class Booking extends BaseEntity {
     private BigDecimal flightAmount;
     private BigDecimal cruiseAmount;
 
+    /** Total paid for optional add-ons (insurance, baggage, …); revenue source. */
+    @Column(name = "ancillary_amount")
+    private BigDecimal ancillaryAmount;
+
+    /** Platform service fee actually charged (0 when waived by Prime). */
+    @Column(name = "service_fee_amount")
+    private BigDecimal serviceFeeAmount;
+
+    /** Markup captured over the supplier net price; the platform's commission. */
+    @Column(name = "commission_amount")
+    private BigDecimal commissionAmount;
+
     private String destination;
     private LocalDate checkIn;
     private LocalDate checkOut;
@@ -68,4 +80,7 @@ public class Booking extends BaseEntity {
 
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BookingTraveler> travelers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BookingAncillary> ancillaries = new ArrayList<>();
 }

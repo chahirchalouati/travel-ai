@@ -227,6 +227,20 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'membership',
+    data: {
+      seo: {
+        title: 'Travel AI Prime',
+        description:
+          'Travel AI Prime — zero service fees on every booking plus a members-only discount.',
+      },
+    },
+    loadComponent: () =>
+      import('./features/membership/membership.component').then(
+        m => m.MembershipComponent
+      ),
+  },
+  {
     path: 'trip-cart',
     data: { seo: { noindex: true } },
     loadComponent: () =>

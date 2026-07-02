@@ -49,6 +49,8 @@ public enum ErrorCode {
     EXPENSE_NOT_FOUND("Trip expense not found"),
     SOCIAL_LOGIN_DISABLED("Social login is not configured"),
     SOCIAL_TOKEN_INVALID("Social login token is invalid or expired"),
+    SUBSCRIPTION_PLAN_NOT_FOUND("Subscription plan not found"),
+    SUBSCRIPTION_NOT_FOUND("No active subscription found"),
     INTERNAL_ERROR("Internal server error");
 
     private final String message;

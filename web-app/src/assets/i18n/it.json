@@ -326,6 +326,7 @@
     "myTrips": "I miei viaggi",
     "profile": "Profilo",
     "bookings": "Prenotazioni",
+    "membership": "Travel AI Prime",
     "messages": "Messaggi",
     "accountInfo": "Informazioni account",
     "signOut": "Esci",
@@ -1170,7 +1171,53 @@
       "promoInvalid": "Questo codice sconto non può essere applicato",
       "discount": "Sconto",
       "confirm": "Conferma prenotazione",
-      "processing": "Elaborazione…"
+      "processing": "Elaborazione…",
+      "ancillaries": {
+        "title": "Aggiungi extra",
+        "help": "Servizi opzionali per rendere il viaggio più sereno.",
+        "summaryLine": "Extra",
+        "items": {
+          "INSURANCE": "Assicurazione di viaggio",
+          "TRANSFER": "Transfer aeroportuale",
+          "BAGGAGE": "Bagaglio in stiva",
+          "SEAT": "Selezione del posto",
+          "PRIORITY": "Imbarco prioritario",
+          "EXCURSION": "Escursione a terra",
+          "WINE": "Abbinamento vini"
+        },
+        "desc": {
+          "INSURANCE": "Copertura medica, annullamento e bagaglio per tutto il viaggio.",
+          "TRANSFER": "Transfer privato porta a porta da e per l'aeroporto.",
+          "BAGGAGE": "Aggiungi un bagaglio da 23 kg per viaggiatore.",
+          "SEAT": "Scegli il tuo posto in anticipo.",
+          "PRIORITY": "Imbarca per primo e assicurati lo spazio in cabina.",
+          "EXCURSION": "Escursione guidata in uno dei porti di scalo.",
+          "WINE": "Abbinamento vini selezionato dal sommelier per il tavolo."
+        }
+      }
+    }
+  },
+  "membership": {
+    "eyebrow": "Abbonamento",
+    "title": "Travel AI Prime",
+    "lede": "Zero costi di servizio su ogni prenotazione e uno sconto riservato ai membri. Pensato per chi viaggia spesso.",
+    "interval": { "ANNUAL": "anno", "MONTHLY": "mese" },
+    "subscribe": "Abbonati a Prime",
+    "subscribeSignedOut": "Accedi per abbonarti",
+    "cancel": "Annulla abbonamento",
+    "cancelNote": "Puoi annullare quando vuoi; i vantaggi restano fino alla scadenza.",
+    "priceNote": "Rinnovo automatico. Annulla in qualsiasi momento.",
+    "active": { "title": "Prime attivo", "renews": "Si rinnova il" },
+    "benefits": {
+      "fee": { "title": "Zero costi di servizio", "body": "Elimina il costo del servizio del 6% su tutte le prenotazioni." },
+      "discount": { "title": "Sconto membri", "body": "Uno sconto esclusivo applicato automaticamente al totale." },
+      "priority": { "title": "Assistenza prioritaria", "body": "Coda prioritaria per supporto e modifiche di viaggio." },
+      "watch": { "title": "Avvisi prezzo illimitati", "body": "Monitora tutti i voli e le crociere che vuoi." },
+      "concierge": { "title": "Concierge IA", "body": "Suggerimenti di viaggio personalizzati dal nostro assistente." }
+    },
+    "checkout": {
+      "feeWaived": "Incluso in Prime",
+      "memberDiscount": "Sconto Prime"
     }
   },
   "favorites": {

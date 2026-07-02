@@ -44,6 +44,10 @@ public class Cruise {
     @Column(nullable = false)
     private BigDecimal pricePerPerson;
 
+    /** Supplier cost; the markup (pricePerPerson − netPrice) is the commission. */
+    @Column(name = "net_price")
+    private BigDecimal netPrice;
+
     @Builder.Default
     private int cabinsAvailable = 0;
 
