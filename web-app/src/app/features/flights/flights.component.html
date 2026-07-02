@@ -20,15 +20,17 @@
 
   @if (tripType() !== 'multi') {
     <form class="filter-bar" (ngSubmit)="runSearch()">
-      <div class="field">
-        <label for="f-from">{{ 'catalog.fields.from' | transloco }}</label>
-        <input id="f-from" type="text" maxlength="3" [(ngModel)]="originIata" name="origin"
-               placeholder="LHR" style="text-transform:uppercase" />
+      <div class="field field--primary">
+        <label>{{ 'catalog.fields.from' | transloco }}</label>
+        <app-ui-autocomplete [(ngModel)]="originIata" name="origin" icon="flight_takeoff"
+                             optionIcon="flight" [fetch]="airportSuggest" [uppercase]="true"
+                             [ariaLabel]="'catalog.fields.from' | transloco" placeholder="LHR" />
       </div>
-      <div class="field">
-        <label for="f-to">{{ 'catalog.fields.to' | transloco }}</label>
-        <input id="f-to" type="text" maxlength="3" [(ngModel)]="destIata" name="dest"
-               placeholder="JFK" style="text-transform:uppercase" />
+      <div class="field field--primary">
+        <label>{{ 'catalog.fields.to' | transloco }}</label>
+        <app-ui-autocomplete [(ngModel)]="destIata" name="dest" icon="flight_land"
+                             optionIcon="flight" [fetch]="airportSuggest" [uppercase]="true"
+                             [ariaLabel]="'catalog.fields.to' | transloco" placeholder="JFK" />
       </div>
       <div class="field">
         <label for="f-date">{{ 'catalog.fields.departure' | transloco }}</label>
@@ -62,7 +64,7 @@
                          { value: 'departure_desc', label: ('catalog.sort.departureDesc' | transloco) }
                        ]" />
       </div>
-      <button class="search-submit" type="submit">{{ 'catalog.search' | transloco }}</button>
+      <button class="search-submit" type="submit"><span class="ms">search</span>{{ 'catalog.search' | transloco }}</button>
     </form>
   } @else {
     <!-- Multi-city leg editor -->
@@ -87,7 +89,7 @@
         <button type="button" class="leg-add" (click)="addLeg()">
           <span class="ms" style="font-size:18px">add</span> {{ 'catalog.flights.addLeg' | transloco }}
         </button>
-        <button type="button" class="search-submit" (click)="runSearch()">{{ 'catalog.search' | transloco }}</button>
+        <button type="button" class="search-submit" (click)="runSearch()"><span class="ms">search</span>{{ 'catalog.search' | transloco }}</button>
       </div>
     </div>
   }

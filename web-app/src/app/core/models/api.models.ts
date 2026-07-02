@@ -5,6 +5,16 @@ export interface ApiWrapper<T> {
   meta?: { total: number; page: number; limit: number } | null;
 }
 
+/** A single typeahead suggestion returned by the catalog suggest endpoints. */
+export interface Suggestion {
+  /** Value applied to the filter when chosen (e.g. "CDG", "Paris"). */
+  value: string;
+  /** Primary text shown to the user. */
+  label: string;
+  /** Optional secondary text (e.g. an airport's country); may be null. */
+  hint: string | null;
+}
+
 export interface LoginRequest {
   email: string;
   password: string;

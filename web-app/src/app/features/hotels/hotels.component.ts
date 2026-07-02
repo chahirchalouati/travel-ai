@@ -9,7 +9,8 @@ import type { HotelSearchQuery } from '../../core/services/catalog.service';
 import type { HotelSearchResult } from '../../core/models/api.models';
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
-import { UiSelectComponent, UiCheckboxComponent, UiRangeComponent } from '../../shared/ui';
+import { UiSelectComponent, UiCheckboxComponent, UiRangeComponent, UiAutocompleteComponent } from '../../shared/ui';
+import { SuggestService } from '../../core/services/suggest.service';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920&q=80';
@@ -17,7 +18,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-hotels',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiSelectComponent, UiCheckboxComponent, UiRangeComponent],
+  imports: [CommonModule, FormsModule, CurrencyPipe, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiSelectComponent, UiCheckboxComponent, UiRangeComponent, UiAutocompleteComponent],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -27,10 +28,12 @@ const HEADER_IMG =
       <p class="catalog-subtitle">{{ 'catalog.hotels.subtitle' | transloco }}</p>
 
       <form class="filter-bar" (ngSubmit)="runSearch()">
-        <div class="field">
-          <label for="h-city">{{ 'catalog.fields.city' | transloco }}</label>
-          <input id="h-city" type="text" [(ngModel)]="city" name="city"
-                 [placeholder]="'catalog.fields.cityPlaceholder' | transloco" />
+        <div class="field field--primary">
+          <label>{{ 'catalog.fields.city' | transloco }}</label>
+          <app-ui-autocomplete [(ngModel)]="city" name="city" icon="location_on"
+                               [fetch]="citySuggest" (selected)="runSearch()"
+                               [ariaLabel]="'catalog.fields.city' | transloco"
+                               [placeholder]="'catalog.fields.cityPlaceholder' | transloco" />
         </div>
         <div class="field">
           <label for="h-in">{{ 'catalog.fields.checkIn' | transloco }}</label>
@@ -72,7 +75,7 @@ const HEADER_IMG =
                            { value: 'stars_desc', label: ('catalog.sort.starsDesc' | transloco) }
                          ]" />
         </div>
-        <button class="search-submit" type="submit">{{ 'catalog.search' | transloco }}</button>
+        <button class="search-submit" type="submit"><span class="ms">search</span>{{ 'catalog.search' | transloco }}</button>
       </form>
 
       <div class="filter-checks">
@@ -143,6 +146,10 @@ export class HotelsComponent implements OnInit {
   private readonly catalog = inject(CatalogService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly suggest = inject(SuggestService);
+
+  /** Live city suggestions for the destination field. */
+  readonly citySuggest = (q: string) => this.suggest.hotelCities(q);
 
   readonly headerImg = HEADER_IMG;
   readonly results = signal<HotelSearchResult[]>([]);

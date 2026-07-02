@@ -10,7 +10,8 @@ import type { CruiseSearchResult } from '../../core/models/api.models';
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
 import { TripContextService } from '../../core/services/trip-context.service';
-import { UiRangeComponent } from '../../shared/ui';
+import { UiRangeComponent, UiAutocompleteComponent } from '../../shared/ui';
+import { SuggestService } from '../../core/services/suggest.service';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1599640842225-85d111c60e6b?w=1920&q=80';
@@ -18,7 +19,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-cruises',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiRangeComponent],
+  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiRangeComponent, UiAutocompleteComponent],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -28,15 +29,19 @@ const HEADER_IMG =
       <p class="catalog-subtitle">{{ 'catalog.cruises.subtitle' | transloco }}</p>
 
       <form class="filter-bar" (ngSubmit)="runSearch()">
-        <div class="field">
-          <label for="c-port">{{ 'catalog.fields.departurePort' | transloco }}</label>
-          <input id="c-port" type="text" [(ngModel)]="departurePort" name="port"
-                 [placeholder]="'catalog.fields.portPlaceholder' | transloco" />
+        <div class="field field--primary">
+          <label>{{ 'catalog.fields.departurePort' | transloco }}</label>
+          <app-ui-autocomplete [(ngModel)]="departurePort" name="port" icon="anchor"
+                               optionIcon="directions_boat" [fetch]="portSuggest" (selected)="runSearch()"
+                               [ariaLabel]="'catalog.fields.departurePort' | transloco"
+                               [placeholder]="'catalog.fields.portPlaceholder' | transloco" />
         </div>
         <div class="field">
-          <label for="c-type">{{ 'catalog.fields.cruiseType' | transloco }}</label>
-          <input id="c-type" type="text" [(ngModel)]="cruiseType" name="type"
-                 [placeholder]="'catalog.fields.cruiseTypePlaceholder' | transloco" />
+          <label>{{ 'catalog.fields.cruiseType' | transloco }}</label>
+          <app-ui-autocomplete [(ngModel)]="cruiseType" name="type" icon="sailing"
+                               optionIcon="sailing" [fetch]="typeSuggest"
+                               [ariaLabel]="'catalog.fields.cruiseType' | transloco"
+                               [placeholder]="'catalog.fields.cruiseTypePlaceholder' | transloco" />
         </div>
         <div class="field">
           <label for="c-date">{{ 'catalog.fields.departure' | transloco }}</label>
@@ -52,7 +57,7 @@ const HEADER_IMG =
                         [ariaLabel]="'catalog.fields.maxPrice' | transloco"
                         [anyLabel]="'catalog.fields.anyPrice' | transloco" />
         </div>
-        <button class="search-submit" type="submit">{{ 'catalog.search' | transloco }}</button>
+        <button class="search-submit" type="submit"><span class="ms">search</span>{{ 'catalog.search' | transloco }}</button>
       </form>
     </header>
 
@@ -116,6 +121,10 @@ export class CruisesComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly tripContext = inject(TripContextService);
+  private readonly suggest = inject(SuggestService);
+
+  readonly portSuggest = (q: string) => this.suggest.cruisePorts(q);
+  readonly typeSuggest = (q: string) => this.suggest.cruiseTypes(q);
 
   readonly headerImg = HEADER_IMG;
 
