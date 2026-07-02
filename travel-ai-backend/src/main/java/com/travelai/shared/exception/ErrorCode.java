@@ -36,6 +36,9 @@ public enum ErrorCode {
     PLACE_NOT_FOUND("Travel place not found"),
     PHOTO_NOT_FOUND("Photo not found"),
     SETTING_NOT_FOUND("Platform setting not found"),
+    TRIP_MEMBER_NOT_FOUND("Trip member not found"),
+    TRIP_MEMBER_ALREADY_EXISTS("This person is already invited to the trip"),
+    TRIP_INVITE_INVALID("Invite is invalid or was already used"),
     INTERNAL_ERROR("Internal server error");
 
     private final String message;

@@ -565,3 +565,40 @@ export interface AskQuestionRequest {
 export interface ForumAnswerRequest {
   body: string;
 }
+
+// ── Trip collaboration (companions + segment voting) ──────────────
+export type TripRole = 'VIEWER' | 'EDITOR';
+export type TripMemberStatus = 'PENDING' | 'ACCEPTED' | 'DECLINED';
+export type VoteValue = 'UP' | 'DOWN';
+
+export interface TripMemberResponse {
+  id: string;
+  invitedEmail: string;
+  role: TripRole;
+  status: TripMemberStatus;
+  displayName: string | null;
+  createdAt: string;
+  respondedAt: string | null;
+}
+
+export interface InviteMemberRequest {
+  email: string;
+  role: TripRole;
+}
+
+export interface AcceptInviteResponse {
+  tripId: string;
+}
+
+export interface SegmentVoteView {
+  userId: string;
+  displayName: string;
+  vote: VoteValue;
+}
+
+export interface SegmentVotesResponse {
+  segmentId: string;
+  score: number;
+  myVote: VoteValue | null;
+  votes: SegmentVoteView[];
+}
