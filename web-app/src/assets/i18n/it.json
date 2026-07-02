@@ -1392,5 +1392,10 @@
     "resending": "Invio…",
     "resendDone": "Email di verifica inviata — controlla la tua casella",
     "resendErr": "Impossibile inviare l'email — riprova"
+  },
+  "socialAuth": {
+    "continueWithGoogle": "Continua con Google",
+    "orDivider": "o",
+    "socialError": "Accesso con Google non riuscito. Riprova o usa la tua email."
   }
 }

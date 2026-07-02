@@ -729,3 +729,8 @@ export interface ResetPasswordRequest {
 export interface VerifyEmailRequest {
   token: string;
 }
+
+// ── Social login (Google now; structured so Apple can be added later) ────────
+export interface SocialLoginRequest {
+  idToken: string;
+}

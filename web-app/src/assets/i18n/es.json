@@ -1392,5 +1392,10 @@
     "resending": "Enviando…",
     "resendDone": "Email de verificación enviado — revisa tu bandeja",
     "resendErr": "No se pudo enviar el email — inténtalo de nuevo"
+  },
+  "socialAuth": {
+    "continueWithGoogle": "Continuar con Google",
+    "orDivider": "o",
+    "socialError": "Error al iniciar sesión con Google. Inténtalo de nuevo o usa tu email."
   }
 }
