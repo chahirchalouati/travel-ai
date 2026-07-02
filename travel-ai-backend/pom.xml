@@ -89,6 +89,12 @@
 			<version>${jjwt.version}</version>
 			<scope>runtime</scope>
 		</dependency>
+		<!-- ─── Two-factor auth (TOTP / RFC 6238) ──────────────── -->
+		<dependency>
+			<groupId>dev.samstevens.totp</groupId>
+			<artifactId>totp</artifactId>
+			<version>1.7.1</version>
+		</dependency>
 
 		<!-- ─── Persistence ────────────────────────────────────── -->
 		<dependency>

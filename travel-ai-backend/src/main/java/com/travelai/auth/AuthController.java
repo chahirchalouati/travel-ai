@@ -3,9 +3,14 @@ package com.travelai.auth;
 import com.travelai.auth.dto.AuthResponse;
 import com.travelai.auth.dto.ForgotPasswordRequest;
 import com.travelai.auth.dto.LoginRequest;
+import com.travelai.auth.dto.LoginResponse;
 import com.travelai.auth.dto.RefreshRequest;
 import com.travelai.auth.dto.RegisterRequest;
 import com.travelai.auth.dto.ResetPasswordRequest;
+import com.travelai.auth.dto.TwoFactorCodeRequest;
+import com.travelai.auth.dto.TwoFactorEnableResponse;
+import com.travelai.auth.dto.TwoFactorSetupResponse;
+import com.travelai.auth.dto.TwoFactorVerifyRequest;
 import com.travelai.auth.dto.VerifyEmailRequest;
 import com.travelai.shared.domain.ApiResponse;
 import jakarta.validation.Valid;
@@ -21,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final TwoFactorService twoFactorService;
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<AuthResponse>> register(@Valid @RequestBody RegisterRequest request) {
@@ -28,9 +34,46 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok(response));
     }
 
+    /**
+     * Password login. Returns full tokens for non-2FA accounts; for 2FA accounts
+     * returns {@code mfaRequired=true} plus a short-lived mfaToken to be completed
+     * via {@code /auth/2fa/verify}.
+     */
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody LoginRequest request) {
-        AuthResponse response = authService.login(request);
+    public ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
+        LoginResponse response = authService.loginWithMfa(request);
+        return ResponseEntity.ok(ApiResponse.ok(response));
+    }
+
+    // ── Two-factor authentication ────────────────────────────────────────────
+
+    /** Authenticated: begins 2FA enrolment (stores pending secret; not yet enabled). */
+    @PostMapping("/2fa/setup")
+    public ResponseEntity<ApiResponse<TwoFactorSetupResponse>> setup2fa(Authentication auth) {
+        TwoFactorSetupResponse response = twoFactorService.setup(auth.getName());
+        return ResponseEntity.ok(ApiResponse.ok(response));
+    }
+
+    /** Authenticated: verifies the first code and enables 2FA, returning recovery codes once. */
+    @PostMapping("/2fa/enable")
+    public ResponseEntity<ApiResponse<TwoFactorEnableResponse>> enable2fa(
+            Authentication auth, @Valid @RequestBody TwoFactorCodeRequest request) {
+        TwoFactorEnableResponse response = twoFactorService.enable(auth.getName(), request.code());
+        return ResponseEntity.ok(ApiResponse.ok(response));
+    }
+
+    /** Authenticated: disables 2FA after verifying a TOTP or recovery code. */
+    @PostMapping("/2fa/disable")
+    public ResponseEntity<ApiResponse<Void>> disable2fa(
+            Authentication auth, @Valid @RequestBody TwoFactorCodeRequest request) {
+        twoFactorService.disable(auth.getName(), request.code());
+        return ResponseEntity.ok(ApiResponse.ok(null));
+    }
+
+    /** Public: completes the 2FA login challenge and issues real tokens. */
+    @PostMapping("/2fa/verify")
+    public ResponseEntity<ApiResponse<LoginResponse>> verify2fa(@Valid @RequestBody TwoFactorVerifyRequest request) {
+        LoginResponse response = authService.verifyMfaChallenge(request.mfaToken(), request.code());
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
 
