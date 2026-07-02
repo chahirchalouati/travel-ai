@@ -1,5 +1,6 @@
 package com.travelai.notification;
 
+import com.travelai.notification.events.BookingCancelledEvent;
 import com.travelai.notification.events.BookingConfirmedEvent;
 import com.travelai.notification.events.PartnerWelcomeEvent;
 import com.travelai.notification.events.PaymentCompletedEvent;
@@ -22,6 +23,14 @@ public class NotificationService {
     public void onBookingConfirmed(BookingConfirmedEvent event) {
         String subject = "Prenotazione confermata — " + event.destination();
         String body = buildBookingConfirmationHtml(event);
+        emailService.sendHtml(event.userId(), event.userEmail(), subject, body);
+    }
+
+    /** Sends the cancellation email with the refund breakdown. */
+    @ApplicationModuleListener
+    public void onBookingCancelled(BookingCancelledEvent event) {
+        String subject = "Prenotazione annullata — " + event.destination();
+        String body = buildBookingCancelledHtml(event);
         emailService.sendHtml(event.userId(), event.userEmail(), subject, body);
     }
 
@@ -75,6 +84,28 @@ public class NotificationService {
                         e.destination(),
                         e.hotelName(),
                         e.totalAmount(),
+                        e.bookingId());
+    }
+
+    private String buildBookingCancelledHtml(BookingCancelledEvent e) {
+        String refundLine = e.refundPercent() > 0
+                ? "<p><strong>Rimborso (%d%%):</strong> €%.2f su €%.2f pagati.</p>"
+                        .formatted(e.refundPercent(), e.refundAmount(), e.totalPaid())
+                : "<p>Nessun rimborso previsto per questa cancellazione.</p>";
+        return """
+                <html><body style="font-family:sans-serif;color:#241C15;">
+                <h2 style="color:#D9694C;">Prenotazione annullata</h2>
+                <p>Ciao <strong>%s</strong>,</p>
+                <p>La tua prenotazione per <strong>%s</strong> (rif. %s) è stata annullata.</p>
+                %s
+                <p style="color:#8A7C6A;font-size:12px;">Booking ID: %s</p>
+                </body></html>
+                """
+                .formatted(
+                        e.userName(),
+                        e.destination(),
+                        e.bookingReference(),
+                        refundLine,
                         e.bookingId());
     }
 
