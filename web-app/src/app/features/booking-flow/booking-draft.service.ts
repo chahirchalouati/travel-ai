@@ -1,5 +1,5 @@
 import { Injectable, computed, signal } from '@angular/core';
-import type { CreateBookingRequest, TravelerRequest } from '../../core/models/api.models';
+import type { AncillaryOption, AncillarySelection, CreateBookingRequest, TravelerRequest } from '../../core/models/api.models';
 
 /** Which catalog vertical a booking draft was started from. */
 export type BookingVertical = 'flight' | 'restaurant' | 'cruise';
@@ -68,6 +68,12 @@ export class BookingDraftService {
   /** Loyalty points redeemed on this booking and the EUR discount they buy. */
   readonly redeemedPoints = signal(0);
   readonly loyaltyDiscount = signal(0);
+  /** Add-ons available for this vertical and the codes the traveller has selected. */
+  readonly ancillaryOptions = signal<readonly AncillaryOption[]>([]);
+  readonly selectedAncillaries = signal<readonly string[]>([]);
+  /** Travel AI Prime benefits, set from the membership when the funnel loads. */
+  readonly primeActive = signal(false);
+  readonly memberDiscountPct = signal(0);
 
   /** Currently selected configuration option, or null when the draft has none. */
   readonly selectedOption = computed<BookingOption | null>(() => {
@@ -88,10 +94,32 @@ export class BookingDraftService {
   });
 
   readonly subtotal = computed(() => this.unitPrice() * this.partySize());
-  readonly serviceFee = computed(() => Math.round(this.subtotal() * SERVICE_FEE_RATE * 100) / 100);
+
+  /** Travel AI Prime waives the platform service fee entirely. */
+  readonly serviceFee = computed(() =>
+    this.primeActive() ? 0 : Math.round(this.subtotal() * SERVICE_FEE_RATE * 100) / 100);
+
+  /** Members-only discount on the subtotal, granted by an active Prime plan. */
+  readonly memberDiscount = computed(() => {
+    if (!this.primeActive() || this.memberDiscountPct() <= 0) {
+      return 0;
+    }
+    return Math.round(this.subtotal() * (this.memberDiscountPct() / 100) * 100) / 100;
+  });
+
+  /** Sum of the selected add-ons (each priced from the catalogue, quantity 1). */
+  readonly ancillaryTotal = computed(() => {
+    const selected = this.selectedAncillaries();
+    const sum = this.ancillaryOptions()
+      .filter(o => selected.includes(o.code))
+      .reduce((acc, o) => acc + o.price, 0);
+    return Math.round(sum * 100) / 100;
+  });
+
   readonly total = computed(() =>
     Math.max(0, Math.round(
-      (this.subtotal() + this.serviceFee() - this.discount() - this.loyaltyDiscount()) * 100) / 100));
+      (this.subtotal() + this.serviceFee() + this.ancillaryTotal()
+        - this.memberDiscount() - this.discount() - this.loyaltyDiscount()) * 100) / 100));
 
   /** Seeds a fresh draft and resets all funnel selections. */
   start(draft: BookingDraft, party = 2): void {
@@ -102,7 +130,20 @@ export class BookingDraftService {
     this.appliedPromo.set(null);
     this.redeemedPoints.set(0);
     this.loyaltyDiscount.set(0);
+    this.ancillaryOptions.set([]);
+    this.selectedAncillaries.set([]);
     this.setPartySize(party);
+  }
+
+  /** Adds or removes an add-on from the selection (idempotent per code). */
+  toggleAncillary(code: string): void {
+    this.selectedAncillaries.update(codes =>
+      codes.includes(code) ? codes.filter(c => c !== code) : [...codes, code],
+    );
+  }
+
+  isAncillarySelected(code: string): boolean {
+    return this.selectedAncillaries().includes(code);
   }
 
   setPartySize(size: number): void {
@@ -127,6 +168,8 @@ export class BookingDraftService {
     this.appliedPromo.set(null);
     this.redeemedPoints.set(0);
     this.loyaltyDiscount.set(0);
+    this.ancillaryOptions.set([]);
+    this.selectedAncillaries.set([]);
   }
 
   /** Builds the API payload from the current draft + selections. */
@@ -138,8 +181,10 @@ export class BookingDraftService {
     const total = this.total();
     const option = this.selectedOption();
     const redeemPoints = this.redeemedPoints() > 0 ? this.redeemedPoints() : undefined;
+    const ancillaries: AncillarySelection[] = this.selectedAncillaries().map(code => ({ code, quantity: 1 }));
     const base: CreateBookingRequest = {
       redeemPoints,
+      ancillaries: ancillaries.length > 0 ? ancillaries : undefined,
       destination: d.destination,
       totalAmount: total,
       partySize: this.partySize(),

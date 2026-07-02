@@ -1,0 +1,59 @@
+<section class="pm">
+  <div class="pm-hero">
+    <span class="pm-eyebrow">{{ 'membership.eyebrow' | transloco }}</span>
+    <h1 class="pm-title">{{ 'membership.title' | transloco }}</h1>
+    <p class="pm-lede">{{ 'membership.lede' | transloco }}</p>
+
+    @if (isMember()) {
+      <div class="pm-status">
+        <span class="ms">verified</span>
+        <div>
+          <strong>{{ 'membership.active.title' | transloco }}</strong>
+          @if (membership()?.renewsAt; as r) {
+            <small>{{ 'membership.active.renews' | transloco }} {{ r | date:'dd MMM yyyy' }}</small>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="pm-grid">
+    <!-- Benefits -->
+    <ul class="pm-benefits">
+      @for (k of benefitKeys; track k) {
+        <li class="pm-benefit">
+          <span class="pm-benefit__mark ms">check</span>
+          <div>
+            <strong>{{ 'membership.benefits.' + k + '.title' | transloco }}</strong>
+            <span>{{ 'membership.benefits.' + k + '.body' | transloco }}</span>
+          </div>
+        </li>
+      }
+    </ul>
+
+    <!-- Plan card -->
+    @if (plan(); as p) {
+      <aside class="pm-card">
+        <span class="pm-card__name">{{ p.name }}</span>
+        <div class="pm-card__price">
+          <span class="pm-card__amount">{{ p.price | currency:p.currency:'symbol':'1.0-0' }}</span>
+          <span class="pm-card__interval">/ {{ 'membership.interval.' + p.billingInterval | transloco }}</span>
+        </div>
+        <p class="pm-card__desc">{{ p.description }}</p>
+
+        @if (isMember()) {
+          <button class="pm-btn pm-btn--ghost" (click)="cancel()" [disabled]="working()">
+            {{ 'membership.cancel' | transloco }}
+          </button>
+          <p class="pm-card__note">{{ 'membership.cancelNote' | transloco }}</p>
+        } @else {
+          <button class="pm-btn pm-btn--primary" (click)="subscribe()" [disabled]="working()">
+            @if (working()) { <span class="pm-spinner"></span> }
+            {{ (isAuthenticated() ? 'membership.subscribe' : 'membership.subscribeSignedOut') | transloco }}
+          </button>
+          <p class="pm-card__note">{{ 'membership.priceNote' | transloco }}</p>
+        }
+      </aside>
+    }
+  </div>
+</section>

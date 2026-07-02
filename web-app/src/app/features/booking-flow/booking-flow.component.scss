@@ -261,3 +261,24 @@
   .bf-spinner { animation: none; }
   * { transition: none !important; }
 }
+
+/* Ancillary add-ons (paid extras at checkout) */
+.bf-addons .bf-help { margin: 0 0 10px; }
+.bf-addon-list { display: flex; flex-direction: column; gap: 10px; }
+.bf-addon {
+  display: flex; align-items: center; gap: 12px;
+  border: 1px solid var(--bf-line); border-radius: 12px;
+  padding: 12px 14px; cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease, box-shadow 150ms ease;
+}
+.bf-addon:hover { border-color: #d5d5d5; }
+.bf-addon--on {
+  border-color: var(--bf-accent);
+  background: linear-gradient(135deg, #fff6f3, #fff);
+  box-shadow: 0 1px 0 rgba(224, 74, 47, 0.06);
+}
+.bf-addon input { width: 18px; height: 18px; accent-color: var(--bf-accent); flex: none; }
+.bf-addon__body { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.bf-addon__label { font-weight: 700; font-size: 0.95rem; }
+.bf-addon__note { font-size: 12px; color: var(--bf-muted); }
+.bf-addon__price { font-weight: 800; color: var(--bf-ink); white-space: nowrap; }
