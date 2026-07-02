@@ -1275,5 +1275,38 @@
       "errorBody": "Esta invitación no es válida o ya se ha usado.",
       "goTrips": "Ir a mis viajes"
     }
+  },
+  "tripBudget": {
+    "title": "Presupuesto del viaje",
+    "setPrompt": "Establecer un presupuesto para este viaje",
+    "amountPlaceholder": "Importe",
+    "descriptionPlaceholder": "Descripción (opcional)",
+    "save": "Establecer presupuesto",
+    "saving": "Guardando...",
+    "cancel": "Cancelar",
+    "edit": "Editar",
+    "spent": "Gastado",
+    "budget": "Presupuesto",
+    "remaining": "Restante",
+    "overBudget": "Sobrepasado",
+    "ofBudgetUsed": "del presupuesto usado",
+    "breakdown": "Distribución",
+    "noSpendYet": "Aún no hay gastos registrados.",
+    "addExpense": "Añadir un gasto",
+    "category": "Categoría",
+    "date": "Fecha",
+    "delete": "Eliminar",
+    "categories": {
+      "VOLI": "Vuelos",
+      "HOTEL": "Hoteles",
+      "RISTORANTI": "Restauración",
+      "CROCIERE": "Cruceros",
+      "ATTRAZIONI": "Atracciones",
+      "FOOD": "Comida y bebida",
+      "TRANSPORT": "Transporte",
+      "SHOPPING": "Compras",
+      "ACTIVITIES": "Actividades",
+      "OTHER": "Otros"
+    }
   }
 }
