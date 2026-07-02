@@ -23,6 +23,7 @@ import java.util.UUID;
 public class BookingController {
 
     private final BookingService bookingService;
+    private final BookingCancellationService cancellationService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -59,11 +60,30 @@ public class BookingController {
                 .body(ics);
     }
 
-    @PatchMapping("/{id}/cancel")
-    public ApiResponse<BookingResponse> cancel(
+    /** Refund quote for cancelling now — does not cancel anything. */
+    @GetMapping("/{id}/cancellation-preview")
+    public ApiResponse<CancellationPreviewResponse> cancellationPreview(
             @AuthenticationPrincipal UserDetails user,
             @PathVariable UUID id) {
-        return ApiResponse.ok(bookingService.cancelBooking(user.getUsername(), id));
+        return ApiResponse.ok(cancellationService.preview(user.getUsername(), id));
+    }
+
+    /** Self-service cancellation: refund per policy, inventory restored, email sent. */
+    @PostMapping("/{id}/cancel")
+    public ApiResponse<CancellationResultResponse> cancel(
+            @AuthenticationPrincipal UserDetails user,
+            @PathVariable UUID id,
+            @RequestBody(required = false) @Valid CancelBookingRequest req) {
+        String reason = req != null ? req.reason() : null;
+        return ApiResponse.ok(cancellationService.cancel(user.getUsername(), id, reason));
+    }
+
+    /** Legacy verb kept for older clients; same refund-aware flow as the POST. */
+    @PatchMapping("/{id}/cancel")
+    public ApiResponse<CancellationResultResponse> cancelLegacy(
+            @AuthenticationPrincipal UserDetails user,
+            @PathVariable UUID id) {
+        return ApiResponse.ok(cancellationService.cancel(user.getUsername(), id, null));
     }
 
     @PostMapping("/waitlist")

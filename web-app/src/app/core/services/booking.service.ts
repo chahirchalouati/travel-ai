@@ -2,7 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import type { ApiWrapper, CreateBookingRequest, BookingResponse, PageWrapper } from '../models/api.models';
+import type {
+  ApiWrapper,
+  BookingResponse,
+  CancellationPreview,
+  CancellationResult,
+  CreateBookingRequest,
+  PageWrapper,
+} from '../models/api.models';
 
 @Injectable({ providedIn: 'root' })
 export class BookingService {
@@ -29,9 +36,19 @@ export class BookingService {
     );
   }
 
-  cancel(id: string): Observable<BookingResponse> {
-    return this.http.patch<ApiWrapper<BookingResponse>>(`${environment.apiUrl}/bookings/${id}/cancel`, {}).pipe(
-      map(res => res.data)
-    );
+  /** Refund quote for cancelling a booking now, without cancelling it. */
+  cancellationPreview(id: string): Observable<CancellationPreview> {
+    return this.http
+      .get<ApiWrapper<CancellationPreview>>(`${environment.apiUrl}/bookings/${id}/cancellation-preview`)
+      .pipe(map(res => res.data));
+  }
+
+  /** Cancels the booking; the backend refunds per policy and restores inventory. */
+  cancel(id: string, reason?: string): Observable<CancellationResult> {
+    return this.http
+      .post<ApiWrapper<CancellationResult>>(`${environment.apiUrl}/bookings/${id}/cancel`, {
+        reason: reason?.trim() || null,
+      })
+      .pipe(map(res => res.data));
   }
 }

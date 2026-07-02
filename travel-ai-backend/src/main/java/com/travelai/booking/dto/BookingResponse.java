@@ -31,4 +31,5 @@ public record BookingResponse(
         LocalDate checkIn,
         LocalDate checkOut,
         List<TravelerResponse> travelers,
+        BigDecimal refundAmount,
         Instant createdAt) {}

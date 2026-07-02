@@ -1233,5 +1233,24 @@
       "completed": "Completed",
       "cancelled": "Cancelled"
     }
+  },
+  "cancellation": {
+    "action": "Cancel booking",
+    "dialogTitle": "Cancel this booking?",
+    "previewLoading": "Checking refund policy…",
+    "refundLine": "You will be refunded {{ percent }}% —",
+    "noRefund": "No refund applies at this stage.",
+    "policyTitle": "Refund policy",
+    "tierFull": "7+ days before check-in: 100% refund",
+    "tierPartial": "2 to 6 days before: 50% refund",
+    "tierNone": "Less than 2 days before: no refund",
+    "reasonPlaceholder": "Reason (optional)",
+    "keep": "Keep booking",
+    "confirm": "Confirm cancellation",
+    "notCancellable": "This booking can no longer be cancelled.",
+    "error": "Could not cancel — please try again",
+    "cancelledWithRefund": "Booking cancelled — €{{ amount }} refunded",
+    "cancelledNoRefund": "Booking cancelled",
+    "refundedBadge": "Refunded"
   }
 }

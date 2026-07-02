@@ -10,6 +10,8 @@ public enum ErrorCode {
     VALIDATION_ERROR("Validation error"),
     PARTNER_NOT_FOUND("Partner not found"),
     BOOKING_NOT_FOUND("Booking not found"),
+    BOOKING_ALREADY_CANCELLED("Booking is already cancelled"),
+    BOOKING_NOT_CANCELLABLE("Booking cannot be cancelled"),
     PAYMENT_NOT_FOUND("Payment not found"),
     PAYMENT_FAILED("Payment failed"),
     AVAILABILITY_UNAVAILABLE("Availability unavailable"),

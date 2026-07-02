@@ -38,6 +38,7 @@ public class BookingService {
     private final FlightRepository flightRepository;
     private final CruiseRepository cruiseRepository;
     private final RestaurantAvailabilityRepository restaurantAvailabilityRepository;
+    private final RefundRepository refundRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     public BookingResponse createBooking(String userEmail, CreateBookingRequest req) {
@@ -164,13 +165,6 @@ public class BookingService {
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.BOOKING_NOT_FOUND));
     }
 
-    public BookingResponse cancelBooking(String email, UUID bookingId) {
-        Booking booking = bookingRepository.findByIdAndUserEmail(bookingId, email)
-                .orElseThrow(() -> TravelAiException.notFound(ErrorCode.BOOKING_NOT_FOUND));
-        booking.setStatus(BookingStatus.CANCELLED);
-        return toResponse(bookingRepository.save(booking));
-    }
-
     public WaitlistEntryResponse joinWaitlist(String email, JoinWaitlistRequest req) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.USER_NOT_FOUND));
@@ -236,7 +230,14 @@ public class BookingService {
                 .replace("\n", "\\n");
     }
 
-    private BookingResponse toResponse(Booking b) {
+    /** Package-private so {@link BookingCancellationService} can reuse the mapping. */
+    BookingResponse toResponse(Booking b) {
+        // Refund issued at cancellation time, surfaced on cancelled bookings only.
+        java.math.BigDecimal refundAmount = b.getStatus() == BookingStatus.CANCELLED
+                ? refundRepository.findFirstByBookingIdOrderByCreatedAtDesc(b.getId())
+                        .map(Refund::getAmount)
+                        .orElse(null)
+                : null;
         List<TravelerResponse> travelers = b.getTravelers().stream()
                 .map(t -> new TravelerResponse(
                         t.getId(),
@@ -268,6 +269,7 @@ public class BookingService {
                 b.getCheckIn(),
                 b.getCheckOut(),
                 travelers,
+                refundAmount,
                 b.getCreatedAt());
     }
 

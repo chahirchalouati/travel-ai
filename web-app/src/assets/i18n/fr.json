@@ -1233,5 +1233,24 @@
       "completed": "Terminée",
       "cancelled": "Annulée"
     }
+  },
+  "cancellation": {
+    "action": "Annuler la réservation",
+    "dialogTitle": "Annuler cette réservation ?",
+    "previewLoading": "Vérification de la politique de remboursement…",
+    "refundLine": "Vous serez remboursé à {{ percent }} % —",
+    "noRefund": "Aucun remboursement ne s'applique à ce stade.",
+    "policyTitle": "Politique de remboursement",
+    "tierFull": "7 jours ou plus avant l'arrivée : remboursement à 100 %",
+    "tierPartial": "De 2 à 6 jours avant : remboursement à 50 %",
+    "tierNone": "Moins de 2 jours avant : aucun remboursement",
+    "reasonPlaceholder": "Motif (facultatif)",
+    "keep": "Conserver la réservation",
+    "confirm": "Confirmer l'annulation",
+    "notCancellable": "Cette réservation ne peut plus être annulée.",
+    "error": "Annulation impossible — veuillez réessayer",
+    "cancelledWithRefund": "Réservation annulée — {{ amount }} € remboursés",
+    "cancelledNoRefund": "Réservation annulée",
+    "refundedBadge": "Remboursé"
   }
 }
