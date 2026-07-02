@@ -43,6 +43,8 @@ public enum ErrorCode {
     TRIP_MEMBER_ALREADY_EXISTS("This person is already invited to the trip"),
     TRIP_INVITE_INVALID("Invite is invalid or was already used"),
     EXPENSE_NOT_FOUND("Trip expense not found"),
+    SOCIAL_LOGIN_DISABLED("Social login is not configured"),
+    SOCIAL_TOKEN_INVALID("Social login token is invalid or expired"),
     INTERNAL_ERROR("Internal server error");
 
     private final String message;

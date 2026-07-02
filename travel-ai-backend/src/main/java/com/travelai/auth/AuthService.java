@@ -4,6 +4,8 @@ import com.travelai.auth.dto.AuthResponse;
 import com.travelai.auth.dto.LoginRequest;
 import com.travelai.auth.dto.RefreshRequest;
 import com.travelai.auth.dto.RegisterRequest;
+import com.travelai.auth.social.GoogleTokenVerifier;
+import com.travelai.auth.social.SocialIdentity;
 import com.travelai.notification.events.EmailVerificationRequestedEvent;
 import com.travelai.notification.events.PasswordResetRequestedEvent;
 import com.travelai.shared.config.JwtProperties;
@@ -36,11 +38,13 @@ public class AuthService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final SocialAccountRepository socialAccountRepository;
     private final JwtService jwtService;
     private final JwtProperties jwtProperties;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final ApplicationEventPublisher eventPublisher;
+    private final GoogleTokenVerifier googleTokenVerifier;
 
     @Value("${app.frontend-base-url:http://localhost:4200}")
     private String frontendBaseUrl;
@@ -197,6 +201,76 @@ public class AuthService {
         String verifyLink = frontendBaseUrl + "/verify-email?token=" + user.getEmailVerificationToken();
         eventPublisher.publishEvent(new EmailVerificationRequestedEvent(
                 user.getId(), user.getEmail(), user.getFirstName(), verifyLink));
+    }
+
+    /**
+     * Signs a user in via Google. Verifies the ID token server-side, then finds
+     * the user by linked social account → by email (linking a new social account)
+     * → else provisions a new account. Issues our own JWTs via the same path as
+     * {@link #login}/{@link #register}.
+     */
+    public AuthResponse loginWithGoogle(String idToken) {
+        SocialIdentity identity = googleTokenVerifier.verify(idToken);
+        User user = resolveSocialUser(SocialProvider.GOOGLE, identity);
+
+        refreshTokenRepository.deleteByUser(user);
+
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+        saveRefreshToken(user, refreshToken);
+
+        log.info("Google social login for user: {}", user.getEmail());
+        return buildAuthResponse(user, accessToken, refreshToken);
+    }
+
+    /**
+     * Resolves the local {@link User} for a verified social identity, creating or
+     * linking records as needed. Package-private so it can be exercised directly
+     * in unit tests without going through token verification.
+     */
+    User resolveSocialUser(SocialProvider provider, SocialIdentity identity) {
+        // 1) Already linked → return that user.
+        var linked = socialAccountRepository
+                .findByProviderAndProviderUserId(provider, identity.subject());
+        if (linked.isPresent()) {
+            return linked.get().getUser();
+        }
+
+        // 2) Existing local account with the same email → link it.
+        User user = userRepository.findByEmail(identity.email())
+                .orElseGet(() -> createSocialUser(identity));
+
+        linkSocialAccount(provider, identity, user);
+        return user;
+    }
+
+    private User createSocialUser(SocialIdentity identity) {
+        User user = User.builder()
+                .email(identity.email())
+                .passwordHash(passwordEncoder.encode(UUID.randomUUID().toString()))
+                .firstName(orDefault(identity.firstName(), "Traveler"))
+                .lastName(orDefault(identity.lastName(), ""))
+                .role(UserRole.TRAVELER)
+                .emailVerified(identity.emailVerified())
+                .active(true)
+                .build();
+        User saved = userRepository.save(user);
+        log.info("Provisioned new user via social login: {}", saved.getEmail());
+        return saved;
+    }
+
+    private void linkSocialAccount(SocialProvider provider, SocialIdentity identity, User user) {
+        SocialAccount account = SocialAccount.builder()
+                .user(user)
+                .provider(provider)
+                .providerUserId(identity.subject())
+                .email(identity.email())
+                .build();
+        socialAccountRepository.save(account);
+    }
+
+    private static String orDefault(String value, String fallback) {
+        return (value == null || value.isBlank()) ? fallback : value;
     }
 
     private void saveRefreshToken(User user, String token) {

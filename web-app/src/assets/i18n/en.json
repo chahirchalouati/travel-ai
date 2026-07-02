@@ -1391,5 +1391,10 @@
     "resending": "Sending…",
     "resendDone": "Verification email sent — check your inbox",
     "resendErr": "Could not send the email — try again"
+  },
+  "socialAuth": {
+    "continueWithGoogle": "Continue with Google",
+    "orDivider": "or",
+    "socialError": "Google sign-in failed. Please try again or use your email."
   }
 }
