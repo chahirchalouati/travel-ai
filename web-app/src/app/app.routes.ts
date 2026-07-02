@@ -114,6 +114,13 @@ export const routes: Routes = [
       import('./features/trips/trips.component').then(m => m.TripsComponent),
   },
   {
+    path: 'trips/invite',
+    loadComponent: () =>
+      import('./features/trip-collab/trip-invite.component').then(
+        m => m.TripInviteComponent
+      ),
+  },
+  {
     path: 'trips/:id/live',
     loadComponent: () =>
       import('./features/itinerary-live/itinerary-live.component').then(

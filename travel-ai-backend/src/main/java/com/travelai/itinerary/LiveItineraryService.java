@@ -41,6 +41,7 @@ public class LiveItineraryService {
     private final ItineraryProposalRepository proposalRepository;
     private final ProposedChangeRepository changeRepository;
     private final BookingRepository bookingRepository;
+    private final com.travelai.tripcollab.TripAccessService tripAccessService;
     private final AiRateLimiter aiRateLimiter;
     private final com.travelai.messaging.MessagingService messagingService;
     private final ApplicationEventPublisher eventPublisher;
@@ -98,8 +99,8 @@ public class LiveItineraryService {
 
     @Transactional(readOnly = true)
     public LiveItineraryResponse getByBooking(String userEmail, UUID bookingId) {
-        bookingRepository.findByIdAndUserEmail(bookingId, userEmail)
-                .orElseThrow(() -> TravelAiException.notFound(ErrorCode.BOOKING_NOT_FOUND));
+        // Owner or any accepted trip companion may view.
+        tripAccessService.requireView(bookingId, userEmail);
         LiveItinerary itinerary = itineraryRepository.findByBookingId(bookingId)
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.ITINERARY_NOT_FOUND));
         return toResponse(itinerary);
@@ -107,7 +108,7 @@ public class LiveItineraryService {
 
     @Transactional(readOnly = true)
     public List<ItineraryProposalResponse> listProposals(String userEmail, UUID itineraryId) {
-        LiveItinerary itinerary = loadOwnedItinerary(userEmail, itineraryId);
+        LiveItinerary itinerary = loadViewableItinerary(userEmail, itineraryId);
         return proposalRepository.findByItineraryIdOrderByCreatedAtDesc(itinerary.getId())
                 .stream().map(this::toProposalResponse).toList();
     }
@@ -280,11 +281,19 @@ public class LiveItineraryService {
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
+    /** Owner or accepted EDITOR companion — may mutate segments and proposals. */
     private LiveItinerary loadOwnedItinerary(String userEmail, UUID itineraryId) {
         LiveItinerary itinerary = itineraryRepository.findById(itineraryId)
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.ITINERARY_NOT_FOUND));
-        bookingRepository.findByIdAndUserEmail(itinerary.getBookingId(), userEmail)
-                .orElseThrow(() -> TravelAiException.forbidden(ErrorCode.ACCESS_DENIED));
+        tripAccessService.requireEdit(itinerary.getBookingId(), userEmail);
+        return itinerary;
+    }
+
+    /** Owner or any accepted companion (viewer included) — read-only access. */
+    private LiveItinerary loadViewableItinerary(String userEmail, UUID itineraryId) {
+        LiveItinerary itinerary = itineraryRepository.findById(itineraryId)
+                .orElseThrow(() -> TravelAiException.notFound(ErrorCode.ITINERARY_NOT_FOUND));
+        tripAccessService.requireView(itinerary.getBookingId(), userEmail);
         return itinerary;
     }
 

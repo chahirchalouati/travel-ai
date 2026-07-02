@@ -1241,5 +1241,39 @@
     "empty": "Aucune étape à afficher pour le moment",
     "emptyHint": "Vos étapes apparaîtront ici dès que votre itinéraire aura des lieux.",
     "missing": "{{count}} étape(s) sans localisation"
+  },
+  "tripCollab": {
+    "title": "Compagnons de voyage",
+    "subtitle": "Invitez des personnes à consulter et voter sur ce voyage",
+    "empty": "Aucun compagnon pour l'instant. Invitez quelqu'un à planifier ensemble.",
+    "emailPlaceholder": "compagnon@email.com",
+    "invite": "Inviter",
+    "inviteSent": "Invitation envoyée.",
+    "inviteError": "Impossible d'envoyer l'invitation.",
+    "remove": "Retirer le compagnon",
+    "role": {
+      "VIEWER": "Spectateur",
+      "EDITOR": "Éditeur"
+    },
+    "status": {
+      "PENDING": "En attente",
+      "ACCEPTED": "Accepté",
+      "DECLINED": "Refusé"
+    },
+    "vote": {
+      "aria": "Voter sur cette étape",
+      "up": "Voter pour",
+      "down": "Voter contre",
+      "voters": "votes"
+    },
+    "accept": {
+      "working": "Ajout au voyage...",
+      "loginTitle": "Connectez-vous pour accepter",
+      "loginBody": "Connectez-vous avec l'adresse invitée, puis rouvrez le lien d'invitation.",
+      "goHome": "Se connecter",
+      "errorTitle": "Invitation non valide",
+      "errorBody": "Cette invitation est invalide ou a déjà été utilisée.",
+      "goTrips": "Voir mes voyages"
+    }
   }
 }

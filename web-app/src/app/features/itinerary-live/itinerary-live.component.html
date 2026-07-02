@@ -42,6 +42,11 @@
                   <span class="il-segment__date">{{ s.scheduledAt | date:'EEE, MMM d' }}</span>
                 }
 
+                <div class="il-segment__vote">
+                  <app-segment-vote [tripId]="it.bookingId" [segmentId]="s.id"
+                                    [state]="voteFor(s.id)"></app-segment-vote>
+                </div>
+
                 @if (reportingSegmentId() === s.id) {
                   <div class="il-report">
                     <textarea class="il-input" rows="2" [(ngModel)]="reportText" name="reportText"
@@ -69,6 +74,9 @@
       <section class="il-section">
         <app-trip-map [bookingId]="it.bookingId" />
       </section>
+
+      <!-- Travel companions -->
+      <app-trip-companions [tripId]="it.bookingId" [owner]="isOwner()"></app-trip-companions>
 
       <!-- Proposals -->
       @if (pendingProposals().length > 0) {
