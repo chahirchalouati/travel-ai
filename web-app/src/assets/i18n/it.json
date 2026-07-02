@@ -1233,5 +1233,34 @@
       "completed": "Completata",
       "cancelled": "Annullata"
     }
+  },
+  "loyalty": {
+    "tier": {
+      "EXPLORER": "Explorer",
+      "VOYAGER": "Voyager",
+      "ELITE": "Elite"
+    },
+    "type": {
+      "EARN": "Punti guadagnati",
+      "REDEEM": "Punti utilizzati",
+      "ADJUST": "Rettifica"
+    },
+    "card": {
+      "subtitle": "I tuoi premi di viaggio",
+      "points": "punti",
+      "progressTo": "Progresso verso {{tier}}",
+      "pointsToGo": "{{points}} pt mancanti",
+      "topTier": "Hai raggiunto il nostro livello più alto — goditi i vantaggi.",
+      "lifetime": "{{points}} punti totali",
+      "earnRate": "Guadagni {{rate}}× punti",
+      "activity": "Attività recente",
+      "empty": "Nessuna attività punti per ora. Prenota un viaggio per iniziare a guadagnare."
+    },
+    "checkout": {
+      "toggle": "Usa i tuoi punti",
+      "balance": "{{points}} punti disponibili",
+      "applied": "{{points}} punti applicati — risparmi {{amount}}",
+      "discountLine": "Punti ({{points}})"
+    }
   }
 }

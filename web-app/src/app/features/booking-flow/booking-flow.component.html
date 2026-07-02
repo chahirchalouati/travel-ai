@@ -170,6 +170,23 @@
               }
             </div>
 
+            @if (canRedeem()) {
+              <div class="bf-field bf-loyalty">
+                <label class="bf-loyalty__row">
+                  <input type="checkbox" [checked]="redeemOn()" (change)="toggleRedeem()" />
+                  <span class="bf-loyalty__text">
+                    <strong>{{ 'loyalty.checkout.toggle' | transloco }}</strong>
+                    <small>{{ 'loyalty.checkout.balance' | transloco: { points: pointsBalance() } }}</small>
+                  </span>
+                </label>
+                @if (redeemOn() && store.redeemedPoints() > 0) {
+                  <p class="bf-promo__msg bf-promo__msg--ok">
+                    {{ 'loyalty.checkout.applied' | transloco: { points: store.redeemedPoints(), amount: (store.loyaltyDiscount() | currency:d.currency:'symbol':'1.2-2') } }}
+                  </p>
+                }
+              </div>
+            }
+
             <div class="bf-field">
               <label class="bf-label">{{ 'booking.flow.payVia' | transloco }}</label>
               <div class="bf-chips">
@@ -236,6 +253,12 @@
           <div class="bf-summary__line" style="color:#00856a;font-weight:700;">
             <span>{{ 'booking.flow.discount' | transloco }} @if (store.appliedPromo(); as c) { ({{ c }}) }</span>
             <span>−{{ store.discount() | currency:d.currency:'symbol':'1.2-2' }}</span>
+          </div>
+        }
+        @if (store.loyaltyDiscount() > 0) {
+          <div class="bf-summary__line" style="color:#00856a;font-weight:700;">
+            <span>{{ 'loyalty.checkout.discountLine' | transloco: { points: store.redeemedPoints() } }}</span>
+            <span>−{{ store.loyaltyDiscount() | currency:d.currency:'symbol':'1.2-2' }}</span>
           </div>
         }
         <div class="bf-summary__total">
