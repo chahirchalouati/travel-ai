@@ -329,7 +329,34 @@ export interface BookingResponse {
   checkIn: string;
   checkOut: string;
   travelers: TravelerResponse[];
+  refundAmount: number | null;
   createdAt: string;
+}
+
+// ── Self-service cancellation ────────────────────────────────────────────────
+
+export interface CancellationPolicyTier {
+  minDaysBefore: number;
+  refundPercent: number;
+}
+
+export interface CancellationPreview {
+  bookingId: string;
+  cancellable: boolean;
+  notCancellableReason: string | null;
+  checkIn: string | null;
+  daysBeforeCheckIn: number;
+  totalPaid: number;
+  refundPercent: number;
+  refundAmount: number;
+  tiers: CancellationPolicyTier[];
+}
+
+export interface CancellationResult {
+  booking: BookingResponse;
+  refundAmount: number;
+  refundPercent: number;
+  refundStatus: 'PENDING' | 'PROCESSED' | 'FAILED' | null;
 }
 
 export interface InitiatePaymentRequest {
