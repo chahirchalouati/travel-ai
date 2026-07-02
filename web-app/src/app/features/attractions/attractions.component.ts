@@ -10,7 +10,8 @@ import { emptyPage } from '../../core/services/catalog.service';
 import type { AttractionResponse } from '../../core/models/api.models';
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
-import { UiSelectComponent } from '../../shared/ui';
+import { UiSelectComponent, UiAutocompleteComponent } from '../../shared/ui';
+import { SuggestService } from '../../core/services/suggest.service';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1920&q=80';
@@ -18,7 +19,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-attractions',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiSelectComponent],
+  imports: [CommonModule, FormsModule, CurrencyPipe, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiSelectComponent, UiAutocompleteComponent],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -28,10 +29,12 @@ const HEADER_IMG =
       <p class="catalog-subtitle">{{ 'attractions.subtitle' | transloco }}</p>
 
       <form class="filter-bar" (ngSubmit)="runSearch()">
-        <div class="field">
-          <label for="a-city">{{ 'catalog.fields.city' | transloco }}</label>
-          <input id="a-city" type="text" [(ngModel)]="city" name="city"
-                 [placeholder]="'catalog.fields.cityPlaceholder' | transloco" />
+        <div class="field field--primary">
+          <label>{{ 'catalog.fields.city' | transloco }}</label>
+          <app-ui-autocomplete [(ngModel)]="city" name="city" icon="location_on"
+                               [fetch]="citySuggest" (selected)="runSearch()"
+                               [ariaLabel]="'catalog.fields.city' | transloco"
+                               [placeholder]="'catalog.fields.cityPlaceholder' | transloco" />
         </div>
         <div class="field">
           <label>{{ 'catalog.fields.sort' | transloco }}</label>
@@ -45,7 +48,7 @@ const HEADER_IMG =
                            { value: 'name_asc', label: ('catalog.sort.nameAsc' | transloco) }
                          ]" />
         </div>
-        <button class="search-submit" type="submit">{{ 'catalog.search' | transloco }}</button>
+        <button class="search-submit" type="submit"><span class="ms">search</span>{{ 'catalog.search' | transloco }}</button>
       </form>
 
       @if (categories().length > 0) {
@@ -123,6 +126,9 @@ export class AttractionsComponent implements OnInit {
   private readonly attractions = inject(AttractionService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly suggest = inject(SuggestService);
+
+  readonly citySuggest = (q: string) => this.suggest.attractionCities(q);
 
   readonly headerImg = HEADER_IMG;
   readonly results = signal<AttractionResponse[]>([]);

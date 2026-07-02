@@ -10,7 +10,8 @@ import type { RestaurantSearchResult } from '../../core/models/api.models';
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
 import { TripContextService } from '../../core/services/trip-context.service';
-import { UiSelectComponent, UiRangeComponent } from '../../shared/ui';
+import { UiSelectComponent, UiRangeComponent, UiAutocompleteComponent } from '../../shared/ui';
+import { SuggestService } from '../../core/services/suggest.service';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80';
@@ -18,7 +19,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-restaurants',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiSelectComponent, UiRangeComponent],
+  imports: [CommonModule, FormsModule, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiSelectComponent, UiRangeComponent, UiAutocompleteComponent],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -28,15 +29,19 @@ const HEADER_IMG =
       <p class="catalog-subtitle">{{ 'catalog.restaurants.subtitle' | transloco }}</p>
 
       <form class="filter-bar" (ngSubmit)="runSearch()">
-        <div class="field">
-          <label for="r-city">{{ 'catalog.fields.city' | transloco }}</label>
-          <input id="r-city" type="text" [(ngModel)]="city" name="city"
-                 [placeholder]="'catalog.fields.cityPlaceholder' | transloco" />
+        <div class="field field--primary">
+          <label>{{ 'catalog.fields.city' | transloco }}</label>
+          <app-ui-autocomplete [(ngModel)]="city" name="city" icon="location_on"
+                               [fetch]="citySuggest" (selected)="runSearch()"
+                               [ariaLabel]="'catalog.fields.city' | transloco"
+                               [placeholder]="'catalog.fields.cityPlaceholder' | transloco" />
         </div>
         <div class="field">
-          <label for="r-cuisine">{{ 'catalog.fields.cuisine' | transloco }}</label>
-          <input id="r-cuisine" type="text" [(ngModel)]="cuisineType" name="cuisine"
-                 [placeholder]="'catalog.fields.cuisinePlaceholder' | transloco" />
+          <label>{{ 'catalog.fields.cuisine' | transloco }}</label>
+          <app-ui-autocomplete [(ngModel)]="cuisineType" name="cuisine" icon="restaurant"
+                               optionIcon="restaurant" [fetch]="cuisineSuggest"
+                               [ariaLabel]="'catalog.fields.cuisine' | transloco"
+                               [placeholder]="'catalog.fields.cuisinePlaceholder' | transloco" />
         </div>
         <div class="field">
           <label for="r-date">{{ 'catalog.fields.date' | transloco }}</label>
@@ -63,7 +68,7 @@ const HEADER_IMG =
                            { value: 'name_asc', label: ('catalog.sort.nameAsc' | transloco) }
                          ]" />
         </div>
-        <button class="search-submit" type="submit">{{ 'catalog.search' | transloco }}</button>
+        <button class="search-submit" type="submit"><span class="ms">search</span>{{ 'catalog.search' | transloco }}</button>
       </form>
     </header>
 
@@ -126,6 +131,10 @@ export class RestaurantsComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly tripContext = inject(TripContextService);
+  private readonly suggest = inject(SuggestService);
+
+  readonly citySuggest = (q: string) => this.suggest.restaurantCities(q);
+  readonly cuisineSuggest = (q: string) => this.suggest.cuisines(q);
 
   readonly headerImg = HEADER_IMG;
 
