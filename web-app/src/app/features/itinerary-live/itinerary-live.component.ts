@@ -14,13 +14,14 @@ import type {
   SegmentStatus,
 } from '../../core/models/api.models';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
+import { TripMapComponent } from './trip-map.component';
 
 const POLL_INTERVAL_MS = 20000;
 
 @Component({
   selector: 'app-itinerary-live',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, RevealDirective],
+  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, RevealDirective, TripMapComponent],
   templateUrl: './itinerary-live.component.html',
   styleUrl: './itinerary-live.component.scss',
 })
