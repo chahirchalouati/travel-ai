@@ -22,6 +22,9 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
 
     Optional<Booking> findByBookingReference(String reference);
 
+    /** All bookings of a user, regardless of status. Used by trip budget aggregation. */
+    java.util.List<Booking> findByUserId(UUID userId);
+
     @EntityGraph(attributePaths = {"travelers"})
     java.util.List<Booking> findByTripGroupIdAndUserEmail(UUID tripGroupId, String email);
 

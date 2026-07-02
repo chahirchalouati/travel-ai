@@ -39,6 +39,7 @@ public enum ErrorCode {
     TRIP_MEMBER_NOT_FOUND("Trip member not found"),
     TRIP_MEMBER_ALREADY_EXISTS("This person is already invited to the trip"),
     TRIP_INVITE_INVALID("Invite is invalid or was already used"),
+    EXPENSE_NOT_FOUND("Trip expense not found"),
     INTERNAL_ERROR("Internal server error");
 
     private final String message;

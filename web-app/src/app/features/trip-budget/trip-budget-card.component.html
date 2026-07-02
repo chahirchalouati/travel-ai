@@ -1,0 +1,140 @@
+<ng-container *transloco="let t">
+  <section class="tb-card">
+    <header class="tb-head">
+      <span class="tb-eyebrow"><span class="ms">savings</span> {{ t('tripBudget.title') }}</span>
+      @if (hasBudget() && !editingBudget()) {
+        <button class="tb-edit" type="button" (click)="startEditBudget()">
+          <span class="ms">edit</span> {{ t('tripBudget.edit') }}
+        </button>
+      }
+    </header>
+
+    @if (loading()) {
+      <div class="tb-skeleton"></div>
+    } @else {
+      <!-- No budget set, or editing -->
+      @if (!hasBudget() || editingBudget()) {
+        <div class="tb-set">
+          <label class="tb-label" for="tb-budget">{{ t('tripBudget.setPrompt') }}</label>
+          <div class="tb-set__row">
+            <input id="tb-budget" class="tb-input" type="number" min="1" step="1"
+                   [(ngModel)]="budgetInput" name="budget"
+                   [placeholder]="t('tripBudget.amountPlaceholder')" />
+            <button class="tb-btn tb-btn--accent" type="button"
+                    [disabled]="saving() || !budgetInput || budgetInput <= 0"
+                    (click)="saveBudget()">
+              {{ saving() ? t('tripBudget.saving') : t('tripBudget.save') }}
+            </button>
+            @if (editingBudget()) {
+              <button class="tb-btn" type="button" (click)="editingBudget.set(false)">
+                {{ t('tripBudget.cancel') }}
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Budget set: progress + figures -->
+      @if (hasBudget() && !editingBudget() && summary(); as s) {
+        <div class="tb-progress" [attr.data-state]="barState()">
+          <div class="tb-bar">
+            <div class="tb-bar__fill" [style.width.%]="barWidth()"></div>
+          </div>
+          <div class="tb-figures">
+            <div class="tb-figure">
+              <span class="tb-figure__val">{{ s.totalSpent | currency:currency():'symbol':'1.0-0' }}</span>
+              <span class="tb-figure__lbl">{{ t('tripBudget.spent') }}</span>
+            </div>
+            <div class="tb-figure tb-figure--muted">
+              <span class="tb-figure__val">{{ s.budget | currency:currency():'symbol':'1.0-0' }}</span>
+              <span class="tb-figure__lbl">{{ t('tripBudget.budget') }}</span>
+            </div>
+            <div class="tb-figure" [class.is-over]="barState() === 'over'">
+              <span class="tb-figure__val">
+                {{ (s.remaining ?? 0) | currency:currency():'symbol':'1.0-0' }}
+              </span>
+              <span class="tb-figure__lbl">
+                {{ barState() === 'over' ? t('tripBudget.overBudget') : t('tripBudget.remaining') }}
+              </span>
+            </div>
+          </div>
+          <p class="tb-percent" [attr.data-state]="barState()">
+            {{ percent() | number:'1.0-0' }}% {{ t('tripBudget.ofBudgetUsed') }}
+          </p>
+        </div>
+      }
+
+      <!-- Breakdown -->
+      @if (summary()?.breakdown?.length) {
+        <div class="tb-breakdown">
+          <h4 class="tb-subhead">{{ t('tripBudget.breakdown') }}</h4>
+          <ul class="tb-cats">
+            @for (c of summary()!.breakdown; track c.category) {
+              <li class="tb-cat">
+                <span class="tb-cat__icon"><span class="ms">{{ categoryIcon(c.category) }}</span></span>
+                <span class="tb-cat__name">
+                  {{ t('tripBudget.categories.' + c.category) }}
+                  <span class="tb-cat__count">×{{ c.count }}</span>
+                </span>
+                <span class="tb-cat__amount">{{ c.amount | currency:currency():'symbol':'1.0-0' }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+      } @else if (hasBudget()) {
+        <p class="tb-empty">{{ t('tripBudget.noSpendYet') }}</p>
+      }
+
+      <!-- Add manual expense -->
+      <details class="tb-add">
+        <summary class="tb-add__toggle"><span class="ms">add_circle</span> {{ t('tripBudget.addExpense') }}</summary>
+        <div class="tb-form">
+          <div class="tb-form__row">
+            <select class="tb-input" [(ngModel)]="newCategory" name="cat"
+                    [attr.aria-label]="t('tripBudget.category')">
+              @for (cat of categories; track cat) {
+                <option [value]="cat">{{ t('tripBudget.categories.' + cat) }}</option>
+              }
+            </select>
+            <input class="tb-input" type="number" min="0" step="0.01"
+                   [(ngModel)]="newAmount" name="amt"
+                   [placeholder]="t('tripBudget.amountPlaceholder')" />
+          </div>
+          <div class="tb-form__row">
+            <input class="tb-input" type="text" [(ngModel)]="newDescription" name="desc"
+                   [placeholder]="t('tripBudget.descriptionPlaceholder')" />
+            <input class="tb-input" type="date" [(ngModel)]="newDate" name="date"
+                   [attr.aria-label]="t('tripBudget.date')" />
+          </div>
+          <button class="tb-btn tb-btn--accent tb-btn--full" type="button"
+                  [disabled]="saving() || !newAmount || newAmount <= 0"
+                  (click)="addExpense()">
+            <span class="ms">add</span> {{ t('tripBudget.addExpense') }}
+          </button>
+        </div>
+      </details>
+
+      <!-- Expense list -->
+      @if (expenses().length) {
+        <ul class="tb-expenses">
+          @for (e of expenses(); track e.id) {
+            <li class="tb-expense">
+              <span class="tb-expense__icon"><span class="ms">{{ categoryIcon(e.category) }}</span></span>
+              <span class="tb-expense__main">
+                <span class="tb-expense__desc">
+                  {{ e.description || t('tripBudget.categories.' + e.category) }}
+                </span>
+                @if (e.spentOn) { <span class="tb-expense__date">{{ e.spentOn | date:'MMM d' }}</span> }
+              </span>
+              <span class="tb-expense__amount">{{ e.amount | currency:currency():'symbol':'1.0-2' }}</span>
+              <button class="tb-expense__del" type="button"
+                      [attr.aria-label]="t('tripBudget.delete')" (click)="deleteExpense(e)">
+                <span class="ms">delete</span>
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    }
+  </section>
+</ng-container>

@@ -40,6 +40,13 @@ public class TravelRequest extends BaseEntity {
 
     private BigDecimal budget;
 
+    /** Spending cap tracked by the trip budget card; NULL = no budget set. */
+    @Column(name = "budget_amount")
+    private BigDecimal budgetAmount;
+
+    @Column(name = "budget_currency", nullable = false)
+    private String budgetCurrency = "EUR";
+
     @Enumerated(EnumType.STRING)
     private SpendingPriority spendingPriority;
 

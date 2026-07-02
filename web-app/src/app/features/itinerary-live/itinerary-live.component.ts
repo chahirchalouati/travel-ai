@@ -9,6 +9,8 @@ import { ItineraryService } from '../../core/services/itinerary.service';
 import { AuthService } from '../../core/services/auth.service';
 import { BookingService } from '../../core/services/booking.service';
 import { TripCollabService } from '../../core/services/trip-collab.service';
+import { TripBudgetService } from '../../core/services/trip-budget.service';
+import { TripBudgetCardComponent } from '../trip-budget/trip-budget-card.component';
 import type {
   LiveItineraryResponse,
   ItinerarySegmentResponse,
@@ -29,7 +31,7 @@ const POLL_INTERVAL_MS = 20000;
   standalone: true,
   imports: [
     CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, RevealDirective,
-    TripMapComponent, TripCompanionsComponent, SegmentVoteComponent,
+    TripMapComponent, TripCompanionsComponent, SegmentVoteComponent, TripBudgetCardComponent,
   ],
   templateUrl: './itinerary-live.component.html',
   styleUrl: './itinerary-live.component.scss',
@@ -39,6 +41,7 @@ export class ItineraryLiveComponent implements OnInit, OnDestroy {
   private readonly auth = inject(AuthService);
   private readonly bookings = inject(BookingService);
   private readonly collab = inject(TripCollabService);
+  private readonly budgetService = inject(TripBudgetService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
@@ -47,6 +50,8 @@ export class ItineraryLiveComponent implements OnInit, OnDestroy {
   readonly loading = signal(true);
   readonly itinerary = signal<LiveItineraryResponse | null>(null);
   readonly proposals = signal<ItineraryProposalResponse[]>([]);
+  /** Trip (travel request) this booking belongs to, for the budget card. */
+  readonly tripId = signal<string | null>(null);
 
   /** True when the current user owns the booking (owns invite/remove controls). */
   readonly isOwner = signal(false);
@@ -71,6 +76,12 @@ export class ItineraryLiveComponent implements OnInit, OnDestroy {
       return;
     }
     this.load();
+
+    // Resolve the owning trip so the budget card can render (booking -> travel request).
+    this.budgetService
+      .resolveTripForBooking(this.bookingId)
+      .pipe(catchError(() => of(null)), takeUntilDestroyed(this.destroyRef))
+      .subscribe(ref => this.tripId.set(ref?.tripId ?? null));
 
     // Poll proposals so newly generated re-plans surface without a manual refresh.
     interval(POLL_INTERVAL_MS)
