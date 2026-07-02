@@ -65,6 +65,9 @@ export class BookingDraftService {
   /** Applied promo discount (absolute EUR) and the code that produced it. */
   readonly discount = signal(0);
   readonly appliedPromo = signal<string | null>(null);
+  /** Loyalty points redeemed on this booking and the EUR discount they buy. */
+  readonly redeemedPoints = signal(0);
+  readonly loyaltyDiscount = signal(0);
 
   /** Currently selected configuration option, or null when the draft has none. */
   readonly selectedOption = computed<BookingOption | null>(() => {
@@ -87,7 +90,8 @@ export class BookingDraftService {
   readonly subtotal = computed(() => this.unitPrice() * this.partySize());
   readonly serviceFee = computed(() => Math.round(this.subtotal() * SERVICE_FEE_RATE * 100) / 100);
   readonly total = computed(() =>
-    Math.max(0, Math.round((this.subtotal() + this.serviceFee() - this.discount()) * 100) / 100));
+    Math.max(0, Math.round(
+      (this.subtotal() + this.serviceFee() - this.discount() - this.loyaltyDiscount()) * 100) / 100));
 
   /** Seeds a fresh draft and resets all funnel selections. */
   start(draft: BookingDraft, party = 2): void {
@@ -96,6 +100,8 @@ export class BookingDraftService {
     this.selectedTimeSlot.set(draft.timeSlots?.[0] ?? null);
     this.discount.set(0);
     this.appliedPromo.set(null);
+    this.redeemedPoints.set(0);
+    this.loyaltyDiscount.set(0);
     this.setPartySize(party);
   }
 
@@ -119,6 +125,8 @@ export class BookingDraftService {
     this.partySize.set(2);
     this.discount.set(0);
     this.appliedPromo.set(null);
+    this.redeemedPoints.set(0);
+    this.loyaltyDiscount.set(0);
   }
 
   /** Builds the API payload from the current draft + selections. */
@@ -129,7 +137,9 @@ export class BookingDraftService {
     }
     const total = this.total();
     const option = this.selectedOption();
+    const redeemPoints = this.redeemedPoints() > 0 ? this.redeemedPoints() : undefined;
     const base: CreateBookingRequest = {
+      redeemPoints,
       destination: d.destination,
       totalAmount: total,
       partySize: this.partySize(),
