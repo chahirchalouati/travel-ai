@@ -565,3 +565,19 @@ export interface AskQuestionRequest {
 export interface ForumAnswerRequest {
   body: string;
 }
+
+// ── Trip map (day-by-day itinerary map) ────────────────────────────
+export interface TripMapStop {
+  segmentId: string;
+  day: number;
+  date: string | null;
+  title: string;
+  type: string;
+  lat: number;
+  lng: number;
+}
+
+export interface TripMapResponse {
+  stops: TripMapStop[];
+  missingCoords: number;
+}

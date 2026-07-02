@@ -65,6 +65,11 @@
         </ul>
       </section>
 
+      <!-- Day-by-day trip map -->
+      <section class="il-section">
+        <app-trip-map [bookingId]="it.bookingId" />
+      </section>
+
       <!-- Proposals -->
       @if (pendingProposals().length > 0) {
         <section class="il-section">

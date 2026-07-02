@@ -1233,5 +1233,13 @@
       "completed": "Completed",
       "cancelled": "Cancelled"
     }
+  },
+  "tripMap": {
+    "title": "Trip map",
+    "all": "All days",
+    "day": "Day {{n}}",
+    "empty": "No stops to map yet",
+    "emptyHint": "Your stops will appear here once your itinerary has locations.",
+    "missing": "{{count}} stop(s) without a location"
   }
 }
