@@ -1197,6 +1197,23 @@
       }
     }
   },
+  "adminRevenue": {
+    "eyebrow": "Admin",
+    "title": "Revenue",
+    "lede": "How the platform earns: commission markup, service fees, add-on sales and memberships. Gross booking value is customer spend, shown for context.",
+    "error": "Could not load revenue. Admin access is required.",
+    "totalPlatform": "Total platform revenue",
+    "gross": "Gross booking value",
+    "bookings": "confirmed bookings",
+    "mix": "Revenue mix by stream",
+    "activeSubs": "{count} active Prime memberships",
+    "streams": {
+      "commission": "Commission",
+      "serviceFee": "Service fees",
+      "ancillary": "Add-ons",
+      "subscription": "Subscriptions"
+    }
+  },
   "membership": {
     "eyebrow": "Membership",
     "title": "Travel AI Prime",

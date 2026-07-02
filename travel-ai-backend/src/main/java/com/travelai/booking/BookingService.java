@@ -123,8 +123,12 @@ public class BookingService {
                 ancillaryTotal = ancillaryTotal.add(r.lineTotal());
             }
             saved.setAncillaryAmount(ancillaryTotal);
-            saved = bookingRepository.save(saved);
         }
+
+        // Snapshot the platform's revenue on this booking (commission markup +
+        // service fee) so it can be reported without re-deriving from the catalogue.
+        applyRevenueSnapshot(saved, user);
+        saved = bookingRepository.save(saved);
 
         return toResponse(saved);
     }
@@ -183,6 +187,62 @@ public class BookingService {
                                 restaurantAvailabilityRepository.save(av);
                             }));
         }
+    }
+
+    /**
+     * Records the platform's revenue components on the booking:
+     *  - commission: the markup over each vertical's supplier net price, taken from
+     *    the catalogue (restaurants carry no per-unit net price, so contribute 0);
+     *  - service fee: the platform fee actually charged — the standard 6% of the
+     *    vertical sell amount, or 0 when an active Prime membership waives it.
+     * Both are best-effort: missing catalogue data yields a zero contribution
+     * rather than failing the booking.
+     */
+    private void applyRevenueSnapshot(Booking b, User user) {
+        java.math.BigDecimal commission = java.math.BigDecimal.ZERO;
+        java.math.BigDecimal sellBase = java.math.BigDecimal.ZERO;
+
+        if (b.getFlightId() != null && b.getFlightAmount() != null) {
+            sellBase = sellBase.add(b.getFlightAmount());
+            commission = commission.add(flightRepository.findById(b.getFlightId())
+                    .map(f -> b.getFlightAmount().multiply(marginFraction(f.getPrice(), f.getNetPrice())))
+                    .orElse(java.math.BigDecimal.ZERO));
+        }
+        if (b.getCruiseId() != null && b.getCruiseAmount() != null) {
+            sellBase = sellBase.add(b.getCruiseAmount());
+            commission = commission.add(cruiseRepository.findById(b.getCruiseId())
+                    .map(c -> b.getCruiseAmount().multiply(marginFraction(c.getPricePerPerson(), c.getNetPrice())))
+                    .orElse(java.math.BigDecimal.ZERO));
+        }
+        if (b.getHotelId() != null && b.getHotelAmount() != null) {
+            sellBase = sellBase.add(b.getHotelAmount());
+            commission = commission.add(hotelRepository.findById(b.getHotelId())
+                    .map(h -> b.getHotelAmount().multiply(marginFraction(h.getBasePriceNight(), h.getNetPrice())))
+                    .orElse(java.math.BigDecimal.ZERO));
+        }
+        if (b.getRestaurantId() != null && b.getRestaurantAmount() != null) {
+            sellBase = sellBase.add(b.getRestaurantAmount());
+        }
+        if (sellBase.signum() == 0 && b.getTotalAmount() != null) {
+            sellBase = b.getTotalAmount();
+        }
+
+        boolean feeWaived = subscriptionService.membership(user.getEmail()).serviceFeeWaived();
+        java.math.BigDecimal serviceFee = feeWaived
+                ? java.math.BigDecimal.ZERO
+                : sellBase.multiply(SERVICE_FEE_RATE);
+
+        b.setCommissionAmount(commission.setScale(2, java.math.RoundingMode.HALF_UP));
+        b.setServiceFeeAmount(serviceFee.setScale(2, java.math.RoundingMode.HALF_UP));
+    }
+
+    /** Margin as a fraction of the sell price: (sell − net) / sell, clamped at ≥ 0. */
+    private java.math.BigDecimal marginFraction(java.math.BigDecimal sell, java.math.BigDecimal net) {
+        if (sell == null || net == null || sell.signum() <= 0) {
+            return java.math.BigDecimal.ZERO;
+        }
+        return sell.subtract(net).max(java.math.BigDecimal.ZERO)
+                .divide(sell, 6, java.math.RoundingMode.HALF_UP);
     }
 
     private java.util.Optional<LocalTime> parseSlot(String raw) {

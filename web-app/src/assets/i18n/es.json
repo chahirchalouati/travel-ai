@@ -1197,6 +1197,23 @@
       }
     }
   },
+  "adminRevenue": {
+    "eyebrow": "Admin",
+    "title": "Ingresos",
+    "lede": "Cómo gana la plataforma: comisión (markup), costes de servicio, venta de extras y suscripciones. El valor bruto de las reservas es el gasto del cliente, mostrado como contexto.",
+    "error": "No se pudieron cargar los ingresos. Se requiere acceso de administrador.",
+    "totalPlatform": "Ingresos totales de la plataforma",
+    "gross": "Valor bruto de reservas",
+    "bookings": "reservas confirmadas",
+    "mix": "Composición de ingresos por fuente",
+    "activeSubs": "{count} membresías Prime activas",
+    "streams": {
+      "commission": "Comisión",
+      "serviceFee": "Costes de servicio",
+      "ancillary": "Extras",
+      "subscription": "Suscripciones"
+    }
+  },
   "membership": {
     "eyebrow": "Membresía",
     "title": "Travel AI Prime",
