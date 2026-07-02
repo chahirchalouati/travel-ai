@@ -10,6 +10,7 @@ import type { FlightSearchResult, FareCalendarDay } from '../../core/models/api.
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
 import { TripContextService } from '../../core/services/trip-context.service';
+import { UiSelectComponent, UiCheckboxComponent, UiRangeComponent } from '../../shared/ui';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80';
@@ -52,7 +53,7 @@ const MAX_LEGS = 5;
 @Component({
   selector: 'app-flights',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, InfiniteScrollDirective, RevealDirective],
+  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiSelectComponent, UiCheckboxComponent, UiRangeComponent],
   templateUrl: './flights.component.html',
   styleUrls: ['../catalog/catalog-shared.scss', './flights.component.scss'],
 })

@@ -44,19 +44,23 @@
         <label for="f-pax">{{ 'catalog.fields.passengers' | transloco }}</label>
         <input id="f-pax" type="number" min="1" [(ngModel)]="passengers" name="pax" />
       </div>
-      <div class="field">
-        <label for="f-price">{{ 'catalog.fields.maxPrice' | transloco }}</label>
-        <input id="f-price" type="number" min="0" [(ngModel)]="maxPrice" name="maxPrice" placeholder="€" />
+      <div class="field field--range">
+        <label>{{ 'catalog.fields.maxPrice' | transloco }}</label>
+        <app-ui-range [(ngModel)]="maxPrice" name="maxPrice" [max]="3000" [step]="50"
+                      [ariaLabel]="'catalog.fields.maxPrice' | transloco"
+                      [anyLabel]="'catalog.fields.anyPrice' | transloco" />
       </div>
       <div class="field">
-        <label for="f-sort">{{ 'catalog.fields.sort' | transloco }}</label>
-        <select id="f-sort" [(ngModel)]="sort" name="sort" (change)="runSearch()">
-          <option value="">{{ 'catalog.sort.relevance' | transloco }}</option>
-          <option value="price_asc">{{ 'catalog.sort.priceAsc' | transloco }}</option>
-          <option value="price_desc">{{ 'catalog.sort.priceDesc' | transloco }}</option>
-          <option value="departure_asc">{{ 'catalog.sort.departureAsc' | transloco }}</option>
-          <option value="departure_desc">{{ 'catalog.sort.departureDesc' | transloco }}</option>
-        </select>
+        <label>{{ 'catalog.fields.sort' | transloco }}</label>
+        <app-ui-select [(ngModel)]="sort" name="sort" (ngModelChange)="runSearch()"
+                       [ariaLabel]="'catalog.fields.sort' | transloco"
+                       [options]="[
+                         { value: '', label: ('catalog.sort.relevance' | transloco) },
+                         { value: 'price_asc', label: ('catalog.sort.priceAsc' | transloco) },
+                         { value: 'price_desc', label: ('catalog.sort.priceDesc' | transloco) },
+                         { value: 'departure_asc', label: ('catalog.sort.departureAsc' | transloco) },
+                         { value: 'departure_desc', label: ('catalog.sort.departureDesc' | transloco) }
+                       ]" />
       </div>
       <button class="search-submit" type="submit">{{ 'catalog.search' | transloco }}</button>
     </form>
@@ -158,17 +162,19 @@
         <span class="flight-filters__title"><span class="ms" style="font-size:16px">tune</span>{{ 'catalog.flights.filters' | transloco }}</span>
         <div class="flight-filters__airlines">
           @for (a of availableAirlines(); track a) {
-            <button type="button" class="chip-toggle" [class.chip-toggle--on]="airlineFilter().has(a)" (click)="toggleAirline(a)">{{ a }}</button>
+            <app-ui-checkbox [label]="a" [checked]="airlineFilter().has(a)" (checkedChange)="toggleAirline(a)" />
           }
         </div>
         <label class="flight-filters__duration">
           {{ 'catalog.flights.maxDuration' | transloco }}
-          <select [ngModel]="maxDurationHours()" (ngModelChange)="setMaxDuration(+$event)">
-            <option [ngValue]="0">{{ 'catalog.flights.anyDuration' | transloco }}</option>
-            <option [ngValue]="3">≤ 3h</option>
-            <option [ngValue]="6">≤ 6h</option>
-            <option [ngValue]="10">≤ 10h</option>
-          </select>
+          <app-ui-select [ngModel]="maxDurationHours()" (ngModelChange)="setMaxDuration(+$event)"
+                         [ariaLabel]="'catalog.flights.maxDuration' | transloco"
+                         [options]="[
+                           { value: 0, label: ('catalog.flights.anyDuration' | transloco) },
+                           { value: 3, label: '≤ 3h' },
+                           { value: 6, label: '≤ 6h' },
+                           { value: 10, label: '≤ 10h' }
+                         ]" />
         </label>
         @if (hasActiveFilters()) {
           <button type="button" class="flight-filters__clear" (click)="clearFilters()">{{ 'catalog.flights.clearFilters' | transloco }}</button>

@@ -10,6 +10,7 @@ import type { CruiseSearchResult } from '../../core/models/api.models';
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
 import { TripContextService } from '../../core/services/trip-context.service';
+import { UiRangeComponent } from '../../shared/ui';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1599640842225-85d111c60e6b?w=1920&q=80';
@@ -17,7 +18,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-cruises',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, InfiniteScrollDirective, RevealDirective],
+  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiRangeComponent],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -45,9 +46,11 @@ const HEADER_IMG =
           <label for="c-pax">{{ 'catalog.fields.passengers' | transloco }}</label>
           <input id="c-pax" type="number" min="1" [(ngModel)]="passengers" name="pax" />
         </div>
-        <div class="field">
-          <label for="c-price">{{ 'catalog.fields.maxPrice' | transloco }}</label>
-          <input id="c-price" type="number" min="0" [(ngModel)]="maxPrice" name="maxPrice" placeholder="€" />
+        <div class="field field--range">
+          <label>{{ 'catalog.fields.maxPrice' | transloco }}</label>
+          <app-ui-range [(ngModel)]="maxPrice" name="maxPrice" [max]="10000" [step]="250"
+                        [ariaLabel]="'catalog.fields.maxPrice' | transloco"
+                        [anyLabel]="'catalog.fields.anyPrice' | transloco" />
         </div>
         <button class="search-submit" type="submit">{{ 'catalog.search' | transloco }}</button>
       </form>

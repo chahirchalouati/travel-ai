@@ -10,6 +10,7 @@ import { emptyPage } from '../../core/services/catalog.service';
 import type { AttractionResponse } from '../../core/models/api.models';
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
+import { UiSelectComponent } from '../../shared/ui';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1920&q=80';
@@ -17,7 +18,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-attractions',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, TranslocoModule, InfiniteScrollDirective, RevealDirective],
+  imports: [CommonModule, FormsModule, CurrencyPipe, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiSelectComponent],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -33,14 +34,16 @@ const HEADER_IMG =
                  [placeholder]="'catalog.fields.cityPlaceholder' | transloco" />
         </div>
         <div class="field">
-          <label for="a-sort">{{ 'catalog.fields.sort' | transloco }}</label>
-          <select id="a-sort" [(ngModel)]="sort" name="sort" (change)="runSearch()">
-            <option value="">{{ 'catalog.sort.relevance' | transloco }}</option>
-            <option value="popularity_desc">{{ 'catalog.sort.popularity' | transloco }}</option>
-            <option value="price_asc">{{ 'catalog.sort.priceAsc' | transloco }}</option>
-            <option value="price_desc">{{ 'catalog.sort.priceDesc' | transloco }}</option>
-            <option value="name_asc">{{ 'catalog.sort.nameAsc' | transloco }}</option>
-          </select>
+          <label>{{ 'catalog.fields.sort' | transloco }}</label>
+          <app-ui-select [(ngModel)]="sort" name="sort" (ngModelChange)="runSearch()"
+                         [ariaLabel]="'catalog.fields.sort' | transloco"
+                         [options]="[
+                           { value: '', label: ('catalog.sort.relevance' | transloco) },
+                           { value: 'popularity_desc', label: ('catalog.sort.popularity' | transloco) },
+                           { value: 'price_asc', label: ('catalog.sort.priceAsc' | transloco) },
+                           { value: 'price_desc', label: ('catalog.sort.priceDesc' | transloco) },
+                           { value: 'name_asc', label: ('catalog.sort.nameAsc' | transloco) }
+                         ]" />
         </div>
         <button class="search-submit" type="submit">{{ 'catalog.search' | transloco }}</button>
       </form>

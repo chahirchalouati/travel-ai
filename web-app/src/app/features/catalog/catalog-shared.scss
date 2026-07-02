@@ -108,6 +108,11 @@
   min-width: 0;
 }
 
+.field--range {
+  flex: 1 1 180px;
+  justify-content: space-between;
+}
+
 .field label {
   font-size: 0.72rem;
   font-weight: 600;
@@ -490,4 +495,14 @@
   background: var(--teal);
   border-color: var(--teal);
   color: #fff;
+}
+
+/* ── Checkbox filter row (amenities / booleans) ──────────────────── */
+.filter-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  max-width: 760px;
+  margin: 18px auto 0;
 }

@@ -9,6 +9,7 @@ import type { HotelSearchQuery } from '../../core/services/catalog.service';
 import type { HotelSearchResult } from '../../core/models/api.models';
 import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
+import { UiSelectComponent, UiCheckboxComponent, UiRangeComponent } from '../../shared/ui';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920&q=80';
@@ -16,7 +17,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-hotels',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, TranslocoModule, InfiniteScrollDirective, RevealDirective],
+  imports: [CommonModule, FormsModule, CurrencyPipe, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiSelectComponent, UiCheckboxComponent, UiRangeComponent],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -43,37 +44,42 @@ const HEADER_IMG =
           <label for="h-guests">{{ 'catalog.fields.guests' | transloco }}</label>
           <input id="h-guests" type="number" min="1" [(ngModel)]="guests" name="guests" />
         </div>
-        <div class="field">
-          <label for="h-budget">{{ 'catalog.fields.maxBudget' | transloco }}</label>
-          <input id="h-budget" type="number" min="0" [(ngModel)]="maxBudget" name="maxBudget" placeholder="€" />
+        <div class="field field--range">
+          <label>{{ 'catalog.fields.maxBudget' | transloco }}</label>
+          <app-ui-range [(ngModel)]="maxBudget" name="maxBudget" [max]="2000" [step]="50"
+                        [ariaLabel]="'catalog.fields.maxBudget' | transloco"
+                        [anyLabel]="'catalog.fields.anyPrice' | transloco" />
         </div>
         <div class="field">
-          <label for="h-stars">{{ 'catalog.fields.minStars' | transloco }}</label>
-          <select id="h-stars" [(ngModel)]="minStars" name="minStars" (change)="runSearch()">
-            <option [ngValue]="undefined">{{ 'catalog.fields.anyStars' | transloco }}</option>
-            <option [ngValue]="3">3+ ★</option>
-            <option [ngValue]="4">4+ ★</option>
-            <option [ngValue]="5">5 ★</option>
-          </select>
+          <label>{{ 'catalog.fields.minStars' | transloco }}</label>
+          <app-ui-select [(ngModel)]="minStars" name="minStars" (ngModelChange)="runSearch()"
+                         [ariaLabel]="'catalog.fields.minStars' | transloco"
+                         [options]="[
+                           { value: undefined, label: ('catalog.fields.anyStars' | transloco) },
+                           { value: 3, label: '3+ ★' },
+                           { value: 4, label: '4+ ★' },
+                           { value: 5, label: '5 ★' }
+                         ]" />
         </div>
         <div class="field">
-          <label for="h-sort">{{ 'catalog.fields.sort' | transloco }}</label>
-          <select id="h-sort" [(ngModel)]="sort" name="sort" (change)="runSearch()">
-            <option value="">{{ 'catalog.sort.relevance' | transloco }}</option>
-            <option value="price_asc">{{ 'catalog.sort.priceAsc' | transloco }}</option>
-            <option value="price_desc">{{ 'catalog.sort.priceDesc' | transloco }}</option>
-            <option value="stars_desc">{{ 'catalog.sort.starsDesc' | transloco }}</option>
-          </select>
+          <label>{{ 'catalog.fields.sort' | transloco }}</label>
+          <app-ui-select [(ngModel)]="sort" name="sort" (ngModelChange)="runSearch()"
+                         [ariaLabel]="'catalog.fields.sort' | transloco"
+                         [options]="[
+                           { value: '', label: ('catalog.sort.relevance' | transloco) },
+                           { value: 'price_asc', label: ('catalog.sort.priceAsc' | transloco) },
+                           { value: 'price_desc', label: ('catalog.sort.priceDesc' | transloco) },
+                           { value: 'stars_desc', label: ('catalog.sort.starsDesc' | transloco) }
+                         ]" />
         </div>
         <button class="search-submit" type="submit">{{ 'catalog.search' | transloco }}</button>
       </form>
 
-      <div class="chip-row">
+      <div class="filter-checks">
         @for (a of AMENITIES; track a.value) {
-          <button type="button" class="chip" [class.chip--active]="isAmenityOn(a.value)"
-                  (click)="toggleAmenity(a.value)">
-            {{ a.labelKey | transloco }}
-          </button>
+          <app-ui-checkbox [label]="a.labelKey | transloco"
+                           [checked]="isAmenityOn(a.value)"
+                           (checkedChange)="toggleAmenity(a.value)" />
         }
       </div>
     </header>
