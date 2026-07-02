@@ -4,12 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { DatePipe } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
+import { LoyaltyService } from '../../core/services/loyalty.service';
+import type { LoyaltySummaryResponse } from '../../core/models/api.models';
 
 @Component({
   selector: 'app-account',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule],
+  imports: [CommonModule, FormsModule, TranslocoModule, DatePipe],
   styleUrls: ['../../shared/styles/dashboard.scss'],
   template: `
     <div class="dash-container">
@@ -64,6 +67,64 @@ import { AuthService } from '../../core/services/auth.service';
             </div>
           </form>
         </section>
+
+        <!-- Loyalty card -->
+        @if (loyalty(); as l) {
+          <section class="card pad loyalty" [attr.data-tier]="l.tier">
+            <div class="loyalty-head">
+              <div>
+                <span class="loyalty-tier">
+                  <span class="ms">workspace_premium</span>
+                  {{ 'loyalty.tier.' + l.tier | transloco }}
+                </span>
+                <p class="loyalty-sub">{{ 'loyalty.card.subtitle' | transloco }}</p>
+              </div>
+              <div class="loyalty-balance">
+                <span class="loyalty-points">{{ l.pointsBalance | number }}</span>
+                <span class="loyalty-points-label">{{ 'loyalty.card.points' | transloco }}</span>
+              </div>
+            </div>
+
+            @if (l.nextTier && l.pointsToNextTier !== null) {
+              <div class="loyalty-progress">
+                <div class="loyalty-progress__labels">
+                  <span>{{ 'loyalty.card.progressTo' | transloco: { tier: (('loyalty.tier.' + l.nextTier) | transloco) } }}</span>
+                  <span>{{ 'loyalty.card.pointsToGo' | transloco: { points: l.pointsToNextTier } }}</span>
+                </div>
+                <div class="loyalty-bar"><span class="loyalty-bar__fill" [style.width.%]="progressPct(l)"></span></div>
+              </div>
+            } @else {
+              <p class="loyalty-top">{{ 'loyalty.card.topTier' | transloco }}</p>
+            }
+
+            <div class="loyalty-meta">
+              <span>{{ 'loyalty.card.lifetime' | transloco: { points: (l.lifetimePoints | number) } }}</span>
+              <span>{{ 'loyalty.card.earnRate' | transloco: { rate: l.earnRate } }}</span>
+            </div>
+
+            <h3 class="loyalty-h">{{ 'loyalty.card.activity' | transloco }}</h3>
+            @if (l.recentTransactions.length > 0) {
+              <ul class="loyalty-tx">
+                @for (tx of l.recentTransactions; track tx.id) {
+                  <li class="loyalty-tx__row">
+                    <span class="loyalty-tx__desc">
+                      <span class="ms" [class.earn]="tx.points > 0" [class.redeem]="tx.points < 0">
+                        {{ tx.points > 0 ? 'add_circle' : 'remove_circle' }}
+                      </span>
+                      {{ tx.description || ('loyalty.type.' + tx.type | transloco) }}
+                      <small>{{ tx.createdAt | date:'dd MMM yyyy' }}</small>
+                    </span>
+                    <span class="loyalty-tx__pts" [class.earn]="tx.points > 0" [class.redeem]="tx.points < 0">
+                      {{ tx.points > 0 ? '+' : '' }}{{ tx.points | number }}
+                    </span>
+                  </li>
+                }
+              </ul>
+            } @else {
+              <p class="loyalty-empty">{{ 'loyalty.card.empty' | transloco }}</p>
+            }
+          </section>
+        }
 
         <!-- Side rail -->
         <aside class="side">
@@ -121,17 +182,75 @@ import { AuthService } from '../../core/services/auth.service';
     .danger { display: flex; align-items: center; justify-content: center; gap: 8px; background: #fff; border: 1px solid var(--line); color: var(--accent); border-radius: 12px; padding: 0.85rem; font-family: inherit; font-weight: 700; cursor: pointer; transition: background 120ms ease; }
     .danger:hover { background: var(--accent-soft); }
     .toast { background: var(--ink); color: #fff; padding: 0.7rem 1.1rem; border-radius: 12px; margin-bottom: 1.2rem; font-weight: 600; font-size: 0.9rem; }
-    @media (max-width: 820px) { .account-grid { grid-template-columns: 1fr; } .field-row { grid-template-columns: 1fr; } }
+    /* Loyalty card — occupies the main column, below the identity card. */
+    .loyalty { grid-column: 1; }
+    .loyalty-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding-bottom: 1.1rem; margin-bottom: 1.1rem; border-bottom: 1px solid var(--line); }
+    .loyalty-tier { display: inline-flex; align-items: center; gap: 7px; font-weight: 800; font-size: 1.05rem; letter-spacing: 0.01em; padding: 6px 13px; border-radius: 999px; background: linear-gradient(135deg, #1f2733, #3a4656); color: #fff; }
+    .loyalty[data-tier="VOYAGER"] .loyalty-tier { background: linear-gradient(135deg, #1d5c8f, #4aa3d6); }
+    .loyalty[data-tier="ELITE"] .loyalty-tier { background: linear-gradient(135deg, #9a6a12, #e0b64a); }
+    .loyalty-tier .ms { font-size: 19px; }
+    .loyalty-sub { margin: 0.5rem 0 0; color: var(--muted); font-size: 0.85rem; }
+    .loyalty-balance { text-align: right; flex: none; }
+    .loyalty-points { display: block; font-size: 1.9rem; font-weight: 800; line-height: 1; color: var(--ink); }
+    .loyalty-points-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 700; }
+    .loyalty-progress { margin-bottom: 1rem; }
+    .loyalty-progress__labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: #555; font-weight: 600; margin-bottom: 6px; }
+    .loyalty-bar { height: 8px; border-radius: 999px; background: #ececea; overflow: hidden; }
+    .loyalty-bar__fill { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #E04A2F, #ff7a5a); transition: width 300ms cubic-bezier(0.16,1,0.3,1); }
+    .loyalty-top { margin: 0 0 1rem; font-weight: 700; color: #9a6a12; font-size: 0.9rem; }
+    .loyalty-meta { display: flex; justify-content: space-between; gap: 1rem; font-size: 0.82rem; color: var(--muted); font-weight: 600; padding-bottom: 1rem; margin-bottom: 0.6rem; border-bottom: 1px solid var(--line); }
+    .loyalty-h { margin: 0 0 0.6rem; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
+    .loyalty-tx { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+    .loyalty-tx__row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.55rem 0; border-bottom: 1px solid #f2f2f0; }
+    .loyalty-tx__row:last-child { border-bottom: none; }
+    .loyalty-tx__desc { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #333; }
+    .loyalty-tx__desc small { color: var(--muted); font-weight: 500; margin-left: 4px; }
+    .loyalty-tx__desc .ms { font-size: 18px; }
+    .loyalty-tx__pts { font-weight: 800; font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+    .ms.earn, .loyalty-tx__pts.earn { color: #1a7f43; }
+    .ms.redeem, .loyalty-tx__pts.redeem { color: var(--accent); }
+    .loyalty-empty { color: var(--muted); font-size: 0.88rem; margin: 0.3rem 0 0; }
+    @media (max-width: 820px) { .account-grid { grid-template-columns: 1fr; } .field-row { grid-template-columns: 1fr; } .loyalty { grid-column: auto; } }
   `],
 })
 export class AccountComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly transloco = inject(TranslocoService);
+  private readonly loyaltyService = inject(LoyaltyService);
 
   readonly user = this.auth.currentUser;
   readonly saving = signal(false);
   readonly toast = signal('');
+  readonly loyalty = signal<LoyaltySummaryResponse | null>(null);
+
+  constructor() {
+    this.loyaltyService.summary().pipe(catchError(() => of(null))).subscribe(res => this.loyalty.set(res));
+  }
+
+  /** Percentage progress from the current tier's floor toward the next tier. */
+  protected progressPct(l: LoyaltySummaryResponse): number {
+    if (l.nextTier === null || l.pointsToNextTier === null) {
+      return 100;
+    }
+    const nextFloor = l.lifetimePoints + l.pointsToNextTier;
+    const currentFloor = nextFloor - this.tierSpan(l);
+    const span = nextFloor - currentFloor;
+    if (span <= 0) {
+      return 0;
+    }
+    const done = ((l.lifetimePoints - currentFloor) / span) * 100;
+    return Math.max(0, Math.min(100, Math.round(done)));
+  }
+
+  /** Points between the member's current tier floor and the next tier floor. */
+  private tierSpan(l: LoyaltySummaryResponse): number {
+    const nextFloor = l.lifetimePoints + l.pointsToNextTier!;
+    // Tier floors mirror the backend LoyaltyTier thresholds.
+    const floors = [0, 1000, 5000];
+    const currentFloor = floors.filter(f => f < nextFloor).pop() ?? 0;
+    return nextFloor - currentFloor;
+  }
 
   firstName = this.user()?.firstName ?? '';
   lastName = this.user()?.lastName ?? '';

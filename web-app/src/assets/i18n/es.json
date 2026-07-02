@@ -1308,5 +1308,34 @@
       "ACTIVITIES": "Actividades",
       "OTHER": "Otros"
     }
+  },
+  "loyalty": {
+    "tier": {
+      "EXPLORER": "Explorador",
+      "VOYAGER": "Viajero",
+      "ELITE": "Élite"
+    },
+    "type": {
+      "EARN": "Puntos ganados",
+      "REDEEM": "Puntos canjeados",
+      "ADJUST": "Ajuste"
+    },
+    "card": {
+      "subtitle": "Tus recompensas de viaje",
+      "points": "puntos",
+      "progressTo": "Progreso hacia {{tier}}",
+      "pointsToGo": "Faltan {{points}} pts",
+      "topTier": "Has alcanzado nuestro nivel más alto — disfruta las ventajas.",
+      "lifetime": "{{points}} puntos acumulados",
+      "earnRate": "Ganas {{rate}}× puntos",
+      "activity": "Actividad reciente",
+      "empty": "Aún no hay actividad de puntos. Reserva un viaje para empezar a ganar."
+    },
+    "checkout": {
+      "toggle": "Usa tus puntos",
+      "balance": "{{points}} puntos disponibles",
+      "applied": "{{points}} puntos aplicados — ahorras {{amount}}",
+      "discountLine": "Puntos ({{points}})"
+    }
   }
 }

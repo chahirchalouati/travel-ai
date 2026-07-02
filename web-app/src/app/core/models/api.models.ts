@@ -259,7 +259,38 @@ export interface CreateBookingRequest {
   cabinCategory?: string;
   partySize?: number;
   tripGroupId?: string;
+  /** Loyalty points to spend on this booking (discount already reflected in totalAmount). */
+  redeemPoints?: number;
   travelers: TravelerRequest[];
+}
+
+export interface LoyaltyTransactionResponse {
+  id: string;
+  type: 'EARN' | 'REDEEM' | 'ADJUST';
+  points: number;
+  bookingId?: string | null;
+  description?: string;
+  createdAt: string;
+}
+
+export interface LoyaltySummaryResponse {
+  pointsBalance: number;
+  lifetimePoints: number;
+  tier: string;
+  nextTier: string | null;
+  pointsToNextTier: number | null;
+  earnRate: number;
+  recentTransactions: LoyaltyTransactionResponse[];
+}
+
+export interface RedeemPreviewRequest {
+  amount: number;
+  points?: number;
+}
+
+export interface RedeemPreviewResponse {
+  maxRedeemablePoints: number;
+  discountAmount: number;
 }
 
 export interface ValidatePromoRequest {

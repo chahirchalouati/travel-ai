@@ -6,6 +6,7 @@ import com.travelai.booking.dto.*;
 import com.travelai.catalog.cruise.CruiseRepository;
 import com.travelai.catalog.flight.FlightRepository;
 import com.travelai.catalog.restaurant.RestaurantAvailabilityRepository;
+import com.travelai.loyalty.LoyaltyService;
 import com.travelai.notification.events.BookingConfirmedEvent;
 import com.travelai.shared.exception.ErrorCode;
 import com.travelai.shared.exception.TravelAiException;
@@ -38,6 +39,7 @@ public class BookingService {
     private final FlightRepository flightRepository;
     private final CruiseRepository cruiseRepository;
     private final RestaurantAvailabilityRepository restaurantAvailabilityRepository;
+    private final LoyaltyService loyaltyService;
     private final ApplicationEventPublisher eventPublisher;
 
     public BookingResponse createBooking(String userEmail, CreateBookingRequest req) {
@@ -70,6 +72,13 @@ public class BookingService {
         booking.setBookingReference("TRV-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
 
         Booking saved = bookingRepository.save(booking);
+
+        // Loyalty redemption: like the promo discount, the points discount is already
+        // subtracted from totalAmount by the client; here we validate the rules and
+        // deduct the points (throws 400, rolling the booking back, when invalid).
+        if (req.redeemPoints() != null && req.redeemPoints() > 0) {
+            loyaltyService.redeemForBooking(user, req.redeemPoints(), req.totalAmount(), saved.getId());
+        }
 
         if (req.travelers() != null) {
             for (TravelerRequest t : req.travelers()) {
