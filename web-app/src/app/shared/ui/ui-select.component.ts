@@ -2,6 +2,7 @@ import {
   Component,
   ElementRef,
   HostListener,
+  ViewChild,
   computed,
   forwardRef,
   inject,
@@ -9,6 +10,7 @@ import {
   signal,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { computeMenuPosition } from './menu-position.util';
 
 /** A single option in a {@link UiSelectComponent}. */
 export interface UiSelectOption {
@@ -30,6 +32,7 @@ export interface UiSelectOption {
   ],
   template: `
     <button
+      #trigger
       type="button"
       class="ui-select__trigger"
       [class.ui-select__trigger--open]="open()"
@@ -47,7 +50,9 @@ export interface UiSelectOption {
     </button>
 
     @if (open()) {
-      <ul class="ui-select__menu" role="listbox" [attr.aria-label]="ariaLabel() || null">
+      <ul class="ui-select__menu" role="listbox" [attr.aria-label]="ariaLabel() || null"
+          [style.top.px]="menuPosition().top" [style.left.px]="menuPosition().left"
+          [style.width.px]="menuPosition().width" [style.max-height.px]="menuPosition().maxHeight">
         @for (opt of options(); track $index) {
           <li
             class="ui-select__option"
@@ -131,15 +136,11 @@ export interface UiSelectOption {
       }
 
       .ui-select__menu {
-        position: absolute;
-        top: calc(100% + 6px);
-        left: 0;
-        right: 0;
-        z-index: 40;
+        position: fixed;
+        z-index: 300;
         margin: 0;
         padding: 6px;
         list-style: none;
-        max-height: 260px;
         overflow-y: auto;
         background: var(--bg-primary, #fff);
         border: 1px solid var(--border, #e0e0e0);
@@ -198,10 +199,15 @@ export class UiSelectComponent implements ControlValueAccessor {
   readonly placeholder = input<string>('Select');
   readonly ariaLabel = input<string>('');
 
+  @ViewChild('trigger') private readonly triggerRef!: ElementRef<HTMLButtonElement>;
+
   readonly open = signal(false);
   readonly value = signal<unknown>(undefined);
   readonly disabled = signal(false);
   readonly activeIndex = signal(-1);
+  /** Viewport-relative position for the fixed-position menu, so it escapes
+   * any ancestor with `overflow: hidden` (e.g. the hero header). */
+  readonly menuPosition = signal({ top: 0, left: 0, width: 0, maxHeight: 260 });
 
   readonly selectedLabel = computed(() => {
     const current = this.value();
@@ -240,7 +246,15 @@ export class UiSelectComponent implements ControlValueAccessor {
     this.open.update(o => !o);
     if (this.open()) {
       this.activeIndex.set(this.options().findIndex(o => this.same(o.value, this.value())));
+      const rect = this.triggerRef.nativeElement.getBoundingClientRect();
+      this.menuPosition.set(computeMenuPosition(rect));
     }
+  }
+
+  @HostListener('window:scroll')
+  @HostListener('window:resize')
+  onViewportChange(): void {
+    this.close();
   }
 
   close(): void {

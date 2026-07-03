@@ -2,6 +2,7 @@ import {
   Component,
   ElementRef,
   HostListener,
+  ViewChild,
   forwardRef,
   inject,
   input,
@@ -12,6 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable, Subject, debounceTime, distinctUntilChanged, of, switchMap, tap } from 'rxjs';
 import type { Suggestion } from '../../core/models/api.models';
+import { computeMenuPosition } from './menu-position.util';
 
 /** Function that fetches suggestions for a query. */
 export type SuggestFetch = (query: string) => Observable<Suggestion[]>;
@@ -34,6 +36,7 @@ export type SuggestFetch = (query: string) => Observable<Suggestion[]>;
         <span class="ui-ac__icon ms" aria-hidden="true">{{ icon() }}</span>
       }
       <input
+        #trigger
         class="ui-ac__input"
         type="text"
         autocomplete="off"
@@ -55,7 +58,9 @@ export type SuggestFetch = (query: string) => Observable<Suggestion[]>;
     </div>
 
     @if (open() && suggestions().length > 0) {
-      <ul class="ui-ac__menu" role="listbox">
+      <ul class="ui-ac__menu" role="listbox"
+          [style.top.px]="menuPosition().top" [style.left.px]="menuPosition().left"
+          [style.width.px]="menuPosition().width" [style.max-height.px]="menuPosition().maxHeight">
         @for (s of suggestions(); track s.value; let i = $index) {
           <li
             class="ui-ac__option"
@@ -140,15 +145,11 @@ export type SuggestFetch = (query: string) => Observable<Suggestion[]>;
       }
 
       .ui-ac__menu {
-        position: absolute;
-        top: calc(100% + 6px);
-        left: 0;
-        right: 0;
-        z-index: 50;
+        position: fixed;
+        z-index: 300;
         margin: 0;
         padding: 6px;
         list-style: none;
-        max-height: 300px;
         overflow-y: auto;
         background: var(--bg-primary, #fff);
         border: 1px solid var(--border, #e0e0e0);
@@ -223,6 +224,8 @@ export class UiAutocompleteComponent implements ControlValueAccessor {
 
   readonly selected = output<Suggestion>();
 
+  @ViewChild('trigger') private readonly triggerRef!: ElementRef<HTMLInputElement>;
+
   readonly display = signal('');
   readonly value = signal('');
   readonly suggestions = signal<readonly Suggestion[]>([]);
@@ -230,6 +233,9 @@ export class UiAutocompleteComponent implements ControlValueAccessor {
   readonly loading = signal(false);
   readonly activeIndex = signal(-1);
   readonly disabled = signal(false);
+  /** Viewport-relative position for the fixed-position menu, so it escapes
+   * any ancestor with `overflow: hidden` (e.g. the hero header). */
+  readonly menuPosition = signal({ top: 0, left: 0, width: 0, maxHeight: 300 });
 
   private readonly query$ = new Subject<string>();
   private onChange: (value: string) => void = () => {};
@@ -251,9 +257,23 @@ export class UiAutocompleteComponent implements ControlValueAccessor {
       .subscribe(list => {
         this.suggestions.set(list);
         this.loading.set(false);
+        if (list.length > 0) {
+          this.updateMenuPosition();
+        }
         this.open.set(list.length > 0);
         this.activeIndex.set(-1);
       });
+  }
+
+  private updateMenuPosition(): void {
+    const rect = this.triggerRef.nativeElement.getBoundingClientRect();
+    this.menuPosition.set(computeMenuPosition(rect, 6, 300));
+  }
+
+  @HostListener('window:scroll')
+  @HostListener('window:resize')
+  onViewportChange(): void {
+    this.close();
   }
 
   writeValue(value: string): void {
@@ -284,6 +304,7 @@ export class UiAutocompleteComponent implements ControlValueAccessor {
 
   onFocus(): void {
     if (this.suggestions().length > 0) {
+      this.updateMenuPosition();
       this.open.set(true);
     }
   }

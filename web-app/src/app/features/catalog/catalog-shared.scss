@@ -101,7 +101,12 @@
   box-shadow: 0 28px 70px -20px rgba(15, 18, 22, 0.55), 0 2px 6px rgba(15, 18, 22, 0.12);
   text-align: left;
   isolation: isolate;
-  animation: panel-rise 520ms var(--ease) both;
+  /* No fill-mode: a lingering "forwards"/"both" transform (even an at-rest
+     identity matrix) creates a containing block for `position: fixed`
+     descendants, breaking dropdown menus anchored to fields inside this bar.
+     The implicit 100% keyframe already matches the resting style, so the
+     element settles back to `transform: none` once the animation ends. */
+  animation: panel-rise 520ms var(--ease);
 }
 
 /* Terracotta → gold gradient hairline accent along the top edge */
