@@ -24,8 +24,13 @@ export class AuthService {
   currentUser = signal<UserProfileResponse | null>(null);
 
   constructor() {
+    // Deferred to a microtask: calling http.get() synchronously here would run
+    // authInterceptor's inject(AuthService) while this constructor is still on
+    // the call stack, which Angular's injector rejects as a circular dependency
+    // (NG0200) — silently swallowed by the error handler below, leaving
+    // currentUser permanently null after every fresh page load.
     if (localStorage.getItem(TOKEN_KEY)) {
-      this.fetchProfile().subscribe({ error: () => {} });
+      queueMicrotask(() => this.fetchProfile().subscribe({ error: () => {} }));
     }
   }
 

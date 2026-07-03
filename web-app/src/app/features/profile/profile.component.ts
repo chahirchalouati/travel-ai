@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, OnInit } from '@angular/core';
+import { Component, computed, effect, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -625,15 +625,23 @@ export class ProfileComponent implements OnInit {
     return `${Math.round((done / 5) * 100)}%`;
   });
 
+  constructor() {
+    // Keep avatar/cover in sync with the persisted profile — currentUser() only
+    // resolves after the initial /users/me fetch completes, which happens after
+    // this component is constructed on a page refresh, so this can't be a
+    // one-time ngOnInit read.
+    effect(() => {
+      const u = this.authService.currentUser();
+      if (u?.avatarUrl) this.avatarUrl.set(u.avatarUrl);
+      if (u?.coverUrl) this.coverUrl.set(u.coverUrl);
+    });
+  }
+
   ngOnInit(): void {
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/']);
       return;
     }
-    // Seed avatar/cover from the persisted profile.
-    const u = this.authService.currentUser();
-    if (u?.avatarUrl) this.avatarUrl.set(u.avatarUrl);
-    if (u?.coverUrl) this.coverUrl.set(u.coverUrl);
 
     this.profileService.getOverview().pipe(catchError(() => of(null)))
       .subscribe(overview => this.overview.set(overview));

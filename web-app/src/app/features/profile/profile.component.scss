@@ -24,7 +24,10 @@
 .cover-gradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.4) 100%);
+  // Guarantees the identity block (name/handle/meta) stays legible over the
+  // translated header (see .profile-header's translateY overlap below) no
+  // matter how light or busy the user's cover photo is.
+  background: linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.55) 75%, rgba(0,0,0,0.8) 100%);
 }
 
 .cover-edit-btn {
@@ -130,17 +133,23 @@
   padding-bottom: 4px;
 }
 
+// Name/handle/meta always render on top of the cover photo (the header is
+// pulled up over it — see .profile-header's translateY below), never on
+// --bg-primary, so they're pinned to white + a shadow instead of the
+// theme's (dark) text tokens to stay legible over any cover image.
 .profile-name {
   font-size: 22px;
   font-weight: 800;
-  color: var(--text-primary);
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
   margin: 0 0 2px;
   line-height: 1.2;
 }
 
 .profile-handle {
   font-size: 13.5px;
-  color: var(--text-secondary);
+  color: rgba(255,255,255,0.85);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
   font-weight: 500;
 }
 
@@ -941,7 +950,8 @@
 
 .verified-badge {
   display: inline-flex;
-  color: var(--teal);
+  color: #4ade80;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
 }
 
 .profile-meta {
@@ -956,10 +966,17 @@
   align-items: center;
   gap: 4px;
   font-size: 12.5px;
-  color: var(--text-secondary);
+  color: #fff;
   font-weight: 500;
+  // The meta row sits right at the cover photo's bottom edge, so part of it
+  // can land past the image onto the page's own (light) background — a text
+  // shadow alone isn't enough contrast there. A pill backdrop guarantees
+  // legibility no matter which side of that boundary each chip falls on.
+  background: rgba(0,0,0,0.45);
+  border-radius: 20px;
+  padding: 3px 10px 3px 8px;
 
-  .ms { color: var(--text-tertiary); }
+  .ms { color: #fff; }
 }
 
 // ─── Content head (tab toolbars) ─────────────────────────────────────────────
