@@ -2,6 +2,7 @@ package com.travelai.review;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,9 +13,13 @@ import java.util.UUID;
 
 public interface ReviewRepository extends JpaRepository<Review, UUID> {
 
+    // Reviews are always rendered with their author (name), so eager-fetch the
+    // lazy user to avoid an N+1 when mapping a page of reviews to DTOs.
+    @EntityGraph(attributePaths = {"user"})
     Page<Review> findByTargetTypeAndTargetIdOrderByCreatedAtDesc(
             String targetType, UUID targetId, Pageable pageable);
 
+    @EntityGraph(attributePaths = {"user"})
     Page<Review> findByUserIdOrderByCreatedAtDesc(UUID userId, Pageable pageable);
 
     long countByTargetTypeAndTargetId(String targetType, UUID targetId);
@@ -26,6 +31,7 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
 
     boolean existsByUserIdAndTargetTypeAndTargetId(UUID userId, String targetType, UUID targetId);
 
+    @EntityGraph(attributePaths = {"user"})
     Page<Review> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
     @Query("SELECT AVG(r.rating) FROM Review r")

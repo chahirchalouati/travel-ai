@@ -21,8 +21,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Builds the day-by-day map view of a trip: resolves each itinerary segment to
@@ -57,10 +60,16 @@ public class TripMapService {
 
         LatLng destinationFallback = resolveDestination(booking.getDestination());
 
+        // Batch-resolve catalog coordinates up front (one query per type) instead
+        // of a findById per segment.
+        Map<UUID, LatLng> hotelCoords = hotelCoords(segments);
+        Map<UUID, LatLng> restaurantCoords = restaurantCoords(segments);
+
         List<TripMapStop> stops = new ArrayList<>();
         int missingCoords = 0;
         for (ItinerarySegment segment : segments) {
-            LatLng coords = resolveSegment(segment).orElse(destinationFallback);
+            LatLng coords = resolveSegment(segment, hotelCoords, restaurantCoords)
+                    .orElse(destinationFallback);
             if (coords == null) {
                 missingCoords++;
                 continue;
@@ -82,15 +91,48 @@ public class TripMapService {
     }
 
     /** Coordinates carried by the segment's own catalog entity, if any. */
-    private Optional<LatLng> resolveSegment(ItinerarySegment segment) {
+    private Optional<LatLng> resolveSegment(ItinerarySegment segment,
+                                            Map<UUID, LatLng> hotelCoords,
+                                            Map<UUID, LatLng> restaurantCoords) {
         return switch (segment.getSegmentType()) {
-            case HOTEL -> hotelRepository.findById(segment.getEntityId())
-                    .flatMap(h -> latLng(h.getLatitude(), h.getLongitude()));
-            case RESTAURANT -> restaurantRepository.findById(segment.getEntityId())
-                    .flatMap(r -> latLng(r.getLatitude(), r.getLongitude()));
+            case HOTEL -> Optional.ofNullable(hotelCoords.get(segment.getEntityId()));
+            case RESTAURANT -> Optional.ofNullable(restaurantCoords.get(segment.getEntityId()));
             // Flights carry IATA codes only; they fall back to the trip destination.
             case FLIGHT -> Optional.empty();
         };
+    }
+
+    /** Coordinates of every hotel referenced by the segments, in one query. */
+    private Map<UUID, LatLng> hotelCoords(List<ItinerarySegment> segments) {
+        List<UUID> ids = entityIdsOfType(segments, SegmentType.HOTEL);
+        if (ids.isEmpty()) {
+            return Map.of();
+        }
+        return hotelRepository.findAllById(ids).stream()
+                .filter(h -> h.getLatitude() != null && h.getLongitude() != null)
+                .collect(Collectors.toMap(h -> h.getId(),
+                        h -> new LatLng(h.getLatitude(), h.getLongitude())));
+    }
+
+    /** Coordinates of every restaurant referenced by the segments, in one query. */
+    private Map<UUID, LatLng> restaurantCoords(List<ItinerarySegment> segments) {
+        List<UUID> ids = entityIdsOfType(segments, SegmentType.RESTAURANT);
+        if (ids.isEmpty()) {
+            return Map.of();
+        }
+        return restaurantRepository.findAllById(ids).stream()
+                .filter(r -> r.getLatitude() != null && r.getLongitude() != null)
+                .collect(Collectors.toMap(r -> r.getId(),
+                        r -> new LatLng(r.getLatitude(), r.getLongitude())));
+    }
+
+    private static List<UUID> entityIdsOfType(List<ItinerarySegment> segments, SegmentType type) {
+        return segments.stream()
+                .filter(s -> s.getSegmentType() == type)
+                .map(ItinerarySegment::getEntityId)
+                .filter(Objects::nonNull)
+                .distinct()
+                .toList();
     }
 
     /** Coordinates of the booking's destination, used as a fallback. Null when unknown. */

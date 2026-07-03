@@ -19,8 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Lets a user watch a flight or cruise and get alerted when its price drops.
@@ -94,8 +98,19 @@ public class PriceWatchService {
      */
     public void checkAll() {
         List<PriceWatch> watches = repository.findByActiveTrue();
+
+        // Batch-load the current price of every watched item — one query per
+        // vertical — instead of a per-watch lookup. Keys absent from a map mean
+        // the item is gone and the watch is skipped, matching the old behaviour.
+        Set<UUID> flightIds = watches.stream()
+                .map(PriceWatch::getFlightId).filter(Objects::nonNull).collect(Collectors.toSet());
+        Set<UUID> cruiseIds = watches.stream()
+                .map(PriceWatch::getCruiseId).filter(Objects::nonNull).collect(Collectors.toSet());
+        Map<UUID, BigDecimal> flightPrices = flightService.pricesByIds(flightIds);
+        Map<UUID, BigDecimal> cruisePrices = cruiseService.pricesByIds(cruiseIds);
+
         for (PriceWatch w : watches) {
-            currentPrice(w).ifPresent(current -> evaluate(w, current));
+            currentPrice(w, flightPrices, cruisePrices).ifPresent(current -> evaluate(w, current));
         }
     }
 
@@ -116,16 +131,14 @@ public class PriceWatchService {
         repository.save(w);
     }
 
-    private Optional<BigDecimal> currentPrice(PriceWatch w) {
-        try {
-            if (w.getFlightId() != null) {
-                return Optional.of(flightService.getById(w.getFlightId()).price());
-            }
-            if (w.getCruiseId() != null) {
-                return Optional.of(cruiseService.getById(w.getCruiseId()).pricePerPerson());
-            }
-        } catch (TravelAiException ex) {
-            log.debug("Watched item gone for watch {} — skipping", w.getId());
+    private Optional<BigDecimal> currentPrice(PriceWatch w,
+                                              Map<UUID, BigDecimal> flightPrices,
+                                              Map<UUID, BigDecimal> cruisePrices) {
+        if (w.getFlightId() != null) {
+            return Optional.ofNullable(flightPrices.get(w.getFlightId()));
+        }
+        if (w.getCruiseId() != null) {
+            return Optional.ofNullable(cruisePrices.get(w.getCruiseId()));
         }
         return Optional.empty();
     }

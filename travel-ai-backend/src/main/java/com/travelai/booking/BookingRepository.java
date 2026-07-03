@@ -28,6 +28,12 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     @EntityGraph(attributePaths = {"travelers"})
     java.util.List<Booking> findByTripGroupIdAndUserEmail(UUID tripGroupId, String email);
 
+    /** Admin listing: eager-fetch the user so the DTO mapping doesn't N+1. */
+    @EntityGraph(attributePaths = {"user"})
+    @Query(value = "SELECT b FROM Booking b",
+           countQuery = "SELECT count(b) FROM Booking b")
+    Page<Booking> findAllWithUser(Pageable pageable);
+
     /**
      * True when the user has a confirmed or completed booking referencing the given target
      * (hotel, restaurant, or flight). Used to mark reviews as verified stays.

@@ -80,7 +80,7 @@ public class AdminService {
 
     /** Returns paginated bookings. */
     public Page<AdminBookingResponse> listBookings(Pageable pageable) {
-        return bookingRepository.findAll(pageable).map(AdminBookingResponse::from);
+        return bookingRepository.findAllWithUser(pageable).map(AdminBookingResponse::from);
     }
 
     /** Changes a booking's status (confirm / cancel / complete). */

@@ -15,7 +15,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +47,19 @@ public class CruiseService {
         Cruise cruise = cruiseRepository.findById(id)
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.CRUISE_NOT_FOUND));
         return toResult(cruise);
+    }
+
+    /**
+     * Current per-person price of each given cruise, keyed by id, in a single
+     * query. Missing ids are absent from the map. Lets callers re-price many
+     * watched cruises without an N+1.
+     */
+    public Map<UUID, BigDecimal> pricesByIds(Set<UUID> ids) {
+        if (ids.isEmpty()) {
+            return Map.of();
+        }
+        return cruiseRepository.findAllById(ids).stream()
+                .collect(Collectors.toMap(Cruise::getId, Cruise::getPricePerPerson));
     }
 
     /** Bookable cabin tiers for a cruise, priced from its per-person base. */

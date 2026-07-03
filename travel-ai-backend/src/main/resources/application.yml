@@ -29,6 +29,9 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
         default_schema: public
+        # Batch-load lazy associations/collections in IN(..) chunks instead of
+        # one query per parent row — turns residual N+1s into ceil(N/size)+1.
+        default_batch_fetch_size: 100
 
   flyway:
     enabled: true

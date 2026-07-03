@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Conversation inbox between a user and the platform. Newly started conversations
@@ -33,8 +35,21 @@ public class MessagingService {
     @Transactional(readOnly = true)
     public List<ConversationResponse> listConversations(String email) {
         UUID userId = userId(email);
-        return conversationRepository.findByUserIdOrderByLastMessageAtDesc(userId).stream()
-                .map(c -> ConversationResponse.summary(c, lastBody(c.getId())))
+        List<Conversation> conversations =
+                conversationRepository.findByUserIdOrderByLastMessageAtDesc(userId);
+
+        // One query for the last body of every conversation, keyed by conversation id.
+        List<UUID> ids = conversations.stream().map(Conversation::getId).toList();
+        Map<UUID, String> lastBodies = ids.isEmpty()
+                ? Map.of()
+                : messageRepository.findByConversationIdInOrderByCreatedAtAsc(ids).stream()
+                        .collect(Collectors.toMap(
+                                Message::getConversationId,
+                                Message::getBody,
+                                (first, second) -> second)); // ordered asc → keep latest
+
+        return conversations.stream()
+                .map(c -> ConversationResponse.summary(c, lastBodies.getOrDefault(c.getId(), "")))
                 .toList();
     }
 
@@ -94,11 +109,6 @@ public class MessagingService {
         return messageRepository.findByConversationIdOrderByCreatedAtAsc(conversationId).stream()
                 .map(MessageResponse::from)
                 .toList();
-    }
-
-    private String lastBody(UUID conversationId) {
-        var messages = messageRepository.findByConversationIdOrderByCreatedAtAsc(conversationId);
-        return messages.isEmpty() ? "" : messages.get(messages.size() - 1).getBody();
     }
 
     private Conversation ownedConversation(String email, UUID conversationId) {

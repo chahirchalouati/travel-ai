@@ -22,9 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Core domain logic for the reactive living itinerary: creation on booking confirm,
@@ -109,8 +110,8 @@ public class LiveItineraryService {
     @Transactional(readOnly = true)
     public List<ItineraryProposalResponse> listProposals(String userEmail, UUID itineraryId) {
         LiveItinerary itinerary = loadViewableItinerary(userEmail, itineraryId);
-        return proposalRepository.findByItineraryIdOrderByCreatedAtDesc(itinerary.getId())
-                .stream().map(this::toProposalResponse).toList();
+        return toProposalResponses(
+                proposalRepository.findByItineraryIdOrderByCreatedAtDesc(itinerary.getId()));
     }
 
     // ── Manual disruption trigger ─────────────────────────────────────────────
@@ -307,9 +308,8 @@ public class LiveItineraryService {
     private LiveItineraryResponse toResponse(LiveItinerary itinerary) {
         List<SegmentResponse> segments = segmentRepository.findByItineraryId(itinerary.getId())
                 .stream().map(SegmentResponse::from).toList();
-        List<ItineraryProposalResponse> pending = proposalRepository
-                .findByItineraryIdAndStatus(itinerary.getId(), ItineraryProposalStatus.PENDING_APPROVAL)
-                .stream().map(this::toProposalResponse).toList();
+        List<ItineraryProposalResponse> pending = toProposalResponses(proposalRepository
+                .findByItineraryIdAndStatus(itinerary.getId(), ItineraryProposalStatus.PENDING_APPROVAL));
         return new LiveItineraryResponse(
                 itinerary.getId(),
                 itinerary.getBookingId(),
@@ -318,10 +318,23 @@ public class LiveItineraryService {
                 pending);
     }
 
-    private ItineraryProposalResponse toProposalResponse(ItineraryProposal proposal) {
-        List<ProposedChangeResponse> changes = new ArrayList<>(
-                changeRepository.findByProposalId(proposal.getId())
-                        .stream().map(ProposedChangeResponse::from).toList());
-        return ItineraryProposalResponse.from(proposal, changes);
+    /**
+     * Maps proposals to responses, fetching every proposal's changes in a single
+     * query (grouped by proposal) instead of one query per proposal.
+     */
+    private List<ItineraryProposalResponse> toProposalResponses(List<ItineraryProposal> proposals) {
+        if (proposals.isEmpty()) {
+            return List.of();
+        }
+        List<UUID> ids = proposals.stream().map(ItineraryProposal::getId).toList();
+        Map<UUID, List<ProposedChangeResponse>> changesByProposal =
+                changeRepository.findByProposalIdIn(ids).stream()
+                        .collect(Collectors.groupingBy(
+                                ProposedChange::getProposalId,
+                                Collectors.mapping(ProposedChangeResponse::from, Collectors.toList())));
+        return proposals.stream()
+                .map(p -> ItineraryProposalResponse.from(
+                        p, changesByProposal.getOrDefault(p.getId(), List.of())))
+                .toList();
     }
 }

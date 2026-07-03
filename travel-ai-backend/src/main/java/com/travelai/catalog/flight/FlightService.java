@@ -17,8 +17,10 @@ import java.time.ZoneOffset;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -87,6 +89,19 @@ public class FlightService {
         Flight flight = flightRepository.findById(id)
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.FLIGHT_NOT_FOUND));
         return toResult(flight);
+    }
+
+    /**
+     * Current sell price of each given flight, keyed by id, in a single query.
+     * Missing ids (deleted flights) are absent from the map. Lets callers re-price
+     * many watched flights without an N+1.
+     */
+    public Map<UUID, BigDecimal> pricesByIds(Set<UUID> ids) {
+        if (ids.isEmpty()) {
+            return Map.of();
+        }
+        return flightRepository.findAllById(ids).stream()
+                .collect(Collectors.toMap(Flight::getId, Flight::getPrice));
     }
 
     /**

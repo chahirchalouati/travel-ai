@@ -5,6 +5,7 @@ import com.travelai.shared.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -79,8 +80,12 @@ public class Booking extends BaseEntity {
     private String bookingReference;
 
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 100)
     private List<BookingTraveler> travelers = new ArrayList<>();
 
+    // Not in the "travelers" EntityGraph, so a page of bookings would otherwise
+    // fire one ancillaries query per booking; batch-fetch them instead.
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 100)
     private List<BookingAncillary> ancillaries = new ArrayList<>();
 }
