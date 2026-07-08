@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 import { RouterLink } from '@angular/router';
+import { SiteContentService, SiteContentItem } from '../../core/services/site-content.service';
 
 @Component({
   selector: 'app-about',
@@ -21,10 +22,10 @@ import { RouterLink } from '@angular/router';
       </section>
 
       <div class="stats-row">
-        @for (s of stats; track s.key) {
+        @for (s of stats(); track s.title) {
           <div class="stat">
             <strong class="stat-val">{{ s.value }}</strong>
-            <span class="stat-label">{{ s.key | transloco }}</span>
+            <span class="stat-label">{{ s.title }}</span>
           </div>
         }
       </div>
@@ -51,11 +52,11 @@ import { RouterLink } from '@angular/router';
           <p class="section-eye">{{ 'about.values.eye' | transloco }}</p>
           <h2>{{ 'about.values.title' | transloco }}</h2>
           <div class="values-grid">
-            @for (v of values; track v.icon) {
+            @for (v of values(); track v.title) {
               <div class="value-card">
                 <div class="value-icon-wrap"><span class="ms value-icon">{{ v.icon }}</span></div>
-                <h3>{{ v.titleKey | transloco }}</h3>
-                <p>{{ v.bodyKey | transloco }}</p>
+                <h3>{{ v.title }}</h3>
+                <p>{{ v.body }}</p>
               </div>
             }
           </div>
@@ -164,17 +165,18 @@ import { RouterLink } from '@angular/router';
   `]
 })
 export class AboutComponent {
-  stats = [
-    { key: 'about.stats.destinations', value: '150+' },
-    { key: 'about.stats.travelers', value: '2M+' },
-    { key: 'about.stats.bookings', value: '500K+' },
-    { key: 'about.stats.countries', value: '80+' },
-  ];
+  private readonly siteContent = inject(SiteContentService);
 
-  values = [
-    { icon: 'travel_explore', titleKey: 'about.values.curious.title', bodyKey: 'about.values.curious.body' },
-    { icon: 'verified', titleKey: 'about.values.trustworthy.title', bodyKey: 'about.values.trustworthy.body' },
-    { icon: 'bolt', titleKey: 'about.values.innovative.title', bodyKey: 'about.values.innovative.body' },
-    { icon: 'public', titleKey: 'about.values.inclusive.title', bodyKey: 'about.values.inclusive.body' },
-  ];
+  stats = signal<SiteContentItem[]>([]);
+  values = signal<SiteContentItem[]>([]);
+
+  constructor() {
+    this.siteContent.getPage('about').subscribe({
+      next: items => {
+        this.stats.set(items.filter(i => i.section === 'stats'));
+        this.values.set(items.filter(i => i.section === 'values'));
+      },
+      error: () => {},
+    });
+  }
 }

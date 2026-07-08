@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
+import { SiteContentService, SiteContentItem } from '../../core/services/site-content.service';
 
 @Component({
   selector: 'app-developers',
@@ -47,11 +48,11 @@ console<span class="c-op">.</span><span class="c-fn">log</span>(results<span cla
             <p class="section-eye">{{ 'developers.features.eye' | transloco }}</p>
             <h2>{{ 'developers.features.title' | transloco }}</h2>
             <div class="features-grid">
-              @for (f of features; track f.icon) {
+              @for (f of features(); track f.title) {
                 <div class="feature-card">
                   <div class="feature-icon-wrap"><span class="ms">{{ f.icon }}</span></div>
-                  <h3>{{ f.titleKey | transloco }}</h3>
-                  <p>{{ f.bodyKey | transloco }}</p>
+                  <h3>{{ f.title }}</h3>
+                  <p>{{ f.body }}</p>
                 </div>
               }
             </div>
@@ -61,11 +62,11 @@ console<span class="c-op">.</span><span class="c-fn">log</span>(results<span cla
           <section class="endpoints-section">
             <h2>{{ 'developers.endpoints.title' | transloco }}</h2>
             <div class="endpoints-list">
-              @for (ep of endpoints; track ep.method + ep.path) {
+              @for (ep of endpoints(); track ep.title) {
                 <div class="endpoint-row">
-                  <span class="method" [class]="'method--' + ep.method.toLowerCase()">{{ ep.method }}</span>
-                  <code class="ep-path">{{ ep.path }}</code>
-                  <span class="ep-desc">{{ ep.descKey | transloco }}</span>
+                  <span class="method" [class]="'method--' + (ep.value || '').toLowerCase()">{{ ep.value }}</span>
+                  <code class="ep-path">{{ ep.title }}</code>
+                  <span class="ep-desc">{{ ep.body }}</span>
                 </div>
               }
             </div>
@@ -75,12 +76,12 @@ console<span class="c-op">.</span><span class="c-fn">log</span>(results<span cla
           <section class="sdks-section">
             <h2>{{ 'developers.sdks.title' | transloco }}</h2>
             <div class="sdks-grid">
-              @for (sdk of sdks; track sdk.lang) {
+              @for (sdk of sdks(); track sdk.title) {
                 <div class="sdk-card">
-                  <div class="sdk-icon" [style.background]="sdk.color">{{ sdk.emoji }}</div>
+                  <div class="sdk-icon" [style.background]="sdk.accent">{{ sdk.icon }}</div>
                   <div>
-                    <h3>{{ sdk.lang }}</h3>
-                    <code>{{ sdk.install }}</code>
+                    <h3>{{ sdk.title }}</h3>
+                    <code>{{ sdk.value }}</code>
                   </div>
                 </div>
               }
@@ -176,28 +177,20 @@ console<span class="c-op">.</span><span class="c-fn">log</span>(results<span cla
   `]
 })
 export class DevelopersComponent {
-  features = [
-    { icon: 'api', titleKey: 'developers.features.rest.title', bodyKey: 'developers.features.rest.body' },
-    { icon: 'search', titleKey: 'developers.features.search.title', bodyKey: 'developers.features.search.body' },
-    { icon: 'webhook', titleKey: 'developers.features.webhooks.title', bodyKey: 'developers.features.webhooks.body' },
-    { icon: 'smart_toy', titleKey: 'developers.features.ai.title', bodyKey: 'developers.features.ai.body' },
-    { icon: 'speed', titleKey: 'developers.features.speed.title', bodyKey: 'developers.features.speed.body' },
-    { icon: 'gpp_good', titleKey: 'developers.features.security.title', bodyKey: 'developers.features.security.body' },
-  ];
+  private readonly siteContent = inject(SiteContentService);
 
-  endpoints = [
-    { method: 'GET', path: '/api/hotels', descKey: 'developers.ep.hotels' },
-    { method: 'GET', path: '/api/flights', descKey: 'developers.ep.flights' },
-    { method: 'GET', path: '/api/destinations', descKey: 'developers.ep.destinations' },
-    { method: 'POST', path: '/api/bookings', descKey: 'developers.ep.createBooking' },
-    { method: 'GET', path: '/api/bookings/{id}', descKey: 'developers.ep.getBooking' },
-    { method: 'PATCH', path: '/api/bookings/{id}', descKey: 'developers.ep.updateBooking' },
-  ];
+  features = signal<SiteContentItem[]>([]);
+  endpoints = signal<SiteContentItem[]>([]);
+  sdks = signal<SiteContentItem[]>([]);
 
-  sdks = [
-    { lang: 'JavaScript / TypeScript', emoji: '🟨', color: '#f7df1e22', install: 'npm install @travelai/sdk' },
-    { lang: 'Python', emoji: '🐍', color: '#3776ab22', install: 'pip install travelai' },
-    { lang: 'Java', emoji: '☕', color: '#ed8b0022', install: 'implementation "com.travelai:sdk"' },
-    { lang: 'Go', emoji: '🐹', color: '#00add822', install: 'go get travelai.com/sdk' },
-  ];
+  constructor() {
+    this.siteContent.getPage('developers').subscribe({
+      next: items => {
+        this.features.set(items.filter(i => i.section === 'features'));
+        this.endpoints.set(items.filter(i => i.section === 'endpoints'));
+        this.sdks.set(items.filter(i => i.section === 'sdks'));
+      },
+      error: () => {},
+    });
+  }
 }

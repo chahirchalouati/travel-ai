@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 import { RouterLink } from '@angular/router';
+import { SiteContentService, SiteContentItem } from '../../core/services/site-content.service';
 
 @Component({
   selector: 'app-partners',
@@ -14,10 +15,10 @@ import { RouterLink } from '@angular/router';
           <h1>{{ 'partners.headline' | transloco }}</h1>
           <p class="hero-sub">{{ 'partners.sub' | transloco }}</p>
           <div class="hero-stats">
-            @for (s of stats; track s.key) {
+            @for (s of stats(); track s.title) {
               <div class="hero-stat">
                 <strong>{{ s.value }}</strong>
-                <span>{{ s.key | transloco }}</span>
+                <span>{{ s.title }}</span>
               </div>
             }
           </div>
@@ -29,14 +30,14 @@ import { RouterLink } from '@angular/router';
           <p class="section-eye">{{ 'partners.types.eye' | transloco }}</p>
           <h2>{{ 'partners.types.title' | transloco }}</h2>
           <div class="types-grid">
-            @for (t of partnerTypes; track t.icon) {
+            @for (t of partnerTypes(); track t.title) {
               <div class="type-card">
-                <div class="type-icon-wrap" [style.background]="t.bg"><span class="ms">{{ t.icon }}</span></div>
-                <h3>{{ t.titleKey | transloco }}</h3>
-                <p>{{ t.bodyKey | transloco }}</p>
+                <div class="type-icon-wrap" [style.background]="t.accent"><span class="ms">{{ t.icon }}</span></div>
+                <h3>{{ t.title }}</h3>
+                <p>{{ t.body }}</p>
                 <ul class="type-benefits">
-                  @for (b of t.benefits; track b) {
-                    <li><span class="ms">check</span>{{ b | transloco }}</li>
+                  @for (b of t.bullets; track b) {
+                    <li><span class="ms">check</span>{{ b }}</li>
                   }
                 </ul>
               </div>
@@ -50,11 +51,11 @@ import { RouterLink } from '@angular/router';
           <p class="section-eye">{{ 'partners.process.eye' | transloco }}</p>
           <h2>{{ 'partners.process.title' | transloco }}</h2>
           <div class="steps-row">
-            @for (step of steps; track step.n) {
+            @for (step of steps(); track step.value) {
               <div class="step">
-                <div class="step-num">{{ step.n }}</div>
-                <h3>{{ step.titleKey | transloco }}</h3>
-                <p>{{ step.bodyKey | transloco }}</p>
+                <div class="step-num">{{ step.value }}</div>
+                <h3>{{ step.title }}</h3>
+                <p>{{ step.body }}</p>
               </div>
               @if (!$last) { <div class="step-divider" aria-hidden="true"><span class="ms">arrow_forward</span></div> }
             }
@@ -121,39 +122,20 @@ import { RouterLink } from '@angular/router';
   `]
 })
 export class PartnersComponent {
-  stats = [
-    { key: 'partners.stats.partners', value: '2,000+' },
-    { key: 'partners.stats.bookings', value: '500K+' },
-    { key: 'partners.stats.countries', value: '80+' },
-  ];
+  private readonly siteContent = inject(SiteContentService);
 
-  partnerTypes = [
-    {
-      icon: 'hotel',
-      bg: 'linear-gradient(135deg, #BE4329, #A2371F)',
-      titleKey: 'partners.types.hotels.title',
-      bodyKey: 'partners.types.hotels.body',
-      benefits: ['partners.types.hotels.b1', 'partners.types.hotels.b2', 'partners.types.hotels.b3'],
-    },
-    {
-      icon: 'flight',
-      bg: 'linear-gradient(135deg, #11664C, #0d5640)',
-      titleKey: 'partners.types.airlines.title',
-      bodyKey: 'partners.types.airlines.body',
-      benefits: ['partners.types.airlines.b1', 'partners.types.airlines.b2', 'partners.types.airlines.b3'],
-    },
-    {
-      icon: 'celebration',
-      bg: 'linear-gradient(135deg, #C0892E, #a0731f)',
-      titleKey: 'partners.types.experiences.title',
-      bodyKey: 'partners.types.experiences.body',
-      benefits: ['partners.types.experiences.b1', 'partners.types.experiences.b2', 'partners.types.experiences.b3'],
-    },
-  ];
+  stats = signal<SiteContentItem[]>([]);
+  partnerTypes = signal<SiteContentItem[]>([]);
+  steps = signal<SiteContentItem[]>([]);
 
-  steps = [
-    { n: 1, titleKey: 'partners.process.apply.title', bodyKey: 'partners.process.apply.body' },
-    { n: 2, titleKey: 'partners.process.review.title', bodyKey: 'partners.process.review.body' },
-    { n: 3, titleKey: 'partners.process.onboard.title', bodyKey: 'partners.process.onboard.body' },
-  ];
+  constructor() {
+    this.siteContent.getPage('partners').subscribe({
+      next: items => {
+        this.stats.set(items.filter(i => i.section === 'stats'));
+        this.partnerTypes.set(items.filter(i => i.section === 'types'));
+        this.steps.set(items.filter(i => i.section === 'steps'));
+      },
+      error: () => {},
+    });
+  }
 }
