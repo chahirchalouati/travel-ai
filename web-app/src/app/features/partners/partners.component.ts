@@ -1,12 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
-import { RouterLink } from '@angular/router';
 import { SiteContentService, SiteContentItem } from '../../core/services/site-content.service';
 
 @Component({
   selector: 'app-partners',
   standalone: true,
-  imports: [TranslocoModule, RouterLink],
+  imports: [TranslocoModule],
   template: `
     <div class="partners">
       <header class="partners-hero">

@@ -1,12 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
-import { RouterLink } from '@angular/router';
 import { BlogService, BlogPost } from '../../core/services/blog.service';
 
 @Component({
   selector: 'app-blog',
   standalone: true,
-  imports: [TranslocoModule, RouterLink],
+  imports: [TranslocoModule],
   template: `
     <div class="blog">
       <header class="blog-hero">

@@ -1,12 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
-import { RouterLink } from '@angular/router';
 import { CareersService, JobPosition } from '../../core/services/careers.service';
 
 @Component({
   selector: 'app-careers',
   standalone: true,
-  imports: [TranslocoModule, RouterLink],
+  imports: [TranslocoModule],
   template: `
     <div class="careers">
       <header class="careers-hero">
