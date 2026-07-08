@@ -38,21 +38,21 @@ export class FooterComponent {
     {
       titleKey: 'footer.cols.company',
       links: [
-        { key: 'footer.links.about', href: '#' },
-        { key: 'footer.links.blog', href: '#' },
-        { key: 'footer.links.careers', href: '#' },
-        { key: 'footer.links.press', href: '#' },
-        { key: 'footer.links.contact', href: '#' },
+        { key: 'footer.links.about', route: '/about' },
+        { key: 'footer.links.blog', route: '/blog' },
+        { key: 'footer.links.careers', route: '/careers' },
+        { key: 'footer.links.press', route: '/press' },
+        { key: 'footer.links.contact', route: '/contact' },
       ]
     },
     {
       titleKey: 'footer.cols.support',
       links: [
-        { key: 'footer.links.help', href: '#' },
-        { key: 'footer.links.safety', href: '#' },
-        { key: 'footer.links.community', href: '#' },
-        { key: 'footer.links.partners', href: '#' },
-        { key: 'footer.links.api', href: '#' },
+        { key: 'footer.links.help', route: '/help' },
+        { key: 'footer.links.safety', route: '/safety' },
+        { key: 'footer.links.community', route: '/forum' },
+        { key: 'footer.links.partners', route: '/partners' },
+        { key: 'footer.links.api', route: '/developers' },
       ]
     },
   ];

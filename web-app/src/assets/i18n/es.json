@@ -1231,19 +1231,40 @@
     "eyebrow": "Membresía",
     "title": "Travel AI Prime",
     "lede": "Cero costes de servicio en cada reserva y un descuento exclusivo para miembros. Pensado para quienes viajan a menudo.",
-    "interval": { "ANNUAL": "año", "MONTHLY": "mes" },
+    "interval": {
+      "ANNUAL": "año",
+      "MONTHLY": "mes"
+    },
     "subscribe": "Suscríbete a Prime",
     "subscribeSignedOut": "Inicia sesión para suscribirte",
     "cancel": "Cancelar membresía",
     "cancelNote": "Cancela cuando quieras; los beneficios siguen activos hasta la renovación.",
     "priceNote": "Se renueva automáticamente. Cancela cuando quieras.",
-    "active": { "title": "Prime activo", "renews": "Se renueva el" },
+    "active": {
+      "title": "Prime activo",
+      "renews": "Se renueva el"
+    },
     "benefits": {
-      "fee": { "title": "Cero costes de servicio", "body": "Elimina el coste de servicio del 6% en cada reserva." },
-      "discount": { "title": "Descuento de miembro", "body": "Un descuento exclusivo aplicado automáticamente a tu total." },
-      "priority": { "title": "Soporte prioritario", "body": "Atención preferente para soporte y cambios de viaje." },
-      "watch": { "title": "Alertas de precio ilimitadas", "body": "Vigila todos los vuelos y cruceros que quieras." },
-      "concierge": { "title": "Conserje IA", "body": "Sugerencias de viaje personalizadas de nuestro asistente." }
+      "fee": {
+        "title": "Cero costes de servicio",
+        "body": "Elimina el coste de servicio del 6% en cada reserva."
+      },
+      "discount": {
+        "title": "Descuento de miembro",
+        "body": "Un descuento exclusivo aplicado automáticamente a tu total."
+      },
+      "priority": {
+        "title": "Soporte prioritario",
+        "body": "Atención preferente para soporte y cambios de viaje."
+      },
+      "watch": {
+        "title": "Alertas de precio ilimitadas",
+        "body": "Vigila todos los vuelos y cruceros que quieras."
+      },
+      "concierge": {
+        "title": "Conserje IA",
+        "body": "Sugerencias de viaje personalizadas de nuestro asistente."
+      }
     },
     "checkout": {
       "feeWaived": "Incluido con Prime",
@@ -1508,5 +1529,565 @@
     "errCodeRequired": "Introduce tu código de verificación.",
     "errCodeInvalid": "Ese código no es válido. Inténtalo de nuevo.",
     "errGeneric": "Algo salió mal. Inténtalo de nuevo."
+  },
+  "about": {
+    "eyebrow": "Nuestra historia",
+    "headline": "Descubre el mundo, de forma más inteligente",
+    "tagline": "TravelAI ayuda a millones de viajeros a descubrir destinos, planificar itinerarios y reservar viajes.",
+    "heroCta": "Empieza a explorar",
+    "stats": {
+      "destinations": "Destinos",
+      "travelers": "Viajeros satisfechos",
+      "bookings": "Reservas realizadas",
+      "countries": "Países cubiertos"
+    },
+    "mission": {
+      "eye": "Por qué existimos",
+      "title": "Nuestra misión es hacer el mundo más accesible",
+      "body": "Creemos que viajar transforma vidas. Por eso construimos una plataforma con IA que elimina la fricción de la planificación."
+    },
+    "values": {
+      "eye": "Lo que nos impulsa",
+      "title": "Construidos sobre valores que vivimos",
+      "curious": {
+        "title": "Infinitamente curiosos",
+        "body": "Exploramos cada rincón del viaje para traerte joyas ocultas."
+      },
+      "trustworthy": {
+        "title": "Radicalmente confiables",
+        "body": "Opiniones reales, precios transparentes, sin cargos ocultos."
+      },
+      "innovative": {
+        "title": "Audazmente innovadores",
+        "body": "Usamos IA para hacer la planificación de viajes eficaz y personal."
+      },
+      "inclusive": {
+        "title": "Globalmente inclusivos",
+        "body": "Viajar es para todos. Diseñamos para cada presupuesto, idioma y capacidad."
+      }
+    },
+    "cta": {
+      "headline": "¿Listo para explorar?",
+      "sub": "Únete a millones de viajeros que planifican mejor con TravelAI.",
+      "chat": "Hablar con la IA",
+      "planner": "Crear un viaje"
+    }
+  },
+  "blog": {
+    "eyebrow": "Diario TravelAI",
+    "headline": "Historias, consejos e inspiración",
+    "sub": "Despachos del equipo — destinos que amamos y consejos para todo tipo de viajes.",
+    "featured": "Historia destacada",
+    "latest": "Artículos recientes",
+    "readMore": "Leer más",
+    "minRead": "min de lectura",
+    "newsletter": {
+      "title": "Recibe el resumen semanal",
+      "sub": "Inspiración de viaje y nuevas funciones cada semana.",
+      "placeholder": "Tu dirección de correo",
+      "cta": "Suscribirse"
+    },
+    "posts": {
+      "aiPlanning": {
+        "title": "Cómo la IA está reinventando la planificación de viajes",
+        "excerpt": "Descubre cómo TravelAI convierte horas de investigación en minutos de inspiración."
+      },
+      "hiddenGems": {
+        "title": "Los destinos europeos más infravalorados de 2025",
+        "excerpt": "Nuestra IA analizó millones de reseñas para encontrar los lugares que los locales aman."
+      },
+      "budgetTips": {
+        "title": "5 formas de viajar más lejos con menos",
+        "excerpt": "Fechas flexibles, alertas de precios y algunos trucos de IA que ahorran en tu próximo viaje."
+      },
+      "soloTravel": {
+        "title": "La guía completa del viaje en solitario",
+        "excerpt": "Todo lo que necesitas saber sobre viajar solo."
+      },
+      "sustainable": {
+        "title": "Cómo viajar de forma más sostenible en 2025",
+        "excerpt": "Una guía práctica para reducir tu huella de viaje."
+      },
+      "family": {
+        "title": "Trucos de viaje familiar que funcionan",
+        "excerpt": "Nuestros mejores consejos para aventuras en familia sin estrés."
+      }
+    }
+  },
+  "careers": {
+    "eyebrow": "Estamos contratando",
+    "headline": "Construye el futuro del viaje",
+    "sub": "Únete a un pequeño equipo con una gran misión.",
+    "perks": {
+      "title": "Por qué unirse a TravelAI",
+      "mission": {
+        "title": "Misión significativa",
+        "body": "Tu trabajo ayuda a millones de personas a descubrir el mundo."
+      },
+      "growth": {
+        "title": "Crecimiento rápido",
+        "body": "Curvas de aprendizaje pronunciadas y propiedad real."
+      },
+      "remote": {
+        "title": "Remote-first",
+        "body": "Trabaja desde cualquier lugar. Tenemos compañeros en 15 países."
+      },
+      "benefits": {
+        "title": "Excelentes beneficios",
+        "body": "Salario competitivo, cobertura sanitaria y asignación de viaje."
+      },
+      "travel": {
+        "title": "Ventajas de viaje",
+        "body": "Retiros anuales en equipo y reservas con descuento."
+      },
+      "team": {
+        "title": "Equipo increíble",
+        "body": "Personas reflexivas que se preocupan profundamente por la calidad."
+      }
+    },
+    "positions": {
+      "title": "Puestos abiertos",
+      "none": "No hay puestos abiertos ahora mismo — vuelve pronto.",
+      "apply": "Solicitar"
+    },
+    "jobs": {
+      "seniorFe": "Ingeniero Frontend Senior",
+      "aiEngineer": "Ingeniero IA / ML",
+      "productDesigner": "Diseñador de Producto Senior",
+      "contentStrategist": "Estratega de Contenido"
+    },
+    "culture": {
+      "eye": "Nuestra cultura",
+      "title": "Un lugar donde ocurre el gran trabajo",
+      "body": "Nos movemos rápido, nos preocupamos por la calidad y confiamos los unos en los otros."
+    }
+  },
+  "press": {
+    "eyebrow": "Medios",
+    "headline": "Prensa y Medios",
+    "sub": "Cobertura, recursos de marca y todo lo que los periodistas necesitan.",
+    "coverage": {
+      "title": "En las noticias",
+      "tc": "TravelAI recauda fondos para llevar la planificación con IA a millones",
+      "guardian": "La aplicación que hace que la planificación de viajes sea sin esfuerzo",
+      "forbes": "TravelAI nombrada una de las startups de viajes más innovadoras de 2025",
+      "wired": "Cómo la IA está haciendo obsoleto al agente de viajes"
+    },
+    "kit": {
+      "title": "Kit de Medios",
+      "body": "Descarga nuestros activos de marca, logos y capturas de pantalla.",
+      "download": "Descargar kit de medios",
+      "logos": "Archivos de logo (SVG, PNG)",
+      "screenshots": "Capturas de pantalla del producto",
+      "brandGuide": "Directrices de marca (PDF)",
+      "boilerplate": "Presentación de la empresa"
+    },
+    "contact": {
+      "title": "Contacto de prensa",
+      "body": "Para solicitudes de entrevistas o verificación, contáctanos.",
+      "response": "Respuesta típica: 1 día hábil"
+    },
+    "brand": {
+      "title": "Activos de marca",
+      "light": "Fondo claro",
+      "dark": "Fondo oscuro",
+      "color": "Color de marca"
+    }
+  },
+  "contact": {
+    "eyebrow": "Contacto",
+    "headline": "Ponte en contacto",
+    "sub": "¿Una pregunta, una idea o solo quieres saludar?",
+    "form": {
+      "title": "Envíanos un mensaje",
+      "name": "Nombre completo",
+      "email": "Dirección de correo",
+      "subject": "Asunto",
+      "message": "Mensaje",
+      "send": "Enviar mensaje",
+      "sentTitle": "¡Mensaje recibido!",
+      "sentBody": "Gracias por ponerte en contacto. Te responderemos en un día hábil.",
+      "newMessage": "Enviar otro mensaje",
+      "error": "Algo salió mal al enviar tu mensaje. Inténtalo de nuevo.",
+      "sending": "Enviando…"
+    },
+    "subjects": {
+      "general": "Consulta general",
+      "booking": "Ayuda con reservas",
+      "technical": "Problema técnico",
+      "partnership": "Asociación",
+      "press": "Prensa y medios",
+      "other": "Otro"
+    },
+    "channels": {
+      "title": "Otras formas de contactarnos",
+      "email": "Correo electrónico",
+      "chat": "Chat IA en vivo",
+      "help": "Centro de ayuda"
+    },
+    "hours": {
+      "title": "Horario de soporte",
+      "body": "Lunes – Viernes, 9 am – 6 pm CET. Respondemos en un día hábil."
+    }
+  },
+  "help": {
+    "headline": "¿Cómo podemos ayudarte?",
+    "sub": "Explora los temas a continuación o busca lo que necesitas.",
+    "search": "Buscar artículos de ayuda…",
+    "topics": {
+      "title": "Explorar por tema",
+      "bookings": {
+        "title": "Reservas",
+        "body": "Gestiona, modifica o cancela tus reservas."
+      },
+      "account": {
+        "title": "Cuenta",
+        "body": "Configuración de perfil, contraseña y preferencias."
+      },
+      "payments": {
+        "title": "Pagos",
+        "body": "Facturación, facturas y consultas de reembolso."
+      },
+      "cancellations": {
+        "title": "Cancelaciones",
+        "body": "Políticas de cancelación y cómo solicitar un reembolso."
+      },
+      "ai": {
+        "title": "Planificador IA",
+        "body": "Consejos para sacar el máximo partido al asistente IA."
+      },
+      "security": {
+        "title": "Seguridad",
+        "body": "Autenticación de dos factores, seguridad de cuenta y privacidad."
+      }
+    },
+    "faqs": {
+      "title": "Preguntas frecuentes"
+    },
+    "faq": {
+      "q1": "¿Cómo cancelo o modifico una reserva?",
+      "a1": "Ve a Mis reservas, selecciona la reserva que deseas cambiar y pulsa Modificar o Cancelar.",
+      "q2": "¿Es segura mi información de pago?",
+      "a2": "Sí. Todos los pagos se procesan a través de proveedores certificados PCI-DSS.",
+      "q3": "¿Cómo funciona el Planificador de Viajes IA?",
+      "a3": "El planificador IA usa modelos de lenguaje para generar itinerarios personalizados.",
+      "q4": "¿Puedo obtener un reembolso si cambian mis planes?",
+      "a4": "La elegibilidad del reembolso depende de la política de cancelación de cada proveedor.",
+      "q5": "¿Cómo contacto directamente con un hotel o aerolínea?",
+      "a5": "Cada correo de confirmación incluye los datos de contacto directos del proveedor.",
+      "q6": "¿Qué monedas están disponibles?",
+      "a6": "TravelAI muestra precios en tu moneda local y acepta más de 30 monedas."
+    },
+    "contact": {
+      "title": "¿Sigues necesitando ayuda?",
+      "sub": "Nuestro equipo de soporte está disponible de lunes a viernes, de 9 am a 6 pm CET.",
+      "cta": "Contactar soporte",
+      "chat": "Hablar con la IA"
+    }
+  },
+  "safety": {
+    "headline": "Viaja seguro con TravelAI",
+    "sub": "Tu seguridad es nuestra prioridad, en la plataforma y en el camino.",
+    "tips": {
+      "title": "Consejos de viaje seguro",
+      "account": {
+        "title": "Protege tu cuenta",
+        "body": "Usa una contraseña fuerte y activa la autenticación de dos factores."
+      },
+      "bookings": {
+        "title": "Verifica tus reservas",
+        "body": "Comprueba siempre tu email de confirmación."
+      },
+      "research": {
+        "title": "Investiga tu destino",
+        "body": "Consulta los avisos de viaje oficiales antes de reservar."
+      },
+      "location": {
+        "title": "Comparte tu itinerario",
+        "body": "Informa a alguien en casa de tus planes de viaje."
+      },
+      "payments": {
+        "title": "Paga solo en TravelAI",
+        "body": "Nunca hagas pagos fuera de la plataforma."
+      },
+      "health": {
+        "title": "Verifica los requisitos sanitarios",
+        "body": "Comprueba los requisitos de visado y vacunación con antelación."
+      }
+    },
+    "platform": {
+      "eye": "En la plataforma",
+      "title": "Cómo te mantenemos seguro",
+      "ssl": "Cifrado SSL de extremo a extremo",
+      "2fa": "Autenticación de dos factores disponible",
+      "fraud": "Detección de fraude y monitorización 24/7",
+      "reviews": "Reseñas verificadas de viajeros reales",
+      "gdpr": "Conforme con el RGPD, tus datos nunca se venden"
+    },
+    "badge": {
+      "ssl": "Cifrado SSL",
+      "verified": "Reseñas verificadas",
+      "gdpr": "Conforme RGPD"
+    },
+    "emergency": {
+      "title": "En caso de emergencia",
+      "body": "Si estás en peligro inmediato, contacta siempre con los servicios de emergencia locales primero.",
+      "contact": {
+        "title": "Soporte TravelAI 24/7",
+        "body": "Contacta nuestra línea de emergencia en cualquier momento a través de la app."
+      },
+      "medical": {
+        "title": "Emergencias médicas",
+        "body": "Contacta inmediatamente con los servicios de emergencia locales."
+      },
+      "police": {
+        "title": "Policía y crimen",
+        "body": "Denuncia cualquier delito a la policía local."
+      },
+      "support": {
+        "title": "Documentos perdidos",
+        "body": "Contacta con la embajada o consulado de tu país."
+      }
+    },
+    "report": {
+      "title": "Reportar un problema de seguridad",
+      "body": "¿Viste algo sospechoso en la plataforma? Cuéntanos.",
+      "cta": "Reportar un problema"
+    }
+  },
+  "partners": {
+    "eyebrow": "Asociación",
+    "headline": "Haz crecer tu negocio con TravelAI",
+    "sub": "Conecta tu inventario con millones de viajeros.",
+    "stats": {
+      "partners": "Socios activos",
+      "bookings": "Reservas facilitadas",
+      "countries": "Países"
+    },
+    "types": {
+      "eye": "Tipos de socios",
+      "title": "Trabajamos con todos los sectores del viaje",
+      "hotels": {
+        "title": "Hoteles y Alojamiento",
+        "body": "Desde casas de huéspedes hasta complejos de lujo.",
+        "b1": "Sincronización de disponibilidad en tiempo real",
+        "b2": "Tarifas de comisión competitivas",
+        "b3": "Previsión de demanda con IA"
+      },
+      "airlines": {
+        "title": "Aerolíneas y Transporte",
+        "body": "Integra tu inventario de vuelos y llega a los viajeros.",
+        "b1": "Tarifas y disponibilidad de asientos en vivo",
+        "b2": "Agrupación dinámica con hoteles",
+        "b3": "Opciones de distribución flexibles"
+      },
+      "experiences": {
+        "title": "Experiencias y Actividades",
+        "body": "Tours, catas, eventos culturales.",
+        "b1": "Optimización de reservas de última hora",
+        "b2": "Recomendaciones del conserje IA",
+        "b3": "Gestión de reservas de grupo"
+      }
+    },
+    "process": {
+      "eye": "Cómo funciona",
+      "title": "Tres pasos hacia la asociación",
+      "apply": {
+        "title": "Solicita en línea",
+        "body": "Cuéntanos sobre tu negocio. Menos de 10 minutos."
+      },
+      "review": {
+        "title": "Evaluamos",
+        "body": "Nuestro equipo evalúa tu solicitud y te responde en 48 horas."
+      },
+      "onboard": {
+        "title": "Empieza",
+        "body": "Conecta tus sistemas y empieza a recibir reservas."
+      }
+    },
+    "apply": {
+      "eye": "¿Listo para crecer?",
+      "title": "Construyamos algo grande juntos",
+      "sub": "Únete a más de 2.000 socios que confían en TravelAI.",
+      "cta": "Convertirse en socio"
+    }
+  },
+  "developers": {
+    "eyebrow": "Plataforma para desarrolladores",
+    "headline": "Construye sobre TravelAI",
+    "sub": "Accede a nuestros datos de viaje y capacidades de IA a través de una API REST limpia.",
+    "start": {
+      "cta": "Solicitar acceso API",
+      "explore": "Explorar funciones"
+    },
+    "features": {
+      "eye": "Lo que puedes construir",
+      "title": "Todo lo que necesitas",
+      "rest": {
+        "title": "API REST",
+        "body": "Endpoints limpios y versionados para hoteles, vuelos, destinos y reservas."
+      },
+      "search": {
+        "title": "Búsqueda potente",
+        "body": "Búsqueda de texto completo y semántica en todo nuestro inventario."
+      },
+      "webhooks": {
+        "title": "Webhooks",
+        "body": "Notificaciones de eventos en tiempo real."
+      },
+      "ai": {
+        "title": "Endpoints IA",
+        "body": "Accede a nuestros endpoints de recomendación y generación de itinerarios."
+      },
+      "speed": {
+        "title": "Rápido y fiable",
+        "body": "SLA de disponibilidad del 99,9% con latencia inferior a 100ms."
+      },
+      "security": {
+        "title": "Seguro por defecto",
+        "body": "OAuth 2.0, limitación de velocidad e infraestructura conforme SOC 2."
+      }
+    },
+    "endpoints": {
+      "title": "Endpoints clave",
+      "hotels": "Buscar hoteles por ubicación, fechas y filtros",
+      "flights": "Buscar vuelos disponibles entre dos puntos",
+      "destinations": "Explorar el catálogo de destinos",
+      "createBooking": "Crear una nueva reserva",
+      "getBooking": "Recuperar detalles y estado de reserva",
+      "updateBooking": "Modificar o cancelar una reserva existente"
+    },
+    "sdks": {
+      "title": "SDKs oficiales"
+    },
+    "cta": {
+      "title": "¿Listo para integrar?",
+      "body": "Solicita acceso API y nuestro equipo te ayudará a empezar.",
+      "btn": "Solicitar acceso"
+    },
+    "ep": {
+      "hotels": "Buscar hoteles",
+      "flights": "Buscar vuelos",
+      "destinations": "Explorar destinos",
+      "createBooking": "Crear una reserva",
+      "getBooking": "Recuperar detalles",
+      "updateBooking": "Modificar o cancelar"
+    }
+  },
+  "legal": {
+    "eyebrow": "Legal",
+    "lastUpdated": "Última actualización",
+    "contactLine": "¿Preguntas sobre esta política? Escríbenos a"
+  },
+  "privacy": {
+    "title": "Política de privacidad",
+    "intro": "Esta Política de privacidad explica cómo TravelAI recopila, usa y protege tu información personal cuando utilizas nuestra plataforma.",
+    "s1": {
+      "title": "Información que recopilamos",
+      "p1": "Recopilamos la información que proporcionas directamente —como tu nombre, correo electrónico y preferencias de viaje— además de los datos generados al usar el servicio, incluidas búsquedas, reservas e interacciones con nuestro asistente de IA.",
+      "p2": "También recopilamos datos técnicos como el tipo de dispositivo, el navegador y la dirección IP para mantener la plataforma segura y fiable."
+    },
+    "s2": {
+      "title": "Cómo usamos tus datos",
+      "p1": "Usamos tus datos para personalizar recomendaciones, procesar reservas, ofrecer soporte, mejorar nuestros modelos de IA y enviarte comunicaciones relacionadas con el servicio."
+    },
+    "s3": {
+      "title": "Compartición y divulgación",
+      "p1": "Compartimos datos con socios de viaje de confianza únicamente para gestionar tus reservas, por ejemplo un hotel o una aerolínea que elijas.",
+      "p2": "Nunca vendemos tus datos personales a terceros con fines publicitarios."
+    },
+    "s4": {
+      "title": "Conservación de datos",
+      "p1": "Conservamos tus datos personales solo el tiempo necesario para prestar el servicio y cumplir obligaciones legales; después se eliminan o anonimizan."
+    },
+    "s5": {
+      "title": "Tus derechos",
+      "p1": "Puedes acceder, corregir, exportar o eliminar tus datos en cualquier momento desde la configuración de tu cuenta o contactándonos. También puedes oponerte a ciertos tratamientos."
+    },
+    "s6": {
+      "title": "Seguridad",
+      "p1": "Protegemos tus datos con cifrado en tránsito y en reposo, controles de acceso estrictos y revisiones de seguridad periódicas."
+    }
+  },
+  "terms": {
+    "title": "Términos del servicio",
+    "intro": "Estos Términos rigen tu acceso y uso de TravelAI. Al crear una cuenta o usar el servicio, los aceptas.",
+    "s1": {
+      "title": "Elegibilidad",
+      "p1": "Debes tener al menos 18 años y capacidad para celebrar un contrato vinculante para usar TravelAI."
+    },
+    "s2": {
+      "title": "Tu cuenta",
+      "p1": "Eres responsable de mantener seguras tus credenciales y de toda la actividad de tu cuenta.",
+      "p2": "Avísanos de inmediato si sospechas de un acceso no autorizado."
+    },
+    "s3": {
+      "title": "Reservas y pagos",
+      "p1": "Los precios se confirman en el momento de la reserva. Todas las tarifas, impuestos y condiciones de cancelación se muestran antes de pagar, y el pago se procesa de forma segura."
+    },
+    "s4": {
+      "title": "Cancelaciones y reembolsos",
+      "p1": "Las reglas de cancelación y reembolso dependen del proveedor de viaje y se muestran al finalizar la compra. Aplican las condiciones propias del proveedor."
+    },
+    "s5": {
+      "title": "Uso aceptable",
+      "p1": "Te comprometes a no hacer un uso indebido de la plataforma, intentar interrumpirla, extraer datos sin permiso o usarla con fines ilícitos."
+    },
+    "s6": {
+      "title": "Limitación de responsabilidad",
+      "p1": "TravelAI actúa como intermediario entre tú y los proveedores de viaje. No somos responsables de los actos u omisiones de dichos proveedores más allá de lo que exige la ley."
+    },
+    "s7": {
+      "title": "Cambios en estos términos",
+      "p1": "Podemos actualizar estos Términos ocasionalmente. Los cambios importantes se comunicarán, y el uso continuado implica que aceptas los Términos actualizados."
+    }
+  },
+  "cookies": {
+    "title": "Política de cookies",
+    "intro": "Esta Política de cookies explica cómo TravelAI utiliza cookies y tecnologías similares para que la plataforma funcione y para mejorar tu experiencia.",
+    "s1": {
+      "title": "Qué son las cookies",
+      "p1": "Las cookies son pequeños archivos de texto guardados en tu dispositivo que ayudan a los sitios a recordar tus preferencias y reconocerte en futuras visitas."
+    },
+    "s2": {
+      "title": "Cookies esenciales",
+      "p1": "Son necesarias para funciones básicas como iniciar sesión, mantener segura tu sesión y recordar tu idioma. No se pueden desactivar."
+    },
+    "s3": {
+      "title": "Cookies analíticas",
+      "p1": "Nos ayudan a entender cómo se usa la plataforma para poder mejorarla. Son anónimas y opcionales."
+    },
+    "s4": {
+      "title": "Cookies de preferencias",
+      "p1": "Recuerdan elecciones como tu moneda, región y ajustes de interfaz para personalizar tu experiencia."
+    },
+    "s5": {
+      "title": "Gestionar las cookies",
+      "p1": "Puedes controlar o eliminar las cookies desde la configuración de tu navegador. Bloquear las cookies esenciales puede afectar al funcionamiento de la plataforma."
+    }
+  },
+  "accessibility": {
+    "title": "Accesibilidad",
+    "intro": "TravelAI se compromete a hacer que la planificación de viajes sea accesible para todos, con independencia de sus capacidades.",
+    "s1": {
+      "title": "Nuestro compromiso",
+      "p1": "Aspiramos a cumplir el nivel AA de las WCAG 2.1 y mejoramos de forma continua la accesibilidad de nuestra plataforma."
+    },
+    "s2": {
+      "title": "Teclado y lectores de pantalla",
+      "p1": "La plataforma se puede navegar con teclado y usamos HTML semántico y etiquetas ARIA para que los lectores de pantalla interpreten el contenido correctamente."
+    },
+    "s3": {
+      "title": "Color y contraste",
+      "p1": "Mantenemos un contraste suficiente y nunca dependemos solo del color para transmitir información."
+    },
+    "s4": {
+      "title": "Movimiento reducido",
+      "p1": "Respetamos tu preferencia de movimiento reducido del sistema y minimizamos las animaciones no esenciales cuando está activada."
+    },
+    "s5": {
+      "title": "Comentarios",
+      "p1": "Si encuentras una barrera de accesibilidad, dínoslo para que podamos solucionarla. Tus comentarios nos ayudan a mejorar para todos."
+    }
   }
 }

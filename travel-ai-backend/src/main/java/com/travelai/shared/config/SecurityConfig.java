@@ -51,6 +51,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/subscriptions/plans").permitAll()
                         .requestMatchers("/api/stats/**").permitAll()
                         .requestMatchers("/api/stories/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/api/webhooks/**").permitAll()
                         .requestMatchers("/api/api-docs/**").permitAll()

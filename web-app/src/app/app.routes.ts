@@ -314,5 +314,70 @@ export const routes: Routes = [
         m => m.VerifyEmailComponent
       ),
   },
+  {
+    path: 'about',
+    data: { seo: { title: 'About TravelAI' } },
+    loadComponent: () => import('./features/about/about.component').then(m => m.AboutComponent),
+  },
+  {
+    path: 'blog',
+    data: { seo: { title: 'TravelAI Journal', description: 'Travel inspiration, tips, and stories from the TravelAI team.' } },
+    loadComponent: () => import('./features/blog/blog.component').then(m => m.BlogComponent),
+  },
+  {
+    path: 'careers',
+    data: { seo: { title: 'Careers at TravelAI' } },
+    loadComponent: () => import('./features/careers/careers.component').then(m => m.CareersComponent),
+  },
+  {
+    path: 'press',
+    data: { seo: { title: 'Press & Media — TravelAI' } },
+    loadComponent: () => import('./features/press/press.component').then(m => m.PressComponent),
+  },
+  {
+    path: 'contact',
+    data: { seo: { title: 'Contact TravelAI', noindex: true } },
+    loadComponent: () => import('./features/contact/contact.component').then(m => m.ContactComponent),
+  },
+  {
+    path: 'help',
+    data: { seo: { title: 'Help Centre — TravelAI' } },
+    loadComponent: () => import('./features/help/help.component').then(m => m.HelpComponent),
+  },
+  {
+    path: 'safety',
+    data: { seo: { title: 'Safety — TravelAI' } },
+    loadComponent: () => import('./features/safety/safety.component').then(m => m.SafetyComponent),
+  },
+  {
+    path: 'partners',
+    data: { seo: { title: 'Partner with TravelAI' } },
+    loadComponent: () => import('./features/partners/partners.component').then(m => m.PartnersComponent),
+  },
+  {
+    path: 'developers',
+    data: { seo: { title: 'TravelAI Developer API' } },
+    loadComponent: () => import('./features/developers/developers.component').then(m => m.DevelopersComponent),
+  },
+  {
+    path: 'privacy',
+    data: { seo: { title: 'Privacy Policy — TravelAI' } },
+    loadComponent: () => import('./features/legal/privacy.component').then(m => m.PrivacyComponent),
+  },
+  {
+    path: 'terms',
+    data: { seo: { title: 'Terms of Service — TravelAI' } },
+    loadComponent: () => import('./features/legal/terms.component').then(m => m.TermsComponent),
+  },
+  {
+    path: 'cookies',
+    data: { seo: { title: 'Cookie Policy — TravelAI' } },
+    loadComponent: () => import('./features/legal/cookies.component').then(m => m.CookiesComponent),
+  },
+  {
+    path: 'accessibility',
+    data: { seo: { title: 'Accessibility — TravelAI' } },
+    loadComponent: () => import('./features/legal/accessibility.component').then(m => m.AccessibilityComponent),
+  },
   { path: '**', redirectTo: '' },
 ];
