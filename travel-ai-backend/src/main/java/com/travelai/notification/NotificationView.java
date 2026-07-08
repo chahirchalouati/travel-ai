@@ -12,7 +12,8 @@ public record NotificationView(
         String subject,
         NotificationChannel channel,
         NotificationStatus status,
-        Instant createdAt) {
+        Instant createdAt,
+        Instant readAt) {
 
     public static NotificationView from(NotificationLog log) {
         return new NotificationView(
@@ -20,6 +21,7 @@ public record NotificationView(
                 log.getSubject(),
                 log.getChannel(),
                 log.getStatus(),
-                log.getSentAt());
+                log.getSentAt(),
+                log.getReadAt());
     }
 }

@@ -51,6 +51,9 @@ public class NotificationLog {
     @Column(nullable = false)
     private Instant sentAt;
 
+    @Column(name = "read_at")
+    private Instant readAt;
+
     @PrePersist
     void prePersist() {
         if (sentAt == null) {

@@ -130,7 +130,16 @@
     "availableNow": "Available now",
     "notAvailable": "Not available",
     "book": "Plan a trip here",
-    "askAi": "Ask AI about this hotel"
+    "askAi": "Ask AI about this hotel",
+    "reviewsLabel": "reviews",
+    "writeReview": "Write a review",
+    "overallRating": "Overall rating",
+    "cleanliness": "Cleanliness",
+    "service": "Service",
+    "value": "Value",
+    "location": "Location",
+    "guestRating": "Guest rating",
+    "ratingBreakdown": "Rating breakdown"
   },
   "nav": {
     "tabs": {
@@ -1284,7 +1293,11 @@
     "empty": "You're all caught up",
     "emptyBody": "New notifications about your bookings and trips will show up here.",
     "untitled": "Notification",
-    "viewBookings": "View bookings"
+    "viewBookings": "View bookings",
+    "markRead": "Mark as read",
+    "markAllRead": "Mark all as read",
+    "unread": "unread",
+    "read": "Read"
   },
   "ticket": {
     "title": "Digital ticket",

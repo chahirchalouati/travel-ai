@@ -130,7 +130,16 @@
     "availableNow": "Disponible maintenant",
     "notAvailable": "Non disponible",
     "book": "Planifier un voyage ici",
-    "askAi": "Demander à l'IA à propos de cet hôtel"
+    "askAi": "Demander à l'IA à propos de cet hôtel",
+    "reviewsLabel": "avis",
+    "writeReview": "Écrire un avis",
+    "overallRating": "Note globale",
+    "cleanliness": "Propreté",
+    "service": "Service",
+    "value": "Rapport qualité-prix",
+    "location": "Emplacement",
+    "guestRating": "Note des clients",
+    "ratingBreakdown": "Détail des notes"
   },
   "nav": {
     "tabs": {
@@ -1284,7 +1293,11 @@
     "empty": "Vous êtes à jour",
     "emptyBody": "Les nouvelles notifications sur vos réservations et voyages apparaîtront ici.",
     "untitled": "Notification",
-    "viewBookings": "Voir les réservations"
+    "viewBookings": "Voir les réservations",
+    "markRead": "Marquer comme lu",
+    "markAllRead": "Tout marquer comme lu",
+    "unread": "non lu(s)",
+    "read": "Lu"
   },
   "ticket": {
     "title": "Billet numérique",

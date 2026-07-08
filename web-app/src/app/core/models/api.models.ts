@@ -634,6 +634,7 @@ export interface NotificationView {
   channel: NotificationChannel;
   status: NotificationStatus;
   createdAt: string;
+  readAt: string | null;
 }
 
 // ── Reactive Living Itinerary ──────────────────────────────────────
