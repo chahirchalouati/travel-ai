@@ -2,9 +2,9 @@ import { Component, Input } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 
 export interface LegalSection {
-  titleKey: string;
-  /** One or more paragraph i18n keys rendered under the section heading. */
-  bodyKeys: string[];
+  title: string;
+  /** One or more paragraphs rendered under the section heading. */
+  paragraphs: string[];
 }
 
 @Component({
@@ -16,21 +16,21 @@ export interface LegalSection {
       <header class="legal-hero">
         <div class="legal-hero__inner">
           <p class="eyebrow">{{ 'legal.eyebrow' | transloco }}</p>
-          <h1>{{ titleKey | transloco }}</h1>
+          <h1>{{ title }}</h1>
           <p class="updated">{{ 'legal.lastUpdated' | transloco }} {{ updated }}</p>
         </div>
       </header>
 
       <div class="legal-body">
         <article class="legal-inner">
-          @if (introKey) {
-            <p class="lead">{{ introKey | transloco }}</p>
+          @if (intro) {
+            <p class="lead">{{ intro }}</p>
           }
-          @for (s of sections; track s.titleKey; let i = $index) {
+          @for (s of sections; track s.title; let i = $index) {
             <section class="legal-section">
-              <h2><span class="sec-num">{{ i + 1 }}.</span>{{ s.titleKey | transloco }}</h2>
-              @for (b of s.bodyKeys; track b) {
-                <p>{{ b | transloco }}</p>
+              <h2><span class="sec-num">{{ i + 1 }}.</span>{{ s.title }}</h2>
+              @for (p of s.paragraphs; track p) {
+                <p>{{ p }}</p>
               }
             </section>
           }
@@ -72,8 +72,8 @@ export interface LegalSection {
   `]
 })
 export class LegalLayoutComponent {
-  @Input({ required: true }) titleKey!: string;
-  @Input({ required: true }) updated!: string;
-  @Input() introKey?: string;
+  @Input({ required: true }) title = '';
+  @Input({ required: true }) updated = '';
+  @Input() intro?: string;
   @Input({ required: true }) sections: LegalSection[] = [];
 }

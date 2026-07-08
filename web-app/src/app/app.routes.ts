@@ -361,23 +361,23 @@ export const routes: Routes = [
   },
   {
     path: 'privacy',
-    data: { seo: { title: 'Privacy Policy — TravelAI' } },
-    loadComponent: () => import('./features/legal/privacy.component').then(m => m.PrivacyComponent),
+    data: { seo: { title: 'Privacy Policy — TravelAI' }, legalPage: 'privacy' },
+    loadComponent: () => import('./features/legal/legal-page.component').then(m => m.LegalPageComponent),
   },
   {
     path: 'terms',
-    data: { seo: { title: 'Terms of Service — TravelAI' } },
-    loadComponent: () => import('./features/legal/terms.component').then(m => m.TermsComponent),
+    data: { seo: { title: 'Terms of Service — TravelAI' }, legalPage: 'terms' },
+    loadComponent: () => import('./features/legal/legal-page.component').then(m => m.LegalPageComponent),
   },
   {
     path: 'cookies',
-    data: { seo: { title: 'Cookie Policy — TravelAI' } },
-    loadComponent: () => import('./features/legal/cookies.component').then(m => m.CookiesComponent),
+    data: { seo: { title: 'Cookie Policy — TravelAI' }, legalPage: 'cookies' },
+    loadComponent: () => import('./features/legal/legal-page.component').then(m => m.LegalPageComponent),
   },
   {
     path: 'accessibility',
-    data: { seo: { title: 'Accessibility — TravelAI' } },
-    loadComponent: () => import('./features/legal/accessibility.component').then(m => m.AccessibilityComponent),
+    data: { seo: { title: 'Accessibility — TravelAI' }, legalPage: 'accessibility' },
+    loadComponent: () => import('./features/legal/legal-page.component').then(m => m.LegalPageComponent),
   },
   { path: '**', redirectTo: '' },
 ];

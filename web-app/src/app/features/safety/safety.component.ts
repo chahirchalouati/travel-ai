@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 import { RouterLink } from '@angular/router';
+import { SiteContentService, SiteContentItem } from '../../core/services/site-content.service';
 
 @Component({
   selector: 'app-safety',
@@ -23,12 +24,12 @@ import { RouterLink } from '@angular/router';
           <section class="tips-section">
             <h2>{{ 'safety.tips.title' | transloco }}</h2>
             <div class="tips-grid">
-              @for (tip of tips; track tip.icon) {
+              @for (tip of tips(); track tip.title) {
                 <div class="tip-card">
                   <div class="tip-icon-wrap"><span class="ms">{{ tip.icon }}</span></div>
                   <div class="tip-body">
-                    <h3>{{ tip.titleKey | transloco }}</h3>
-                    <p>{{ tip.bodyKey | transloco }}</p>
+                    <h3>{{ tip.title }}</h3>
+                    <p>{{ tip.body }}</p>
                   </div>
                 </div>
               }
@@ -42,18 +43,18 @@ import { RouterLink } from '@angular/router';
                 <p class="section-eye">{{ 'safety.platform.eye' | transloco }}</p>
                 <h2>{{ 'safety.platform.title' | transloco }}</h2>
                 <ul class="platform-list">
-                  @for (item of platformFeatures; track item) {
-                    <li><span class="ms">check_circle</span>{{ item | transloco }}</li>
+                  @for (item of platformFeatures(); track item.body) {
+                    <li><span class="ms">check_circle</span>{{ item.body }}</li>
                   }
                 </ul>
               </div>
               <div class="platform-vis" aria-hidden="true">
                 <div class="shield-icon"><span class="ms">shield</span></div>
                 <div class="trust-badges">
-                  @for (b of trustBadges; track b.icon) {
+                  @for (b of trustBadges(); track b.title) {
                     <div class="trust-badge">
                       <span class="ms">{{ b.icon }}</span>
-                      <span>{{ b.labelKey | transloco }}</span>
+                      <span>{{ b.title }}</span>
                     </div>
                   }
                 </div>
@@ -66,11 +67,11 @@ import { RouterLink } from '@angular/router';
             <h2>{{ 'safety.emergency.title' | transloco }}</h2>
             <p class="emergency-body">{{ 'safety.emergency.body' | transloco }}</p>
             <div class="emergency-cards">
-              @for (em of emergency; track em.icon) {
+              @for (em of emergency(); track em.title) {
                 <div class="emergency-card">
                   <span class="ms em-icon">{{ em.icon }}</span>
-                  <h3>{{ em.titleKey | transloco }}</h3>
-                  <p>{{ em.bodyKey | transloco }}</p>
+                  <h3>{{ em.title }}</h3>
+                  <p>{{ em.body }}</p>
                 </div>
               }
             </div>
@@ -136,33 +137,22 @@ import { RouterLink } from '@angular/router';
   `]
 })
 export class SafetyComponent {
-  tips = [
-    { icon: 'lock', titleKey: 'safety.tips.account.title', bodyKey: 'safety.tips.account.body' },
-    { icon: 'verified_user', titleKey: 'safety.tips.bookings.title', bodyKey: 'safety.tips.bookings.body' },
-    { icon: 'travel_explore', titleKey: 'safety.tips.research.title', bodyKey: 'safety.tips.research.body' },
-    { icon: 'location_on', titleKey: 'safety.tips.location.title', bodyKey: 'safety.tips.location.body' },
-    { icon: 'credit_card_off', titleKey: 'safety.tips.payments.title', bodyKey: 'safety.tips.payments.body' },
-    { icon: 'health_and_safety', titleKey: 'safety.tips.health.title', bodyKey: 'safety.tips.health.body' },
-  ];
+  private readonly siteContent = inject(SiteContentService);
 
-  platformFeatures = [
-    'safety.platform.ssl',
-    'safety.platform.2fa',
-    'safety.platform.fraud',
-    'safety.platform.reviews',
-    'safety.platform.gdpr',
-  ];
+  tips = signal<SiteContentItem[]>([]);
+  platformFeatures = signal<SiteContentItem[]>([]);
+  trustBadges = signal<SiteContentItem[]>([]);
+  emergency = signal<SiteContentItem[]>([]);
 
-  trustBadges = [
-    { icon: 'https', labelKey: 'safety.badge.ssl' },
-    { icon: 'verified', labelKey: 'safety.badge.verified' },
-    { icon: 'gpp_good', labelKey: 'safety.badge.gdpr' },
-  ];
-
-  emergency = [
-    { icon: 'phone_in_talk', titleKey: 'safety.emergency.contact.title', bodyKey: 'safety.emergency.contact.body' },
-    { icon: 'local_hospital', titleKey: 'safety.emergency.medical.title', bodyKey: 'safety.emergency.medical.body' },
-    { icon: 'local_police', titleKey: 'safety.emergency.police.title', bodyKey: 'safety.emergency.police.body' },
-    { icon: 'support_agent', titleKey: 'safety.emergency.support.title', bodyKey: 'safety.emergency.support.body' },
-  ];
+  constructor() {
+    this.siteContent.getPage('safety').subscribe({
+      next: items => {
+        this.tips.set(items.filter(i => i.section === 'tips'));
+        this.platformFeatures.set(items.filter(i => i.section === 'platform'));
+        this.trustBadges.set(items.filter(i => i.section === 'badges'));
+        this.emergency.set(items.filter(i => i.section === 'emergency'));
+      },
+      error: () => {},
+    });
+  }
 }
