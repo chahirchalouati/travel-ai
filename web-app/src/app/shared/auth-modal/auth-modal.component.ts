@@ -151,12 +151,7 @@ const GIS_SRC = 'https://accounts.google.com/gsi/client';
   `,
   styles: [`
     :host {
-      --brand: #E04A2F;
-      --brand-hover: #c93d25;
-      --text-primary: #1a1a1a;
-      --text-secondary: #545454;
-      --border: #e0e0e0;
-      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-family: var(--font-body);
     }
 
     .auth-overlay {
@@ -178,11 +173,13 @@ const GIS_SRC = 'https://accounts.google.com/gsi/client';
       position: relative;
       width: 100%;
       max-width: 420px;
-      background: #fff;
-      border-radius: 18px;
+      background: var(--surface);
+      border-radius: var(--radius-lg);
       padding: 34px 32px 28px;
-      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.3);
-      animation: authPop 220ms cubic-bezier(0.16, 1, 0.3, 1);
+      box-sizing: border-box;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      animation: authPop 220ms var(--ease-out-expo);
     }
 
     @keyframes authPop {
@@ -202,7 +199,7 @@ const GIS_SRC = 'https://accounts.google.com/gsi/client';
       display: flex; align-items: center; justify-content: center;
       transition: background 150ms ease;
     }
-    .auth-close:hover { background: #f5f5f5; color: var(--text-primary); }
+    .auth-close:hover { background: var(--bg-secondary); color: var(--text-primary); }
 
     .auth-brand { margin-bottom: 14px; }
     .auth-logo { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; color: var(--text-primary); }
@@ -226,13 +223,14 @@ const GIS_SRC = 'https://accounts.google.com/gsi/client';
     .auth-form { display: flex; flex-direction: column; gap: 14px; }
 
     .auth-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 400px) { .auth-row { grid-template-columns: 1fr; } }
 
     .auth-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 
     .auth-label {
       font-size: 0.78rem;
       font-weight: 600;
-      color: var(--text-secondary);
+      color: var(--text-tertiary);
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
@@ -243,14 +241,14 @@ const GIS_SRC = 'https://accounts.google.com/gsi/client';
       font-family: inherit;
       font-size: 0.95rem;
       color: var(--text-primary);
-      background: #f7f7f7;
+      background: var(--bg-secondary);
       border: 1.5px solid var(--border);
-      border-radius: 10px;
+      border-radius: var(--radius-sm);
       padding: 11px 13px;
       outline: none;
-      transition: border-color 150ms ease, background 150ms ease;
+      transition: border-color var(--duration-fast) ease, background var(--duration-fast) ease;
     }
-    .auth-input:focus { border-color: var(--brand); background: #fff; }
+    .auth-input:focus { border-color: var(--brand); background: var(--surface); }
 
     .auth-code {
       text-align: center;
@@ -292,7 +290,7 @@ const GIS_SRC = 'https://accounts.google.com/gsi/client';
     .auth-submit:hover:not(:disabled) {
       background: var(--brand-hover);
       transform: translateY(-1px);
-      box-shadow: 0 6px 18px rgba(224, 74, 47, 0.35);
+      box-shadow: var(--shadow-md);
     }
     .auth-submit:disabled { opacity: 0.7; cursor: default; }
 
@@ -335,16 +333,16 @@ const GIS_SRC = 'https://accounts.google.com/gsi/client';
       font-size: 0.95rem;
       font-weight: 600;
       color: var(--text-primary);
-      background: #fff;
+      background: var(--surface);
       border: 1.5px solid var(--border);
-      border-radius: 10px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
-      transition: background 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+      transition: background var(--duration-fast) ease, border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
     }
     .auth-social:hover:not(:disabled) {
-      background: #f7f7f7;
-      border-color: #cfcfcf;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      background: var(--bg-secondary);
+      border-color: var(--text-tertiary);
+      box-shadow: var(--shadow-sm);
     }
     .auth-social:disabled { opacity: 0.7; cursor: default; }
     .auth-social-icon { width: 18px; height: 18px; flex-shrink: 0; }
@@ -352,7 +350,7 @@ const GIS_SRC = 'https://accounts.google.com/gsi/client';
     .auth-switch {
       text-align: center;
       font-size: 0.88rem;
-      color: var(--text-secondary);
+      color: var(--text-tertiary);
       margin: 18px 0 0;
     }
 

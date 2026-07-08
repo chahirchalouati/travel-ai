@@ -80,13 +80,13 @@ const MONTH_NAMES = [
             style="
               font-family: 'Hanken Grotesk', sans-serif;
               font-size: clamp(2rem, 1.2rem + 3.5vw, 3.5rem);
-              color: #1a1a1a; margin: 0; line-height: 1.1; font-weight: 800;
+              color: var(--text-primary); margin: 0; line-height: 1.1; font-weight: 800;
             "
           >{{ dest.name }}</h1>
           <p
             style="
               font-family: 'Hanken Grotesk', sans-serif; font-size: 16px;
-              color: #545454; margin: 6px 0 0; font-weight: 500;
+              color: var(--text-secondary); margin: 6px 0 0; font-weight: 500;
             "
           >{{ dest.country }} &middot; {{ dest.continent }}</p>
         </div>
@@ -95,7 +95,7 @@ const MONTH_NAMES = [
       <!-- Quick Stats Bar -->
       <section
         style="
-          background: #f7f7f7; border-top: 1px solid #efefef; border-bottom: 1px solid #efefef;
+          background: var(--bg-secondary); border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light);
         "
       >
         <div
@@ -105,23 +105,23 @@ const MONTH_NAMES = [
           "
         >
           <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="ms" style="font-size: 20px; color: #00856A;">payments</span>
-            <span style="font-family: 'Hanken Grotesk', sans-serif; font-size: 14px; color: #1a1a1a; font-weight: 600;">{{ dest.avgDailyCost | currency:dest.currency:'symbol':'1.0-0' }}/day avg</span>
+            <span class="ms" style="font-size: 20px; color: var(--teal);">payments</span>
+            <span style="font-family: var(--font-body); font-size: 14px; color: var(--text-primary); font-weight: 600;">{{ dest.avgDailyCost | currency:dest.currency:'symbol':'1.0-0' }}/day avg</span>
           </div>
-          <div style="width: 1px; height: 20px; background: #e0e0e0;"></div>
+          <div style="width: 1px; height: 20px; background: var(--border);"></div>
           <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="ms" style="font-size: 20px; color: #00856A;">thermostat</span>
-            <span style="font-family: 'Hanken Grotesk', sans-serif; font-size: 14px; color: #1a1a1a; font-weight: 600;">{{ dest.climate }} climate</span>
+            <span class="ms" style="font-size: 20px; color: var(--teal);">thermostat</span>
+            <span style="font-family: var(--font-body); font-size: 14px; color: var(--text-primary); font-weight: 600;">{{ dest.climate }} climate</span>
           </div>
-          <div style="width: 1px; height: 20px; background: #e0e0e0;"></div>
+          <div style="width: 1px; height: 20px; background: var(--border);"></div>
           <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="ms" style="font-size: 20px; color: #00856A;">translate</span>
-            <span style="font-family: 'Hanken Grotesk', sans-serif; font-size: 14px; color: #1a1a1a; font-weight: 600;">{{ dest.language }}</span>
+            <span class="ms" style="font-size: 20px; color: var(--teal);">translate</span>
+            <span style="font-family: var(--font-body); font-size: 14px; color: var(--text-primary); font-weight: 600;">{{ dest.language }}</span>
           </div>
-          <div style="width: 1px; height: 20px; background: #e0e0e0;"></div>
+          <div style="width: 1px; height: 20px; background: var(--border);"></div>
           <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="ms" style="font-size: 20px; color: #00856A;">monetization_on</span>
-            <span style="font-family: 'Hanken Grotesk', sans-serif; font-size: 14px; color: #1a1a1a; font-weight: 600;">{{ dest.currency }}</span>
+            <span class="ms" style="font-size: 20px; color: var(--teal);">monetization_on</span>
+            <span style="font-family: var(--font-body); font-size: 14px; color: var(--text-primary); font-weight: 600;">{{ dest.currency }}</span>
           </div>
         </div>
       </section>
@@ -142,21 +142,21 @@ const MONTH_NAMES = [
             <h2 class="section-heading">{{ 'destDetail.overview' | transloco }}</h2>
             <p
               style="
-                font-size: 15px; color: #545454; line-height: 1.75; margin: 0 0 24px;
+                font-size: 15px; color: var(--text-secondary); line-height: 1.75; margin: 0 0 24px;
               "
             >{{ dest.description }}</p>
 
             <div
               style="
-                background: #f7f7f7; border-radius: 10px; padding: 20px;
+                background: var(--bg-secondary); border-radius: 10px; padding: 20px;
               "
             >
               <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                <span class="ms" style="font-size: 20px; color: #E04A2F;">calendar_month</span>
+                <span class="ms" style="font-size: 20px; color: var(--brand);">calendar_month</span>
                 <h3
                   style="
-                    font-family: 'Hanken Grotesk', sans-serif; font-size: 15px;
-                    color: #1a1a1a; margin: 0; font-weight: 700;
+                    font-family: var(--font-body); font-size: 15px;
+                    color: var(--text-primary); margin: 0; font-weight: 700;
                   "
                 >{{ 'destDetail.bestTime' | transloco }}</h3>
               </div>
@@ -164,9 +164,9 @@ const MONTH_NAMES = [
                 @for (month of getMonthList(); track month) {
                   <span
                     style="
-                      background: #FFF0ED; color: #E04A2F;
+                      background: var(--brand-light); color: var(--brand);
                       padding: 5px 14px; border-radius: 100px;
-                      font-family: 'Hanken Grotesk', sans-serif; font-size: 13px;
+                      font-family: var(--font-body); font-size: 13px;
                       font-weight: 600;
                     "
                   >{{ month }}</span>
@@ -181,14 +181,14 @@ const MONTH_NAMES = [
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
                 <h2 class="section-heading" style="margin-bottom: 0;">{{ 'destDetail.thingsToDo' | transloco }}</h2>
                 <button
-                  style="background: none; border: none; color: #D9694C; font-weight: 700; font-size: 14px; cursor: pointer;"
+                  style="background: none; border: none; color: var(--brand); font-weight: 700; font-size: 14px; cursor: pointer;"
                   (click)="seeAllAttractions()"
                 >{{ 'destDetail.seeAllThings' | transloco }} →</button>
               </div>
               <div style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory;">
                 @for (a of attractions(); track a.id) {
                   <article
-                    style="flex: 0 0 230px; scroll-snap-align: start; cursor: pointer; border-radius: 14px; overflow: hidden; background: #fff; border: 1px solid #ececec;"
+                    style="flex: 0 0 230px; scroll-snap-align: start; cursor: pointer; border-radius: 14px; overflow: hidden; background: var(--surface); border: 1px solid var(--border);"
                     (click)="openAttraction(a.id)"
                     tabindex="0"
                     (keydown.enter)="openAttraction(a.id)"
@@ -200,8 +200,8 @@ const MONTH_NAMES = [
                       </span>
                     </div>
                     <div style="padding: 12px 14px;">
-                      <h4 style="margin: 0 0 4px; font-size: 15px; font-weight: 700; color: #1a1a1a;">{{ a.name }}</h4>
-                      <p style="margin: 0; font-size: 13px; color: #8a7c6a; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ a.description }}</p>
+                      <h4 style="margin: 0 0 4px; font-size: 15px; font-weight: 700; color: var(--text-primary);">{{ a.name }}</h4>
+                      <p style="margin: 0; font-size: 13px; color: var(--text-secondary); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ a.description }}</p>
                     </div>
                   </article>
                 }
@@ -214,7 +214,7 @@ const MONTH_NAMES = [
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
               <h2 class="section-heading" style="margin-bottom: 0;">{{ 'destDetail.reviews' | transloco }}</h2>
               @if (reviewSummary(); as summary) {
-                <span style="font-size: 14px; color: #8a8a8a;">{{ summary.totalReviews }} {{ 'destDetail.reviewsCount' | transloco }}</span>
+                <span style="font-size: 14px; color: var(--text-tertiary);">{{ summary.totalReviews }} {{ 'destDetail.reviewsCount' | transloco }}</span>
               }
             </div>
 
@@ -222,29 +222,29 @@ const MONTH_NAMES = [
               <div
                 style="
                   display: flex; align-items: flex-start; gap: 20px;
-                  background: #E6F5F0; border-radius: 10px; padding: 20px;
-                  border-left: 4px solid #00856A; margin-bottom: 24px;
+                  background: var(--teal-light); border-radius: 10px; padding: 20px;
+                  border-left: 4px solid var(--teal); margin-bottom: 24px;
                 "
               >
                 <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
-                  <span class="ms" style="font-size: 22px; color: #00856A;">auto_awesome</span>
+                  <span class="ms" style="font-size: 22px; color: var(--teal);">auto_awesome</span>
                 </div>
                 <div style="flex: 1;">
                   <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                    <span style="font-family: 'Hanken Grotesk', sans-serif; font-size: 12px; color: #00856A; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">{{ 'destDetail.aiSummary' | transloco }}</span>
-                    <span style="font-family: 'Hanken Grotesk', sans-serif; font-size: 22px; color: #1a1a1a; font-weight: 800;">{{ summary.averageRating | number:'1.1-1' }}</span>
+                    <span style="font-family: var(--font-body); font-size: 12px; color: var(--teal); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">{{ 'destDetail.aiSummary' | transloco }}</span>
+                    <span style="font-family: var(--font-body); font-size: 22px; color: var(--text-primary); font-weight: 800;">{{ summary.averageRating | number:'1.1-1' }}</span>
                     <div style="display: flex; gap: 1px;">
                       @for (star of getStars(summary.averageRating); track $index) {
-                        <span style="font-size: 14px; color: {{ star ? '#F5A623' : '#e0e0e0' }};">&#9733;</span>
+                        <span style="font-size: 14px; color: {{ star ? 'var(--gold)' : 'var(--border)' }};">&#9733;</span>
                       }
                     </div>
                     @if (summary.ranking; as rank) {
                       <span
                         style="
                           display: inline-flex; align-items: center; gap: 4px; margin-left: auto;
-                          background: #00856A; color: #fff; border-radius: 999px;
+                          background: var(--teal); color: #fff; border-radius: 999px;
                           padding: 4px 12px; font-size: 12px; font-weight: 700;
-                          font-family: 'Hanken Grotesk', sans-serif; letter-spacing: 0.3px;
+                          font-family: var(--font-body); letter-spacing: 0.3px;
                         "
                       >
                         <span class="ms" style="font-size: 14px;">emoji_events</span>
@@ -254,15 +254,15 @@ const MONTH_NAMES = [
                   </div>
                   <p
                     style="
-                      font-size: 14px; color: #545454; line-height: 1.65; margin: 0 0 12px;
+                      font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin: 0 0 12px;
                     "
                   >{{ summary.aiSummary }}</p>
                   @if (summary.averageService || summary.averageValue || summary.averageCleanliness || summary.averageLocation) {
                     <div style="display: flex; flex-wrap: wrap; gap: 14px;">
                       @for (aspect of aspectAverages(summary); track aspect.key) {
                         <div style="display: flex; align-items: center; gap: 6px;">
-                          <span style="font-size: 12px; color: #545454; font-weight: 600;">{{ aspect.label | transloco }}</span>
-                          <span style="font-size: 13px; color: #1a1a1a; font-weight: 800;">{{ aspect.value | number:'1.1-1' }}</span>
+                          <span style="font-size: 12px; color: var(--text-secondary); font-weight: 600;">{{ aspect.label | transloco }}</span>
+                          <span style="font-size: 13px; color: var(--text-primary); font-weight: 800;">{{ aspect.value | number:'1.1-1' }}</span>
                         </div>
                       }
                     </div>
@@ -272,14 +272,14 @@ const MONTH_NAMES = [
             } @else {
               <div
                 style="
-                  background: #f7f7f7; border-radius: 10px; padding: 32px;
+                  background: var(--bg-secondary); border-radius: 10px; padding: 32px;
                   text-align: center; margin-bottom: 24px;
                 "
               >
-                <span class="ms" style="font-size: 36px; color: #e0e0e0; display: block; margin-bottom: 8px;">rate_review</span>
+                <span class="ms" style="font-size: 36px; color: var(--border); display: block; margin-bottom: 8px;">rate_review</span>
                 <p
                   style="
-                    font-size: 15px; color: #8a8a8a; margin: 0;
+                    font-size: 15px; color: var(--text-tertiary); margin: 0;
                   "
                 >{{ 'destDetail.noReviews' | transloco }}</p>
               </div>
@@ -290,8 +290,8 @@ const MONTH_NAMES = [
                 @for (review of reviews(); track review.id) {
                   <article
                     style="
-                      background: #ffffff;
-                      border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px;
+                      background: var(--surface);
+                      border: 1px solid var(--border); border-radius: 10px; padding: 20px;
                     "
                   >
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
@@ -299,16 +299,16 @@ const MONTH_NAMES = [
                         <div
                           style="
                             width: 36px; height: 36px; border-radius: 50%;
-                            background: #f0f0f0;
+                            background: var(--bg-secondary);
                             display: flex; align-items: center; justify-content: center;
-                            font-family: 'Hanken Grotesk', sans-serif; font-size: 14px;
-                            color: #E04A2F; font-weight: 700;
+                            font-family: var(--font-body); font-size: 14px;
+                            color: var(--brand); font-weight: 700;
                           "
                         >{{ review.userFirstName.charAt(0) }}</div>
                         <div>
                           <div
                             style="
-                              font-size: 14px; color: #1a1a1a; font-weight: 600;
+                              font-size: 14px; color: var(--text-primary); font-weight: 600;
                             "
                           >
                             {{ review.userFirstName }}
@@ -317,7 +317,7 @@ const MONTH_NAMES = [
                                 title="{{ 'destDetail.verifiedStay' | transloco }}"
                                 style="
                                   display: inline-flex; align-items: center; gap: 3px; margin-left: 6px;
-                                  color: #00856A; font-size: 11px; font-weight: 700;
+                                  color: var(--teal); font-size: 11px; font-weight: 700;
                                   text-transform: uppercase; letter-spacing: 0.4px; vertical-align: middle;
                                 "
                               >
@@ -328,7 +328,7 @@ const MONTH_NAMES = [
                           </div>
                           <div
                             style="
-                              font-size: 12px; color: #8a8a8a;
+                              font-size: 12px; color: var(--text-tertiary);
                             "
                           >{{ review.createdAt | date:'mediumDate' }}</div>
                         </div>
@@ -336,22 +336,22 @@ const MONTH_NAMES = [
                       <div style="display: flex; align-items: center; gap: 6px;">
                         <div style="display: flex; gap: 1px;">
                           @for (star of getStars(review.rating); track $index) {
-                            <span style="font-size: 14px; color: {{ star ? '#F5A623' : '#e0e0e0' }};">&#9733;</span>
+                            <span style="font-size: 14px; color: {{ star ? 'var(--gold)' : 'var(--border)' }};">&#9733;</span>
                           }
                         </div>
-                        <span style="font-size: 14px; color: #1a1a1a; font-weight: 700;">{{ review.rating }}.0</span>
+                        <span style="font-size: 14px; color: var(--text-primary); font-weight: 700;">{{ review.rating }}.0</span>
                       </div>
                     </div>
                     @if (review.title) {
                       <h4
                         style="
-                          font-size: 15px; color: #1a1a1a; font-weight: 700; margin: 0 0 6px;
+                          font-size: 15px; color: var(--text-primary); font-weight: 700; margin: 0 0 6px;
                         "
                       >{{ review.title }}</h4>
                     }
                     <p
                       style="
-                        font-size: 14px; color: #545454; line-height: 1.65; margin: 0 0 12px;
+                        font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin: 0 0 12px;
                       "
                     >{{ review.content }}</p>
                     <button
@@ -374,7 +374,7 @@ const MONTH_NAMES = [
               <span
                 class="ms"
                 style="
-                  font-size: 24px; color: #E04A2F;
+                  font-size: 24px; color: var(--brand);
                 "
               >auto_awesome</span>
               <h2 class="section-heading" style="margin-bottom: 0;">{{ 'destDetail.aiGuide' | transloco }}</h2>
@@ -383,11 +383,11 @@ const MONTH_NAMES = [
             @if (!guide() && !guideLoading()) {
               <p
                 style="
-                  font-size: 15px; color: #545454; line-height: 1.65; margin: 0 0 20px;
+                  font-size: 15px; color: var(--text-secondary); line-height: 1.65; margin: 0 0 20px;
                 "
               >{{ 'destDetail.guideIntro' | transloco }}</p>
               @if (guideError()) {
-                <p style="font-size: 14px; color: #E04A2F; margin: 0 0 16px; display: flex; align-items: center; gap: 6px;">
+                <p style="font-size: 14px; color: var(--brand); margin: 0 0 16px; display: flex; align-items: center; gap: 6px;">
                   <span class="ms" style="font-size: 16px;">error_outline</span>
                   {{ guideError() }}
                 </p>
@@ -414,7 +414,7 @@ const MONTH_NAMES = [
                 @if (g.guide) {
                   <p
                     style="
-                      font-size: 15px; color: #545454; line-height: 1.75; margin: 0;
+                      font-size: 15px; color: var(--text-secondary); line-height: 1.75; margin: 0;
                     "
                   >{{ g.guide }}</p>
                 }
@@ -422,7 +422,7 @@ const MONTH_NAMES = [
                 @if (g.topAttractions) {
                   <div class="guide-section-card">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                      <span class="ms" style="font-size: 22px; color: #E04A2F;">attractions</span>
+                      <span class="ms" style="font-size: 22px; color: var(--brand);">attractions</span>
                       <h3 class="guide-section-title">{{ 'destDetail.topAttractions' | transloco }}</h3>
                     </div>
                     <p class="guide-section-text">{{ g.topAttractions }}</p>
@@ -432,7 +432,7 @@ const MONTH_NAMES = [
                 @if (g.foodRecommendations) {
                   <div class="guide-section-card">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                      <span class="ms" style="font-size: 22px; color: #E04A2F;">restaurant</span>
+                      <span class="ms" style="font-size: 22px; color: var(--brand);">restaurant</span>
                       <h3 class="guide-section-title">{{ 'destDetail.foodRec' | transloco }}</h3>
                     </div>
                     <p class="guide-section-text">{{ g.foodRecommendations }}</p>
@@ -442,7 +442,7 @@ const MONTH_NAMES = [
                 @if (g.travelTips) {
                   <div class="guide-section-card">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                      <span class="ms" style="font-size: 22px; color: #E04A2F;">lightbulb</span>
+                      <span class="ms" style="font-size: 22px; color: var(--brand);">lightbulb</span>
                       <h3 class="guide-section-title">{{ 'destDetail.travelTips' | transloco }}</h3>
                     </div>
                     <p class="guide-section-text">{{ g.travelTips }}</p>
@@ -460,57 +460,57 @@ const MONTH_NAMES = [
           <div class="sidebar-card">
             <h3
               style="
-                font-family: 'Hanken Grotesk', sans-serif; font-size: 18px;
-                color: #1a1a1a; margin: 0 0 18px; font-weight: 700;
+                font-family: var(--font-body); font-size: 18px;
+                color: var(--text-primary); margin: 0 0 18px; font-weight: 700;
               "
             >{{ 'destDetail.quickInfo' | transloco }}</h3>
 
             <div style="display: flex; flex-direction: column; gap: 14px;">
               <div style="display: flex; align-items: center; gap: 12px;">
-                <span class="ms" style="font-size: 20px; color: #00856A;">payments</span>
+                <span class="ms" style="font-size: 20px; color: var(--teal);">payments</span>
                 <div>
-                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">{{ 'destDetail.avgDailyCost' | transloco }}</div>
-                  <div style="font-size: 15px; color: #1a1a1a; font-weight: 700;">{{ dest.avgDailyCost | currency:dest.currency:'symbol':'1.0-0' }}</div>
+                  <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">{{ 'destDetail.avgDailyCost' | transloco }}</div>
+                  <div style="font-size: 15px; color: var(--text-primary); font-weight: 700;">{{ dest.avgDailyCost | currency:dest.currency:'symbol':'1.0-0' }}</div>
                 </div>
               </div>
 
-              <div style="height: 1px; background: #efefef;"></div>
+              <div style="height: 1px; background: var(--border-light);"></div>
 
               <div style="display: flex; align-items: center; gap: 12px;">
-                <span class="ms" style="font-size: 20px; color: #00856A;">thermostat</span>
+                <span class="ms" style="font-size: 20px; color: var(--teal);">thermostat</span>
                 <div>
-                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">{{ 'destDetail.climate' | transloco }}</div>
-                  <div style="font-size: 15px; color: #1a1a1a; font-weight: 700;">{{ dest.climate }}</div>
+                  <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">{{ 'destDetail.climate' | transloco }}</div>
+                  <div style="font-size: 15px; color: var(--text-primary); font-weight: 700;">{{ dest.climate }}</div>
                 </div>
               </div>
 
-              <div style="height: 1px; background: #efefef;"></div>
+              <div style="height: 1px; background: var(--border-light);"></div>
 
               <div style="display: flex; align-items: center; gap: 12px;">
-                <span class="ms" style="font-size: 20px; color: #00856A;">translate</span>
+                <span class="ms" style="font-size: 20px; color: var(--teal);">translate</span>
                 <div>
-                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">{{ 'destDetail.language' | transloco }}</div>
-                  <div style="font-size: 15px; color: #1a1a1a; font-weight: 700;">{{ dest.language }}</div>
+                  <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">{{ 'destDetail.language' | transloco }}</div>
+                  <div style="font-size: 15px; color: var(--text-primary); font-weight: 700;">{{ dest.language }}</div>
                 </div>
               </div>
 
-              <div style="height: 1px; background: #efefef;"></div>
+              <div style="height: 1px; background: var(--border-light);"></div>
 
               <div style="display: flex; align-items: center; gap: 12px;">
-                <span class="ms" style="font-size: 20px; color: #00856A;">monetization_on</span>
+                <span class="ms" style="font-size: 20px; color: var(--teal);">monetization_on</span>
                 <div>
-                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">{{ 'destDetail.currency' | transloco }}</div>
-                  <div style="font-size: 15px; color: #1a1a1a; font-weight: 700;">{{ dest.currency }}</div>
+                  <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">{{ 'destDetail.currency' | transloco }}</div>
+                  <div style="font-size: 15px; color: var(--text-primary); font-weight: 700;">{{ dest.currency }}</div>
                 </div>
               </div>
 
-              <div style="height: 1px; background: #efefef;"></div>
+              <div style="height: 1px; background: var(--border-light);"></div>
 
               <div style="display: flex; align-items: center; gap: 12px;">
-                <span class="ms" style="font-size: 20px; color: #00856A;">calendar_month</span>
+                <span class="ms" style="font-size: 20px; color: var(--teal);">calendar_month</span>
                 <div>
-                  <div style="font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">{{ 'destDetail.bestMonths' | transloco }}</div>
-                  <div style="font-size: 15px; color: #1a1a1a; font-weight: 700;">{{ getMonthNames(dest.bestMonths) }}</div>
+                  <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">{{ 'destDetail.bestMonths' | transloco }}</div>
+                  <div style="font-size: 15px; color: var(--text-primary); font-weight: 700;">{{ getMonthNames(dest.bestMonths) }}</div>
                 </div>
               </div>
             </div>
@@ -520,13 +520,13 @@ const MONTH_NAMES = [
           <div class="sidebar-card">
             <h3
               style="
-                font-family: 'Hanken Grotesk', sans-serif; font-size: 18px;
-                color: #1a1a1a; margin: 0 0 6px; font-weight: 700;
+                font-family: var(--font-body); font-size: 18px;
+                color: var(--text-primary); margin: 0 0 6px; font-weight: 700;
               "
             >{{ 'destDetail.readyToExplore' | transloco }}</h3>
             <p
               style="
-                font-size: 14px; color: #545454; margin: 0 0 18px; line-height: 1.5;
+                font-size: 14px; color: var(--text-secondary); margin: 0 0 18px; line-height: 1.5;
               "
             >{{ 'destDetail.craftItinerary' | transloco:{ name: dest.name } }}</p>
 
@@ -553,7 +553,7 @@ const MONTH_NAMES = [
       </div>
     } @else {
       <!-- Loading skeleton -->
-      <div style="min-height: 100vh; background: #ffffff;">
+      <div style="min-height: 100vh; background: var(--bg-primary);">
         <div
           class="shimmer-card"
           style="
@@ -576,10 +576,10 @@ const MONTH_NAMES = [
   styles: [`
     :host {
       display: block;
-      background: #ffffff;
+      background: var(--bg-primary);
       min-height: 100vh;
-      color: #1a1a1a;
-      font-family: 'Hanken Grotesk', sans-serif;
+      color: var(--text-primary);
+      font-family: var(--font-body);
     }
 
     .back-link {
@@ -588,8 +588,8 @@ const MONTH_NAMES = [
       gap: 4px;
       background: none;
       border: none;
-      color: #545454;
-      font-family: 'Hanken Grotesk', sans-serif;
+      color: var(--text-secondary);
+      font-family: var(--font-body);
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
@@ -598,49 +598,49 @@ const MONTH_NAMES = [
     }
 
     .back-link:hover {
-      color: #E04A2F;
+      color: var(--brand);
     }
 
     .content-card {
-      background: #ffffff;
-      border: 1px solid #e0e0e0;
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 12px;
       padding: 28px;
     }
 
     .sidebar-card {
-      background: #ffffff;
-      border: 1px solid #e0e0e0;
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 12px;
       padding: 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
 
     .section-heading {
-      font-family: 'Hanken Grotesk', sans-serif;
+      font-family: var(--font-body);
       font-size: 20px;
-      color: #1a1a1a;
+      color: var(--text-primary);
       margin: 0 0 16px;
       font-weight: 700;
     }
 
     .guide-section-card {
-      background: #f7f7f7;
+      background: var(--bg-secondary);
       border-radius: 10px;
       padding: 20px;
     }
 
     .guide-section-title {
-      font-family: 'Hanken Grotesk', sans-serif;
+      font-family: var(--font-body);
       font-size: 16px;
-      color: #1a1a1a;
+      color: var(--text-primary);
       margin: 0;
       font-weight: 700;
     }
 
     .guide-section-text {
       font-size: 14px;
-      color: #545454;
+      color: var(--text-secondary);
       line-height: 1.7;
       margin: 0;
       white-space: pre-line;
@@ -650,12 +650,12 @@ const MONTH_NAMES = [
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: #E04A2F;
-      color: #ffffff;
+      background: var(--brand);
+      color: #fff;
       border: none;
       border-radius: 10px;
       padding: 13px 24px;
-      font-family: 'Hanken Grotesk', sans-serif;
+      font-family: var(--font-body);
       font-size: 15px;
       font-weight: 600;
       cursor: pointer;
@@ -663,19 +663,19 @@ const MONTH_NAMES = [
     }
 
     .btn-primary:hover {
-      background: #c93d25;
+      background: var(--brand-hover);
     }
 
     .btn-outline {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: #ffffff;
-      color: #E04A2F;
-      border: 1.5px solid #E04A2F;
+      background: var(--surface);
+      color: var(--brand);
+      border: 1.5px solid var(--brand);
       border-radius: 10px;
       padding: 12px 24px;
-      font-family: 'Hanken Grotesk', sans-serif;
+      font-family: var(--font-body);
       font-size: 15px;
       font-weight: 600;
       cursor: pointer;
@@ -683,33 +683,33 @@ const MONTH_NAMES = [
     }
 
     .btn-outline:hover {
-      background: #FFF0ED;
+      background: var(--brand-light);
     }
 
     .helpful-btn {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      background: #ffffff;
-      border: 1px solid #e0e0e0;
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 100px;
       padding: 5px 14px;
       cursor: pointer;
-      font-family: 'Hanken Grotesk', sans-serif;
+      font-family: var(--font-body);
       font-size: 13px;
-      color: #545454;
+      color: var(--text-secondary);
       transition: border-color 150ms ease, color 150ms ease;
     }
 
     .helpful-btn:hover {
-      border-color: #E04A2F;
-      color: #E04A2F;
+      border-color: var(--brand);
+      color: var(--brand);
     }
 
     .helpful-btn--active {
-      background: #FFF0ED;
-      border-color: #E04A2F;
-      color: #E04A2F;
+      background: var(--brand-light);
+      border-color: var(--brand);
+      color: var(--brand);
       font-weight: 700;
     }
 
@@ -721,9 +721,9 @@ const MONTH_NAMES = [
     .shimmer-card {
       background: linear-gradient(
         90deg,
-        #f0f0f0 25%,
-        #e0e0e0 50%,
-        #f0f0f0 75%
+        var(--bg-secondary) 25%,
+        var(--bg-tertiary) 50%,
+        var(--bg-secondary) 75%
       );
       background-size: 800px 100%;
       animation: shimmer 1.8s ease-in-out infinite;
@@ -877,7 +877,9 @@ export class DestinationDetailComponent implements OnInit {
   }
 
   goToChat(): void {
-    this.router.navigate(['/chat']);
+    const d = this.destination();
+    const q = d ? `Tell me about ${d.name}${d.country ? ' in ' + d.country : ''} as a travel destination. What are the best things to do and see there?` : undefined;
+    this.router.navigate(['/chat'], q ? { queryParams: { q } } : {});
   }
 
   goBack(): void {

@@ -38,7 +38,7 @@ export interface PlannerPin {
       -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
       border: 1.5px solid rgba(255,255,255,0.9);
       box-shadow: 0 6px 18px rgba(8,28,38,0.28);
-      font-family: 'Hanken Grotesk', sans-serif;
+      font-family: var(--font-body);
       font-weight: 800; font-size: 12px; color: #14242E;
       white-space: nowrap; cursor: pointer;
     }
@@ -49,14 +49,14 @@ export interface PlannerPin {
     }
     :host ::ng-deep .pmap-dot__price { font-variant-numeric: tabular-nums; }
     :host ::ng-deep .pmap-pin--sel .pmap-dot {
-      background: linear-gradient(135deg, #E15023, #C8411B);
+      background: linear-gradient(135deg, var(--brand), var(--brand-hover));
       border-color: rgba(255,255,255,0.95);
       color: #fff;
-      box-shadow: 0 10px 26px rgba(225,80,35,0.5);
+      box-shadow: 0 10px 26px rgba(190,67,41,0.5);
       transform: scale(1.06);
     }
-    :host ::ng-deep .pmap-pin--sel .pmap-dot__head { background: #fff; color: #E15023; }
-    :host ::ng-deep .pmap-pin--rec:not(.pmap-pin--sel) .pmap-dot__head { background: #E59A2E; }
+    :host ::ng-deep .pmap-pin--sel .pmap-dot__head { background: #fff; color: var(--brand); }
+    :host ::ng-deep .pmap-pin--rec:not(.pmap-pin--sel) .pmap-dot__head { background: var(--gold); }
   `]
 })
 export class PlannerMapComponent implements AfterViewInit, OnChanges, OnDestroy {

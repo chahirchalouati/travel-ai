@@ -86,26 +86,26 @@ export interface UiSelectOption {
         justify-content: space-between;
         gap: 8px;
         width: 100%;
-        border: 1px solid var(--border, #e0e0e0);
+        border: 1px solid var(--border);
         border-radius: var(--radius-sm, 8px);
         padding: 10px 12px;
         font-family: inherit;
         font-size: 0.92rem;
-        color: var(--text-primary, #1a1a1a);
-        background: var(--bg-primary, #fff);
+        color: var(--text-primary);
+        background: var(--bg-primary);
         cursor: pointer;
         text-align: left;
         transition: border-color 150ms ease, box-shadow 150ms ease;
       }
 
       .ui-select__trigger:hover:not(:disabled) {
-        border-color: var(--text-tertiary, #8a8a8a);
+        border-color: var(--text-tertiary);
       }
 
       .ui-select__trigger:focus-visible,
       .ui-select__trigger--open {
         outline: none;
-        border-color: var(--brand, #e04a2f);
+        border-color: var(--brand);
         box-shadow: 0 0 0 3px rgba(224, 74, 47, 0.15);
       }
 
@@ -121,12 +121,12 @@ export interface UiSelectOption {
       }
 
       .ui-select__value--placeholder {
-        color: var(--text-tertiary, #8a8a8a);
+        color: var(--text-tertiary);
       }
 
       .ui-select__chevron {
         font-size: 20px;
-        color: var(--text-tertiary, #8a8a8a);
+        color: var(--text-tertiary);
         transition: transform 150ms ease;
         flex: 0 0 auto;
       }
@@ -142,8 +142,8 @@ export interface UiSelectOption {
         padding: 6px;
         list-style: none;
         overflow-y: auto;
-        background: var(--bg-primary, #fff);
-        border: 1px solid var(--border, #e0e0e0);
+        background: var(--bg-primary);
+        border: 1px solid var(--border);
         border-radius: var(--radius-md, 12px);
         box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.28);
         animation: ui-select-in 140ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -164,17 +164,17 @@ export interface UiSelectOption {
         padding: 9px 10px;
         border-radius: var(--radius-sm, 8px);
         font-size: 0.9rem;
-        color: var(--text-primary, #1a1a1a);
+        color: var(--text-primary);
         cursor: pointer;
         transition: background 120ms ease;
       }
 
       .ui-select__option--active {
-        background: var(--bg-secondary, #f7f7f7);
+        background: var(--bg-secondary);
       }
 
       .ui-select__option--selected {
-        color: var(--brand, #e04a2f);
+        color: var(--brand);
         font-weight: 600;
       }
 

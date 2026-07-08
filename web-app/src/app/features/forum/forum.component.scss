@@ -1,6 +1,6 @@
 :host {
   display: block;
-  background: var(--bg-primary, #faf8f5);
+  background: var(--bg-primary);
   min-height: 100vh;
 }
 
@@ -68,7 +68,7 @@
   background: #fff;
   border-radius: 28px;
   padding: 0 16px;
-  color: var(--text-secondary, #6b6b6b);
+  color: var(--text-secondary);
 
   .ms { font-size: 20px; }
   input {
@@ -78,7 +78,7 @@
     padding: 13px 0;
     font: inherit;
     font-size: 0.95rem;
-    color: var(--text-primary, #1a1a1a);
+    color: var(--text-primary);
     &:focus { outline: none; }
   }
 }
@@ -88,7 +88,7 @@
   align-items: center;
   gap: 6px;
   border: none;
-  background: var(--teal, #0f766e);
+  background: var(--teal);
   color: #fff;
   font-size: 0.92rem;
   font-weight: 700;
@@ -97,7 +97,7 @@
   cursor: pointer;
   transition: background 150ms ease, transform 150ms ease;
   .ms { font-size: 18px; }
-  &:hover { background: var(--teal-dark, #0c5d57); transform: translateY(-1px); }
+  &:hover { background: #0d5640; transform: translateY(-1px); }
 }
 
 /* ── Body ───────────────────────────────────────────────────────── */
@@ -109,8 +109,8 @@
 
 /* ── Ask form ───────────────────────────────────────────────────── */
 .fo-form {
-  background: var(--bg-secondary, #fff);
-  border: 1px solid var(--border-subtle, #ececec);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
   border-radius: 16px;
   padding: 22px;
   margin-bottom: 24px;
@@ -118,18 +118,18 @@
   flex-direction: column;
   gap: 12px;
 
-  h3 { margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--text-primary, #1a1a1a); }
+  h3 { margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--text-primary); }
 }
 
 .fo-input {
   width: 100%;
-  border: 1px solid var(--border-subtle, #ddd);
+  border: 1px solid var(--border-light);
   border-radius: 10px;
   padding: 11px 14px;
   font: inherit;
   font-size: 0.95rem;
-  background: var(--bg-primary, #faf8f5);
-  &:focus { outline: 2px solid var(--teal, #0f766e); outline-offset: -1px; }
+  background: var(--bg-primary);
+  &:focus { outline: 2px solid var(--teal); outline-offset: -1px; }
 }
 
 .fo-textarea { resize: vertical; min-height: 96px; }
@@ -139,9 +139,9 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid var(--border-subtle, #ddd);
-  background: var(--bg-secondary, #fff);
-  color: var(--text-primary, #1a1a1a);
+  border: 1px solid var(--border-light);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   font-size: 0.88rem;
   font-weight: 600;
   padding: 9px 18px;
@@ -152,7 +152,7 @@
   &:disabled { opacity: 0.55; cursor: default; transform: none; }
 }
 
-.fo-btn--accent { background: var(--teal, #0f766e); border-color: var(--teal, #0f766e); color: #fff; }
+.fo-btn--accent { background: var(--teal); border-color: var(--teal); color: #fff; }
 
 /* ── List ───────────────────────────────────────────────────────── */
 .fo-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
@@ -162,8 +162,8 @@
   gap: 16px;
   align-items: stretch;
   padding: 18px 20px;
-  background: var(--bg-secondary, #fff);
-  border: 1px solid var(--border-subtle, #ececec);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
   border-radius: 14px;
   cursor: pointer;
   transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
@@ -171,9 +171,9 @@
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
-    border-color: rgba(15, 118, 110, 0.4);
+    border-color: rgba(17, 102, 76, 0.4);
   }
-  &:focus-visible { outline: 2px solid var(--teal, #0f766e); outline-offset: 2px; }
+  &:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
 }
 
 .fo-card__main { flex: 1; min-width: 0; }
@@ -182,13 +182,13 @@
   margin: 0 0 6px;
   font-size: 1.08rem;
   font-weight: 700;
-  color: var(--text-primary, #1a1a1a);
+  color: var(--text-primary);
 }
 
 .fo-card__body {
   margin: 0 0 10px;
   font-size: 0.92rem;
-  color: var(--text-secondary, #6b6b6b);
+  color: var(--text-secondary);
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -201,7 +201,7 @@
   align-items: center;
   gap: 7px;
   font-size: 0.8rem;
-  color: var(--text-secondary, #8a8a8a);
+  color: var(--text-secondary);
   flex-wrap: wrap;
 }
 
@@ -211,7 +211,7 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: var(--teal, #0f766e);
+  background: var(--teal);
   color: #fff;
   font-size: 0.72rem;
   font-weight: 700;
@@ -226,25 +226,25 @@
   align-items: center;
   justify-content: center;
   flex: 0 0 64px;
-  border-left: 1px solid var(--border-subtle, #ececec);
+  border-left: 1px solid var(--border-light);
   padding-left: 14px;
-  color: var(--teal, #0f766e);
+  color: var(--teal);
 }
 
 .fo-answers__num { font-size: 1.4rem; font-weight: 800; line-height: 1; }
-.fo-answers__lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary, #8a8a8a); }
+.fo-answers__lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary); }
 
 /* ── States ─────────────────────────────────────────────────────── */
 .fo-skeletons { display: flex; flex-direction: column; gap: 14px; }
-.fo-skel { height: 96px; border-radius: 14px; background: linear-gradient(90deg, #efeae3, #f7f4ef, #efeae3); background-size: 200% 100%; animation: fo-shimmer 1.4s infinite; }
+.fo-skel { height: 96px; border-radius: 14px; background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%); background-size: 200% 100%; animation: fo-shimmer 1.4s infinite; }
 @keyframes fo-shimmer { to { background-position: -200% 0; } }
 
 .fo-empty {
   text-align: center;
   padding: 48px 24px;
-  color: var(--text-secondary, #8a8a8a);
+  color: var(--text-secondary);
   .ms { font-size: 44px; opacity: 0.5; display: block; margin-bottom: 10px; }
-  h3 { margin: 0 0 6px; color: var(--text-primary, #1a1a1a); }
+  h3 { margin: 0 0 6px; color: var(--text-primary); }
   p { margin: 0; }
 }
 

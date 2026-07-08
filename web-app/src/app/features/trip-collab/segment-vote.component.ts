@@ -42,15 +42,15 @@ import type { SegmentVotesResponse, VoteValue } from '../../core/models/api.mode
   `,
   styles: [`
     .sv { display: inline-flex; align-items: center; gap: 0.35rem; }
-    .sv-btn { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border: 1px solid var(--line, #e5e7eb); background: var(--surface, #fff); border-radius: 8px; cursor: pointer; color: var(--muted, #6b7280); transition: background 120ms, color 120ms, border-color 120ms; }
-    .sv-btn:hover:not(:disabled) { border-color: var(--accent, #2563eb); color: var(--accent, #2563eb); }
+    .sv-btn { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border: 1px solid var(--border); background: var(--surface); border-radius: 8px; cursor: pointer; color: var(--text-tertiary); transition: background 120ms, color 120ms, border-color 120ms; }
+    .sv-btn:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); }
     .sv-btn:disabled { opacity: 0.55; cursor: not-allowed; }
     .sv-btn .ms { font-size: 17px; }
-    .sv-btn.is-active { background: var(--accent, #2563eb); border-color: var(--accent, #2563eb); color: #fff; }
-    .sv-score { min-width: 1.6rem; text-align: center; font-weight: 800; font-size: 0.9rem; color: var(--muted, #6b7280); }
+    .sv-btn.is-active { background: var(--brand); border-color: var(--brand); color: #fff; }
+    .sv-score { min-width: 1.6rem; text-align: center; font-weight: 800; font-size: 0.9rem; color: var(--text-tertiary); }
     .sv-score.is-pos { color: #15803d; }
     .sv-score.is-neg { color: #b91c1c; }
-    .sv-count { font-size: 0.72rem; color: var(--muted, #6b7280); margin-left: 0.2rem; }
+    .sv-count { font-size: 0.72rem; color: var(--text-tertiary); margin-left: 0.2rem; }
   `],
 })
 export class SegmentVoteComponent {

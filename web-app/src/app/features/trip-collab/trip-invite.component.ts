@@ -37,12 +37,12 @@ import { AuthService } from '../../core/services/auth.service';
   `,
   styles: [`
     .ti { min-height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; text-align: center; padding: 2rem; }
-    .ti-spinner { width: 42px; height: 42px; border: 4px solid var(--line, #e5e7eb); border-top-color: var(--accent, #2563eb); border-radius: 50%; animation: ti-spin 0.8s linear infinite; }
+    .ti-spinner { width: 42px; height: 42px; border: 4px solid var(--border); border-top-color: var(--brand); border-radius: 50%; animation: ti-spin 0.8s linear infinite; }
     @keyframes ti-spin { to { transform: rotate(360deg) } }
-    .ti-icon { font-size: 46px; color: var(--muted, #6b7280); }
+    .ti-icon { font-size: 46px; color: var(--text-tertiary); }
     .ti-title { margin: 0; font-size: 1.4rem; font-weight: 800; }
-    .ti-msg { margin: 0; color: var(--muted, #6b7280); }
-    .ti-btn { margin-top: 0.5rem; background: var(--accent, #2563eb); color: #fff; border: none; border-radius: 10px; padding: 0.7rem 1.4rem; font-weight: 700; cursor: pointer; }
+    .ti-msg { margin: 0; color: var(--text-tertiary); }
+    .ti-btn { margin-top: 0.5rem; background: var(--brand); color: #fff; border: none; border-radius: 10px; padding: 0.7rem 1.4rem; font-weight: 700; cursor: pointer; }
   `],
 })
 export class TripInviteComponent implements OnInit {

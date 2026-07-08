@@ -189,7 +189,7 @@ interface ReviewTarget {
     .row { display: flex; align-items: center; gap: 1.1rem; padding: 1.1rem 1.3rem; }
     .row-icon { width: 48px; height: 48px; flex: none; border-radius: 12px; background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; }
     .row-icon .ms { font-size: 24px; }
-    .row-icon.cancelled { background: #f3f3f3; color: var(--muted); }
+    .row-icon.cancelled { background: var(--bg-secondary); color: var(--muted); }
     .row-main { flex: 1; min-width: 0; }
     .row-top { display: flex; align-items: center; gap: 0.7rem; }
     .row-dest { margin: 0; font-size: 1.1rem; font-weight: 800; letter-spacing: -0.01em; }
@@ -209,23 +209,23 @@ interface ReviewTarget {
     .row-invoice { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: all 120ms ease; }
     .row-invoice:hover { border-color: var(--accent); color: var(--accent); }
     .row-ticket, .row-calendar { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--line); color: var(--ink); border-radius: 999px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease, border-color 120ms ease; }
-    .row-ticket:hover, .row-calendar:hover:not(:disabled) { background: #f6f6f6; border-color: var(--ink); }
+    .row-ticket:hover, .row-calendar:hover:not(:disabled) { background: var(--bg-secondary); border-color: var(--ink); }
     .row-calendar:disabled { opacity: 0.6; cursor: default; }
     .row-ticket .ms, .row-calendar .ms { font-size: 15px; }
     .row-review:hover { background: var(--accent-soft); }
     .row-review .ms { font-size: 15px; }
-    .row-reviewed { display: inline-flex; align-items: center; gap: 4px; color: #00856A; font-weight: 700; font-size: 0.8rem; }
+    .row-reviewed { display: inline-flex; align-items: center; gap: 4px; color: var(--teal); font-weight: 700; font-size: 0.8rem; }
     .row-reviewed .ms { font-size: 16px; }
-    .row-refunded { display: inline-flex; align-items: center; gap: 4px; color: #00856A; font-weight: 700; font-size: 0.8rem; }
+    .row-refunded { display: inline-flex; align-items: center; gap: 4px; color: var(--teal); font-weight: 700; font-size: 0.8rem; }
     .row-refunded .ms { font-size: 16px; }
     .cancel-form { flex-basis: 100%; border-top: 1px dashed var(--line); margin-top: 0.9rem; padding-top: 0.9rem; display: flex; flex-direction: column; gap: 0.7rem; }
     .cancel-form__label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); }
     .cancel-note { margin: 0; color: var(--muted); font-size: 0.9rem; }
     .cancel-refund { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 0.95rem; }
-    .cancel-refund .ms { font-size: 18px; color: #00856A; }
-    .cancel-refund strong { color: #00856A; }
+    .cancel-refund .ms { font-size: 18px; color: var(--teal); }
+    .cancel-refund strong { color: var(--teal); }
     .cancel-refund--none .ms { color: var(--muted); }
-    .cancel-policy { background: #faf8f5; border: 1px solid var(--line); border-radius: 10px; padding: 0.6rem 0.9rem; }
+    .cancel-policy { background: var(--bg-secondary); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 0.6rem 0.9rem; }
     .cancel-policy__title { display: block; font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); margin-bottom: 0.3rem; }
     .cancel-policy ul { margin: 0; padding-left: 1.1rem; color: var(--muted); font-size: 0.84rem; line-height: 1.5; }
     .cancel-confirm { background: #c0392b; color: #fff; border: none; border-radius: 999px; padding: 7px 18px; font-weight: 700; font-size: 0.82rem; cursor: pointer; }
@@ -234,9 +234,9 @@ interface ReviewTarget {
     .review-form { flex-basis: 100%; border-top: 1px dashed var(--line); margin-top: 0.9rem; padding-top: 0.9rem; display: flex; flex-direction: column; gap: 0.6rem; }
     .review-form__label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); }
     .stars { display: flex; gap: 2px; }
-    .star { background: none; border: none; cursor: pointer; padding: 2px; color: #d8d8d8; line-height: 0; }
+    .star { background: none; border: none; cursor: pointer; padding: 2px; color: var(--border); line-height: 0; }
     .star .ms { font-size: 26px; }
-    .star--on { color: #F5A623; }
+    .star--on { color: var(--gold); }
     .review-input { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; font: inherit; font-size: 0.9rem; resize: vertical; }
     .review-input:focus { outline: none; border-color: var(--accent); }
     .review-actions { display: flex; justify-content: flex-end; gap: 0.6rem; }

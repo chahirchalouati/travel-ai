@@ -1,11 +1,11 @@
 // Generic entity manager — inherits the admin console visual language.
 :host {
-  --ink: #15171c;
-  --accent: #e04a2f;
-  --line: #e8e8ea;
-  --muted: #8a8f99;
+  --ink: #15171c;       /* intentional — admin cool-dark for buttons/toasts */
+  --accent: var(--brand);
+  --line: var(--border);
+  --muted: var(--text-tertiary);
   display: block;
-  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-family: var(--font-body);
 }
 
 .em-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
@@ -21,14 +21,14 @@
 .em-toast { background: var(--ink); color: #fff; padding: 0.7rem 1.1rem; border-radius: 10px; margin-bottom: 1rem; font-weight: 600; font-size: 0.9rem; }
 
 // ── Table ──────────────────────────────────────────────────────────────
-.table-wrap { background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.table-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
 .em-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 .em-table thead th {
-  text-align: left; padding: 0.85rem 1.1rem; background: #fafafb;
+  text-align: left; padding: 0.85rem 1.1rem; background: var(--bg-secondary);
   font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 800;
   border-bottom: 1px solid var(--line);
 }
-.em-table td { padding: 0.8rem 1.1rem; border-bottom: 1px solid #f1f1f3; vertical-align: middle; color: var(--ink); }
+.em-table td { padding: 0.8rem 1.1rem; border-bottom: 1px solid var(--border-light); vertical-align: middle; color: var(--ink); }
 .em-table tr:last-child td { border-bottom: none; }
 .ta-right { text-align: right; }
 .empty-row { text-align: center; color: var(--muted); padding: 2.5rem; }
@@ -40,11 +40,11 @@
 .tag-neutral { background: #eef0f4; color: #4a5160; }
 
 .mini {
-  background: #fff; border: 1px solid var(--line); border-radius: 8px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
   padding: 0.4rem 0.8rem; font-family: inherit; font-weight: 700; font-size: 0.8rem; cursor: pointer;
   transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
 }
-.mini:hover { border-color: #c8c8cc; }
+.mini:hover { border-color: var(--border); }
 .mini-danger { color: #c0392b; }
 .mini-danger:hover { background: #fdecec; border-color: #f3c4c4; }
 .mini-ok { color: #1a7f43; }
@@ -52,7 +52,7 @@
 
 // ── Pager ──────────────────────────────────────────────────────────────
 .pager { display: flex; align-items: center; gap: 1rem; justify-content: flex-end; margin-top: 1.1rem; }
-.pager button { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 0.45rem 1rem; font-family: inherit; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
+.pager button { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 0.45rem 1rem; font-family: inherit; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
 .pager button:disabled { opacity: 0.5; cursor: default; }
 .pager span { color: var(--muted); font-size: 0.85rem; }
 
@@ -63,7 +63,7 @@
   padding: 4vh 1rem; z-index: 1000; overflow-y: auto;
 }
 .em-modal {
-  background: #fff; border-radius: 18px; width: min(720px, 100%);
+  background: var(--surface); border-radius: 18px; width: min(720px, 100%);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25); overflow: hidden;
 }
 .em-modal-head {
@@ -89,7 +89,7 @@
 .em-field select,
 .em-field textarea {
   border: 1px solid var(--line); border-radius: 9px; padding: 0.55rem 0.7rem;
-  font-family: inherit; font-size: 0.9rem; color: var(--ink); background: #fff; width: 100%;
+  font-family: inherit; font-size: 0.9rem; color: var(--ink); background: var(--surface); width: 100%;
 }
 .em-field input:focus, .em-field select:focus, .em-field textarea:focus {
   outline: none; border-color: var(--accent);
@@ -105,7 +105,7 @@
   padding: 1.1rem 1.5rem; border-top: 1px solid var(--line);
 }
 .em-btn-ghost {
-  background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
   padding: 0.6rem 1.2rem; font-family: inherit; font-weight: 700; font-size: 0.9rem; cursor: pointer;
 }
 .em-btn-primary {

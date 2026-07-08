@@ -46,20 +46,20 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
         display: flex;
         align-items: center;
         gap: 8px;
-        border: 1px solid var(--border, #e0e0e0);
+        border: 1px solid var(--border);
         border-radius: var(--radius-sm, 8px);
         padding: 0 10px 0 12px;
-        background: var(--bg-primary, #fff);
+        background: var(--bg-primary);
         transition: border-color 150ms ease, box-shadow 150ms ease;
         cursor: text;
       }
 
       .ui-date:hover:not(.ui-date--disabled) {
-        border-color: var(--text-tertiary, #8a8a8a);
+        border-color: var(--text-tertiary);
       }
 
       .ui-date--focus {
-        border-color: var(--brand, #e04a2f) !important;
+        border-color: var(--brand) !important;
         box-shadow: 0 0 0 3px rgba(224, 74, 47, 0.15);
       }
 
@@ -70,7 +70,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
       .ui-date__icon {
         font-size: 18px;
-        color: var(--brand, #e04a2f);
+        color: var(--brand);
         flex: 0 0 auto;
         pointer-events: none;
       }
@@ -84,7 +84,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
         padding: 10px 0;
         font-family: inherit;
         font-size: 0.92rem;
-        color: var(--text-primary, #1a1a1a);
+        color: var(--text-primary);
         cursor: inherit;
       }
 
@@ -108,8 +108,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
         height: 22px;
         border: none;
         border-radius: 50%;
-        background: var(--bg-tertiary, #f0f0f0);
-        color: var(--text-tertiary, #8a8a8a);
+        background: var(--bg-tertiary);
+        color: var(--text-tertiary);
         cursor: pointer;
         padding: 0;
         flex: 0 0 auto;
@@ -117,8 +117,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       }
 
       .ui-date__clear:hover {
-        background: var(--brand-light, #fff0ed);
-        color: var(--brand, #e04a2f);
+        background: var(--brand-light);
+        color: var(--brand);
       }
 
       .ui-date__clear .ms {

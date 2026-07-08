@@ -1,8 +1,8 @@
 :host {
-  --pm-ink: #16130f;
-  --pm-muted: #6c675f;
-  --pm-line: #e7e2d9;
-  --pm-gold: #b8894a;
+  --pm-ink: var(--text-primary);
+  --pm-muted: var(--text-secondary);
+  --pm-line: var(--border);
+  --pm-gold: var(--gold);
   --pm-gold-deep: #8f6a37;
   display: block;
 }
@@ -95,7 +95,7 @@
   border: 1px solid var(--pm-line);
   border-radius: 18px;
   padding: 28px;
-  background: #fff;
+  background: var(--surface);
   box-shadow: 0 22px 50px -30px rgba(20, 17, 13, 0.35);
   position: sticky;
   top: 90px;

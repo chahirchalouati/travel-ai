@@ -46,7 +46,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
             />
           } @else {
             <div class="hero-card__img-placeholder">
-              <span class="ms" style="font-size:72px; color:#e0e0e0">directions_boat</span>
+              <span class="ms" style="font-size:72px; color:var(--border)">directions_boat</span>
             </div>
           }
 
@@ -95,17 +95,17 @@ import { FavoritesService } from '../../core/services/favorites.service';
             @if (c.description) {
               <section class="info-card" appReveal>
                 <h2 class="card-heading">
-                  <span class="ms" style="font-size:22px; color:#00856A">info</span>
+                  <span class="ms" style="font-size:22px; color:var(--teal)">info</span>
                   {{ 'cruise.about' | transloco }}
                 </h2>
-                <p style="font-size:15px; color:#545454; line-height:1.75; margin:0;">{{ c.description }}</p>
+                <p style="font-size:15px; color:var(--text-secondary); line-height:1.75; margin:0;">{{ c.description }}</p>
               </section>
             }
 
             <!-- Schedule -->
             <section class="info-card" appReveal>
               <h2 class="card-heading">
-                <span class="ms" style="font-size:22px; color:#00856A">calendar_month</span>
+                <span class="ms" style="font-size:22px; color:var(--teal)">calendar_month</span>
                 {{ 'cruise.schedule' | transloco }}
               </h2>
               <div class="schedule-grid">
@@ -131,7 +131,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
             @if (itineraryDays().length > 0 || c.itinerary) {
               <section class="info-card" appReveal>
                 <h2 class="card-heading">
-                  <span class="ms" style="font-size:22px; color:#00856A">map</span>
+                  <span class="ms" style="font-size:22px; color:var(--teal)">map</span>
                   {{ 'cruise.itinerary' | transloco }}
                 </h2>
                 @if (itineraryDays().length > 0) {
@@ -150,7 +150,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
                     }
                   </ol>
                 } @else {
-                  <p style="font-size:14px; color:#545454; line-height:1.75; margin:0; white-space:pre-line;">{{ c.itinerary }}</p>
+                  <p style="font-size:14px; color:var(--text-secondary); line-height:1.75; margin:0; white-space:pre-line;">{{ c.itinerary }}</p>
                 }
               </section>
             }
@@ -159,7 +159,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
             @if (cabins().length > 0) {
               <section class="info-card" appReveal>
                 <h2 class="card-heading">
-                  <span class="ms" style="font-size:22px; color:#00856A">king_bed</span>
+                  <span class="ms" style="font-size:22px; color:var(--teal)">king_bed</span>
                   {{ 'cruise.cabinCategories' | transloco }}
                 </h2>
                 <div class="cabin-grid">
@@ -180,7 +180,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
             <!-- What's included -->
             <section class="info-card" appReveal>
               <h2 class="card-heading">
-                <span class="ms" style="font-size:22px; color:#00856A">checklist</span>
+                <span class="ms" style="font-size:22px; color:var(--teal)">checklist</span>
                 {{ 'cruise.whatsIncluded' | transloco }}
               </h2>
               <div class="feature-list">
@@ -214,35 +214,35 @@ import { FavoritesService } from '../../core/services/favorites.service';
                 <span class="price-note">{{ c.durationNights }}{{ 'cruise.booking.nightCruise' | transloco }}</span>
               </div>
 
-              <div style="height:1px; background:#efefef; margin:16px 0;"></div>
+              <div style="height:1px; background:var(--border-light); margin:16px 0;"></div>
 
               <div class="meta-list">
                 <div class="meta-item">
-                  <span class="ms" style="font-size:20px; color:#8a8a8a">directions_boat</span>
+                  <span class="ms" style="font-size:20px; color:var(--text-tertiary)">directions_boat</span>
                   <div>
                     <span class="meta-label">{{ 'cruise.booking.ship' | transloco }}</span>
                     <span class="meta-value">{{ c.shipName }}</span>
                   </div>
                 </div>
                 <div class="meta-item">
-                  <span class="ms" style="font-size:20px; color:#8a8a8a">business</span>
+                  <span class="ms" style="font-size:20px; color:var(--text-tertiary)">business</span>
                   <div>
                     <span class="meta-label">{{ 'cruise.booking.operator' | transloco }}</span>
                     <span class="meta-value">{{ c.operator }}</span>
                   </div>
                 </div>
                 <div class="meta-item">
-                  <span class="ms" style="font-size:20px; color:#8a8a8a">bed</span>
+                  <span class="ms" style="font-size:20px; color:var(--text-tertiary)">bed</span>
                   <div>
                     <span class="meta-label">{{ 'cruise.booking.cabinsAvailable' | transloco }}</span>
-                    <span class="meta-value" [style.color]="c.cabinsAvailable < 5 ? '#E04A2F' : '#1a1a1a'">
+                    <span class="meta-value" [style.color]="c.cabinsAvailable < 5 ? 'var(--brand)' : 'var(--text-primary)'">
                       {{ c.cabinsAvailable }} {{ c.cabinsAvailable === 1 ? ('cruise.booking.cabin' | transloco) : ('cruise.booking.cabins' | transloco) }}
                     </span>
                   </div>
                 </div>
                 @if (c.cruiseType) {
                   <div class="meta-item">
-                    <span class="ms" style="font-size:20px; color:#8a8a8a">explore</span>
+                    <span class="ms" style="font-size:20px; color:var(--text-tertiary)">explore</span>
                     <div>
                       <span class="meta-label">{{ 'cruise.booking.type' | transloco }}</span>
                       <span class="meta-value">{{ c.cruiseType }}</span>
@@ -251,7 +251,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
                 }
               </div>
 
-              <div style="height:1px; background:#efefef; margin:16px 0;"></div>
+              <div style="height:1px; background:var(--border-light); margin:16px 0;"></div>
 
               <button class="btn-book" (click)="book(c)">
                 <span class="ms" style="font-size:20px">confirmation_number</span>
@@ -293,22 +293,22 @@ import { FavoritesService } from '../../core/services/favorites.service';
   styles: [`
     :host {
       display: block;
-      background: #f7f7f7;
+      background: var(--bg-primary);
       min-height: 100vh;
-      font-family: 'Hanken Grotesk', system-ui, sans-serif;
-      color: #1a1a1a;
+      font-family: var(--font-body);
+      color: var(--text-primary);
     }
 
     .back-link {
       display: inline-flex; align-items: center; gap: 4px;
-      background: none; border: none; color: #545454;
+      background: none; border: none; color: var(--text-secondary);
       font-family: inherit; font-size: 14px; font-weight: 500;
       cursor: pointer; padding: 0; transition: color 150ms ease;
     }
-    .back-link:hover { color: #E04A2F; }
-    .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid #e0e0e0; border-radius: 999px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: #545454; cursor: pointer; transition: all 150ms ease; }
-    .fav-toggle:hover { border-color: #E04A2F; color: #E04A2F; }
-    .fav-toggle--on { border-color: #E04A2F; color: #E04A2F; background: #fff1ec; }
+    .back-link:hover { color: var(--brand); }
+    .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 999px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 150ms ease; }
+    .fav-toggle:hover { border-color: var(--brand); color: var(--brand); }
+    .fav-toggle--on { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
     .fav-toggle .ms { font-size: 18px; }
 
     .hero-card {
@@ -340,12 +340,12 @@ import { FavoritesService } from '../../core/services/favorites.service';
       display: inline-block; border-radius: 100px;
       padding: 4px 12px; font-size: 12px; font-weight: 600;
     }
-    .badge--teal { background: #00856A; color: #fff; }
+    .badge--teal { background: var(--teal); color: #fff; }
     .badge--blue { background: rgba(255,255,255,.2); color: #fff; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,.3); }
-    .badge--ai { display: inline-flex; align-items: center; gap: 4px; background: #EEF1FF; color: #4338CA; }
-    .badge--ai .ms { color: #6366F1; }
-    .badge--rating { display: inline-flex; align-items: center; gap: 4px; background: #FFF4E0; color: #B26A00; }
-    .badge--rating .ms { color: #F5A623; }
+    .badge--ai { display: inline-flex; align-items: center; gap: 4px; background: var(--teal-light); color: var(--teal); }
+    .badge--ai .ms { color: var(--teal); }
+    .badge--rating { display: inline-flex; align-items: center; gap: 4px; background: var(--gold-light); color: var(--gold); }
+    .badge--rating .ms { color: var(--gold); }
 
     .hero-card__name {
       font-size: clamp(1.8rem, 1.2rem + 2vw, 2.6rem);
@@ -376,13 +376,13 @@ import { FavoritesService } from '../../core/services/favorites.service';
     }
 
     .info-card {
-      background: #fff; border-radius: 12px; padding: 24px;
+      background: var(--surface); border-radius: 12px; padding: 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,.08);
     }
 
     .card-heading {
       display: flex; align-items: center; gap: 10px;
-      font-size: 18px; font-weight: 700; margin: 0 0 20px; color: #1a1a1a;
+      font-size: 18px; font-weight: 700; margin: 0 0 20px; color: var(--text-primary);
     }
 
     .schedule-grid {
@@ -394,28 +394,28 @@ import { FavoritesService } from '../../core/services/favorites.service';
     }
 
     .schedule-label {
-      font-size: 11px; color: #8a8a8a; text-transform: uppercase;
+      font-size: 11px; color: var(--text-tertiary); text-transform: uppercase;
       letter-spacing: 0.5px; font-weight: 500;
     }
 
     .schedule-value {
-      font-size: 15px; font-weight: 700; color: #1a1a1a; text-align: center;
+      font-size: 15px; font-weight: 700; color: var(--text-primary); text-align: center;
     }
 
     .schedule-port {
-      font-size: 12px; color: #8a8a8a; text-align: center;
+      font-size: 12px; color: var(--text-tertiary); text-align: center;
     }
 
     .schedule-divider {
       flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;
     }
 
-    .divider-line { width: 100%; height: 1px; background: #e0e0e0; }
+    .divider-line { width: 100%; height: 1px; background: var(--border); }
 
     .divider-badge {
-      background: #f7f7f7; border: 1px solid #e0e0e0;
+      background: var(--bg-primary); border: 1px solid var(--border);
       border-radius: 100px; padding: 4px 12px;
-      font-size: 12px; font-weight: 600; color: #545454;
+      font-size: 12px; font-weight: 600; color: var(--text-secondary);
       white-space: nowrap;
     }
 
@@ -425,57 +425,57 @@ import { FavoritesService } from '../../core/services/favorites.service';
       display: flex; align-items: center; gap: 10px;
       font-size: 14px; font-weight: 500;
     }
-    .feature-item--yes { color: #1a1a1a; }
-    .feature-item--yes .ms { color: #00856A; }
-    .feature-item--no { color: #8a8a8a; }
-    .feature-item--no .ms { color: #e0e0e0; }
+    .feature-item--yes { color: var(--text-primary); }
+    .feature-item--yes .ms { color: var(--teal); }
+    .feature-item--no { color: var(--text-tertiary); }
+    .feature-item--no .ms { color: var(--border); }
 
     .booking-card {
-      background: #fff; border-radius: 12px; padding: 24px;
-      box-shadow: 0 1px 3px rgba(0,0,0,.08); border: 1px solid #e0e0e0;
+      background: var(--surface); border-radius: 12px; padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08); border: 1px solid var(--border);
     }
 
     .price-block { display: flex; flex-direction: column; gap: 4px; }
 
     .price-label {
-      font-size: 12px; color: #8a8a8a; text-transform: uppercase;
+      font-size: 12px; color: var(--text-tertiary); text-transform: uppercase;
       letter-spacing: 0.5px; font-weight: 500;
     }
 
-    .price-value { font-size: 2.2rem; font-weight: 800; color: #1a1a1a; }
+    .price-value { font-size: 2.2rem; font-weight: 800; color: var(--text-primary); }
 
-    .price-note { font-size: 13px; color: #8a8a8a; }
+    .price-note { font-size: 13px; color: var(--text-tertiary); }
 
     .meta-list { display: flex; flex-direction: column; gap: 14px; }
     .meta-item { display: flex; align-items: center; gap: 12px; }
     .meta-label {
-      display: block; font-size: 11px; color: #8a8a8a;
+      display: block; font-size: 11px; color: var(--text-tertiary);
       text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;
     }
-    .meta-value { display: block; font-size: 15px; font-weight: 600; color: #1a1a1a; }
+    .meta-value { display: block; font-size: 15px; font-weight: 600; color: var(--text-primary); }
 
     .btn-book {
       width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
-      background: #E04A2F; color: #fff; border: none; border-radius: 10px;
+      background: var(--brand); color: #fff; border: none; border-radius: 10px;
       padding: 14px; font-family: inherit; font-size: 15px; font-weight: 600;
       cursor: pointer; transition: background 150ms ease; margin-bottom: 10px;
     }
-    .btn-book:hover { background: #c93d25; }
-    .btn-watch { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; background: #fff; color: #545454; border: 1px solid #e0e0e0; border-radius: 10px; padding: 12px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 150ms ease; }
-    .btn-watch:hover { border-color: #E04A2F; color: #E04A2F; }
-    .btn-watch--on { border-color: #E04A2F; color: #E04A2F; background: #fff1ec; }
+    .btn-book:hover { background: var(--brand-hover); }
+    .btn-watch { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; background: var(--surface); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 12px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 150ms ease; }
+    .btn-watch:hover { border-color: var(--brand); color: var(--brand); }
+    .btn-watch--on { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
 
     .btn-chat {
       width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
-      background: #fff; color: #E04A2F; border: 1.5px solid #E04A2F; border-radius: 10px;
+      background: var(--surface); color: var(--brand); border: 1.5px solid var(--brand); border-radius: 10px;
       padding: 13px; font-family: inherit; font-size: 15px; font-weight: 600;
       cursor: pointer; transition: background 150ms ease;
     }
-    .btn-chat:hover { background: #FFF0ED; }
+    .btn-chat:hover { background: var(--brand-light); }
 
     .urgency-note {
       display: flex; align-items: center; gap: 5px;
-      margin: 12px 0 0; font-size: 13px; font-weight: 600; color: #E04A2F;
+      margin: 12px 0 0; font-size: 13px; font-weight: 600; color: var(--brand);
       text-align: center; justify-content: center;
     }
 
@@ -484,7 +484,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
       100% { background-position: 400px 0; }
     }
     .shimmer {
-      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
       background-size: 800px 100%; animation: shimmer 1.8s ease-in-out infinite;
     }
 
@@ -492,7 +492,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
       .detail-grid { grid-template-columns: 1fr; }
       .schedule-grid { flex-direction: column; gap: 12px; }
       .schedule-divider { flex-direction: row; width: 100%; }
-      .divider-line { height: auto; width: 1px; flex: 1; background: #e0e0e0; }
+      .divider-line { height: auto; width: 1px; flex: 1; background: var(--border); }
     }
 
     /* Day-by-day itinerary timeline */
@@ -502,26 +502,26 @@ import { FavoritesService } from '../../core/services/favorites.service';
     }
     .cruise-timeline__item:not(:last-child)::before {
       content: ''; position: absolute; left: 47px; top: 26px; bottom: 0;
-      width: 2px; background: #e8e8e8;
+      width: 2px; background: var(--border);
     }
     .cruise-timeline__day {
       flex-shrink: 0; width: 78px; text-align: center;
       font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
-      color: #00856A; background: #E6F5F0; border-radius: 999px; padding: 6px 0; height: fit-content;
+      color: var(--teal); background: var(--teal-light); border-radius: 999px; padding: 6px 0; height: fit-content;
     }
     .cruise-timeline__body { display: flex; flex-direction: column; gap: 2px; padding-top: 2px; }
-    .cruise-timeline__port { font-size: 15px; font-weight: 700; color: #1a1a1a; }
-    .cruise-timeline__port .ms { color: #00856A; }
-    .cruise-timeline__desc { font-size: 13px; color: #8a8a8a; line-height: 1.5; }
+    .cruise-timeline__port { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+    .cruise-timeline__port .ms { color: var(--teal); }
+    .cruise-timeline__desc { font-size: 13px; color: var(--text-tertiary); line-height: 1.5; }
 
     /* Cabin categories */
     .cabin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
-    .cabin-card { border: 1px solid #e8e8e8; border-radius: 12px; padding: 14px; }
+    .cabin-card { border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
     .cabin-card__head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
     .cabin-card__name { font-size: 15px; font-weight: 700; }
-    .cabin-card__price { font-size: 15px; font-weight: 800; color: #E04A2F; }
-    .cabin-card__desc { font-size: 13px; color: #8a8a8a; margin: 6px 0 10px; line-height: 1.5; }
-    .cabin-card__avail { font-size: 12px; font-weight: 600; color: #545454; }
+    .cabin-card__price { font-size: 15px; font-weight: 800; color: var(--brand); }
+    .cabin-card__desc { font-size: 13px; color: var(--text-tertiary); margin: 6px 0 10px; line-height: 1.5; }
+    .cabin-card__avail { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
   `],
 })
 export class CruiseDetailComponent implements OnInit {
@@ -591,7 +591,11 @@ export class CruiseDetailComponent implements OnInit {
 
   goBack(): void { this.router.navigate(['/']); }
   goToPlanner(): void { this.router.navigate(['/planner']); }
-  goToChat(): void { this.router.navigate(['/chat']); }
+  goToChat(): void {
+    const c = this.cruise();
+    const q = c ? `Tell me about the cruise ${c.name}${c.durationNights ? '. It lasts ' + c.durationNights + ' nights' : ''}${c.departurePort ? ', departing from ' + c.departurePort + '.' : '.'}` : undefined;
+    this.router.navigate(['/chat'], q ? { queryParams: { q } } : {});
+  }
 
   /** Seeds the booking funnel with the cruise's real cabin tiers and opens it. */
   book(c: CruiseSearchResult): void {

@@ -1,12 +1,7 @@
 /** Shared styling for the standalone auth-recovery pages (forgot / reset / verify). */
 export const AUTH_RECOVERY_STYLES = `
   :host {
-    --brand: #E04A2F;
-    --brand-hover: #c93d25;
-    --text-primary: #1a1a1a;
-    --text-secondary: #545454;
-    --border: #e0e0e0;
-    font-family: 'Hanken Grotesk', system-ui, sans-serif;
+    font-family: var(--font-body);
   }
 
   .rec-wrap {
@@ -20,12 +15,12 @@ export const AUTH_RECOVERY_STYLES = `
   .rec-card {
     width: 100%;
     max-width: 440px;
-    background: #fff;
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 18px;
+    border-radius: var(--radius-lg);
     padding: 34px 32px 30px;
-    box-shadow: 0 14px 44px rgba(0, 0, 0, 0.08);
-    animation: recPop 220ms cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: var(--shadow-md);
+    animation: recPop 220ms var(--ease-out-expo);
   }
 
   @keyframes recPop {
@@ -37,13 +32,13 @@ export const AUTH_RECOVERY_STYLES = `
     width: 52px; height: 52px;
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    background: #fdeeea;
+    background: var(--brand-light);
     color: var(--brand);
     margin-bottom: 16px;
   }
   .rec-icon .ms { font-size: 26px; }
-  .rec-icon.ok { background: #e6f4ec; color: #1a7f43; }
-  .rec-icon.err { background: #fdecea; color: #c0392b; }
+  .rec-icon.ok { background: var(--teal-light); color: var(--teal); }
+  .rec-icon.err { background: #fdecec; color: #c0392b; }
 
   .rec-title {
     font-size: 1.45rem;
@@ -55,7 +50,7 @@ export const AUTH_RECOVERY_STYLES = `
 
   .rec-sub {
     font-size: 0.92rem;
-    color: var(--text-secondary);
+    color: var(--text-tertiary);
     line-height: 1.55;
     margin: 0 0 22px;
   }
@@ -67,7 +62,7 @@ export const AUTH_RECOVERY_STYLES = `
   .rec-label {
     font-size: 0.78rem;
     font-weight: 600;
-    color: var(--text-secondary);
+    color: var(--text-tertiary);
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
@@ -78,14 +73,14 @@ export const AUTH_RECOVERY_STYLES = `
     font-family: inherit;
     font-size: 0.95rem;
     color: var(--text-primary);
-    background: #f7f7f7;
+    background: var(--bg-secondary);
     border: 1.5px solid var(--border);
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     padding: 11px 13px;
     outline: none;
-    transition: border-color 150ms ease, background 150ms ease;
+    transition: border-color var(--duration-fast) ease, background var(--duration-fast) ease;
   }
-  .rec-input:focus { border-color: var(--brand); background: #fff; }
+  .rec-input:focus { border-color: var(--brand); background: var(--surface); }
 
   .rec-error {
     display: flex;
@@ -120,7 +115,7 @@ export const AUTH_RECOVERY_STYLES = `
   .rec-submit:hover:not(:disabled) {
     background: var(--brand-hover);
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(224, 74, 47, 0.35);
+    box-shadow: var(--shadow-md);
   }
   .rec-submit:disabled { opacity: 0.7; cursor: default; }
 
@@ -137,7 +132,7 @@ export const AUTH_RECOVERY_STYLES = `
   .rec-footer {
     text-align: center;
     font-size: 0.88rem;
-    color: var(--text-secondary);
+    color: var(--text-tertiary);
     margin: 20px 0 0;
   }
 

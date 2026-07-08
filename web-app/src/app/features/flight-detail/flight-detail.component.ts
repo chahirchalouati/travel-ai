@@ -35,7 +35,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
         <!-- HERO CARD -->
         <div class="hero-card">
           <div class="hero-card__airline">
-            <span class="ms" style="font-size:40px; color:#E04A2F">flight</span>
+            <span class="ms" style="font-size:40px; color:var(--brand)">flight</span>
             <div>
               <h1 class="hero-card__name">{{ f.airline }}</h1>
               <p class="hero-card__flight-no">{{ 'flight.flightNo' | transloco }} {{ f.flightNumber }}</p>
@@ -64,7 +64,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
               <span class="route-label">{{ 'flight.origin' | transloco }}</span>
             </div>
             <div class="route-line">
-              <span class="ms" style="font-size:22px; color:#E04A2F; transform:rotate(90deg); display:block">flight</span>
+              <span class="ms" style="font-size:22px; color:var(--brand); transform:rotate(90deg); display:block">flight</span>
             </div>
             <div class="route-point">
               <span class="route-iata">{{ f.destIata }}</span>
@@ -80,7 +80,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
             <!-- Schedule -->
             <section class="info-card" appReveal>
               <h2 class="card-heading">
-                <span class="ms" style="font-size:22px; color:#00856A">schedule</span>
+                <span class="ms" style="font-size:22px; color:var(--teal)">schedule</span>
                 {{ 'flight.schedule' | transloco }}
               </h2>
               <div class="schedule-row">
@@ -107,7 +107,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
             <!-- Inclusions -->
             <section class="info-card" appReveal>
               <h2 class="card-heading">
-                <span class="ms" style="font-size:22px; color:#00856A">luggage</span>
+                <span class="ms" style="font-size:22px; color:var(--teal)">luggage</span>
                 {{ 'flight.inclusions' | transloco }}
               </h2>
               <div class="feature-list">
@@ -136,27 +136,27 @@ import { FavoritesService } from '../../core/services/favorites.service';
                 <span class="price-value">{{ f.price | currency:'USD':'symbol':'1.0-0' }}</span>
               </div>
 
-              <div style="height:1px; background:#efefef; margin: 16px 0;"></div>
+              <div style="height:1px; background:var(--border-light); margin: 16px 0;"></div>
 
               <div class="meta-list">
                 <div class="meta-item">
-                  <span class="ms" style="font-size:18px; color:#8a8a8a">event_seat</span>
+                  <span class="ms" style="font-size:18px; color:var(--text-tertiary)">event_seat</span>
                   <div>
                     <span class="meta-label">{{ 'flight.booking.seatsLeft' | transloco }}</span>
-                    <span class="meta-value" [style.color]="f.seatsAvailable < 5 ? '#E04A2F' : '#1a1a1a'">
+                    <span class="meta-value" [style.color]="f.seatsAvailable < 5 ? 'var(--brand)' : 'var(--text-primary)'">
                       {{ f.seatsAvailable }} {{ f.seatsAvailable === 1 ? ('flight.booking.seat' | transloco) : ('flight.booking.seats' | transloco) }}
                     </span>
                   </div>
                 </div>
                 <div class="meta-item">
-                  <span class="ms" style="font-size:18px; color:#8a8a8a">airline_stops</span>
+                  <span class="ms" style="font-size:18px; color:var(--text-tertiary)">airline_stops</span>
                   <div>
                     <span class="meta-label">{{ 'flight.booking.route' | transloco }}</span>
                     <span class="meta-value">{{ f.originIata }} → {{ f.destIata }}</span>
                   </div>
                 </div>
                 <div class="meta-item">
-                  <span class="ms" style="font-size:18px; color:#8a8a8a">luggage</span>
+                  <span class="ms" style="font-size:18px; color:var(--text-tertiary)">luggage</span>
                   <div>
                     <span class="meta-label">{{ 'flight.booking.baggage' | transloco }}</span>
                     <span class="meta-value">{{ f.baggageIncluded ? ('flight.booking.included' | transloco) : ('flight.booking.notIncluded' | transloco) }}</span>
@@ -164,7 +164,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
                 </div>
               </div>
 
-              <div style="height:1px; background:#efefef; margin: 16px 0;"></div>
+              <div style="height:1px; background:var(--border-light); margin: 16px 0;"></div>
 
               <button class="btn-book" (click)="book(f)">
                 <span class="ms" style="font-size:20px">confirmation_number</span>
@@ -203,27 +203,27 @@ import { FavoritesService } from '../../core/services/favorites.service';
   styles: [`
     :host {
       display: block;
-      background: #f7f7f7;
+      background: var(--bg-primary);
       min-height: 100vh;
-      font-family: 'Hanken Grotesk', system-ui, sans-serif;
-      color: #1a1a1a;
+      font-family: var(--font-body);
+      color: var(--text-primary);
     }
 
     .back-link {
       display: inline-flex; align-items: center; gap: 4px;
-      background: none; border: none; color: #545454;
+      background: none; border: none; color: var(--text-secondary);
       font-family: inherit; font-size: 14px; font-weight: 500;
       cursor: pointer; padding: 0;
       transition: color 150ms ease;
     }
-    .back-link:hover { color: #E04A2F; }
-    .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid #e0e0e0; border-radius: 999px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: #545454; cursor: pointer; transition: all 150ms ease; }
-    .fav-toggle:hover { border-color: #E04A2F; color: #E04A2F; }
-    .fav-toggle--on { border-color: #E04A2F; color: #E04A2F; background: #fff1ec; }
+    .back-link:hover { color: var(--brand); }
+    .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 999px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 150ms ease; }
+    .fav-toggle:hover { border-color: var(--brand); color: var(--brand); }
+    .fav-toggle--on { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
     .fav-toggle .ms { font-size: 18px; }
 
     .hero-card {
-      background: #fff;
+      background: var(--surface);
       border-radius: 16px;
       padding: 32px;
       margin-bottom: 24px;
@@ -245,21 +245,21 @@ import { FavoritesService } from '../../core/services/favorites.service';
     }
 
     .hero-card__flight-no {
-      font-size: 14px; color: #8a8a8a; margin: 4px 0 0; font-weight: 500;
+      font-size: 14px; color: var(--text-tertiary); margin: 4px 0 0; font-weight: 500;
     }
     .hero-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
     .ai-badge {
       display: inline-flex; align-items: center; gap: 4px;
-      font-size: 12px; font-weight: 700; color: #4338CA;
-      background: #EEF1FF; border-radius: 999px; padding: 3px 10px;
+      font-size: 12px; font-weight: 700; color: var(--teal);
+      background: var(--teal-light); border-radius: 999px; padding: 3px 10px;
     }
-    .ai-badge .ms { color: #6366F1; }
+    .ai-badge .ms { color: var(--teal); }
     .rating-badge {
       display: inline-flex; align-items: center; gap: 4px;
-      font-size: 12px; font-weight: 700; color: #B26A00;
-      background: #FFF4E0; border-radius: 999px; padding: 3px 10px;
+      font-size: 12px; font-weight: 700; color: var(--gold);
+      background: var(--gold-light); border-radius: 999px; padding: 3px 10px;
     }
-    .rating-badge .ms { color: #F5A623; }
+    .rating-badge .ms { color: var(--gold); }
 
     .route-display {
       display: flex; align-items: center; gap: 20px;
@@ -270,11 +270,11 @@ import { FavoritesService } from '../../core/services/favorites.service';
     }
 
     .route-iata {
-      font-size: 2rem; font-weight: 800; letter-spacing: 2px; color: #1a1a1a;
+      font-size: 2rem; font-weight: 800; letter-spacing: 2px; color: var(--text-primary);
     }
 
     .route-label {
-      font-size: 12px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px;
+      font-size: 12px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px;
     }
 
     .route-line { display: flex; flex-direction: column; align-items: center; }
@@ -287,13 +287,13 @@ import { FavoritesService } from '../../core/services/favorites.service';
     }
 
     .info-card {
-      background: #fff; border-radius: 12px; padding: 24px;
+      background: var(--surface); border-radius: 12px; padding: 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,.08);
     }
 
     .card-heading {
       display: flex; align-items: center; gap: 10px;
-      font-size: 18px; font-weight: 700; margin: 0 0 20px; color: #1a1a1a;
+      font-size: 18px; font-weight: 700; margin: 0 0 20px; color: var(--text-primary);
     }
 
     .schedule-row {
@@ -309,11 +309,11 @@ import { FavoritesService } from '../../core/services/favorites.service';
     }
 
     .schedule-time {
-      font-size: 1.3rem; font-weight: 700; color: #1a1a1a;
+      font-size: 1.3rem; font-weight: 700; color: var(--text-primary);
     }
 
     .schedule-date {
-      font-size: 12px; color: #8a8a8a; text-align: center;
+      font-size: 12px; color: var(--text-tertiary); text-align: center;
     }
 
     .schedule-connector {
@@ -321,13 +321,13 @@ import { FavoritesService } from '../../core/services/favorites.service';
     }
 
     .schedule-line {
-      width: 100%; height: 1px; background: #e0e0e0;
+      width: 100%; height: 1px; background: var(--border);
     }
 
     .duration-badge {
-      background: #f7f7f7; border: 1px solid #e0e0e0;
+      background: var(--bg-secondary); border: 1px solid var(--border);
       border-radius: 100px; padding: 4px 12px;
-      font-size: 12px; font-weight: 600; color: #545454;
+      font-size: 12px; font-weight: 600; color: var(--text-secondary);
       white-space: nowrap;
     }
 
@@ -340,15 +340,15 @@ import { FavoritesService } from '../../core/services/favorites.service';
       font-size: 14px; font-weight: 500;
     }
 
-    .feature-item--yes { color: #1a1a1a; }
-    .feature-item--yes .ms { color: #00856A; }
-    .feature-item--no { color: #8a8a8a; }
-    .feature-item--no .ms { color: #e0e0e0; }
+    .feature-item--yes { color: var(--text-primary); }
+    .feature-item--yes .ms { color: var(--teal); }
+    .feature-item--no { color: var(--text-tertiary); }
+    .feature-item--no .ms { color: var(--border); }
 
     .booking-card {
-      background: #fff; border-radius: 12px; padding: 24px;
+      background: var(--surface); border-radius: 12px; padding: 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,.08);
-      border: 1px solid #e0e0e0;
+      border: 1px solid var(--border);
     }
 
     .price-block {
@@ -356,12 +356,12 @@ import { FavoritesService } from '../../core/services/favorites.service';
     }
 
     .price-label {
-      font-size: 12px; color: #8a8a8a; text-transform: uppercase;
+      font-size: 12px; color: var(--text-tertiary); text-transform: uppercase;
       letter-spacing: 0.5px; font-weight: 500;
     }
 
     .price-value {
-      font-size: 2.2rem; font-weight: 800; color: #1a1a1a;
+      font-size: 2.2rem; font-weight: 800; color: var(--text-primary);
     }
 
     .meta-list {
@@ -373,28 +373,28 @@ import { FavoritesService } from '../../core/services/favorites.service';
     }
 
     .meta-label {
-      display: block; font-size: 11px; color: #8a8a8a;
+      display: block; font-size: 11px; color: var(--text-tertiary);
       text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;
     }
 
     .meta-value {
-      display: block; font-size: 15px; font-weight: 600; color: #1a1a1a;
+      display: block; font-size: 15px; font-weight: 600; color: var(--text-primary);
     }
 
     .btn-book {
       width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
-      background: #E04A2F; color: #fff; border: none; border-radius: 10px;
+      background: var(--brand); color: #fff; border: none; border-radius: 10px;
       padding: 14px; font-family: inherit; font-size: 15px; font-weight: 600;
       cursor: pointer; transition: background 150ms ease;
     }
-    .btn-book:hover { background: #c93d25; }
-    .btn-watch { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; background: #fff; color: #545454; border: 1px solid #e0e0e0; border-radius: 10px; padding: 12px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 150ms ease; }
-    .btn-watch:hover { border-color: #E04A2F; color: #E04A2F; }
-    .btn-watch--on { border-color: #E04A2F; color: #E04A2F; background: #fff1ec; }
+    .btn-book:hover { background: var(--brand-hover); }
+    .btn-watch { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; background: var(--surface); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 12px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 150ms ease; }
+    .btn-watch:hover { border-color: var(--brand); color: var(--brand); }
+    .btn-watch--on { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
 
     .urgency-note {
       display: flex; align-items: center; gap: 5px;
-      margin: 12px 0 0; font-size: 13px; font-weight: 600; color: #E04A2F;
+      margin: 12px 0 0; font-size: 13px; font-weight: 600; color: var(--brand);
       text-align: center; justify-content: center;
     }
 
@@ -404,7 +404,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
     }
 
     .shimmer {
-      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
       background-size: 800px 100%;
       animation: shimmer 1.8s ease-in-out infinite;
     }

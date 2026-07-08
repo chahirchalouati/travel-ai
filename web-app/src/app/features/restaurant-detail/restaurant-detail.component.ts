@@ -66,7 +66,7 @@ function localToday(): string {
             />
           } @else {
             <div class="hero-card__img-placeholder">
-              <span class="ms" style="font-size:64px; color:#e0e0e0">restaurant</span>
+              <span class="ms" style="font-size:64px; color:var(--border)">restaurant</span>
             </div>
           }
 
@@ -95,7 +95,7 @@ function localToday(): string {
             </div>
             <h1 class="hero-card__name">{{ r.name }}</h1>
             <p class="hero-card__city">
-              <span class="ms" style="font-size:16px; color:#8a8a8a; vertical-align:middle">location_on</span>
+              <span class="ms" style="font-size:16px; color:var(--text-tertiary); vertical-align:middle">location_on</span>
               {{ r.city }}
             </p>
             <div class="hero-card__features">
@@ -126,17 +126,17 @@ function localToday(): string {
             @if (r.description) {
               <section class="info-card" appReveal>
                 <h2 class="card-heading">
-                  <span class="ms" style="font-size:22px; color:#00856A">info</span>
+                  <span class="ms" style="font-size:22px; color:var(--teal)">info</span>
                   {{ 'restaurant.about' | transloco }}
                 </h2>
-                <p style="font-size:15px; color:#545454; line-height:1.75; margin:0;">{{ r.description }}</p>
+                <p style="font-size:15px; color:var(--text-secondary); line-height:1.75; margin:0;">{{ r.description }}</p>
               </section>
             }
 
             <!-- What's included -->
             <section class="info-card" appReveal>
               <h2 class="card-heading">
-                <span class="ms" style="font-size:22px; color:#00856A">checklist</span>
+                <span class="ms" style="font-size:22px; color:var(--teal)">checklist</span>
                 {{ 'restaurant.amenities' | transloco }}
               </h2>
               <div class="feature-list">
@@ -160,11 +160,11 @@ function localToday(): string {
           <!-- RIGHT: Booking Sidebar -->
           <aside style="position:sticky; top:80px;">
             <div class="booking-card">
-              <h3 style="font-size:18px; font-weight:700; margin:0 0 16px; color:#1a1a1a;">{{ 'restaurant.quickInfo' | transloco }}</h3>
+              <h3 style="font-size:18px; font-weight:700; margin:0 0 16px; color:var(--text-primary);">{{ 'restaurant.quickInfo' | transloco }}</h3>
 
               <div class="meta-list">
                 <div class="meta-item">
-                  <span class="ms" style="font-size:20px; color:#8a8a8a">location_on</span>
+                  <span class="ms" style="font-size:20px; color:var(--text-tertiary)">location_on</span>
                   <div>
                     <span class="meta-label">{{ 'restaurant.city' | transloco }}</span>
                     <span class="meta-value">{{ r.city }}</span>
@@ -173,7 +173,7 @@ function localToday(): string {
 
                 @if (r.cuisineType) {
                   <div class="meta-item">
-                    <span class="ms" style="font-size:20px; color:#8a8a8a">restaurant_menu</span>
+                    <span class="ms" style="font-size:20px; color:var(--text-tertiary)">restaurant_menu</span>
                     <div>
                       <span class="meta-label">{{ 'restaurant.cuisine' | transloco }}</span>
                       <span class="meta-value">{{ r.cuisineType }}</span>
@@ -183,7 +183,7 @@ function localToday(): string {
 
                 @if (r.priceTier) {
                   <div class="meta-item">
-                    <span class="ms" style="font-size:20px; color:#8a8a8a">payments</span>
+                    <span class="ms" style="font-size:20px; color:var(--text-tertiary)">payments</span>
                     <div>
                       <span class="meta-label">{{ 'restaurant.priceRange' | transloco }}</span>
                       <span class="meta-value">{{ getPriceTierLabel(r.priceTier) }}</span>
@@ -192,17 +192,17 @@ function localToday(): string {
                 }
 
                 <div class="meta-item">
-                  <span class="ms" style="font-size:20px; color:#8a8a8a">event_available</span>
+                  <span class="ms" style="font-size:20px; color:var(--text-tertiary)">event_available</span>
                   <div>
                     <span class="meta-label">{{ 'restaurant.availability' | transloco }}</span>
-                    <span class="meta-value" [style.color]="r.available ? '#00856A' : '#E04A2F'">
+                    <span class="meta-value" [style.color]="r.available ? 'var(--teal)' : 'var(--brand)'">
                       {{ r.available ? ('restaurant.availableNow' | transloco) : ('restaurant.notAvailable' | transloco) }}
                     </span>
                   </div>
                 </div>
               </div>
 
-              <div style="height:1px; background:#efefef; margin:20px 0;"></div>
+              <div style="height:1px; background:var(--border-light); margin:20px 0;"></div>
 
               <!-- Real reservation availability (OpenTable-style slot grid) -->
               <div class="reserve">
@@ -265,26 +265,26 @@ function localToday(): string {
   styles: [`
     :host {
       display: block;
-      background: #f7f7f7;
+      background: var(--bg-primary);
       min-height: 100vh;
-      font-family: 'Hanken Grotesk', system-ui, sans-serif;
-      color: #1a1a1a;
+      font-family: var(--font-body);
+      color: var(--text-primary);
     }
 
     .back-link {
       display: inline-flex; align-items: center; gap: 4px;
-      background: none; border: none; color: #545454;
+      background: none; border: none; color: var(--text-secondary);
       font-family: inherit; font-size: 14px; font-weight: 500;
       cursor: pointer; padding: 0; transition: color 150ms ease;
     }
-    .back-link:hover { color: #E04A2F; }
-    .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid #e0e0e0; border-radius: 999px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: #545454; cursor: pointer; transition: all 150ms ease; }
-    .fav-toggle:hover { border-color: #E04A2F; color: #E04A2F; }
-    .fav-toggle--on { border-color: #E04A2F; color: #E04A2F; background: #fff1ec; }
+    .back-link:hover { color: var(--brand); }
+    .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 999px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 150ms ease; }
+    .fav-toggle:hover { border-color: var(--brand); color: var(--brand); }
+    .fav-toggle--on { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
     .fav-toggle .ms { font-size: 18px; }
 
     .hero-card {
-      background: #fff; border-radius: 16px; overflow: hidden;
+      background: var(--surface); border-radius: 16px; overflow: hidden;
       margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.08);
       display: flex; gap: 0;
     }
@@ -294,7 +294,7 @@ function localToday(): string {
     }
 
     .hero-card__img-placeholder {
-      width: 400px; height: 260px; background: #f0f0f0; flex-shrink: 0;
+      width: 400px; height: 260px; background: var(--bg-secondary); flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
     }
 
@@ -310,12 +310,12 @@ function localToday(): string {
       display: inline-block; border-radius: 100px;
       padding: 4px 12px; font-size: 12px; font-weight: 600;
     }
-    .badge--teal { background: #E6F5F0; color: #00856A; }
-    .badge--gray { background: #f7f7f7; color: #545454; border: 1px solid #e0e0e0; }
-    .badge--rating { background: #FFF4E0; color: #B26A00; }
-    .badge--rating .ms { color: #F5A623; }
-    .badge--ai { background: #EEF1FF; color: #4338CA; }
-    .badge--ai .ms { color: #6366F1; }
+    .badge--teal { background: var(--teal-light); color: var(--teal); }
+    .badge--gray { background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+    .badge--rating { background: var(--gold-light); color: var(--gold); }
+    .badge--rating .ms { color: var(--gold); }
+    .badge--ai { background: var(--teal-light); color: var(--teal); }
+    .badge--ai .ms { color: var(--teal); }
 
     .hero-card__name {
       font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.2rem);
@@ -323,7 +323,7 @@ function localToday(): string {
     }
 
     .hero-card__city {
-      font-size: 14px; color: #8a8a8a; margin: 0; font-weight: 500;
+      font-size: 14px; color: var(--text-tertiary); margin: 0; font-weight: 500;
     }
 
     .hero-card__features {
@@ -332,11 +332,11 @@ function localToday(): string {
 
     .feature-chip {
       display: inline-flex; align-items: center; gap: 5px;
-      background: #f7f7f7; border: 1px solid #e0e0e0; border-radius: 100px;
-      padding: 5px 12px; font-size: 12px; font-weight: 600; color: #545454;
+      background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 100px;
+      padding: 5px 12px; font-size: 12px; font-weight: 600; color: var(--text-secondary);
     }
 
-    .feature-chip--green { background: #E6F5F0; border-color: #00856A; color: #00856A; }
+    .feature-chip--green { background: var(--teal-light); border-color: var(--teal); color: var(--teal); }
 
     .detail-grid {
       display: grid; grid-template-columns: 2fr 1fr;
@@ -344,13 +344,13 @@ function localToday(): string {
     }
 
     .info-card {
-      background: #fff; border-radius: 12px; padding: 24px;
+      background: var(--surface); border-radius: 12px; padding: 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,.08);
     }
 
     .card-heading {
       display: flex; align-items: center; gap: 10px;
-      font-size: 18px; font-weight: 700; margin: 0 0 20px; color: #1a1a1a;
+      font-size: 18px; font-weight: 700; margin: 0 0 20px; color: var(--text-primary);
     }
 
     .feature-list { display: flex; flex-direction: column; gap: 12px; }
@@ -359,14 +359,14 @@ function localToday(): string {
       display: flex; align-items: center; gap: 10px;
       font-size: 14px; font-weight: 500;
     }
-    .feature-item--yes { color: #1a1a1a; }
-    .feature-item--yes .ms { color: #00856A; }
-    .feature-item--no { color: #8a8a8a; }
-    .feature-item--no .ms { color: #e0e0e0; }
+    .feature-item--yes { color: var(--text-primary); }
+    .feature-item--yes .ms { color: var(--teal); }
+    .feature-item--no { color: var(--text-tertiary); }
+    .feature-item--no .ms { color: var(--border); }
 
     .booking-card {
-      background: #fff; border-radius: 12px; padding: 24px;
-      box-shadow: 0 1px 3px rgba(0,0,0,.08); border: 1px solid #e0e0e0;
+      background: var(--surface); border-radius: 12px; padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08); border: 1px solid var(--border);
     }
 
     .meta-list { display: flex; flex-direction: column; gap: 14px; }
@@ -374,68 +374,68 @@ function localToday(): string {
     .meta-item { display: flex; align-items: center; gap: 12px; }
 
     .meta-label {
-      display: block; font-size: 11px; color: #8a8a8a;
+      display: block; font-size: 11px; color: var(--text-tertiary);
       text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;
     }
-    .meta-value { display: block; font-size: 15px; font-weight: 600; color: #1a1a1a; }
+    .meta-value { display: block; font-size: 15px; font-weight: 600; color: var(--text-primary); }
 
     .reserve { margin-bottom: 18px; }
     .reserve__controls { display: flex; gap: 10px; margin-bottom: 16px; }
     .reserve__field { flex: 1; display: flex; flex-direction: column; gap: 4px; }
     .reserve__field span {
       font-size: 11px; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 0.4px; color: #8a8a8a;
+      letter-spacing: 0.4px; color: var(--text-tertiary);
     }
     .reserve__field input {
-      border: 1px solid #e8e8e8; border-radius: 8px; padding: 9px 10px;
-      font-family: inherit; font-size: 14px; color: #1a1a1a;
+      border: 1px solid var(--border); border-radius: 8px; padding: 9px 10px;
+      font-family: inherit; font-size: 14px; color: var(--text-primary);
     }
-    .reserve__field input:focus { outline: none; border-color: #E04A2F; }
+    .reserve__field input:focus { outline: none; border-color: var(--brand); }
     .reserve__label {
       display: block; font-size: 11px; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 0.4px; color: #8a8a8a; margin-bottom: 8px;
+      letter-spacing: 0.4px; color: var(--text-tertiary); margin-bottom: 8px;
     }
     .reserve__chips { display: flex; flex-wrap: wrap; gap: 8px; }
     .reserve__chip {
-      border: 1px solid #e8e8e8; background: #fff; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--surface); border-radius: 8px;
       padding: 8px 13px; font-family: inherit; font-size: 14px; font-weight: 600;
-      color: #1a1a1a; cursor: pointer; transition: all 150ms ease;
+      color: var(--text-primary); cursor: pointer; transition: all 150ms ease;
     }
-    .reserve__chip:hover { border-color: #E04A2F; }
-    .reserve__chip--on { background: #E04A2F; border-color: #E04A2F; color: #fff; }
+    .reserve__chip:hover { border-color: var(--brand); }
+    .reserve__chip--on { background: var(--brand); border-color: var(--brand); color: #fff; }
     .reserve__skel {
       width: 56px; height: 35px; border-radius: 8px;
-      background: linear-gradient(90deg, #f0f0f0 25%, #e6e6e6 50%, #f0f0f0 75%);
+      background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
       background-size: 600px 100%; animation: shimmer 1.6s ease-in-out infinite;
     }
     .reserve__empty {
       display: flex; align-items: center; gap: 6px; margin: 0;
-      font-size: 13px; color: #8a8a8a;
+      font-size: 13px; color: var(--text-tertiary);
     }
 
     .btn-book {
       width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
-      background: #E04A2F; color: #fff; border: none; border-radius: 10px;
+      background: var(--brand); color: #fff; border: none; border-radius: 10px;
       padding: 14px; font-family: inherit; font-size: 15px; font-weight: 600;
       cursor: pointer; transition: background 150ms ease; margin-bottom: 10px;
     }
-    .btn-book:hover:not(:disabled) { background: #c93d25; }
+    .btn-book:hover:not(:disabled) { background: var(--brand-hover); }
     .btn-book:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .btn-chat {
       width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
-      background: #fff; color: #E04A2F; border: 1.5px solid #E04A2F; border-radius: 10px;
+      background: var(--surface); color: var(--brand); border: 1.5px solid var(--brand); border-radius: 10px;
       padding: 13px; font-family: inherit; font-size: 15px; font-weight: 600;
       cursor: pointer; transition: background 150ms ease;
     }
-    .btn-chat:hover { background: #FFF0ED; }
+    .btn-chat:hover { background: var(--brand-light); }
 
     @keyframes shimmer {
       0% { background-position: -400px 0; }
       100% { background-position: 400px 0; }
     }
     .shimmer {
-      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
       background-size: 800px 100%; animation: shimmer 1.8s ease-in-out infinite;
     }
 
@@ -529,7 +529,11 @@ export class RestaurantDetailComponent implements OnInit {
 
   goBack(): void { this.router.navigate(['/']); }
   goToPlanner(): void { this.router.navigate(['/planner']); }
-  goToChat(): void { this.router.navigate(['/chat']); }
+  goToChat(): void {
+    const r = this.restaurant();
+    const q = r ? `Tell me about ${r.name}${r.city ? ' in ' + r.city : ''}${r.cuisineType ? '. It is a ' + r.cuisineType + ' restaurant.' : ''}` : undefined;
+    this.router.navigate(['/chat'], q ? { queryParams: { q } } : {});
+  }
 
   /** Seeds the booking funnel with the real chosen date/slot and opens it. */
   book(r: RestaurantSearchResult): void {

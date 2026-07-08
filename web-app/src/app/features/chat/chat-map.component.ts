@@ -22,7 +22,7 @@ export interface MapPin {
       height: 220px;
       border-radius: 12px;
       overflow: hidden;
-      border: 1px solid var(--border, #e0e0e0);
+      border: 1px solid var(--border);
     }
   `]
 })
@@ -34,9 +34,9 @@ export class ChatMapComponent implements AfterViewInit, OnChanges, OnDestroy {
   private markers: L.Marker[] = [];
 
   private readonly iconConfig: Record<string, { color: string; icon: string }> = {
-    destination: { color: '#E04A2F', icon: '📍' },
-    hotel: { color: '#00856A', icon: '🏨' },
-    restaurant: { color: '#F5A623', icon: '🍽️' },
+    destination: { color: 'var(--brand)', icon: '📍' },
+    hotel: { color: 'var(--teal)', icon: '🏨' },
+    restaurant: { color: 'var(--gold)', icon: '🍽️' },
   };
 
   ngAfterViewInit(): void {

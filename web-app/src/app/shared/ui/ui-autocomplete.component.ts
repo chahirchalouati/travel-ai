@@ -94,22 +94,22 @@ export type SuggestFetch = (query: string) => Observable<Suggestion[]>;
         display: flex;
         align-items: center;
         gap: 8px;
-        border: 1px solid var(--border, #e0e0e0);
+        border: 1px solid var(--border);
         border-radius: var(--radius-sm, 8px);
         padding: 0 12px;
-        background: var(--bg-primary, #fff);
+        background: var(--bg-primary);
         transition: border-color 150ms ease, box-shadow 150ms ease;
       }
 
       .ui-ac__field:focus-within,
       .ui-ac__field--open {
-        border-color: var(--brand, #e04a2f);
+        border-color: var(--brand);
         box-shadow: 0 0 0 3px rgba(224, 74, 47, 0.15);
       }
 
       .ui-ac__icon {
         font-size: 20px;
-        color: var(--brand, #e04a2f);
+        color: var(--brand);
         flex: 0 0 auto;
       }
 
@@ -122,11 +122,11 @@ export type SuggestFetch = (query: string) => Observable<Suggestion[]>;
         padding: 10px 0;
         font-family: inherit;
         font-size: 0.92rem;
-        color: var(--text-primary, #1a1a1a);
+        color: var(--text-primary);
       }
 
       .ui-ac__input::placeholder {
-        color: var(--text-tertiary, #8a8a8a);
+        color: var(--text-tertiary);
         text-transform: none;
       }
 
@@ -134,8 +134,8 @@ export type SuggestFetch = (query: string) => Observable<Suggestion[]>;
         width: 15px;
         height: 15px;
         border-radius: 50%;
-        border: 2px solid var(--border, #e0e0e0);
-        border-top-color: var(--brand, #e04a2f);
+        border: 2px solid var(--border);
+        border-top-color: var(--brand);
         animation: ui-ac-spin 0.7s linear infinite;
         flex: 0 0 auto;
       }
@@ -151,8 +151,8 @@ export type SuggestFetch = (query: string) => Observable<Suggestion[]>;
         padding: 6px;
         list-style: none;
         overflow-y: auto;
-        background: var(--bg-primary, #fff);
-        border: 1px solid var(--border, #e0e0e0);
+        background: var(--bg-primary);
+        border: 1px solid var(--border);
         border-radius: var(--radius-md, 12px);
         box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.3);
         animation: ui-ac-in 140ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -173,17 +173,17 @@ export type SuggestFetch = (query: string) => Observable<Suggestion[]>;
       }
 
       .ui-ac__option--active {
-        background: var(--bg-secondary, #f7f7f7);
+        background: var(--bg-secondary);
       }
 
       .ui-ac__opt-icon {
         font-size: 19px;
-        color: var(--text-tertiary, #8a8a8a);
+        color: var(--text-tertiary);
         flex: 0 0 auto;
       }
 
       .ui-ac__option--active .ui-ac__opt-icon {
-        color: var(--brand, #e04a2f);
+        color: var(--brand);
       }
 
       .ui-ac__opt-text {
@@ -196,7 +196,7 @@ export type SuggestFetch = (query: string) => Observable<Suggestion[]>;
       .ui-ac__opt-label {
         font-size: 0.9rem;
         font-weight: 600;
-        color: var(--text-primary, #1a1a1a);
+        color: var(--text-primary);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -204,7 +204,7 @@ export type SuggestFetch = (query: string) => Observable<Suggestion[]>;
 
       .ui-ac__opt-hint {
         font-size: 0.76rem;
-        color: var(--text-tertiary, #8a8a8a);
+        color: var(--text-tertiary);
       }
 
       @media (prefers-reduced-motion: reduce) {

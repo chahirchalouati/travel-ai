@@ -98,8 +98,8 @@ const MATERIAL_ICONS: Record<string, string> = {
         display: block;
       }
       .tm-card {
-        background: var(--bg-secondary, #fff);
-        border: 1px solid var(--border-subtle, #e5e0d8);
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
         border-radius: 18px;
         overflow: hidden;
       }
@@ -119,10 +119,10 @@ const MATERIAL_ICONS: Record<string, string> = {
         font-size: 1.05rem;
         font-weight: 800;
         letter-spacing: -0.01em;
-        color: var(--text-primary, #1a1a1a);
+        color: var(--text-primary);
         .ms {
           font-size: 20px;
-          color: var(--teal, #0f766e);
+          color: var(--teal);
         }
       }
       .tm-chips {
@@ -131,15 +131,15 @@ const MATERIAL_ICONS: Record<string, string> = {
         gap: 6px;
       }
       .tm-chip {
-        --chip-color: var(--teal, #0f766e);
+        --chip-color: var(--teal);
         display: inline-flex;
         align-items: center;
         gap: 6px;
         padding: 5px 12px;
-        border: 1px solid var(--border-subtle, #ddd);
+        border: 1px solid var(--border);
         border-radius: 999px;
-        background: var(--bg-secondary, #fff);
-        color: var(--text-secondary, #555);
+        background: var(--bg-secondary);
+        color: var(--text-secondary);
         font-size: 0.78rem;
         font-weight: 700;
         cursor: pointer;
@@ -174,7 +174,7 @@ const MATERIAL_ICONS: Record<string, string> = {
       .tm-map {
         width: 100%;
         height: 420px;
-        background: #e8eef0;
+        background: var(--teal-light);
       }
       @media (max-width: 640px) {
         .tm-map {
@@ -187,9 +187,9 @@ const MATERIAL_ICONS: Record<string, string> = {
         gap: 6px;
         margin: 0;
         padding: 10px 18px;
-        border-top: 1px dashed var(--border-subtle, #e5e0d8);
+        border-top: 1px dashed var(--border);
         font-size: 0.8rem;
-        color: var(--text-secondary, #6b6b6b);
+        color: var(--text-secondary);
         .ms {
           font-size: 16px;
         }
@@ -202,7 +202,7 @@ const MATERIAL_ICONS: Record<string, string> = {
         gap: 4px;
         padding: 40px 20px;
         text-align: center;
-        color: var(--text-secondary, #6b6b6b);
+        color: var(--text-secondary);
         .ms {
           font-size: 40px;
           opacity: 0.45;
@@ -212,7 +212,7 @@ const MATERIAL_ICONS: Record<string, string> = {
       .tm-empty__title {
         margin: 0;
         font-weight: 700;
-        color: var(--text-primary, #1a1a1a);
+        color: var(--text-primary);
       }
       .tm-empty__hint {
         margin: 0;
@@ -246,7 +246,7 @@ const MATERIAL_ICONS: Record<string, string> = {
         align-items: center;
         gap: 5px;
         font-size: 0.78rem;
-        color: #6b6b6b;
+        color: var(--text-secondary);
         .ms {
           font-size: 15px;
         }

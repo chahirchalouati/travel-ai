@@ -210,18 +210,18 @@ section {
 
 /* ---- Loading skeleton ---- */
 .skeleton .dest-card-img {
-  background: var(--bg-secondary, #f5f5f5);
+  background: var(--bg-secondary);
 }
 
 .skeleton-img {
   aspect-ratio: 400/260;
-  background: linear-gradient(90deg, var(--bg-secondary, #f0f0f0) 25%, #e8e8e8 50%, var(--bg-secondary, #f0f0f0) 75%);
+  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
 
 .skeleton-line {
-  background: linear-gradient(90deg, var(--bg-secondary, #f0f0f0) 25%, #e8e8e8 50%, var(--bg-secondary, #f0f0f0) 75%);
+  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 4px;
@@ -238,8 +238,8 @@ section {
   align-items: center;
   justify-content: center;
   aspect-ratio: 400/260;
-  background: var(--bg-secondary, #f5f5f5);
-  color: var(--text-tertiary, #999);
+  background: var(--bg-secondary);
+  color: var(--text-tertiary);
 
   .ms {
     font-size: 3rem;
@@ -250,14 +250,14 @@ section {
   display: flex;
   gap: 0.75rem;
   font-size: 0.8rem;
-  color: var(--text-tertiary, #999);
+  color: var(--text-tertiary);
   margin-bottom: 0.25rem;
 }
 
 .dest-empty {
   text-align: center;
   padding: 3rem 1rem;
-  color: var(--text-tertiary, #999);
+  color: var(--text-tertiary);
 
   .ms {
     font-size: 3rem;
@@ -279,12 +279,12 @@ section {
   gap: 0.5rem;
   flex: 1 1 240px;
   padding: 0 0.85rem;
-  background: var(--bg-secondary, #fff);
-  border: 1px solid var(--border, #e3e3e3);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
   border-radius: 999px;
   transition: border-color var(--duration-normal, 200ms) var(--ease-out-expo, ease);
 
-  .ms { font-size: 1.1rem; color: var(--text-tertiary, #999); }
+  .ms { font-size: 1.1rem; color: var(--text-tertiary); }
 
   input {
     flex: 1;
@@ -294,10 +294,10 @@ section {
     padding: 0.6rem 0;
     font-family: var(--font-body, inherit);
     font-size: 0.9rem;
-    color: var(--text-primary, #1a1a1a);
+    color: var(--text-primary);
   }
 
-  &:focus-within { border-color: var(--teal, #0a7d72); }
+  &:focus-within { border-color: var(--teal); }
 }
 
 .dest-select {

@@ -374,15 +374,15 @@ export class PlannerComponent implements OnDestroy {
         totalStr: fmt(o.total, lang), hotelPrice: fmt(o.hp, lang),
         restPrice: fmt(o.rp, lang), flightPrice: fmt(o.fp, lang),
         delta: over ? `+€${fmt(diff, lang)}` : t.under_budget + `€${fmt(Math.abs(diff), lang)}`,
-        deltaFg: over ? '#B8492F' : '#2E7D67',
-        deltaBg: over ? '#FBEAE4' : '#E7F4EE',
+        deltaFg: over ? 'var(--brand)' : 'var(--teal)',
+        deltaBg: over ? 'var(--brand-light)' : 'var(--teal-light)',
         deltaIcon: over ? 'trending_up' : 'trending_down',
-        cardBd: o.recommended ? '#E9C07E' : '#EADFCD',
+        cardBd: o.recommended ? '#E9C07E' : 'var(--border)',
         fitPct: Math.round(ratio * 100) + '%',
         fitBar: Math.min(100, Math.round(ratio * 100)) + '%',
         fitLabel: over ? t.fit_over : t.fit_in,
-        fitFg: over ? '#B8492F' : '#2E7D67',
-        fitColor: over ? '#D98A4C' : 'linear-gradient(90deg,#E9863A,#D9694C)',
+        fitFg: over ? 'var(--brand)' : 'var(--teal)',
+        fitColor: over ? 'var(--brand)' : 'linear-gradient(90deg, var(--brand), var(--brand-hover))',
       };
     };
 
@@ -529,7 +529,7 @@ export class PlannerComponent implements OnDestroy {
   agents = computed(() => {
     const t = this.t(); const step = this.agentStep();
     const A = [
-      { key:'orch',   icon:'dashboard_customize', iconBg:'#FBEDE7', iconFg:'#D9694C' },
+      { key:'orch',   icon:'dashboard_customize', iconBg:'var(--brand-light)', iconFg:'var(--brand)' },
       { key:'hotel',  icon:'hotel',               iconBg:'#F2EAD9', iconFg:'#B07B4E' },
       { key:'rest',   icon:'restaurant',           iconBg:'#F6EEDB', iconFg:'#C0894B' },
       { key:'flight', icon:'flight_takeoff',       iconBg:'#E8F0F3', iconFg:'#5E8C9E' },
@@ -561,7 +561,7 @@ export class PlannerComponent implements OnDestroy {
         label,
         done, active, pending: !done && !active,
         status: done ? t.check_available : active ? t.check_checking : '—',
-        fg: done ? '#2E7D67' : active ? '#B49A7C' : '#C9BBA6',
+        fg: done ? 'var(--teal)' : active ? '#B49A7C' : '#C9BBA6',
       };
     });
   });
@@ -577,9 +577,9 @@ export class PlannerComponent implements OnDestroy {
     ].map(o => ({
       ...o,
       on: p === o.key,
-      bg: p === o.key ? '#FBEDE7' : '#FBF6EE',
-      bd: p === o.key ? '#E9B79F' : '#F0E7D9',
-      fg: p === o.key ? '#C0563A' : '#8A7C6A',
+      bg: p === o.key ? 'var(--brand-light)' : 'var(--bg-primary)',
+      bd: p === o.key ? '#E9B79F' : 'var(--border)',
+      fg: p === o.key ? 'var(--brand)' : 'var(--text-tertiary)',
     }));
   });
 
@@ -593,9 +593,9 @@ export class PlannerComponent implements OnDestroy {
     ].map(c => ({
       ...c,
       on: cs.includes(c.key),
-      bg: cs.includes(c.key) ? '#D9694C' : '#fff',
-      fg: cs.includes(c.key) ? '#fff' : '#5A4D3E',
-      bd: cs.includes(c.key) ? '#D9694C' : '#ECE1D2',
+      bg: cs.includes(c.key) ? 'var(--brand)' : 'var(--surface)',
+      fg: cs.includes(c.key) ? '#fff' : 'var(--text-secondary)',
+      bd: cs.includes(c.key) ? 'var(--brand)' : 'var(--border)',
     }));
   });
 
@@ -610,7 +610,7 @@ export class PlannerComponent implements OnDestroy {
       }
       const me = m.from === 'user';
       return { isText: true, isOffer: false, justify: me ? 'flex-end' : 'flex-start',
-        text: m.text, bg: me ? '#D9694C' : '#fff', fg: me ? '#fff' : '#3A2F23',
+        text: m.text, bg: me ? '#BE4329' : '#fff', fg: me ? '#fff' : '#211B14',
         radius: me ? '18px 18px 4px 18px' : '18px 18px 18px 4px' };
     });
   });

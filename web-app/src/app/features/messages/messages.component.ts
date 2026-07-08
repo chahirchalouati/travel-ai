@@ -24,7 +24,7 @@ import type { Conversation } from '../../core/services/messaging.service';
       @if (loading()) {
         <div class="skeleton" style="height:420px"></div>
       } @else {
-        <div class="inbox">
+        <div class="inbox" [class.inbox--selected]="selected() !== null">
           <aside class="thread-list">
             @if (composing()) {
               <div class="compose card">
@@ -66,6 +66,9 @@ import type { Conversation } from '../../core/services/messaging.service';
               </div>
             } @else {
               <div class="thread-header">
+                <button class="back-btn" (click)="selected.set(null)" type="button">
+                  <span class="ms">arrow_back</span>
+                </button>
                 <h2>{{ selected()!.subject }}</h2>
               </div>
               <div class="thread-scroll">
@@ -94,23 +97,22 @@ import type { Conversation } from '../../core/services/messaging.service';
     .inbox { display: grid; grid-template-columns: 340px 1fr; gap: 1.25rem; align-items: start; }
     .thread-list { display: flex; flex-direction: column; gap: 0.6rem; }
     .thread-item { display: flex; align-items: center; gap: 0.75rem; text-align: left; width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 0.85rem 0.9rem; cursor: pointer; transition: border-color 120ms ease, background 120ms ease; }
-    .thread-item:hover { border-color: #d8d8d8; }
+    .thread-item:hover { border-color: var(--border); }
     .thread-item.active { border-color: var(--accent); background: var(--accent-soft); }
-    .thread-avatar { width: 40px; height: 40px; flex: none; border-radius: 50%; background: linear-gradient(135deg, #E04A2F, #ff7a5a); color: #fff; display: flex; align-items: center; justify-content: center; }
+    .thread-avatar { width: 40px; height: 40px; flex: none; border-radius: 50%; background: linear-gradient(135deg, var(--brand), var(--brand-hover)); color: #fff; display: flex; align-items: center; justify-content: center; }
     .thread-text { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
     .thread-subject { font-weight: 700; font-size: 0.92rem; display: flex; align-items: center; gap: 6px; }
     .unread-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
     .thread-preview { color: var(--muted); font-size: 0.82rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .thread-pane { min-height: 460px; display: flex; flex-direction: column; }
     .thread-placeholder { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); gap: 0.5rem; }
-    .thread-placeholder .ms { font-size: 42px; color: #d0d0d0; }
+    .thread-placeholder .ms { font-size: 42px; color: var(--border); }
     .thread-header { padding: 1.1rem 1.3rem; border-bottom: 1px solid var(--line); }
-    .thread-header h2 { margin: 0; font-size: 1.1rem; font-weight: 800; }
     .thread-scroll { flex: 1; overflow-y: auto; max-height: 420px; padding: 1.2rem 1.3rem; display: flex; flex-direction: column; gap: 0.7rem; }
     .bubble-row { display: flex; }
     .bubble-row.mine { justify-content: flex-end; }
-    .bubble { max-width: 78%; background: #f1f1ef; border-radius: 16px 16px 16px 4px; padding: 0.7rem 0.95rem; font-size: 0.92rem; line-height: 1.4; }
-    .bubble.support { background: #f1f1ef; }
+    .bubble { max-width: 78%; background: var(--bg-secondary); border-radius: 16px 16px 16px 4px; padding: 0.7rem 0.95rem; font-size: 0.92rem; line-height: 1.4; }
+    .bubble.support { background: var(--bg-secondary); }
     .bubble-row.mine .bubble { background: var(--accent); color: #fff; border-radius: 16px 16px 4px 16px; }
     .bubble-time { display: block; font-size: 0.66rem; opacity: 0.6; margin-top: 4px; }
     .reply-bar { display: flex; gap: 0.6rem; padding: 0.9rem 1.1rem; border-top: 1px solid var(--line); }
@@ -122,7 +124,17 @@ import type { Conversation } from '../../core/services/messaging.service';
     .compose-subject, .compose-body { border: 1px solid var(--line); border-radius: 10px; padding: 0.6rem 0.8rem; font-family: inherit; font-size: 0.9rem; outline: none; resize: vertical; }
     .compose-subject:focus, .compose-body:focus { border-color: var(--accent); }
     .compose-actions { display: flex; justify-content: flex-end; gap: 0.6rem; }
-    @media (max-width: 760px) { .inbox { grid-template-columns: 1fr; } }
+    .back-btn { display: none; background: none; border: none; cursor: pointer; color: var(--accent); padding: 0; align-items: center; margin-right: 8px; }
+    .back-btn .ms { font-size: 22px; }
+    .thread-header { display: flex; align-items: center; }
+    .thread-header h2 { flex: 1; margin: 0; font-size: 1.1rem; font-weight: 800; }
+    @media (max-width: 760px) {
+      .inbox { grid-template-columns: 1fr; }
+      .thread-pane { display: none; }
+      .inbox--selected .thread-list { display: none; }
+      .inbox--selected .thread-pane { display: flex; }
+      .back-btn { display: flex; }
+    }
   `],
 })
 export class MessagesComponent implements OnInit {

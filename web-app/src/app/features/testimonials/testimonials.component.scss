@@ -39,7 +39,7 @@ section {
 
 /* ---- Review card ---- */
 .review-card {
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 1.5rem;
@@ -136,13 +136,13 @@ section {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(90deg, var(--bg-secondary, #f0f0f0) 25%, #e8e8e8 50%, var(--bg-secondary, #f0f0f0) 75%);
+  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
 
 .skeleton-line {
-  background: linear-gradient(90deg, var(--bg-secondary, #f0f0f0) 25%, #e8e8e8 50%, var(--bg-secondary, #f0f0f0) 75%);
+  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 4px;

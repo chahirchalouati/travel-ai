@@ -96,8 +96,8 @@ export interface EntityAttachment {
   styles: [`
     .entity-card {
       display: flex;
-      background: #ffffff;
-      border: 1px solid var(--border, #e0e0e0);
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 14px;
       overflow: hidden;
       transition: box-shadow 200ms ease, border-color 200ms ease;
@@ -108,7 +108,7 @@ export interface EntityAttachment {
 
     .entity-card:hover {
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-      border-color: var(--border, #d0d0d0);
+      border-color: var(--border);
     }
 
     .entity-card {
@@ -134,12 +134,12 @@ export interface EntityAttachment {
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--bg-tertiary, #f0f0f0);
+      background: var(--bg-tertiary);
     }
 
     .card-image-placeholder .ms {
       font-size: 40px;
-      color: var(--text-tertiary, #8a8a8a);
+      color: var(--text-tertiary);
     }
 
     .card-type-badge {
@@ -155,9 +155,9 @@ export interface EntityAttachment {
       color: #fff;
     }
 
-    .entity-card--destination .card-type-badge { background: var(--brand, #E04A2F); }
-    .entity-card--hotel .card-type-badge { background: var(--teal, #00856A); }
-    .entity-card--restaurant .card-type-badge { background: var(--gold, #F5A623); }
+    .entity-card--destination .card-type-badge { background: var(--brand); }
+    .entity-card--hotel .card-type-badge { background: var(--teal); }
+    .entity-card--restaurant .card-type-badge { background: var(--gold); }
 
     .card-body {
       padding: 14px 16px;
@@ -178,7 +178,7 @@ export interface EntityAttachment {
       font-weight: 700;
       margin: 0;
       line-height: 1.3;
-      color: var(--text-primary, #1a1a1a);
+      color: var(--text-primary);
     }
 
     .card-rating {
@@ -193,18 +193,18 @@ export interface EntityAttachment {
     }
 
     .star.filled {
-      color: var(--gold, #F5A623);
+      color: var(--gold);
     }
 
     .card-subtitle {
       font-size: 12px;
-      color: var(--text-tertiary, #8a8a8a);
+      color: var(--text-tertiary);
       margin: 0;
     }
 
     .card-desc {
       font-size: 12px;
-      color: var(--text-secondary, #545454);
+      color: var(--text-secondary);
       line-height: 1.5;
       margin: 0;
       display: -webkit-box;
@@ -232,8 +232,8 @@ export interface EntityAttachment {
       font-weight: 500;
       padding: 3px 8px;
       border-radius: 12px;
-      background: var(--bg-secondary, #f7f7f7);
-      color: var(--text-secondary, #545454);
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
     }
 
     .card-price {
@@ -246,12 +246,12 @@ export interface EntityAttachment {
     .price-amount {
       font-size: 16px;
       font-weight: 800;
-      color: var(--text-primary, #1a1a1a);
+      color: var(--text-primary);
     }
 
     .price-label {
       font-size: 11px;
-      color: var(--text-tertiary, #8a8a8a);
+      color: var(--text-tertiary);
     }
 
     .card-actions {
@@ -279,24 +279,24 @@ export interface EntityAttachment {
     .card-action-btn .ms { font-size: 15px; }
 
     .card-action-btn.primary {
-      background: var(--brand, #E04A2F);
+      background: var(--brand);
       color: #fff;
     }
 
-    .card-action-btn.primary:hover { background: var(--brand-hover, #c93d25); }
+    .card-action-btn.primary:hover { background: var(--brand-hover); }
 
-    .entity-card--hotel .card-action-btn.primary { background: var(--teal, #00856A); }
-    .entity-card--hotel .card-action-btn.primary:hover { background: #006d57; }
+    .entity-card--hotel .card-action-btn.primary { background: var(--teal); }
+    .entity-card--hotel .card-action-btn.primary:hover { background: #0d5640; }
 
-    .entity-card--restaurant .card-action-btn.primary { background: var(--gold, #F5A623); color: #1a1a1a; }
-    .entity-card--restaurant .card-action-btn.primary:hover { background: #e09510; }
+    .entity-card--restaurant .card-action-btn.primary { background: var(--gold); color: var(--text-primary); }
+    .entity-card--restaurant .card-action-btn.primary:hover { background: #a77025; }
 
     .card-action-btn.secondary {
-      background: var(--bg-secondary, #f7f7f7);
-      color: var(--text-secondary, #545454);
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
     }
 
-    .card-action-btn.secondary:hover { background: var(--bg-tertiary, #f0f0f0); }
+    .card-action-btn.secondary:hover { background: var(--bg-tertiary); }
   `]
 })
 export class EntityCardComponent {

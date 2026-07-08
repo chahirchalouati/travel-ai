@@ -1,21 +1,38 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
+import { catchError, of } from 'rxjs';
 import { CatalogService } from '../../core/services/catalog.service';
-import type { HotelSearchResult } from '../../core/models/api.models';
+import { ReviewService } from '../../core/services/review.service';
+import { AuthService } from '../../core/services/auth.service';
+import { FavoritesService } from '../../core/services/favorites.service';
+import type {
+  HotelSearchResult,
+  ReviewResponse,
+  ReviewSummary,
+  CreateReviewRequest,
+} from '../../core/models/api.models';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
+
+const TARGET_TYPE = 'HOTEL';
 
 @Component({
   selector: 'app-hotel-detail',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, TranslocoModule, RevealDirective],
+  imports: [CommonModule, CurrencyPipe, DatePipe, FormsModule, TranslocoModule, RevealDirective],
   template: `
     @if (hotel(); as h) {
-      <nav style="padding: 16px 32px; max-width: 1100px; margin: 0 auto;">
+      <nav style="padding: 16px 32px; max-width: 1100px; margin: 0 auto; display:flex; align-items:center; justify-content:space-between;">
         <button (click)="goBack()" class="back-link">
           <span class="ms" style="font-size:18px">arrow_back</span>
           {{ 'hotel.back' | transloco }}
+        </button>
+        <button class="fav-toggle" [class.fav-toggle--on]="isFav()" (click)="toggleFav(h)"
+                [attr.aria-label]="'favorites.save' | transloco">
+          <span class="ms">{{ isFav() ? 'favorite' : 'favorite_border' }}</span>
+          {{ (isFav() ? 'favorites.saved' : 'favorites.save') | transloco }}
         </button>
       </nav>
 
@@ -24,17 +41,25 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
           @if (h.imageUrl) {
             <img [src]="h.imageUrl" [alt]="h.name" class="hero-card__img" width="400" height="260" loading="eager" fetchpriority="high" />
           } @else {
-            <div class="hero-card__img-placeholder"><span class="ms" style="font-size:64px; color:#e0e0e0">hotel</span></div>
+            <div class="hero-card__img-placeholder"><span class="ms" style="font-size:64px; color:var(--border)">hotel</span></div>
           }
 
           <div class="hero-card__content">
             <div class="hero-card__badges">
               @if (h.stars) { <span class="badge badge--gray">{{ stars(h.stars) }}</span> }
               <span class="badge badge--teal">{{ h.pricePerNight | currency:'EUR':'symbol':'1.0-0' }} / {{ 'catalog.perNight' | transloco }}</span>
+              @if (summary(); as s) {
+                @if (s.totalReviews > 0) {
+                  <span class="badge badge--rating">
+                    <span class="ms" style="font-size:15px; vertical-align:middle">star</span>
+                    {{ s.averageRating | number:'1.1-1' }} · {{ s.totalReviews }} {{ 'hotel.reviewsLabel' | transloco }}
+                  </span>
+                }
+              }
             </div>
             <h1 class="hero-card__name">{{ h.name }}</h1>
             <p class="hero-card__city">
-              <span class="ms" style="font-size:16px; color:#8a8a8a; vertical-align:middle">location_on</span>
+              <span class="ms" style="font-size:16px; color:var(--text-tertiary); vertical-align:middle">location_on</span>
               {{ h.city }}
             </p>
             <div class="hero-card__features">
@@ -50,12 +75,12 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
           <div style="display:flex; flex-direction:column; gap:20px;">
             @if (h.description) {
               <section class="info-card" appReveal>
-                <h2 class="card-heading"><span class="ms" style="font-size:22px; color:#00856A">info</span>{{ 'hotel.about' | transloco }}</h2>
-                <p style="font-size:15px; color:#545454; line-height:1.75; margin:0;">{{ h.description }}</p>
+                <h2 class="card-heading"><span class="ms" style="font-size:22px; color:var(--teal)">info</span>{{ 'hotel.about' | transloco }}</h2>
+                <p style="font-size:15px; color:var(--text-secondary); line-height:1.75; margin:0;">{{ h.description }}</p>
               </section>
             }
             <section class="info-card" appReveal>
-              <h2 class="card-heading"><span class="ms" style="font-size:22px; color:#00856A">checklist</span>{{ 'hotel.amenities' | transloco }}</h2>
+              <h2 class="card-heading"><span class="ms" style="font-size:22px; color:var(--teal)">checklist</span>{{ 'hotel.amenities' | transloco }}</h2>
               <div class="feature-list">
                 <div class="feature-item" [class.feature-item--yes]="h.seaProximity" [class.feature-item--no]="!h.seaProximity">
                   <span class="ms" style="font-size:20px">{{ h.seaProximity ? 'check_circle' : 'cancel' }}</span>{{ 'catalog.amenities.sea' | transloco }}
@@ -71,29 +96,210 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
                 </div>
               </div>
             </section>
+
+            <!-- AI review summary -->
+            @if (summary(); as s) {
+              @if (s.aiSummary) {
+                <section class="info-card ai-card" appReveal>
+                  <div class="ai-badge"><span class="ms">auto_awesome</span> {{ 'destDetail.aiSummary' | transloco }}</div>
+                  <p style="font-size:15px; color:var(--text-secondary); line-height:1.75; margin:0;">{{ s.aiSummary }}</p>
+                </section>
+              }
+            }
+
+            <!-- Sub-rating breakdown -->
+            @if (summary(); as s) {
+              @if (s.totalReviews > 0) {
+                <section class="info-card" appReveal>
+                  <h2 class="card-heading"><span class="ms" style="font-size:22px; color:var(--teal)">bar_chart</span>{{ 'hotel.ratingBreakdown' | transloco }}</h2>
+                  <div class="rating-grid">
+                    @if (s.averageCleanliness) {
+                      <div class="rating-row">
+                        <span class="rating-label">{{ 'hotel.cleanliness' | transloco }}</span>
+                        <div class="rating-bar"><div class="rating-bar__fill" [style.width.%]="s.averageCleanliness * 20"></div></div>
+                        <span class="rating-score">{{ s.averageCleanliness | number:'1.1-1' }}</span>
+                      </div>
+                    }
+                    @if (s.averageService) {
+                      <div class="rating-row">
+                        <span class="rating-label">{{ 'hotel.service' | transloco }}</span>
+                        <div class="rating-bar"><div class="rating-bar__fill" [style.width.%]="s.averageService * 20"></div></div>
+                        <span class="rating-score">{{ s.averageService | number:'1.1-1' }}</span>
+                      </div>
+                    }
+                    @if (s.averageValue) {
+                      <div class="rating-row">
+                        <span class="rating-label">{{ 'hotel.value' | transloco }}</span>
+                        <div class="rating-bar"><div class="rating-bar__fill" [style.width.%]="s.averageValue * 20"></div></div>
+                        <span class="rating-score">{{ s.averageValue | number:'1.1-1' }}</span>
+                      </div>
+                    }
+                    @if (s.averageLocation) {
+                      <div class="rating-row">
+                        <span class="rating-label">{{ 'hotel.location' | transloco }}</span>
+                        <div class="rating-bar"><div class="rating-bar__fill" [style.width.%]="s.averageLocation * 20"></div></div>
+                        <span class="rating-score">{{ s.averageLocation | number:'1.1-1' }}</span>
+                      </div>
+                    }
+                  </div>
+                </section>
+              }
+            }
+
+            <!-- Reviews section -->
+            <section class="info-card" appReveal>
+              <div class="reviews-head">
+                <h2 class="card-heading" style="margin:0">
+                  <span class="ms" style="font-size:22px; color:var(--teal)">rate_review</span>
+                  {{ 'destDetail.reviews' | transloco }}
+                  @if (summary(); as s) {
+                    @if (s.totalReviews > 0) {
+                      <span class="review-count-badge">{{ s.totalReviews }}</span>
+                    }
+                  }
+                </h2>
+                <button class="btn-write-review" (click)="toggleForm()">
+                  <span class="ms" style="font-size:16px">edit</span>
+                  {{ isAuthenticated() ? ('hotel.writeReview' | transloco) : ('attractions.signInToReview' | transloco) }}
+                </button>
+              </div>
+
+              @if (showForm()) {
+                <form class="review-form" (ngSubmit)="submitReview()">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>{{ 'hotel.overallRating' | transloco }}</label>
+                      <div class="star-pick">
+                        @for (n of [1,2,3,4,5]; track n) {
+                          <button type="button" class="ms star-btn" [class.is-on]="formRating >= n" (click)="formRating = n">star</button>
+                        }
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-row form-row--4">
+                    <div class="form-group">
+                      <label>{{ 'hotel.cleanliness' | transloco }}</label>
+                      <div class="star-pick star-pick--sm">
+                        @for (n of [1,2,3,4,5]; track n) {
+                          <button type="button" class="ms star-btn" [class.is-on]="formCleanliness >= n" (click)="formCleanliness = n">star</button>
+                        }
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>{{ 'hotel.service' | transloco }}</label>
+                      <div class="star-pick star-pick--sm">
+                        @for (n of [1,2,3,4,5]; track n) {
+                          <button type="button" class="ms star-btn" [class.is-on]="formService >= n" (click)="formService = n">star</button>
+                        }
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>{{ 'hotel.value' | transloco }}</label>
+                      <div class="star-pick star-pick--sm">
+                        @for (n of [1,2,3,4,5]; track n) {
+                          <button type="button" class="ms star-btn" [class.is-on]="formValue >= n" (click)="formValue = n">star</button>
+                        }
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>{{ 'hotel.location' | transloco }}</label>
+                      <div class="star-pick star-pick--sm">
+                        @for (n of [1,2,3,4,5]; track n) {
+                          <button type="button" class="ms star-btn" [class.is-on]="formLocation >= n" (click)="formLocation = n">star</button>
+                        }
+                      </div>
+                    </div>
+                  </div>
+
+                  <input class="form-input" type="text" [(ngModel)]="formTitle" name="title"
+                         [placeholder]="'attractions.reviewTitlePlaceholder' | transloco" maxlength="120" />
+                  <textarea class="form-input form-textarea" [(ngModel)]="formContent" name="content" rows="4"
+                            [placeholder]="'attractions.reviewBodyPlaceholder' | transloco"
+                            [class.is-error]="formError() === 'content'"></textarea>
+                  @if (formError() === 'submit') {
+                    <p class="form-error">{{ 'attractions.reviewError' | transloco }}</p>
+                  }
+                  <div class="form-actions">
+                    <button type="button" class="btn-cancel" (click)="toggleForm()">{{ 'attractions.cancel' | transloco }}</button>
+                    <button type="submit" class="btn-submit" [disabled]="submitting()">
+                      <span class="ms" style="font-size:16px">send</span>
+                      {{ submitting() ? ('attractions.submitting' | transloco) : ('attractions.submitReview' | transloco) }}
+                    </button>
+                  </div>
+                </form>
+              }
+
+              @if (reviews().length > 0) {
+                <ul class="review-list">
+                  @for (r of reviews(); track r.id) {
+                    <li class="review-item">
+                      <div class="review-head">
+                        <div class="review-avatar">{{ r.userFirstName.charAt(0) }}</div>
+                        <div class="review-meta">
+                          <span class="review-name">
+                            {{ r.userFirstName }}
+                            @if (r.verified) {
+                              <span class="verified-badge"><span class="ms">verified</span>{{ 'destDetail.verifiedStay' | transloco }}</span>
+                            }
+                          </span>
+                          <span class="review-date">{{ r.createdAt | date:'mediumDate' }}</span>
+                        </div>
+                        <div class="review-stars">
+                          @for (st of starArray(r.rating); track $index) { <span class="ms review-star">star</span> }
+                        </div>
+                      </div>
+                      @if (r.title) { <h4 class="review-title">{{ r.title }}</h4> }
+                      <p class="review-body">{{ r.content }}</p>
+                      <button class="helpful-btn" [class.is-on]="r.helpfulByMe" (click)="markHelpful(r)">
+                        <span class="ms">thumb_up</span>
+                        {{ 'destDetail.helpful' | transloco }}
+                        @if (r.helpfulCount > 0) { ({{ r.helpfulCount }}) }
+                      </button>
+                    </li>
+                  }
+                </ul>
+              } @else {
+                <div class="no-reviews">
+                  <span class="ms">rate_review</span>
+                  <p>{{ 'destDetail.noReviews' | transloco }}</p>
+                </div>
+              }
+            </section>
           </div>
 
           <aside style="position:sticky; top:80px;">
             <div class="booking-card">
               <div style="display:flex; align-items:baseline; gap:6px; margin-bottom:16px;">
-                <span style="font-size:28px; font-weight:800; color:#00856A;">{{ h.pricePerNight | currency:'EUR':'symbol':'1.0-0' }}</span>
-                <span style="font-size:13px; color:#8a8a8a;">/ {{ 'catalog.perNight' | transloco }}</span>
+                <span style="font-size:28px; font-weight:800; color:var(--teal);">{{ h.pricePerNight | currency:'EUR':'symbol':'1.0-0' }}</span>
+                <span style="font-size:13px; color:var(--text-tertiary);">/ {{ 'catalog.perNight' | transloco }}</span>
               </div>
               <div class="meta-list">
                 <div class="meta-item">
-                  <span class="ms" style="font-size:20px; color:#8a8a8a">location_on</span>
+                  <span class="ms" style="font-size:20px; color:var(--text-tertiary)">location_on</span>
                   <div><span class="meta-label">{{ 'hotel.city' | transloco }}</span><span class="meta-value">{{ h.city }}</span></div>
                 </div>
                 <div class="meta-item">
-                  <span class="ms" style="font-size:20px; color:#8a8a8a">event_available</span>
+                  <span class="ms" style="font-size:20px; color:var(--text-tertiary)">event_available</span>
                   <div><span class="meta-label">{{ 'hotel.availability' | transloco }}</span>
-                    <span class="meta-value" [style.color]="h.available ? '#00856A' : '#E04A2F'">
+                    <span class="meta-value" [style.color]="h.available ? 'var(--teal)' : 'var(--brand)'">
                       {{ h.available ? ('hotel.availableNow' | transloco) : ('hotel.notAvailable' | transloco) }}
                     </span>
                   </div>
                 </div>
+                @if (summary(); as s) {
+                  @if (s.totalReviews > 0) {
+                    <div class="meta-item">
+                      <span class="ms" style="font-size:20px; color:var(--gold)">star</span>
+                      <div>
+                        <span class="meta-label">{{ 'hotel.guestRating' | transloco }}</span>
+                        <span class="meta-value">{{ s.averageRating | number:'1.1-1' }} / 5 · {{ s.totalReviews }} {{ 'hotel.reviewsLabel' | transloco }}</span>
+                      </div>
+                    </div>
+                  }
+                }
               </div>
-              <div style="height:1px; background:#efefef; margin:20px 0;"></div>
+              <div style="height:1px; background:var(--border-light); margin:20px 0;"></div>
               <button class="btn-book" (click)="goToPlanner()"><span class="ms" style="font-size:20px">travel_explore</span>{{ 'hotel.book' | transloco }}</button>
               <button class="btn-chat" (click)="goToChat()"><span class="ms" style="font-size:20px">chat</span>{{ 'hotel.askAi' | transloco }}</button>
             </div>
@@ -107,6 +313,7 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
           <div style="display:flex; flex-direction:column; gap:20px;">
             <div class="shimmer" style="height:180px; border-radius:12px;"></div>
             <div class="shimmer" style="height:140px; border-radius:12px;"></div>
+            <div class="shimmer" style="height:240px; border-radius:12px;"></div>
           </div>
           <div class="shimmer" style="height:340px; border-radius:12px;"></div>
         </div>
@@ -114,72 +321,253 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
     }
   `,
   styles: [`
-    :host { display: block; background: #f7f7f7; min-height: 100vh; font-family: 'Hanken Grotesk', system-ui, sans-serif; color: #1a1a1a; }
-    .back-link { display: inline-flex; align-items: center; gap: 4px; background: none; border: none; color: #545454; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; padding: 0; transition: color 150ms ease; }
-    .back-link:hover { color: #E04A2F; }
-    .hero-card { background: #fff; border-radius: 16px; overflow: hidden; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.08); display: flex; }
+    :host { display: block; background: var(--bg-primary); min-height: 100vh; font-family: var(--font-body); color: var(--text-primary); }
+    .back-link { display: inline-flex; align-items: center; gap: 4px; background: none; border: none; color: var(--text-secondary); font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; padding: 0; transition: color 150ms ease; }
+    .back-link:hover { color: var(--brand); }
+    .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 999px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 150ms ease; }
+    .fav-toggle:hover { border-color: var(--brand); color: var(--brand); }
+    .fav-toggle--on { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
+    .fav-toggle .ms { font-size: 18px; }
+
+    .hero-card { background: var(--surface); border-radius: 16px; overflow: hidden; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.08); display: flex; }
     .hero-card__img { width: 400px; height: 260px; object-fit: cover; flex-shrink: 0; }
-    .hero-card__img-placeholder { width: 400px; height: 260px; background: #f0f0f0; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .hero-card__img-placeholder { width: 400px; height: 260px; background: var(--bg-secondary); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
     .hero-card__content { padding: 28px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
     .hero-card__badges { display: flex; gap: 8px; flex-wrap: wrap; }
     .badge { display: inline-block; border-radius: 100px; padding: 4px 12px; font-size: 12px; font-weight: 600; }
-    .badge--teal { background: #E6F5F0; color: #00856A; }
-    .badge--gray { background: #f7f7f7; color: #545454; border: 1px solid #e0e0e0; }
+    .badge--teal { background: var(--teal-light); color: var(--teal); }
+    .badge--gray { background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+    .badge--rating { background: var(--gold-light); color: #B26A00; }
+    .badge--rating .ms { color: var(--gold); }
     .hero-card__name { font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.2rem); font-weight: 800; margin: 0; line-height: 1.1; }
-    .hero-card__city { font-size: 14px; color: #8a8a8a; margin: 0; font-weight: 500; }
+    .hero-card__city { font-size: 14px; color: var(--text-tertiary); margin: 0; font-weight: 500; }
     .hero-card__features { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
-    .feature-chip { display: inline-flex; align-items: center; gap: 5px; background: #f7f7f7; border: 1px solid #e0e0e0; border-radius: 100px; padding: 5px 12px; font-size: 12px; font-weight: 600; color: #545454; }
+    .feature-chip { display: inline-flex; align-items: center; gap: 5px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 100px; padding: 5px 12px; font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+
     .detail-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; align-items: start; }
-    .info-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
-    .card-heading { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; margin: 0 0 20px; color: #1a1a1a; }
+    .info-card { background: var(--surface); border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    .card-heading { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; margin: 0 0 20px; color: var(--text-primary); }
     .feature-list { display: flex; flex-direction: column; gap: 12px; }
     .feature-item { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; }
-    .feature-item--yes { color: #1a1a1a; } .feature-item--yes .ms { color: #00856A; }
-    .feature-item--no { color: #8a8a8a; } .feature-item--no .ms { color: #e0e0e0; }
-    .booking-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.08); border: 1px solid #e0e0e0; }
+    .feature-item--yes { color: var(--text-primary); } .feature-item--yes .ms { color: var(--teal); }
+    .feature-item--no { color: var(--text-tertiary); } .feature-item--no .ms { color: var(--border); }
+
+    .ai-card { background: linear-gradient(135deg, #EEF1FF, #F5F3FF); border: 1px solid rgba(99,102,241,0.2); }
+    .ai-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #4338CA; background: rgba(99,102,241,0.1); padding: 4px 10px; border-radius: 100px; margin-bottom: 12px; }
+    .ai-badge .ms { font-size: 15px; color: #6366F1; }
+
+    .rating-grid { display: flex; flex-direction: column; gap: 12px; }
+    .rating-row { display: flex; align-items: center; gap: 12px; }
+    .rating-label { font-size: 13px; font-weight: 600; color: var(--text-secondary); width: 100px; flex-shrink: 0; }
+    .rating-bar { flex: 1; height: 6px; background: var(--bg-secondary); border-radius: 3px; overflow: hidden; }
+    .rating-bar__fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--brand)); border-radius: 3px; transition: width 600ms ease; }
+    .rating-score { font-size: 13px; font-weight: 700; color: var(--text-primary); width: 30px; text-align: right; }
+
+    .reviews-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+    .review-count-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; border-radius: 100px; background: var(--brand); color: #fff; font-size: 11px; font-weight: 700; padding: 0 6px; margin-left: 4px; }
+    .btn-write-review { display: inline-flex; align-items: center; gap: 6px; background: var(--brand); color: #fff; border: none; border-radius: 8px; padding: 9px 16px; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 150ms ease; }
+    .btn-write-review:hover { background: var(--brand-hover); }
+
+    .review-form { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 14px; }
+    .form-row { display: flex; gap: 16px; flex-wrap: wrap; }
+    .form-row--4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--text-tertiary); }
+    .star-pick { display: flex; gap: 2px; }
+    .star-pick--sm .star-btn { font-size: 18px; }
+    .star-btn { background: none; border: none; cursor: pointer; font-size: 24px; color: var(--border); padding: 0; transition: color 150ms ease, transform 100ms ease; }
+    .star-btn.is-on { color: var(--gold); }
+    .star-btn:hover { transform: scale(1.1); color: var(--gold); }
+    .form-input { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: inherit; font-size: 14px; color: var(--text-primary); width: 100%; box-sizing: border-box; }
+    .form-input:focus { outline: none; border-color: var(--brand); }
+    .form-input.is-error { border-color: var(--brand); }
+    .form-textarea { resize: vertical; min-height: 90px; }
+    .form-error { font-size: 12px; color: var(--brand); margin: 0; }
+    .form-actions { display: flex; gap: 10px; justify-content: flex-end; }
+    .btn-cancel { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 9px 16px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; }
+    .btn-submit { display: inline-flex; align-items: center; gap: 6px; background: var(--brand); color: #fff; border: none; border-radius: 8px; padding: 9px 16px; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity 150ms ease; }
+    .btn-submit:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .review-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 20px; }
+    .review-item { border-bottom: 1px solid var(--border-light); padding-bottom: 20px; }
+    .review-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .review-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .review-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--brand), #F6873F); color: #fff; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .review-meta { flex: 1; min-width: 0; }
+    .review-name { display: block; font-size: 14px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 6px; }
+    .review-date { display: block; font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+    .verified-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 600; color: var(--teal); }
+    .verified-badge .ms { font-size: 13px; }
+    .review-stars { display: flex; gap: 2px; }
+    .review-star { font-size: 15px; color: var(--gold); }
+    .review-title { font-size: 14px; font-weight: 700; color: var(--text-primary); margin: 0 0 6px; }
+    .review-body { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin: 0 0 10px; }
+    .helpful-btn { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--border); border-radius: 100px; padding: 5px 12px; font-family: inherit; font-size: 12px; font-weight: 600; color: var(--text-tertiary); cursor: pointer; transition: all 150ms ease; }
+    .helpful-btn.is-on { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+    .helpful-btn .ms { font-size: 14px; }
+    .no-reviews { text-align: center; padding: 32px 16px; color: var(--text-tertiary); display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .no-reviews .ms { font-size: 36px; }
+    .no-reviews p { margin: 0; font-size: 14px; }
+
+    .booking-card { background: var(--surface); border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.08); border: 1px solid var(--border); }
     .meta-list { display: flex; flex-direction: column; gap: 14px; }
     .meta-item { display: flex; align-items: center; gap: 12px; }
-    .meta-label { display: block; font-size: 11px; color: #8a8a8a; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500; }
-    .meta-value { display: block; font-size: 15px; font-weight: 600; color: #1a1a1a; }
-    .btn-book { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: #E04A2F; color: #fff; border: none; border-radius: 10px; padding: 14px; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 150ms ease; margin-bottom: 10px; }
-    .btn-book:hover { background: #c93d25; }
-    .btn-chat { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: #fff; color: #E04A2F; border: 1.5px solid #E04A2F; border-radius: 10px; padding: 13px; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 150ms ease; }
-    .btn-chat:hover { background: #FFF0ED; }
+    .meta-label { display: block; font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500; }
+    .meta-value { display: block; font-size: 15px; font-weight: 600; color: var(--text-primary); }
+    .btn-book { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--brand); color: #fff; border: none; border-radius: 10px; padding: 14px; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 150ms ease; margin-bottom: 10px; }
+    .btn-book:hover { background: var(--brand-hover); }
+    .btn-chat { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--surface); color: var(--brand); border: 1.5px solid var(--brand); border-radius: 10px; padding: 13px; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 150ms ease; }
+    .btn-chat:hover { background: var(--brand-light); }
+
     @keyframes shimmer { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }
-    .shimmer { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 800px 100%; animation: shimmer 1.8s ease-in-out infinite; }
-    @media (max-width: 768px) { .detail-grid { grid-template-columns: 1fr; } .hero-card { flex-direction: column; } .hero-card__img, .hero-card__img-placeholder { width: 100%; height: 200px; } }
+    .shimmer { background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%); background-size: 800px 100%; animation: shimmer 1.8s ease-in-out infinite; }
+
+    @media (max-width: 900px) { .form-row--4 { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 768px) {
+      .detail-grid { grid-template-columns: 1fr; }
+      .hero-card { flex-direction: column; }
+      .hero-card__img, .hero-card__img-placeholder { width: 100%; height: 200px; }
+      .form-row--4 { grid-template-columns: repeat(2, 1fr); }
+    }
   `],
 })
 export class HotelDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly catalogService = inject(CatalogService);
+  private readonly reviewService = inject(ReviewService);
+  private readonly auth = inject(AuthService);
+  private readonly favorites = inject(FavoritesService);
 
   readonly hotel = signal<HotelSearchResult | null>(null);
+  readonly reviews = signal<ReviewResponse[]>([]);
+  readonly summary = signal<ReviewSummary | null>(null);
+
+  readonly isAuthenticated = this.auth.isAuthenticated;
+  readonly showForm = signal(false);
+  readonly submitting = signal(false);
+  readonly formError = signal<string | null>(null);
+
+  readonly isFav = computed(() => {
+    const h = this.hotel();
+    return h ? this.favorites.has('hotel', h.id) : false;
+  });
+
+  // Review form model
+  formRating = 5;
+  formCleanliness = 5;
+  formService = 5;
+  formValue = 5;
+  formLocation = 5;
+  formTitle = '';
+  formContent = '';
+
+  private id = '';
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (!id) {
-      this.router.navigate(['/']);
+    this.id = this.route.snapshot.paramMap.get('id') ?? '';
+    if (!this.id) {
+      this.router.navigate(['/hotels']);
       return;
     }
-    this.catalogService.getHotel(id).subscribe({
+    this.catalogService.getHotel(this.id).subscribe({
       next: h => this.hotel.set(h),
       error: () => this.router.navigate(['/hotels']),
     });
+    this.loadReviews();
+  }
+
+  private loadReviews(): void {
+    this.reviewService.getSummary(TARGET_TYPE, this.id)
+      .pipe(catchError(() => of(null)))
+      .subscribe(s => this.summary.set(s));
+    this.reviewService.getForTarget(TARGET_TYPE, this.id)
+      .pipe(catchError(() => of([] as ReviewResponse[])))
+      .subscribe(list => this.reviews.set(list));
+  }
+
+  toggleFav(h: HotelSearchResult): void {
+    this.favorites.toggle({
+      type: 'hotel',
+      id: h.id,
+      title: h.name,
+      subtitle: h.city,
+      imageUrl: h.imageUrl,
+      route: `/hotels/${h.id}`,
+    });
+  }
+
+  toggleForm(): void {
+    if (!this.isAuthenticated()) {
+      this.router.navigate(['/hotels', this.id], { queryParams: { auth: 'login' } });
+      return;
+    }
+    this.showForm.update(v => !v);
+  }
+
+  submitReview(): void {
+    if (!this.formContent.trim()) {
+      this.formError.set('content');
+      return;
+    }
+    this.submitting.set(true);
+    this.formError.set(null);
+    const payload: CreateReviewRequest = {
+      targetType: TARGET_TYPE,
+      targetId: this.id,
+      rating: this.formRating,
+      ratingCleanliness: this.formCleanliness,
+      ratingService: this.formService,
+      ratingValue: this.formValue,
+      ratingLocation: this.formLocation,
+      title: this.formTitle.trim(),
+      content: this.formContent.trim(),
+    };
+    this.reviewService.create(payload)
+      .pipe(catchError(() => of(null)))
+      .subscribe(created => {
+        this.submitting.set(false);
+        if (created) {
+          this.showForm.set(false);
+          this.formTitle = '';
+          this.formContent = '';
+          this.formRating = 5;
+          this.formCleanliness = 5;
+          this.formService = 5;
+          this.formValue = 5;
+          this.formLocation = 5;
+          this.loadReviews();
+        } else {
+          this.formError.set('submit');
+        }
+      });
+  }
+
+  markHelpful(review: ReviewResponse): void {
+    if (!this.isAuthenticated()) return;
+    this.reviewService.markHelpful(review.id)
+      .pipe(catchError(() => of(null)))
+      .subscribe(updated => {
+        if (updated) {
+          this.reviews.update(list => list.map(r => r.id === updated.id ? updated : r));
+        }
+      });
   }
 
   stars(n: number): string {
     return '★'.repeat(Math.max(0, Math.min(5, n)));
   }
 
-  goBack(): void {
-    this.router.navigate(['/hotels']);
+  starArray(n: number): number[] {
+    return Array.from({ length: Math.max(0, Math.min(5, Math.round(n))) });
   }
-  goToPlanner(): void {
-    this.router.navigate(['/planner']);
-  }
+
+  goBack(): void { this.router.navigate(['/hotels']); }
+  goToPlanner(): void { this.router.navigate(['/planner']); }
+
   goToChat(): void {
-    this.router.navigate(['/chat']);
+    const h = this.hotel();
+    const q = h ? `Tell me about ${h.name}${h.city ? ' hotel in ' + h.city : ''}${h.stars ? '. It has ' + h.stars + ' stars.' : ''}` : undefined;
+    this.router.navigate(['/chat'], q ? { queryParams: { q } } : {});
   }
 }

@@ -1,7 +1,7 @@
 :host {
-  --rev-ink: #1a1a1a;
-  --rev-muted: #8a8a8a;
-  --rev-line: #e8e8e8;
+  --rev-ink: var(--text-primary);
+  --rev-muted: var(--text-tertiary);
+  --rev-line: var(--border);
   display: block;
 }
 
@@ -15,7 +15,7 @@
   font-size: 12px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #e04a2f;
+  color: var(--brand);
   font-weight: 700;
 }
 .rev-title { font-size: clamp(1.8rem, 1.3rem + 2vw, 2.6rem); font-weight: 800; letter-spacing: -0.02em; margin: 8px 0 6px; }
@@ -64,7 +64,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  background: #fff;
+  background: var(--surface);
 }
 .rev-card__dot { position: absolute; left: 0; top: 0; bottom: 0; width: 5px; border-radius: 14px 0 0 14px; }
 .rev-card__label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--rev-muted); font-weight: 700; }
@@ -79,7 +79,7 @@
   color: var(--rev-muted);
   font-size: 0.92rem;
 }
-.rev-foot .ms { color: #b8894a; }
+.rev-foot .ms { color: var(--gold); }
 
 @media (prefers-reduced-motion: reduce) {
   .rev-mix__seg { transition: none; }

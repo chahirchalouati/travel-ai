@@ -29,7 +29,7 @@ import type { TravelStory } from '../../core/services/story.service';
 
       <div class="stories-grid">
         @for (s of stories(); track s.id) {
-          <article class="story-card" [class.story-card--featured]="s.featured" (click)="goShare()">
+          <article class="story-card" [class.story-card--featured]="s.featured" (click)="goExplore()">
             <div class="story-media">
               <img [src]="s.posterUrl" [alt]="s.place" class="story-poster" loading="lazy" />
               @if (s.videoUrl) {
@@ -69,12 +69,10 @@ import type { TravelStory } from '../../core/services/story.service';
   `,
   styles: [`
     :host {
-      --brand: #E04A2F;
-      --gold: #F5A623;
-      --ease: cubic-bezier(0.16, 1, 0.3, 1);
-      --duration: 220ms;
+      --ease: var(--ease-out-expo);
+      --duration: var(--duration-normal);
       display: block;
-      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-family: var(--font-body);
     }
 
     .stories {
@@ -106,14 +104,14 @@ import type { TravelStory } from '../../core/services/story.service';
       font-size: clamp(1.5rem, 1rem + 1.6vw, 2.1rem);
       font-weight: 800;
       letter-spacing: -0.02em;
-      color: #1a1a1a;
+      color: var(--text-primary);
       margin: 0.5rem 0 0.3rem;
       line-height: 1.1;
     }
 
     .stories-sub {
       font-size: 0.98rem;
-      color: #545454;
+      color: var(--text-secondary);
       margin: 0;
       max-width: 440px;
       line-height: 1.5;
@@ -124,7 +122,7 @@ import type { TravelStory } from '../../core/services/story.service';
       align-items: center;
       gap: 7px;
       flex-shrink: 0;
-      background: #1a1a1a;
+      background: var(--text-primary);
       color: #fff;
       border: none;
       border-radius: 50px;
@@ -335,7 +333,7 @@ export class TripStoriesComponent implements OnInit {
   ngOnInit(): void {
     this.storyService.getStories().pipe(
       catchError(() => of([]))
-    ).subscribe(stories => this.stories.set(stories));
+    ).subscribe(stories => this.stories.set(stories.slice(0, 6)));
   }
 
   onCanPlay(event: Event): void {
@@ -343,6 +341,10 @@ export class TripStoriesComponent implements OnInit {
   }
 
   goShare(): void {
-    this.router.navigate(['/profile']);
+    this.router.navigate(['/trips']);
+  }
+
+  goExplore(): void {
+    this.router.navigate(['/explore']);
   }
 }

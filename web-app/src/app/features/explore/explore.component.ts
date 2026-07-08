@@ -215,50 +215,29 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     .explore-filter .chip {
       padding: 0.5rem 1.1rem;
       border-radius: 999px;
-      border: 1px solid var(--border, #e3e3e3);
-      background: var(--bg-secondary, #f7f7f7);
-      color: var(--text-secondary, #555);
+      border: 1px solid var(--border);
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
       font: inherit;
       font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
       transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
     }
-    .explore-filter .chip:hover { border-color: var(--teal, #0a7d72); color: var(--text-primary, #1a1a1a); }
+    .explore-filter .chip:hover { border-color: var(--teal); color: var(--text-primary); }
     .explore-filter .chip--active {
-      background: var(--teal, #0a7d72);
-      border-color: var(--teal, #0a7d72);
+      background: var(--teal);
+      border-color: var(--teal);
       color: #fff;
     }
 
-    /* ── Design Tokens ─────────────────────────────── */
     :host {
-      --bg-primary: #ffffff;
-      --bg-secondary: #f7f7f7;
-      --bg-tertiary: #f0f0f0;
-      --brand: #E04A2F;
-      --brand-hover: #c93d25;
-      --brand-light: #FFF0ED;
-      --teal: #00856A;
-      --teal-light: #E6F5F0;
-      --gold: #F5A623;
-      --text-primary: #1a1a1a;
-      --text-secondary: #545454;
-      --text-tertiary: #8a8a8a;
-      --border: #e0e0e0;
-      --border-light: #efefef;
-      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --duration: 200ms;
-      --ease: cubic-bezier(0.16, 1, 0.3, 1);
-
+      --duration: var(--duration-fast);
+      --ease: var(--ease-out-expo);
       display: block;
       background: var(--bg-primary);
       color: var(--text-primary);
-      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-family: var(--font-body);
     }
 
     /* ── Section Shared ────────────────────────────── */
@@ -660,8 +639,8 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     /* ── AI Banner (compact) ───────────────────────── */
     .ai-banner {
       background: var(--teal-light);
-      border-top: 1px solid rgba(0, 133, 106, 0.15);
-      border-bottom: 1px solid rgba(0, 133, 106, 0.15);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
       padding: 14px clamp(1rem, 0.5rem + 3vw, 4rem);
     }
 
@@ -712,7 +691,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     }
 
     .ai-banner__cta:hover {
-      background: #006e58;
+      background: #0d5640;
     }
 
     .ai-banner__cta:focus-visible {

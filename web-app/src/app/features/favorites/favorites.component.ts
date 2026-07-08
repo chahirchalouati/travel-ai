@@ -63,10 +63,10 @@ const TYPE_ICON: Record<FavoriteType, string> = {
     .fav-card { position: relative; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; cursor: pointer; background: var(--surface, #fff); transition: transform 150ms ease, box-shadow 150ms ease; }
     .fav-card:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,.08); }
     .fav-card__img { width: 100%; height: 150px; object-fit: cover; }
-    .fav-card__img--icon { display: grid; place-items: center; background: linear-gradient(135deg,#fff1ec,#ffe3da); color: #e04a2f; }
+    .fav-card__img--icon { display: grid; place-items: center; background: var(--brand-light); color: var(--brand); }
     .fav-card__img--icon .ms { font-size: 40px; }
     .fav-card__body { padding: 0.9rem 1rem 1.1rem; }
-    .fav-card__type { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #e04a2f; }
+    .fav-card__type { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--brand); }
     .fav-card__title { margin: 4px 0 2px; font-size: 1.05rem; font-weight: 800; letter-spacing: -0.01em; }
     .fav-card__sub { margin: 0; font-size: 0.85rem; color: var(--muted); }
     .fav-card__remove { position: absolute; top: 8px; right: 8px; width: 30px; height: 30px; border: none; border-radius: 50%; background: rgba(0,0,0,.5); color: #fff; cursor: pointer; display: grid; place-items: center; }

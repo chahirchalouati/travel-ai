@@ -17,7 +17,7 @@
     inset: 0;
     background:
       radial-gradient(ellipse 60% 80% at 30% 50%, rgba(83, 52, 131, 0.5) 0%, transparent 70%),
-      radial-gradient(ellipse 40% 60% at 80% 20%, rgba(224, 74, 47, 0.25) 0%, transparent 60%);
+      radial-gradient(ellipse 40% 60% at 80% 20%, rgba(190, 67, 41, 0.25) 0%, transparent 60%);
   }
 }
 
@@ -87,7 +87,7 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #E04A2F 0%, #F5A623 100%);
+  background: linear-gradient(135deg, var(--brand) 0%, var(--gold) 100%);
   border: 4px solid var(--bg-primary);
   display: flex;
   align-items: center;
@@ -377,7 +377,7 @@
 
 .strength-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--teal), #00a884);
+  background: linear-gradient(90deg, var(--teal), #0d5640);
   border-radius: 3px;
   transition: width 0.6s var(--ease-out-expo);
 }
@@ -472,8 +472,8 @@
   transition: background var(--duration-fast), box-shadow var(--duration-fast);
 
   &:hover {
-    background: #006e58;
-    box-shadow: 0 4px 12px rgba(0, 133, 106, 0.3);
+    background: #0d5640;
+    box-shadow: 0 4px 12px rgba(17, 102, 76, 0.3);
   }
 }
 
@@ -524,7 +524,7 @@
 
   &:hover {
     background: var(--brand-hover);
-    box-shadow: 0 4px 14px rgba(224, 74, 47, 0.35);
+    box-shadow: 0 4px 14px rgba(190, 67, 41, 0.35);
   }
 }
 
@@ -568,7 +568,7 @@
 
 .map-placeholder {
   height: 400px;
-  background: linear-gradient(135deg, #e8f4f0 0%, #d5ece6 100%);
+  background: linear-gradient(135deg, var(--teal-light) 0%, var(--bg-secondary) 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -819,8 +819,8 @@
   transition: background var(--duration-fast), box-shadow var(--duration-fast);
 
   &:hover {
-    background: var(--brand-hover, #c93d25);
-    box-shadow: 0 4px 12px rgba(224,74,47,0.3);
+    background: var(--brand-hover);
+    box-shadow: 0 4px 12px rgba(190,67,41,0.3);
   }
 }
 
@@ -874,7 +874,7 @@
   position: relative;
   transition: background 0.2s;
 
-  &.active { background: var(--teal, #00856A); }
+  &.active { background: var(--teal); }
 }
 
 .toggle-knob {
@@ -1016,7 +1016,7 @@
   cursor: pointer;
   transition: background var(--duration-fast);
 
-  &:hover { background: #ffe2db; }
+  &:hover { background: var(--brand-light); }
 }
 
 // ─── 2026 highlight banner ───────────────────────────────────────────────────
@@ -1033,7 +1033,7 @@
   color: #fff;
   overflow: hidden;
   background:
-    radial-gradient(120% 140% at 0% 0%, #00856A 0%, transparent 55%),
+    radial-gradient(120% 140% at 0% 0%, var(--teal) 0%, transparent 55%),
     linear-gradient(120deg, #0f3460 0%, #16213e 55%, #1a1a2e 100%);
   box-shadow: 0 16px 40px -18px rgba(15, 52, 96, 0.6);
 }
@@ -1053,7 +1053,7 @@
   margin: 8px 0 6px;
   max-width: 360px;
 
-  b { color: #F5A623; }
+  b { color: var(--gold); }
 }
 
 .highlight-sub {
@@ -1201,9 +1201,9 @@
   backdrop-filter: blur(6px);
   background: rgba(0,0,0,0.45);
 
-  &--completed { background: rgba(0, 133, 106, 0.9); }
-  &--upcoming  { background: rgba(224, 74, 47, 0.92); }
-  &--planning  { background: rgba(245, 166, 35, 0.92); }
+  &--completed { background: rgba(17, 102, 76, 0.9); }
+  &--upcoming  { background: rgba(190, 67, 41, 0.92); }
+  &--planning  { background: rgba(192, 137, 46, 0.92); }
 }
 
 .trip-body { padding: 12px 14px 14px; }
@@ -1349,11 +1349,11 @@
 
 .review-star {
   font-size: 17px;
-  color: #d8d8d8;
+  color: var(--border);
   font-variation-settings: 'FILL' 0;
 
   &.filled {
-    color: var(--gold, #F5A623);
+    color: var(--gold);
     font-variation-settings: 'FILL' 1;
   }
 }
@@ -1475,7 +1475,7 @@
 .map-progress-fill {
   height: 100%;
   border-radius: 4px;
-  background: linear-gradient(90deg, #F5A623, #E04A2F);
+  background: linear-gradient(90deg, var(--gold), var(--brand));
 }
 
 .stamps-grid {
@@ -1656,7 +1656,7 @@
   cursor: pointer;
   transition: background 0.15s ease, transform 0.12s ease;
 }
-.add-btn:hover:not(:disabled) { background: var(--brand-hover, #c93d25); transform: translateY(-1px); }
+.add-btn:hover:not(:disabled) { background: var(--brand-hover); transform: translateY(-1px); }
 .add-btn:disabled { opacity: 0.6; cursor: default; }
 
 .photo-add-tile {
@@ -1666,17 +1666,17 @@
   justify-content: center;
   gap: 6px;
   aspect-ratio: 1;
-  border: 2px dashed #d8d8d8;
+  border: 2px dashed var(--border);
   border-radius: 12px;
-  background: #fafafa;
-  color: #8a8a8a;
+  background: var(--bg-secondary);
+  color: var(--text-tertiary);
   font-family: inherit;
   font-weight: 600;
   font-size: 0.82rem;
   cursor: pointer;
   transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
 }
-.photo-add-tile:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); background: var(--brand-light, #fff0ed); }
+.photo-add-tile:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
 .photo-add-tile:disabled { opacity: 0.6; cursor: default; }
 
 .photo-del {
@@ -1705,12 +1705,12 @@
   gap: 0.6rem;
   margin-bottom: 1.2rem;
   padding: 1rem;
-  background: #fafafa;
-  border: 1px solid #ececec;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
   border-radius: 14px;
 }
 .ap-input {
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--border);
   border-radius: 9px;
   padding: 0.6rem 0.8rem;
   font-family: inherit;
@@ -1732,7 +1732,7 @@
 .ap-save:disabled { opacity: 0.55; cursor: default; }
 
 .stamp--owned { position: relative; }
-.stamp-sub { display: block; font-size: 0.72rem; color: #9a9a9a; }
+.stamp-sub { display: block; font-size: 0.72rem; color: var(--text-tertiary); }
 .stamp-del {
   position: absolute;
   top: 6px;
@@ -1742,7 +1742,7 @@
   border-radius: 50%;
   border: none;
   background: rgba(0, 0, 0, 0.08);
-  color: #777;
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
