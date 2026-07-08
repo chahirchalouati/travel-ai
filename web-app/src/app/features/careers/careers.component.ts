@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 import { RouterLink } from '@angular/router';
+import { CareersService, JobPosition } from '../../core/services/careers.service';
 
 @Component({
   selector: 'app-careers',
@@ -35,26 +36,26 @@ import { RouterLink } from '@angular/router';
         <div class="section-inner">
           <div class="positions-head">
             <h2>{{ 'careers.positions.title' | transloco }}</h2>
-            <span class="positions-count">{{ positions.length }}</span>
+            <span class="positions-count">{{ positions().length }}</span>
           </div>
-          @if (positions.length === 0) {
+          @if (positions().length === 0) {
             <div class="empty-positions">
               <span class="ms">search_off</span>
               <p>{{ 'careers.positions.none' | transloco }}</p>
             </div>
           } @else {
             <div class="positions-list">
-              @for (pos of positions; track pos.id) {
+              @for (pos of positions(); track pos.id) {
                 <div class="position-row">
                   <div class="position-info">
-                    <h3>{{ pos.titleKey | transloco }}</h3>
+                    <h3>{{ pos.title }}</h3>
                     <div class="position-meta">
-                      <span class="pos-tag">{{ pos.dept }}</span>
+                      <span class="pos-tag">{{ pos.department }}</span>
                       <span class="pos-tag pos-tag--location"><span class="ms">location_on</span>{{ pos.location }}</span>
-                      <span class="pos-tag pos-tag--type">{{ pos.type }}</span>
+                      <span class="pos-tag pos-tag--type">{{ pos.employmentType }}</span>
                     </div>
                   </div>
-                  <a href="mailto:careers@travelai.com" class="apply-btn">{{ 'careers.positions.apply' | transloco }}</a>
+                  <a [href]="'mailto:' + pos.applyEmail" class="apply-btn">{{ 'careers.positions.apply' | transloco }}</a>
                 </div>
               }
             </div>
@@ -142,12 +143,15 @@ export class CareersComponent {
     { icon: 'groups', titleKey: 'careers.perks.team.title', bodyKey: 'careers.perks.team.body' },
   ];
 
-  positions = [
-    { id: 1, titleKey: 'careers.jobs.seniorFe', dept: 'Engineering', location: 'Remote', type: 'Full-time' },
-    { id: 2, titleKey: 'careers.jobs.aiEngineer', dept: 'AI', location: 'Remote', type: 'Full-time' },
-    { id: 3, titleKey: 'careers.jobs.productDesigner', dept: 'Design', location: 'Paris / Remote', type: 'Full-time' },
-    { id: 4, titleKey: 'careers.jobs.contentStrategist', dept: 'Marketing', location: 'Remote', type: 'Part-time' },
-  ];
-
   cultureIcons = ['code', 'flight', 'people', 'lightbulb', 'diversity_3', 'rocket_launch', 'explore', 'psychology', 'eco'];
+
+  private readonly careersService = inject(CareersService);
+  positions = signal<JobPosition[]>([]);
+
+  constructor() {
+    this.careersService.getPositions().subscribe({
+      next: list => this.positions.set(list),
+      error: () => {},
+    });
+  }
 }

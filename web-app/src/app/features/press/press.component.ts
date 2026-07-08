@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
+import { PressService, PressCoverage } from '../../core/services/press.service';
 
 @Component({
   selector: 'app-press',
@@ -21,15 +22,15 @@ import { TranslocoModule } from '@jsverse/transloco';
           <section class="coverage-section">
             <h2>{{ 'press.coverage.title' | transloco }}</h2>
             <div class="coverage-grid">
-              @for (c of coverage; track c.outlet) {
-                <a href="#" class="coverage-card" rel="noopener noreferrer">
+              @for (c of coverage(); track c.id) {
+                <a [href]="c.url || '#'" class="coverage-card" [attr.target]="c.url ? '_blank' : null" rel="noopener noreferrer">
                   <div class="coverage-vis" aria-hidden="true">
                     <span class="ms">{{ c.icon }}</span>
                   </div>
                   <div class="coverage-body">
                     <span class="outlet">{{ c.outlet }}</span>
-                    <h3>{{ c.headlineKey | transloco }}</h3>
-                    <span class="coverage-date">{{ c.date }}</span>
+                    <h3>{{ c.headline }}</h3>
+                    <span class="coverage-date">{{ c.dateLabel }}</span>
                   </div>
                   <span class="ms coverage-arrow">open_in_new</span>
                 </a>
@@ -140,12 +141,15 @@ import { TranslocoModule } from '@jsverse/transloco';
   `]
 })
 export class PressComponent {
-  coverage = [
-    { outlet: 'TechCrunch', icon: 'newspaper', headlineKey: 'press.coverage.tc', date: 'June 2025' },
-    { outlet: 'The Guardian', icon: 'article', headlineKey: 'press.coverage.guardian', date: 'May 2025' },
-    { outlet: 'Forbes', icon: 'business', headlineKey: 'press.coverage.forbes', date: 'Apr 2025' },
-    { outlet: 'Wired', icon: 'developer_mode', headlineKey: 'press.coverage.wired', date: 'Mar 2025' },
-  ];
+  private readonly pressService = inject(PressService);
+  coverage = signal<PressCoverage[]>([]);
+
+  constructor() {
+    this.pressService.getCoverage().subscribe({
+      next: list => this.coverage.set(list),
+      error: () => {},
+    });
+  }
 
   kitItems = ['press.kit.logos', 'press.kit.screenshots', 'press.kit.brandGuide', 'press.kit.boilerplate'];
 

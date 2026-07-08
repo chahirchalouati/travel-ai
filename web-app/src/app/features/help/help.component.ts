@@ -1,7 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslocoModule } from '@jsverse/transloco';
 import { RouterLink } from '@angular/router';
+import { HelpService, HelpFaq } from '../../core/services/help.service';
 
 @Component({
   selector: 'app-help',
@@ -40,14 +41,14 @@ import { RouterLink } from '@angular/router';
           <section class="faq-section">
             <h2>{{ 'help.faqs.title' | transloco }}</h2>
             <div class="faq-list">
-              @for (faq of faqs; track faq.q) {
-                <div class="faq-item" [class.is-open]="openFaq() === faq.q">
-                  <button class="faq-btn" (click)="toggleFaq(faq.q)" [attr.aria-expanded]="openFaq() === faq.q">
-                    <span>{{ faq.q | transloco }}</span>
-                    <span class="ms faq-chevron">{{ openFaq() === faq.q ? 'expand_less' : 'expand_more' }}</span>
+              @for (faq of faqs(); track faq.id) {
+                <div class="faq-item" [class.is-open]="openFaq() === faq.id">
+                  <button class="faq-btn" (click)="toggleFaq(faq.id)" [attr.aria-expanded]="openFaq() === faq.id">
+                    <span>{{ faq.question }}</span>
+                    <span class="ms faq-chevron">{{ openFaq() === faq.id ? 'expand_less' : 'expand_more' }}</span>
                   </button>
-                  @if (openFaq() === faq.q) {
-                    <div class="faq-answer"><p>{{ faq.a | transloco }}</p></div>
+                  @if (openFaq() === faq.id) {
+                    <div class="faq-answer"><p>{{ faq.answer }}</p></div>
                   }
                 </div>
               }
@@ -127,14 +128,15 @@ export class HelpComponent {
     { icon: 'security', titleKey: 'help.topics.security.title', bodyKey: 'help.topics.security.body' },
   ];
 
-  faqs = [
-    { q: 'help.faq.q1', a: 'help.faq.a1' },
-    { q: 'help.faq.q2', a: 'help.faq.a2' },
-    { q: 'help.faq.q3', a: 'help.faq.a3' },
-    { q: 'help.faq.q4', a: 'help.faq.a4' },
-    { q: 'help.faq.q5', a: 'help.faq.a5' },
-    { q: 'help.faq.q6', a: 'help.faq.a6' },
-  ];
+  private readonly helpService = inject(HelpService);
+  faqs = signal<HelpFaq[]>([]);
+
+  constructor() {
+    this.helpService.getFaqs().subscribe({
+      next: list => this.faqs.set(list),
+      error: () => {},
+    });
+  }
 
   toggleFaq(q: string): void {
     this.openFaq.set(this.openFaq() === q ? null : q);

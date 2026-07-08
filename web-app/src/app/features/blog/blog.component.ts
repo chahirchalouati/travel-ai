@@ -1,17 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 import { RouterLink } from '@angular/router';
-
-interface BlogPost {
-  slug: string;
-  titleKey: string;
-  excerptKey: string;
-  category: string;
-  readMin: number;
-  date: string;
-  icon: string;
-  accent: string;
-}
+import { BlogService, BlogPost } from '../../core/services/blog.service';
 
 @Component({
   selector: 'app-blog',
@@ -29,21 +19,22 @@ interface BlogPost {
 
       <div class="blog-body">
         <div class="blog-inner">
+          @if (posts().length) {
           <!-- Featured -->
           <section class="featured-section">
             <p class="section-label">{{ 'blog.featured' | transloco }}</p>
             <div class="featured-card">
-              <div class="featured-vis" [style.background]="posts[0].accent" aria-hidden="true">
-                <span class="ms featured-icon">{{ posts[0].icon }}</span>
+              <div class="featured-vis" [style.background]="posts()[0].accent" aria-hidden="true">
+                <span class="ms featured-icon">{{ posts()[0].icon }}</span>
               </div>
               <div class="featured-body">
-                <span class="cat-badge">{{ posts[0].category }}</span>
-                <h2>{{ posts[0].titleKey | transloco }}</h2>
-                <p>{{ posts[0].excerptKey | transloco }}</p>
+                <span class="cat-badge">{{ posts()[0].category }}</span>
+                <h2>{{ posts()[0].title }}</h2>
+                <p>{{ posts()[0].excerpt }}</p>
                 <div class="post-meta">
-                  <span>{{ posts[0].date }}</span>
+                  <span>{{ posts()[0].dateLabel }}</span>
                   <span class="dot" aria-hidden="true"></span>
-                  <span>{{ posts[0].readMin }} {{ 'blog.minRead' | transloco }}</span>
+                  <span>{{ posts()[0].readMin }} {{ 'blog.minRead' | transloco }}</span>
                 </div>
                 <a href="#" class="read-more">{{ 'blog.readMore' | transloco }} <span class="ms">arrow_forward</span></a>
               </div>
@@ -54,17 +45,17 @@ interface BlogPost {
           <section class="grid-section">
             <p class="section-label">{{ 'blog.latest' | transloco }}</p>
             <div class="posts-grid">
-              @for (p of posts.slice(1); track p.slug) {
+              @for (p of rest(); track p.slug) {
                 <article class="post-card">
                   <div class="post-vis" [style.background]="p.accent" aria-hidden="true">
                     <span class="ms post-icon">{{ p.icon }}</span>
                   </div>
                   <div class="post-body">
                     <span class="cat-badge cat-badge--sm">{{ p.category }}</span>
-                    <h3>{{ p.titleKey | transloco }}</h3>
-                    <p class="post-excerpt">{{ p.excerptKey | transloco }}</p>
+                    <h3>{{ p.title }}</h3>
+                    <p class="post-excerpt">{{ p.excerpt }}</p>
                     <div class="post-meta">
-                      <span>{{ p.date }}</span>
+                      <span>{{ p.dateLabel }}</span>
                       <span class="dot"></span>
                       <span>{{ p.readMin }} {{ 'blog.minRead' | transloco }}</span>
                     </div>
@@ -73,6 +64,7 @@ interface BlogPost {
               }
             </div>
           </section>
+          }
 
           <!-- Newsletter -->
           <section class="newsletter">
@@ -147,12 +139,18 @@ interface BlogPost {
   `]
 })
 export class BlogComponent {
-  posts: BlogPost[] = [
-    { slug: 'ai-travel-planning', titleKey: 'blog.posts.aiPlanning.title', excerptKey: 'blog.posts.aiPlanning.excerpt', category: 'AI & Tech', readMin: 6, date: 'June 2025', icon: 'smart_toy', accent: 'linear-gradient(135deg, #BE4329, #A2371F)' },
-    { slug: 'hidden-gems-europe', titleKey: 'blog.posts.hiddenGems.title', excerptKey: 'blog.posts.hiddenGems.excerpt', category: 'Destinations', readMin: 8, date: 'May 2025', icon: 'travel_explore', accent: 'linear-gradient(135deg, #11664C, #0d5640)' },
-    { slug: 'budget-travel-tips', titleKey: 'blog.posts.budgetTips.title', excerptKey: 'blog.posts.budgetTips.excerpt', category: 'Tips', readMin: 5, date: 'May 2025', icon: 'savings', accent: 'linear-gradient(135deg, #C0892E, #a0731f)' },
-    { slug: 'solo-travel-guide', titleKey: 'blog.posts.soloTravel.title', excerptKey: 'blog.posts.soloTravel.excerpt', category: 'Guides', readMin: 10, date: 'Apr 2025', icon: 'person', accent: 'linear-gradient(135deg, #4338CA, #312e81)' },
-    { slug: 'sustainable-travel', titleKey: 'blog.posts.sustainable.title', excerptKey: 'blog.posts.sustainable.excerpt', category: 'Sustainability', readMin: 7, date: 'Apr 2025', icon: 'eco', accent: 'linear-gradient(135deg, #15803d, #14532d)' },
-    { slug: 'family-travel', titleKey: 'blog.posts.family.title', excerptKey: 'blog.posts.family.excerpt', category: 'Family', readMin: 6, date: 'Mar 2025', icon: 'family_restroom', accent: 'linear-gradient(135deg, #9333ea, #7e22ce)' },
-  ];
+  private readonly blogService = inject(BlogService);
+
+  posts = signal<BlogPost[]>([]);
+  rest = signal<BlogPost[]>([]);
+
+  constructor() {
+    this.blogService.getPosts().subscribe({
+      next: list => {
+        this.posts.set(list);
+        this.rest.set(list.slice(1));
+      },
+      error: () => {},
+    });
+  }
 }
