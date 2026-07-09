@@ -11,11 +11,12 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
 import { BookingDraftService } from '../booking-flow/booking-draft.service';
 import { TripContextService } from '../../core/services/trip-context.service';
 import { FavoritesService } from '../../core/services/favorites.service';
+import { UiFareGridComponent, type FareDay } from '../../shared/ui';
 
 @Component({
   selector: 'app-flight-detail',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, DatePipe, TranslocoModule, RevealDirective],
+  imports: [CommonModule, CurrencyPipe, DatePipe, TranslocoModule, RevealDirective, UiFareGridComponent],
   template: `
     @if (flight(); as f) {
       <nav style="padding: 16px 32px; max-width: 1100px; margin: 0 auto; display:flex; align-items:center; justify-content:space-between;">
@@ -135,6 +136,13 @@ import { FavoritesService } from '../../core/services/favorites.service';
                 <span class="price-label">{{ 'flight.booking.pricePerPerson' | transloco }}</span>
                 <span class="price-value">{{ f.price | currency:'USD':'symbol':'1.0-0' }}</span>
               </div>
+
+              @if (fareDays().length) {
+                <div class="fare-strip">
+                  <span class="fare-strip__label">{{ 'flight.booking.nearbyDates' | transloco }}</span>
+                  <app-ui-fare-grid [days]="fareDays()" currency="USD" [(selected)]="fareSelected" />
+                </div>
+              }
 
               <div style="height:1px; background:var(--border-light); margin: 16px 0;"></div>
 
@@ -364,6 +372,14 @@ import { FavoritesService } from '../../core/services/favorites.service';
       font-size: 2.2rem; font-weight: 800; color: var(--text-primary);
     }
 
+    .fare-strip {
+      margin-top: 16px; display: flex; flex-direction: column; gap: 8px;
+    }
+    .fare-strip__label {
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-secondary);
+    }
+
     .meta-list {
       display: flex; flex-direction: column; gap: 14px;
     }
@@ -429,6 +445,21 @@ export class FlightDetailComponent implements OnInit {
   readonly flight = signal<FlightSearchResult | null>(null);
   readonly summary = signal<ReviewSummary | null>(null);
   readonly watchId = signal<string | null>(null);
+
+  /** Illustrative fare strip: a week around the departure, this flight's
+   *  price on its own day, deterministic variation on the neighbours. */
+  private readonly fareMultipliers = [1.15, 1.03, 0.82, 1.0, 1.28, 1.42, 1.1];
+  readonly fareSelected = signal(3);
+  readonly fareDays = computed<FareDay[]>(() => {
+    const f = this.flight();
+    if (!f) return [];
+    const base = new Date(f.departureAt);
+    return this.fareMultipliers.map((m, i) => {
+      const d = new Date(base);
+      d.setDate(base.getDate() + (i - 3));
+      return { date: d.toISOString().slice(0, 10), price: Math.round(f.price * m) };
+    });
+  });
 
   toggleWatch(f: FlightSearchResult): void {
     const existing = this.watchId();

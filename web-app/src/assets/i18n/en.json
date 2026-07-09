@@ -267,6 +267,7 @@
     "seatSelection": "Seat selection",
     "booking": {
       "pricePerPerson": "Price per person",
+      "nearbyDates": "Nearby dates",
       "seatsLeft": "Seats left",
       "route": "Route",
       "baggage": "Baggage",

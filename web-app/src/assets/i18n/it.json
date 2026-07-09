@@ -267,6 +267,7 @@
     "seatSelection": "Scelta del posto",
     "booking": {
       "pricePerPerson": "Prezzo per persona",
+      "nearbyDates": "Date vicine",
       "seatsLeft": "Posti rimasti",
       "route": "Rotta",
       "baggage": "Bagaglio",

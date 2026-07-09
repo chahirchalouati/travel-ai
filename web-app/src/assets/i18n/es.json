@@ -267,6 +267,7 @@
     "seatSelection": "Selección de asiento",
     "booking": {
       "pricePerPerson": "Precio por persona",
+      "nearbyDates": "Fechas cercanas",
       "seatsLeft": "Asientos disponibles",
       "route": "Ruta",
       "baggage": "Equipaje",
