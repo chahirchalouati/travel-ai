@@ -532,7 +532,7 @@ export class PlannerComponent implements OnDestroy {
       { key:'orch',   icon:'dashboard_customize', iconBg:'var(--brand-light)', iconFg:'var(--brand)' },
       { key:'hotel',  icon:'hotel',               iconBg:'#FDECEA', iconFg:'#E5352B' },
       { key:'rest',   icon:'restaurant',           iconBg:'#FEF3C7', iconFg:'#D97706' },
-      { key:'flight', icon:'flight_takeoff',       iconBg:'#E0F2FE', iconFg:'#E5352B' },
+      { key:'flight', icon:'flight_takeoff',       iconBg:'#FDECEA', iconFg:'#E5352B' },
       { key:'rank',   icon:'stacked_bar_chart',    iconBg:'#FDECEA', iconFg:'#E5352B' },
     ];
     return A.map((a, i) => ({
