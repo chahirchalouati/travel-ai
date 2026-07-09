@@ -191,7 +191,7 @@
 .field input:focus,
 .field select:focus {
   border-color: var(--brand);
-  box-shadow: 0 0 0 3px rgba(190, 67, 41, 0.15);
+  box-shadow: var(--ring-focus);
 }
 
 .search-submit {
@@ -213,7 +213,7 @@
   transition: background var(--duration) var(--ease), transform var(--duration) var(--ease),
     box-shadow var(--duration) var(--ease);
   height: 46px;
-  box-shadow: 0 8px 20px -6px rgba(190, 67, 41, 0.5);
+  box-shadow: 0 8px 20px -6px rgba(17, 17, 17, 0.14);
 }
 
 .search-submit .ms {
@@ -223,7 +223,7 @@
 .search-submit:hover {
   background: var(--brand-hover);
   transform: translateY(-1px);
-  box-shadow: 0 12px 26px -6px rgba(190, 67, 41, 0.6);
+  box-shadow: 0 12px 26px -6px rgba(17, 17, 17, 0.16);
 }
 
 .search-submit:active {

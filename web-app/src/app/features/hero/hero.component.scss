@@ -441,7 +441,7 @@ section {
   border-radius: 50% 50% 50% 2px;
   background: var(--brand);
   color: #fff;
-  box-shadow: 0 4px 10px rgba(190, 67, 41, 0.5);
+  box-shadow: 0 4px 10px rgba(17, 17, 17, 0.14);
   transform: rotate(-45deg) scale(0);
   opacity: 0;
   transition: transform 0.5s var(--ease-out-expo), opacity 0.3s ease;

@@ -37,7 +37,7 @@ export interface PlannerPin {
       background: rgba(255,255,255,0.86);
       -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
       border: 1.5px solid rgba(255,255,255,0.9);
-      box-shadow: 0 6px 18px rgba(8,28,38,0.28);
+      box-shadow: 0 6px 18px rgba(17, 17, 17, 0.14);
       font-family: var(--font-body);
       font-weight: 800; font-size: 12px; color: #14242E;
       white-space: nowrap; cursor: pointer;
@@ -52,7 +52,7 @@ export interface PlannerPin {
       background: var(--color-red);
       border-color: rgba(255,255,255,0.95);
       color: #fff;
-      box-shadow: 0 10px 26px rgba(190,67,41,0.5);
+      box-shadow: 0 10px 26px rgba(17, 17, 17, 0.14);
       transform: scale(1.06);
     }
     :host ::ng-deep .pmap-pin--sel .pmap-dot__head { background: #fff; color: var(--brand); }
