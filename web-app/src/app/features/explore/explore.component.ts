@@ -267,7 +267,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     }
 
     .section-title {
-      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-family: var(--font-body);
       font-size: clamp(1.4rem, 1rem + 1.2vw, 1.8rem);
       font-weight: 700;
       color: var(--text-primary);
@@ -282,7 +282,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
       background: none;
       border: none;
       color: var(--brand);
-      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-family: var(--font-body);
       font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
@@ -377,7 +377,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     }
 
     .dest-card__name {
-      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-family: var(--font-body);
       font-size: 1.05rem;
       font-weight: 700;
       color: var(--text-primary);
@@ -519,7 +519,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     }
 
     .trending-card__name {
-      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-family: var(--font-body);
       font-size: 0.95rem;
       font-weight: 700;
       color: var(--text-primary);
@@ -622,7 +622,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     }
 
     .interest-tile__title {
-      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-family: var(--font-body);
       font-size: 1.25rem;
       font-weight: 700;
       color: #fff;
@@ -682,7 +682,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
       border: none;
       border-radius: 6px;
       padding: 8px 20px;
-      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-family: var(--font-body);
       font-size: 0.82rem;
       font-weight: 600;
       cursor: pointer;
@@ -747,7 +747,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     }
 
     .continent-card__name {
-      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-family: var(--font-body);
       font-size: 1rem;
       font-weight: 700;
       color: var(--text-primary);

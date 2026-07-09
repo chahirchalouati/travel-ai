@@ -38,7 +38,7 @@ export class AdminRevenueComponent {
       return [];
     }
     return [
-      { key: 'commission', amount: s.commissionRevenue, color: '#e04a2f' },
+      { key: 'commission', amount: s.commissionRevenue, color: '#2563EB' },
       { key: 'serviceFee', amount: s.serviceFeeRevenue, color: '#f0a935' },
       { key: 'ancillary', amount: s.ancillaryRevenue, color: '#00856a' },
       { key: 'subscription', amount: s.subscriptionRevenue, color: '#4a6fe0' },

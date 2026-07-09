@@ -1,56 +1,137 @@
+/* ============================================================
+   TravelAI Design System v1.0  —  global token layer
+   Airbnb × TripAdvisor × AI-premium. Ocean Blue, modern radii,
+   light layered shadows, Plus Jakarta Sans / Inter pairing.
+   Legacy variable names are aliased to the new palette so the
+   whole app adopts the redesign without per-component edits.
+   ============================================================ */
 :root {
-  /* --- Surfaces: warm editorial paper, layered --- */
-  --bg-primary: #FBF7F1;   /* page — warm paper */
-  --bg-secondary: #F3ECE1; /* subtle sand panel */
-  --bg-tertiary: #E9DFD1;  /* deeper sand */
-  --surface: #FFFFFF;      /* crisp card, pops against paper */
-  --surface-ink: #1F1A15;  /* dark editorial surface (hero, footers) */
+  /* ---- Canonical palette (spec) ------------------------------------ */
+  --color-ocean: #2563EB;        /* primary — CTA, links, actions       */
+  --color-ocean-hover: #1D4ED8;  /* primary hover                        */
+  --color-ocean-active: #1E40AF; /* primary pressed                      */
+  --color-ocean-tint: #DBEAFE;   /* soft primary wash                    */
+  --color-deep-ocean: #0F172A;   /* header / strong text                 */
+  --color-sky: #38BDF8;          /* highlight                            */
+  --color-violet: #9333EA;       /* AI gradient terminus                 */
 
-  /* --- Accents: deepened terracotta + forest, used semantically --- */
-  --brand: #BE4329;        /* clay terracotta */
-  --brand-hover: #A2371F;
-  --brand-light: #F6E6DF;  /* warm tint */
-  --teal: #11664C;         /* deep forest (trust / verified) */
-  --teal-light: #E1ECE5;
-  --gold: #C0892E;         /* aged brass — ratings / highlights */
-  --gold-light: #F5EAD4;
+  --color-success: #10B981;      /* confirmations, nature                */
+  --color-success-strong: #047857;
+  --color-success-tint: #D1FAE5;
+  --color-warning: #F97316;      /* promotions                           */
+  --color-warning-tint: #FFEDD5;
+  --color-rating: #FBBF24;       /* stars                                */
+  --color-rating-tint: #FEF3C7;
 
-  /* --- Ink: warm near-black ramp --- */
-  --text-primary: #211B14;
-  --text-secondary: #5B5346;
-  --text-tertiary: #938A7B;
-  --text-on-ink: #F4EEE5;  /* text over --surface-ink */
+  --color-bg: #F8FAFC;           /* page background                      */
+  --color-surface: #FFFFFF;      /* cards                                */
+  --color-surface-hover: #F1F5F9;
+  --color-surface-sunken: #E2E8F0;
+  --color-border: #E2E8F0;
+  --color-border-strong: #CBD5E1;
 
-  --border: #E6DCCD;       /* warm hairline */
-  --border-light: #EFE8DC;
+  --color-text: #0F172A;         /* slate-900                            */
+  --color-text-muted: #475569;   /* slate-600                            */
+  --color-text-subtle: #94A3B8;  /* slate-400                            */
+  --color-text-on-dark: #F8FAFC;
 
-  /* --- Shadows: warm-tinted, longer falloff for real depth --- */
-  --shadow-sm: 0 1px 3px rgba(58, 40, 20, 0.07);
-  --shadow-md: 0 6px 20px rgba(58, 40, 20, 0.10);
-  --shadow-lg: 0 18px 48px rgba(48, 32, 16, 0.16);
+  /* ---- Legacy aliases (consumed across ~50 features) --------------- */
+  --brand: var(--color-ocean);
+  --brand-hover: var(--color-ocean-hover);
+  --brand-active: var(--color-ocean-active);
+  --brand-light: var(--color-ocean-tint);
+  --accent: var(--color-ocean);
+  --primary: var(--color-ocean);
 
-  /* --- Type: editorial serif display + grotesk body --- */
-  --font-display: 'Fraunces', 'Georgia', 'Times New Roman', serif;
-  --font-body: 'Hanken Grotesk', system-ui, sans-serif;
+  --teal: var(--color-success-strong);   /* trust / verified            */
+  --teal-light: var(--color-success-tint);
+  --gold: #D97706;                         /* amber for text/icons        */
+  --gold-light: var(--color-rating-tint);
+  --coral: var(--color-warning);
 
-  /* --- Radii scale (intentional, not uniform) --- */
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 26px;
-  --radius-pill: 100px;
+  --bg-primary: var(--color-bg);
+  --bg-secondary: var(--color-surface-hover);
+  --bg-tertiary: var(--color-surface-sunken);
+  --surface: var(--color-surface);
+  --surface-hover: var(--color-surface-hover);
+  --surface-ink: var(--color-deep-ocean);
 
+  --text-primary: var(--color-text);
+  --text-secondary: var(--color-text-muted);
+  --text-tertiary: var(--color-text-subtle);
+  --text-on-ink: var(--color-text-on-dark);
+
+  --border: var(--color-border);
+  --border-light: #EEF2F7;
+  --line: var(--color-border);
+  --muted: var(--color-text-subtle);
+
+  /* ---- Gradients --------------------------------------------------- */
+  --gradient-ai: linear-gradient(135deg, #2563EB 0%, #6D28D9 55%, #9333EA 100%);
+  --gradient-ocean: linear-gradient(135deg, #2563EB 0%, #38BDF8 100%);
+  --gradient-surface: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+
+  /* ---- Shadows: light, layered, longer falloff -------------------- */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 20px 45px rgba(15, 23, 42, 0.13);
+  --shadow-xl: 0 30px 70px rgba(15, 23, 42, 0.18);
+  --shadow-ai: 0 20px 40px rgba(37, 99, 235, 0.25);
+  --ring-focus: 0 0 0 3px rgba(37, 99, 235, 0.25);
+
+  /* ---- Typography: Plus Jakarta Sans display + Inter body --------- */
+  --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+
+  --text-display: clamp(2.6rem, 1.4rem + 4.5vw, 3rem);   /* 48 */
+  --text-h1: clamp(2rem, 1.3rem + 2.6vw, 2.5rem);        /* 40 */
+  --text-h2: clamp(1.6rem, 1.2rem + 1.6vw, 2rem);        /* 32 */
+  --text-h3: 1.5rem;                                     /* 24 */
+  --text-body-lg: 1.125rem;                              /* 18 */
+  --text-body: 1rem;                                     /* 16 */
+  --text-sm: 0.875rem;                                   /* 14 */
+  --text-caption: 0.75rem;                               /* 12 */
+
+  /* ---- Spacing: base-4 scale -------------------------------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
+  --space-section: clamp(4rem, 3rem + 5vw, 8rem);
+
+  /* ---- Radii: modern, intentional --------------------------------- */
+  --radius-sm: 12px;   /* inputs, chips           */
+  --radius-md: 16px;   /* inputs, small cards     */
+  --radius-lg: 24px;   /* travel cards, panels    */
+  --radius-xl: 32px;   /* hero surfaces           */
+  --radius-pill: 999px;
+  --r-sm: var(--radius-sm);
+  --r-md: var(--radius-md);
+  --r-lg: var(--radius-lg);
+  --r-pill: var(--radius-pill);
+
+  /* ---- Motion ------------------------------------------------------ */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --duration-fast: 150ms;
   --duration-normal: 300ms;
   --duration-smooth: 400ms;
+  --fast: 150ms;
 }
 
-/* Display-serif utility for editorial headlines. */
+/* Display font utility for headlines. */
 .display {
   font-family: var(--font-display);
-  font-optical-sizing: auto;
-  font-weight: 600;
-  letter-spacing: -0.015em;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
   text-wrap: balance;
 }
 
@@ -60,6 +141,9 @@ html, body { margin: 0; height: 100%; background: var(--bg-primary); }
 body {
   font-family: var(--font-body);
   color: var(--text-primary);
+  font-size: var(--text-body);
+  line-height: 1.55;
+  letter-spacing: -0.006em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -75,20 +159,24 @@ body {
 
 .container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
 
+/* Selection */
+::selection { background: var(--color-ocean-tint); color: var(--color-deep-ocean); }
+
 /* Scrollbar */
-::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-thumb {
-  background: #c8c8c8;
-  border-radius: 4px;
+  background: var(--color-border-strong);
+  border-radius: 999px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
-::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-subtle); }
+::-webkit-scrollbar-track { background: transparent; }
 
 /* Range slider */
 input[type=range] { -webkit-appearance: none; appearance: none; background: transparent; width: 100%; }
@@ -108,51 +196,61 @@ input[type=range]::-webkit-slider-runnable-track {
   background: linear-gradient(to right, var(--brand) var(--pct, 20%), var(--border) var(--pct, 20%));
 }
 
-/* Buttons */
+/* ============================================================
+   Buttons  —  pill-first, layered feedback
+   ============================================================ */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   font-family: var(--font-body);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   font-weight: 600;
+  letter-spacing: -0.01em;
   text-decoration: none;
   border: none;
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: var(--radius-pill);
   transition:
     background var(--duration-normal) var(--ease-out-expo),
+    color var(--duration-normal) var(--ease-out-expo),
+    border-color var(--duration-normal) var(--ease-out-expo),
     box-shadow var(--duration-normal) var(--ease-out-expo),
-    transform var(--duration-normal) var(--ease-out-expo);
+    transform var(--duration-fast) var(--ease-out-expo);
 }
+.btn:focus-visible { outline: none; box-shadow: var(--ring-focus); }
+.btn:active { transform: translateY(0) scale(0.98); }
 
 .btn-primary {
-  padding: 0.65rem 1.5rem;
+  padding: 0.75rem 1.5rem;
   background: var(--brand);
   color: #fff;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
 
   &:hover {
     background: var(--brand-hover);
-    box-shadow: 0 4px 14px rgba(224, 74, 47, 0.35);
-    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.34);
+    transform: translateY(-2px);
   }
 }
 
 .btn-outline {
-  padding: 0.6rem 1.4rem;
-  background: var(--bg-secondary);
+  padding: 0.7rem 1.45rem;
+  background: var(--surface);
   color: var(--text-primary);
   border: 1px solid var(--border);
 
   &:hover {
-    border-color: var(--text-secondary);
-    background: var(--bg-tertiary);
+    border-color: var(--color-border-strong);
+    background: var(--surface-hover);
     box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
   }
 }
 
 .btn-ghost {
-  padding: 0.5rem 1rem;
+  padding: 0.55rem 1rem;
   background: transparent;
   color: var(--text-primary);
 
@@ -162,11 +260,47 @@ input[type=range]::-webkit-slider-runnable-track {
   }
 }
 
-/* Scroll reveal (see RevealDirective).
-   Uses a keyframe animation rather than a transition so it never collides with a
-   component's own `transition: transform` (used for hover). `backwards` fill keeps
-   the element hidden through its stagger delay; no `forwards`, so once the reveal
-   finishes the element returns to its normal static styles and hover transforms work. */
+/* Signature AI action — ocean→violet gradient with soft glow. */
+.btn-ai {
+  padding: 0.8rem 1.6rem;
+  color: #fff;
+  background: var(--gradient-ai);
+  background-size: 160% 160%;
+  box-shadow: var(--shadow-ai);
+
+  &:hover {
+    background-position: 100% 50%;
+    box-shadow: 0 24px 50px rgba(99, 40, 217, 0.34);
+    transform: translateY(-2px);
+  }
+}
+
+/* ============================================================
+   Card primitive
+   ============================================================ */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  transition:
+    box-shadow var(--duration-normal) var(--ease-out-expo),
+    transform var(--duration-normal) var(--ease-out-expo),
+    border-color var(--duration-normal) var(--ease-out-expo);
+}
+.card--interactive { cursor: pointer; }
+.card--interactive:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-border-strong);
+}
+
+/* Rating star colour helper. */
+.rating-star { color: var(--color-rating); }
+
+/* ============================================================
+   Scroll reveal (see RevealDirective)
+   ============================================================ */
 .reveal { opacity: 0; }
 .reveal.reveal--visible {
   opacity: 1;

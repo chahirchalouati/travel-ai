@@ -84,7 +84,7 @@ const MENU_ITEMS: MenuItem[] = [
 
     .avatar-circle {
       width: 36px; height: 36px; border-radius: 50%;
-      background: linear-gradient(135deg, #E04A2F 0%, #ff7a5a 100%);
+      background: linear-gradient(135deg, #2563EB 0%, #38BDF8 100%);
       display: flex; align-items: center; justify-content: center;
       border: 2px solid #e0e0e0;
       transition: border-color 150ms ease;
@@ -116,29 +116,29 @@ const MENU_ITEMS: MenuItem[] = [
       display: flex; align-items: center; gap: 10px;
       width: 100%; background: none; border: none;
       border-radius: 8px; padding: 10px 12px;
-      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-family: var(--font-body);
       font-size: 14px; font-weight: 500; color: #1a1a1a;
       cursor: pointer; transition: background 100ms ease;
       text-align: left;
     }
     .menu-item:hover { background: #f5f5f5; }
 
-    .menu-item--danger { color: #E04A2F; }
-    .menu-item--danger:hover { background: #FFF0ED; }
+    .menu-item--danger { color: #DC2626; }
+    .menu-item--danger:hover { background: #FEE2E2; }
 
     .menu-item--admin { color: #1a1a1a; font-weight: 700; }
-    .menu-item--admin .menu-icon { color: #E04A2F; }
-    .menu-item--admin:hover { background: #FFF0ED; }
+    .menu-item--admin .menu-icon { color: #2563EB; }
+    .menu-item--admin:hover { background: #EFF4FF; }
 
     .menu-icon { font-size: 18px; color: #8a8a8a; }
-    .menu-item--danger .menu-icon { color: #E04A2F; }
+    .menu-item--danger .menu-icon { color: #DC2626; }
 
     .divider {
       height: 1px; background: #f0f0f0; margin: 4px 0;
     }
 
     .avatar-initials {
-      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-family: var(--font-body);
       font-size: 14px; font-weight: 700; color: #fff; letter-spacing: 0.02em;
     }
   `],

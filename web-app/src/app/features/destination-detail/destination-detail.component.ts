@@ -78,14 +78,14 @@ const MONTH_NAMES = [
         >
           <h1
             style="
-              font-family: 'Hanken Grotesk', sans-serif;
+              font-family: var(--font-body);
               font-size: clamp(2rem, 1.2rem + 3.5vw, 3.5rem);
               color: var(--text-primary); margin: 0; line-height: 1.1; font-weight: 800;
             "
           >{{ dest.name }}</h1>
           <p
             style="
-              font-family: 'Hanken Grotesk', sans-serif; font-size: 16px;
+              font-family: var(--font-body); font-size: 16px;
               color: var(--text-secondary); margin: 6px 0 0; font-weight: 500;
             "
           >{{ dest.country }} &middot; {{ dest.continent }}</p>

@@ -63,7 +63,7 @@ const LANGS: Lang[] = [
       display: flex; align-items: center; gap: 4px;
       background: none; border: 1px solid #e0e0e0; border-radius: 8px;
       padding: 7px 10px; cursor: pointer;
-      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-family: var(--font-body);
       font-size: 12px; font-weight: 600; color: #1a1a1a;
       transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
       white-space: nowrap; line-height: 1;
@@ -84,7 +84,7 @@ const LANGS: Lang[] = [
       display: flex; align-items: center; gap: 10px;
       width: 100%; background: none; border: none;
       border-radius: 8px; padding: 9px 12px;
-      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      font-family: var(--font-body);
       font-size: 14px; font-weight: 500; color: #1a1a1a;
       cursor: pointer; transition: background 100ms ease;
       text-align: left;
