@@ -92,13 +92,15 @@ import type { TravelStory } from '../../core/services/story.service';
     .stories-eyebrow {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      color: var(--brand);
-      font-size: 0.8rem;
-      font-weight: 700;
+      gap: 7px;
+      color: var(--color-ink);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.12em;
     }
+    .stories-eyebrow .ms { color: var(--color-red); }
 
     .stories-title {
       font-size: clamp(1.5rem, 1rem + 1.6vw, 2.1rem);
@@ -154,7 +156,7 @@ import type { TravelStory } from '../../core/services/story.service';
       overflow: hidden;
       cursor: pointer;
       background: #111;
-      box-shadow: 0 10px 30px -14px rgba(0,0,0,0.45);
+      box-shadow: none;
       transition: transform var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
     }
 
@@ -164,8 +166,8 @@ import type { TravelStory } from '../../core/services/story.service';
     }
 
     .story-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 24px 48px -18px rgba(0,0,0,0.55);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
     }
 
     .story-media {
