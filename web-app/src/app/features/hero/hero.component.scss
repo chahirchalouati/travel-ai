@@ -92,40 +92,38 @@ section {
 .hero-eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 0.8rem 0.35rem 0.6rem;
-  border-radius: var(--radius-pill);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--text-secondary);
+  gap: 0.55rem;
+  padding: 0.3rem 0 0.45rem;
+  border-bottom: 1px solid var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink);
 }
 .hero-eyebrow-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--brand);
-  box-shadow: 0 0 0 3px var(--brand-light);
+  width: 8px;
+  height: 8px;
+  border-radius: 0;
+  background: var(--color-red);
 }
 
 .hero-title {
-  margin: 1.1rem 0 0;
+  margin: 1.4rem 0 0;
   font-family: var(--font-display);
   font-optical-sizing: auto;
-  font-weight: 600;
-  font-size: clamp(2.3rem, 1.4rem + 4vw, 4rem);
-  line-height: 1.02;
-  letter-spacing: -0.022em;
+  font-weight: 800;
+  font-size: clamp(2.5rem, 1.4rem + 5vw, 4.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.038em;
   color: var(--text-primary);
   text-wrap: balance;
 
   em {
-    font-style: italic;
-    font-weight: 500;
-    color: var(--brand);
+    font-style: normal;
+    font-weight: 800;
+    color: var(--color-red);
   }
 }
 
@@ -147,16 +145,14 @@ section {
   align-items: center;
   gap: 0.5rem;
   padding: 0.4rem 0.4rem 0.4rem 1.1rem;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   background: var(--surface);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-md);
-  transition: border-color var(--duration-normal) var(--ease-out-expo),
-    box-shadow var(--duration-normal) var(--ease-out-expo);
+  border: 1px solid var(--color-ink);
+  box-shadow: none;
+  transition: box-shadow var(--duration-normal) var(--ease);
 
   &:focus-within {
-    border-color: var(--brand);
-    box-shadow: var(--shadow-md), 0 0 0 4px var(--brand-light);
+    box-shadow: var(--ring-focus);
   }
 }
 
@@ -186,25 +182,22 @@ section {
   display: inline-grid;
   place-items: center;
   flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--brand);
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-sm);
+  background: var(--color-red);
   border: none;
   color: #fff;
   cursor: pointer;
-  transition: background var(--duration-normal) var(--ease-out-expo),
-    transform var(--duration-normal) var(--ease-out-expo),
-    box-shadow var(--duration-normal) var(--ease-out-expo);
+  transition: background var(--duration-normal) var(--ease),
+    transform var(--duration-fast) var(--ease);
 
   .ms {
     font-size: 1.3rem;
   }
 
   &:hover {
-    background: var(--brand-hover);
-    transform: scale(1.06);
-    box-shadow: 0 6px 18px rgba(190, 67, 41, 0.4);
+    background: var(--color-red-hover);
   }
   &:active {
     transform: scale(0.97);
@@ -229,8 +222,8 @@ section {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.4rem 0.85rem;
-  border-radius: var(--radius-pill);
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-sm);
   background: var(--surface);
   border: 1px solid var(--border);
   color: var(--text-secondary);
@@ -238,23 +231,21 @@ section {
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 200ms var(--ease-out-expo),
-    border-color 200ms var(--ease-out-expo),
-    color 200ms var(--ease-out-expo),
-    box-shadow 200ms var(--ease-out-expo);
+  transition: background 160ms var(--ease),
+    border-color 160ms var(--ease),
+    color 160ms var(--ease);
 
   &:hover {
-    transform: translateY(-2px);
-    color: var(--text-primary);
-    border-color: var(--brand);
-    box-shadow: var(--shadow-sm);
+    color: #fff;
+    background: var(--color-ink);
+    border-color: var(--color-ink);
   }
 
   /* the destination currently building in the live preview */
   &.is-live {
-    color: var(--text-primary);
-    border-color: var(--brand);
-    box-shadow: 0 0 0 3px var(--brand-light);
+    color: var(--color-red);
+    border-color: var(--color-red);
+    background: var(--color-red-tint);
   }
 }
 .quick-pill-emoji {
@@ -299,14 +290,13 @@ section {
   border: 1px solid var(--border);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
-  /* "near" parallax layer — tracks the pointer, opposite the backdrop */
-  transform: rotate(0.6deg)
-    translate3d(calc(var(--mx, 0) * 8px), calc(var(--my, 0) * 6px), 0);
-  transition: transform 240ms var(--ease-out-expo);
+  /* precise, no tilt — subtle pointer parallax only */
+  transform: translate3d(calc(var(--mx, 0) * 6px), calc(var(--my, 0) * 5px), 0);
+  transition: transform 240ms var(--ease);
   will-change: transform;
 
   &:hover {
-    transform: rotate(0deg) translateY(-3px);
+    transform: translateY(-2px);
   }
 }
 
@@ -332,10 +322,9 @@ section {
   flex-shrink: 0;
   width: 34px;
   height: 34px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--brand), var(--brand-hover));
+  border-radius: var(--radius-sm);
+  background: var(--color-red);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(190, 67, 41, 0.45);
 
   .ms { font-size: 1.15rem; }
 }

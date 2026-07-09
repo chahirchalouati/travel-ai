@@ -182,11 +182,11 @@
 .bf-review-line span:last-child { font-weight: 700; text-align: right; }
 .bf-ai {
   display: flex; gap: 10px; align-items: flex-start;
-  background: linear-gradient(135deg, var(--color-ocean-tint), #EDE9FE);
-  border: 1px solid rgba(147,51,234,0.2); border-radius: 14px;
-  padding: 14px 16px; margin-top: 18px; color: #6D28D9;
+  background: linear-gradient(135deg, var(--color-ocean-tint), #FDECEA);
+  border: 1px solid rgba(229,53,43,0.2); border-radius: 14px;
+  padding: 14px 16px; margin-top: 18px; color: #A81F18;
 }
-.bf-ai .ms { color: #7C3AED; flex-shrink: 0; margin-top: 1px; }
+.bf-ai .ms { color: #E5352B; flex-shrink: 0; margin-top: 1px; }
 .bf-ai p { margin: 0; font-size: 13.5px; line-height: 1.5; }
 .bf-error {
   display: flex; align-items: center; gap: 6px; margin: 16px 0 0;
@@ -209,8 +209,8 @@
     box-shadow 200ms ease, transform 150ms var(--ease-out-expo);
 }
 .bf-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.bf-btn--primary { background: var(--bf-accent); color: #fff; box-shadow: 0 6px 16px rgba(37,99,235,.25); }
-.bf-btn--primary:hover:not(:disabled) { background: var(--bf-accent-dark); box-shadow: 0 10px 24px rgba(37,99,235,.34); transform: translateY(-2px); }
+.bf-btn--primary { background: var(--bf-accent); color: #fff; box-shadow: 0 6px 16px rgba(229,53,43,.25); }
+.bf-btn--primary:hover:not(:disabled) { background: var(--bf-accent-dark); box-shadow: 0 10px 24px rgba(229,53,43,.34); transform: translateY(-2px); }
 .bf-btn--ghost { background: transparent; color: var(--text-secondary); border: 1px solid var(--bf-line); }
 .bf-btn--ghost:hover { border-color: var(--border); color: var(--bf-ink); }
 
@@ -277,7 +277,7 @@
 .bf-addon--on {
   border-color: var(--bf-accent);
   background: linear-gradient(135deg, var(--brand-light), var(--surface));
-  box-shadow: 0 1px 0 rgba(37, 99, 235, 0.06);
+  box-shadow: 0 1px 0 rgba(229, 53, 43, 0.06);
 }
 .bf-addon input { width: 18px; height: 18px; accent-color: var(--bf-accent); flex: none; }
 .bf-addon__body { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }

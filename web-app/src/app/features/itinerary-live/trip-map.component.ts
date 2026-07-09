@@ -21,7 +21,7 @@ import type { ApiWrapper, TripMapResponse, TripMapStop } from '../../core/models
 const DAY_PALETTE = [
   '#0f766e', // teal (app accent)
   '#e15023', // burnt orange
-  '#7c3aed', // violet
+  '#E5352B', // violet
   '#0369a1', // ocean blue
   '#ca8a04', // amber
   '#be185d', // magenta

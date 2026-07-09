@@ -530,10 +530,10 @@ export class PlannerComponent implements OnDestroy {
     const t = this.t(); const step = this.agentStep();
     const A = [
       { key:'orch',   icon:'dashboard_customize', iconBg:'var(--brand-light)', iconFg:'var(--brand)' },
-      { key:'hotel',  icon:'hotel',               iconBg:'#DBEAFE', iconFg:'#2563EB' },
+      { key:'hotel',  icon:'hotel',               iconBg:'#FDECEA', iconFg:'#E5352B' },
       { key:'rest',   icon:'restaurant',           iconBg:'#FEF3C7', iconFg:'#D97706' },
-      { key:'flight', icon:'flight_takeoff',       iconBg:'#E0F2FE', iconFg:'#0EA5E9' },
-      { key:'rank',   icon:'stacked_bar_chart',    iconBg:'#EDE9FE', iconFg:'#7C3AED' },
+      { key:'flight', icon:'flight_takeoff',       iconBg:'#E0F2FE', iconFg:'#E5352B' },
+      { key:'rank',   icon:'stacked_bar_chart',    iconBg:'#FDECEA', iconFg:'#E5352B' },
     ];
     return A.map((a, i) => ({
       name: (t as unknown as Record<string, string>)['ag_' + a.key],
@@ -578,7 +578,7 @@ export class PlannerComponent implements OnDestroy {
       ...o,
       on: p === o.key,
       bg: p === o.key ? 'var(--brand-light)' : 'var(--bg-primary)',
-      bd: p === o.key ? '#93C5FD' : 'var(--border)',
+      bd: p === o.key ? '#F3B0AB' : 'var(--border)',
       fg: p === o.key ? 'var(--brand)' : 'var(--text-tertiary)',
     }));
   });
@@ -610,7 +610,7 @@ export class PlannerComponent implements OnDestroy {
       }
       const me = m.from === 'user';
       return { isText: true, isOffer: false, justify: me ? 'flex-end' : 'flex-start',
-        text: m.text, bg: me ? '#2563EB' : '#fff', fg: me ? '#fff' : '#0F172A',
+        text: m.text, bg: me ? '#E5352B' : '#fff', fg: me ? '#fff' : '#0F172A',
         radius: me ? '18px 18px 4px 18px' : '18px 18px 18px 4px' };
     });
   });

@@ -88,7 +88,7 @@
   align-items: center;
   gap: 6px;
   border: none;
-  background: var(--teal);
+  background: var(--brand);
   color: #fff;
   font-size: 0.92rem;
   font-weight: 700;
@@ -129,7 +129,7 @@
   font: inherit;
   font-size: 0.95rem;
   background: var(--bg-primary);
-  &:focus { outline: 2px solid var(--teal); outline-offset: -1px; }
+  &:focus { outline: 2px solid var(--brand); outline-offset: -1px; }
 }
 
 .fo-textarea { resize: vertical; min-height: 96px; }
@@ -152,7 +152,7 @@
   &:disabled { opacity: 0.55; cursor: default; transform: none; }
 }
 
-.fo-btn--accent { background: var(--teal); border-color: var(--teal); color: #fff; }
+.fo-btn--accent { background: var(--brand); border-color: var(--brand); color: #fff; }
 
 /* ── List ───────────────────────────────────────────────────────── */
 .fo-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
@@ -173,7 +173,7 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
     border-color: rgba(17, 102, 76, 0.4);
   }
-  &:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+  &:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 }
 
 .fo-card__main { flex: 1; min-width: 0; }
@@ -211,7 +211,7 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: var(--teal);
+  background: var(--brand);
   color: #fff;
   font-size: 0.72rem;
   font-weight: 700;
@@ -228,7 +228,7 @@
   flex: 0 0 64px;
   border-left: 1px solid var(--border-light);
   padding-left: 14px;
-  color: var(--teal);
+  color: var(--brand);
 }
 
 .fo-answers__num { font-size: 1.4rem; font-weight: 800; line-height: 1; }

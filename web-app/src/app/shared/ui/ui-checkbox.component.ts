@@ -38,7 +38,7 @@ import { Component, input, model } from '@angular/core';
         gap: 8px;
         padding: 8px 14px 8px 10px;
         border: 1px solid var(--border);
-        border-radius: 999px;
+        border-radius: var(--radius-sm);
         background: var(--bg-primary);
         color: var(--text-secondary);
         font-family: inherit;

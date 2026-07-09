@@ -340,7 +340,7 @@ const TARGET_TYPE = 'HOTEL';
     .badge--stars { background: rgba(255,255,255,.16); color: #FBBF24; letter-spacing: 2px; border: 1px solid rgba(255,255,255,.22); backdrop-filter: blur(8px); }
     .badge--rating { background: rgba(255,255,255,.94); color: #B26A00; }
     .badge--rating .ms { color: var(--color-rating); }
-    .badge--price { background: var(--brand); color: #fff; box-shadow: 0 6px 16px rgba(37,99,235,.4); }
+    .badge--price { background: var(--brand); color: #fff; box-shadow: 0 6px 16px rgba(229,53,43,.4); }
     .hero-card__name { font-size: clamp(2rem, 1.4rem + 2.4vw, 3rem); font-weight: 800; margin: 0; line-height: 1.05; color: #fff; text-shadow: 0 2px 20px rgba(0,0,0,.3); }
     .hero-card__city { font-size: 15px; color: rgba(255,255,255,.9); margin: 0; font-weight: 500; display: flex; align-items: center; gap: 5px; }
     .hero-card__features { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
@@ -354,9 +354,9 @@ const TARGET_TYPE = 'HOTEL';
     .feature-item--yes { color: var(--text-primary); } .feature-item--yes .ms { color: var(--teal); }
     .feature-item--no { color: var(--text-tertiary); } .feature-item--no .ms { color: var(--border); }
 
-    .ai-card { background: linear-gradient(135deg, var(--color-ocean-tint), #EDE9FE); border: 1px solid rgba(147,51,234,0.18); }
-    .ai-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #6D28D9; background: rgba(147,51,234,0.1); padding: 5px 11px; border-radius: 100px; margin-bottom: 12px; }
-    .ai-badge .ms { font-size: 15px; color: #7C3AED; }
+    .ai-card { background: linear-gradient(135deg, var(--color-ocean-tint), #FDECEA); border: 1px solid rgba(229,53,43,0.18); }
+    .ai-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #A81F18; background: rgba(229,53,43,0.1); padding: 5px 11px; border-radius: 100px; margin-bottom: 12px; }
+    .ai-badge .ms { font-size: 15px; color: #E5352B; }
 
     .rating-grid { display: flex; flex-direction: column; gap: 12px; }
     .rating-row { display: flex; align-items: center; gap: 12px; }
@@ -394,7 +394,7 @@ const TARGET_TYPE = 'HOTEL';
     .review-item { border-bottom: 1px solid var(--border-light); padding-bottom: 20px; }
     .review-item:last-child { border-bottom: none; padding-bottom: 0; }
     .review-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-    .review-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--brand), #38BDF8); color: #fff; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .review-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--brand), #E5352B); color: #fff; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .review-meta { flex: 1; min-width: 0; }
     .review-name { display: block; font-size: 14px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 6px; }
     .review-date { display: block; font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }

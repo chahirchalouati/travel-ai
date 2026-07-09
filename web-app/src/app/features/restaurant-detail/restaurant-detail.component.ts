@@ -316,7 +316,7 @@ function localToday(): string {
     .badge--gray { background: rgba(255,255,255,.16); color: #fff; border: 1px solid rgba(255,255,255,.28); backdrop-filter: blur(8px); }
     .badge--rating { background: rgba(255,255,255,.94); color: #B26A00; }
     .badge--rating .ms { color: var(--color-rating); }
-    .badge--ai { background: rgba(147,51,234,.92); color: #fff; }
+    .badge--ai { background: rgba(229,53,43,.92); color: #fff; }
     .badge--ai .ms { color: #fff; }
 
     .hero-card__name {

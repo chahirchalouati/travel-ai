@@ -17,7 +17,7 @@
     inset: 0;
     background:
       radial-gradient(ellipse 60% 80% at 30% 50%, rgba(83, 52, 131, 0.5) 0%, transparent 70%),
-      radial-gradient(ellipse 40% 60% at 80% 20%, rgba(190, 67, 41, 0.25) 0%, transparent 60%);
+      radial-gradient(ellipse 40% 60% at 80% 20%, rgba(229, 53, 43, 0.25) 0%, transparent 60%);
   }
 }
 
@@ -524,7 +524,7 @@
 
   &:hover {
     background: var(--brand-hover);
-    box-shadow: 0 4px 14px rgba(190, 67, 41, 0.35);
+    box-shadow: 0 4px 14px rgba(229, 53, 43, 0.35);
   }
 }
 
@@ -820,7 +820,7 @@
 
   &:hover {
     background: var(--brand-hover);
-    box-shadow: 0 4px 12px rgba(190,67,41,0.3);
+    box-shadow: 0 4px 12px rgba(229,53,43,0.3);
   }
 }
 
@@ -1202,7 +1202,7 @@
   background: rgba(0,0,0,0.45);
 
   &--completed { background: rgba(17, 102, 76, 0.9); }
-  &--upcoming  { background: rgba(190, 67, 41, 0.92); }
+  &--upcoming  { background: rgba(229, 53, 43, 0.92); }
   &--planning  { background: rgba(192, 137, 46, 0.92); }
 }
 

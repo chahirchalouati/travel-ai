@@ -1,60 +1,72 @@
 /* ============================================================
-   TravelAI Design System v1.0  —  global token layer
-   Airbnb × TripAdvisor × AI-premium. Ocean Blue, modern radii,
-   light layered shadows, Plus Jakarta Sans / Inter pairing.
-   Legacy variable names are aliased to the new palette so the
-   whole app adopts the redesign without per-component edits.
+   TravelAI Design System v2.0  —  "Swiss Grid"
+   International Typographic Style: authoritative, precise,
+   paper-white surfaces, black rules, a single International Red.
+   Inter (tight tracking) for voice, IBM Plex Mono for technical
+   labels & coordinates. Flat — separation comes from hairline
+   rules and whitespace, never floaty shadows.
+   Legacy token names are aliased to the new palette so the whole
+   app adopts the redesign without per-component rewrites.
    ============================================================ */
 :root {
-  /* ---- Canonical palette (spec) ------------------------------------ */
-  --color-ocean: #2563EB;        /* primary — CTA, links, actions       */
-  --color-ocean-hover: #1D4ED8;  /* primary hover                        */
-  --color-ocean-active: #1E40AF; /* primary pressed                      */
-  --color-ocean-tint: #DBEAFE;   /* soft primary wash                    */
-  --color-deep-ocean: #0F172A;   /* header / strong text                 */
-  --color-sky: #38BDF8;          /* highlight                            */
-  --color-violet: #9333EA;       /* AI gradient terminus                 */
+  /* ---- Canonical palette (Swiss) ---------------------------------- */
+  --color-red: #E5352B;          /* International Red — CTA, links, marks */
+  --color-red-hover: #C42A22;
+  --color-red-active: #A81F18;
+  --color-red-tint: #FDECEA;     /* soft wash                            */
+  --color-ink: #111111;          /* text, black rules, ink blocks        */
+  --color-ink-soft: #201F1C;
 
-  --color-success: #10B981;      /* confirmations, nature                */
-  --color-success-strong: #047857;
-  --color-success-tint: #D1FAE5;
-  --color-warning: #F97316;      /* promotions                           */
-  --color-warning-tint: #FFEDD5;
-  --color-rating: #FBBF24;       /* stars                                */
-  --color-rating-tint: #FEF3C7;
+  /* Legacy "ocean/violet/sky" names → remapped onto the Swiss palette   */
+  --color-ocean: var(--color-red);
+  --color-ocean-hover: var(--color-red-hover);
+  --color-ocean-active: var(--color-red-active);
+  --color-ocean-tint: var(--color-red-tint);
+  --color-deep-ocean: var(--color-ink);
+  --color-sky: var(--color-red);
+  --color-violet: var(--color-ink);
 
-  --color-bg: #F8FAFC;           /* page background                      */
+  --color-success: #1F7A4D;      /* restrained green                     */
+  --color-success-strong: #145C39;
+  --color-success-tint: #E4F1EA;
+  --color-warning: #C25A17;      /* burnt amber, muted                   */
+  --color-warning-tint: #FBEBDD;
+  --color-rating: #111111;       /* ratings render as strong ink numerals*/
+  --color-rating-tint: #F1EFE9;
+
+  --color-bg: #F6F5F1;           /* warm paper page                      */
   --color-surface: #FFFFFF;      /* cards                                */
-  --color-surface-hover: #F1F5F9;
-  --color-surface-sunken: #E2E8F0;
-  --color-border: #E2E8F0;
-  --color-border-strong: #CBD5E1;
+  --color-surface-hover: #F1EFE9;
+  --color-surface-sunken: #ECEAE3;
+  --color-border: #E4E1D9;       /* hairline                             */
+  --color-border-strong: #111111;/* deliberate black rule                */
+  --color-hairline: #E4E1D9;
 
-  --color-text: #0F172A;         /* slate-900                            */
-  --color-text-muted: #475569;   /* slate-600                            */
-  --color-text-subtle: #94A3B8;  /* slate-400                            */
-  --color-text-on-dark: #F8FAFC;
+  --color-text: #111111;
+  --color-text-muted: #55534E;
+  --color-text-subtle: #8B887F;
+  --color-text-on-dark: #F6F5F1;
 
-  /* ---- Legacy aliases (consumed across ~50 features) --------------- */
-  --brand: var(--color-ocean);
-  --brand-hover: var(--color-ocean-hover);
-  --brand-active: var(--color-ocean-active);
-  --brand-light: var(--color-ocean-tint);
-  --accent: var(--color-ocean);
-  --primary: var(--color-ocean);
+  /* ---- Legacy aliases (consumed across ~57 features) --------------- */
+  --brand: var(--color-red);
+  --brand-hover: var(--color-red-hover);
+  --brand-active: var(--color-red-active);
+  --brand-light: var(--color-red-tint);
+  --accent: var(--color-red);
+  --primary: var(--color-red);
 
-  --teal: var(--color-success-strong);   /* trust / verified            */
+  --teal: var(--color-success-strong);
   --teal-light: var(--color-success-tint);
-  --gold: #D97706;                         /* amber for text/icons        */
+  --gold: #B4791A;
   --gold-light: var(--color-rating-tint);
-  --coral: var(--color-warning);
+  --coral: var(--color-red);
 
   --bg-primary: var(--color-bg);
   --bg-secondary: var(--color-surface-hover);
   --bg-tertiary: var(--color-surface-sunken);
   --surface: var(--color-surface);
   --surface-hover: var(--color-surface-hover);
-  --surface-ink: var(--color-deep-ocean);
+  --surface-ink: var(--color-ink);
 
   --text-primary: var(--color-text);
   --text-secondary: var(--color-text-muted);
@@ -62,36 +74,38 @@
   --text-on-ink: var(--color-text-on-dark);
 
   --border: var(--color-border);
-  --border-light: #EEF2F7;
+  --border-light: #EEEBE3;
   --line: var(--color-border);
   --muted: var(--color-text-subtle);
 
-  /* ---- Gradients --------------------------------------------------- */
-  --gradient-ai: linear-gradient(135deg, #2563EB 0%, #6D28D9 55%, #9333EA 100%);
-  --gradient-ocean: linear-gradient(135deg, #2563EB 0%, #38BDF8 100%);
-  --gradient-surface: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+  /* ---- "Gradients" — flattened to solids (Swiss has none) --------- */
+  --gradient-ai: var(--color-ink);        /* AI action = ink block       */
+  --gradient-ocean: var(--color-red);
+  --gradient-surface: var(--color-surface);
 
-  /* ---- Shadows: light, layered, longer falloff -------------------- */
-  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
-  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
-  --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 20px 45px rgba(15, 23, 42, 0.13);
-  --shadow-xl: 0 30px 70px rgba(15, 23, 42, 0.18);
-  --shadow-ai: 0 20px 40px rgba(37, 99, 235, 0.25);
-  --ring-focus: 0 0 0 3px rgba(37, 99, 235, 0.25);
+  /* ---- Shadows: near-flat; separation is done with rules ---------- */
+  --shadow-xs: 0 0 0 1px rgba(17, 17, 17, 0.03);
+  --shadow-sm: 0 1px 1px rgba(17, 17, 17, 0.04);
+  --shadow-md: 0 1px 2px rgba(17, 17, 17, 0.05);
+  --shadow-lg: 0 4px 14px rgba(17, 17, 17, 0.08);
+  --shadow-xl: 0 10px 30px rgba(17, 17, 17, 0.10);
+  --shadow-ai: 0 2px 2px rgba(17, 17, 17, 0.06);
+  --ring-focus: 0 0 0 3px rgba(229, 53, 43, 0.28);
 
-  /* ---- Typography: Plus Jakarta Sans display + Inter body --------- */
-  --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  /* ---- Typography: Inter (tight) + IBM Plex Mono (technical) ------- */
+  --font-display: 'Inter', 'Helvetica Neue', Arial, sans-serif;
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
 
-  --text-display: clamp(2.6rem, 1.4rem + 4.5vw, 3rem);   /* 48 */
-  --text-h1: clamp(2rem, 1.3rem + 2.6vw, 2.5rem);        /* 40 */
-  --text-h2: clamp(1.6rem, 1.2rem + 1.6vw, 2rem);        /* 32 */
-  --text-h3: 1.5rem;                                     /* 24 */
-  --text-body-lg: 1.125rem;                              /* 18 */
-  --text-body: 1rem;                                     /* 16 */
-  --text-sm: 0.875rem;                                   /* 14 */
-  --text-caption: 0.75rem;                               /* 12 */
+  --text-display: clamp(2.75rem, 1.3rem + 6vw, 4.5rem);  /* big Swiss hed */
+  --text-h1: clamp(2rem, 1.3rem + 2.8vw, 3rem);
+  --text-h2: clamp(1.6rem, 1.2rem + 1.7vw, 2.125rem);
+  --text-h3: 1.5rem;
+  --text-body-lg: 1.125rem;
+  --text-body: 1rem;
+  --text-sm: 0.875rem;
+  --text-caption: 0.75rem;
+  --text-micro: 0.6875rem;                               /* mono labels   */
 
   /* ---- Spacing: base-4 scale -------------------------------------- */
   --space-1: 4px;
@@ -106,33 +120,64 @@
   --space-32: 128px;
   --space-section: clamp(4rem, 3rem + 5vw, 8rem);
 
-  /* ---- Radii: modern, intentional --------------------------------- */
-  --radius-sm: 12px;   /* inputs, chips           */
-  --radius-md: 16px;   /* inputs, small cards     */
-  --radius-lg: 24px;   /* travel cards, panels    */
-  --radius-xl: 32px;   /* hero surfaces           */
+  /* ---- Radii: sharp, precise -------------------------------------- */
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
   --radius-pill: 999px;
   --r-sm: var(--radius-sm);
   --r-md: var(--radius-md);
   --r-lg: var(--radius-lg);
   --r-pill: var(--radius-pill);
 
-  /* ---- Motion ------------------------------------------------------ */
+  /* ---- Motion: snappy, restrained --------------------------------- */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --duration-fast: 150ms;
-  --duration-normal: 300ms;
-  --duration-smooth: 400ms;
-  --fast: 150ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 120ms;
+  --duration-normal: 200ms;
+  --duration-smooth: 320ms;
+  --fast: 120ms;
 }
 
-/* Display font utility for headlines. */
+/* Display utility — tight Swiss headline. */
 .display {
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
   text-wrap: balance;
+}
+
+/* Technical mono label (coordinates, index codes, meta). */
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* Deliberate black rule divider. */
+.rule { border: 0; border-top: 1px solid var(--color-ink); }
+.hairline { border: 0; border-top: 1px solid var(--color-border); }
+
+/* Big index numeral in International Red. */
+.index-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--color-red);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* Faint blueprint grid — optional atmospheric backdrop. */
+.grid-lines {
+  background-image:
+    linear-gradient(var(--color-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+  background-size: 48px 48px;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -143,7 +188,7 @@ body {
   color: var(--text-primary);
   font-size: var(--text-body);
   line-height: 1.55;
-  letter-spacing: -0.006em;
+  letter-spacing: -0.011em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -165,39 +210,39 @@ body {
 }
 
 /* Selection */
-::selection { background: var(--color-ocean-tint); color: var(--color-deep-ocean); }
+::selection { background: var(--color-red); color: #fff; }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border-strong);
-  border-radius: 999px;
+  background: var(--color-text-subtle);
+  border-radius: 0;
   border: 2px solid transparent;
   background-clip: content-box;
 }
-::-webkit-scrollbar-thumb:hover { background: var(--color-text-subtle); }
+::-webkit-scrollbar-thumb:hover { background: var(--color-ink); }
 ::-webkit-scrollbar-track { background: transparent; }
 
 /* Range slider */
 input[type=range] { -webkit-appearance: none; appearance: none; background: transparent; width: 100%; }
 input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 20px; height: 20px;
+  width: 18px; height: 18px;
   border-radius: 50%;
-  background: var(--brand);
+  background: var(--color-red);
   border: 3px solid #fff;
-  box-shadow: var(--shadow-sm), 0 0 0 1px var(--brand);
+  box-shadow: 0 0 0 1px var(--color-ink);
   cursor: pointer;
-  margin-top: -8px;
+  margin-top: -7px;
 }
 input[type=range]::-webkit-slider-runnable-track {
   height: 4px;
-  border-radius: 2px;
-  background: linear-gradient(to right, var(--brand) var(--pct, 20%), var(--border) var(--pct, 20%));
+  border-radius: 0;
+  background: linear-gradient(to right, var(--color-red) var(--pct, 20%), var(--color-border) var(--pct, 20%));
 }
 
 /* ============================================================
-   Buttons  —  pill-first, layered feedback
+   Buttons  —  squared, flat, precise. Invert on hover.
    ============================================================ */
 .btn {
   display: inline-flex;
@@ -211,42 +256,33 @@ input[type=range]::-webkit-slider-runnable-track {
   text-decoration: none;
   border: none;
   cursor: pointer;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   transition:
-    background var(--duration-normal) var(--ease-out-expo),
-    color var(--duration-normal) var(--ease-out-expo),
-    border-color var(--duration-normal) var(--ease-out-expo),
-    box-shadow var(--duration-normal) var(--ease-out-expo),
-    transform var(--duration-fast) var(--ease-out-expo);
+    background var(--duration-normal) var(--ease),
+    color var(--duration-normal) var(--ease),
+    border-color var(--duration-normal) var(--ease),
+    box-shadow var(--duration-normal) var(--ease),
+    transform var(--duration-fast) var(--ease);
 }
 .btn:focus-visible { outline: none; box-shadow: var(--ring-focus); }
-.btn:active { transform: translateY(0) scale(0.98); }
+.btn:active { transform: scale(0.985); }
 
 .btn-primary {
   padding: 0.75rem 1.5rem;
-  background: var(--brand);
+  background: var(--color-red);
   color: #fff;
-  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
 
-  &:hover {
-    background: var(--brand-hover);
-    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.34);
-    transform: translateY(-2px);
-  }
+  &:hover { background: var(--color-red-hover); }
+  &:active { background: var(--color-red-active); }
 }
 
 .btn-outline {
   padding: 0.7rem 1.45rem;
   background: var(--surface);
-  color: var(--text-primary);
-  border: 1px solid var(--border);
+  color: var(--color-ink);
+  border: 1px solid var(--color-ink);
 
-  &:hover {
-    border-color: var(--color-border-strong);
-    background: var(--surface-hover);
-    box-shadow: var(--shadow-sm);
-    transform: translateY(-1px);
-  }
+  &:hover { background: var(--color-ink); color: #fff; }
 }
 
 .btn-ghost {
@@ -254,49 +290,39 @@ input[type=range]::-webkit-slider-runnable-track {
   background: transparent;
   color: var(--text-primary);
 
-  &:hover {
-    color: var(--brand);
-    background: var(--brand-light);
-  }
+  &:hover { color: var(--color-red); background: var(--color-red-tint); }
 }
 
-/* Signature AI action — ocean→violet gradient with soft glow. */
+/* Signature AI action — solid ink block, red focus. */
 .btn-ai {
   padding: 0.8rem 1.6rem;
   color: #fff;
-  background: var(--gradient-ai);
-  background-size: 160% 160%;
-  box-shadow: var(--shadow-ai);
+  background: var(--color-ink);
 
-  &:hover {
-    background-position: 100% 50%;
-    box-shadow: 0 24px 50px rgba(99, 40, 217, 0.34);
-    transform: translateY(-2px);
-  }
+  &:hover { background: var(--color-red); }
 }
 
 /* ============================================================
-   Card primitive
+   Card primitive  —  hairline border, flat, black-rule hover.
    ============================================================ */
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  box-shadow: none;
   transition:
-    box-shadow var(--duration-normal) var(--ease-out-expo),
-    transform var(--duration-normal) var(--ease-out-expo),
-    border-color var(--duration-normal) var(--ease-out-expo);
+    box-shadow var(--duration-normal) var(--ease),
+    border-color var(--duration-normal) var(--ease),
+    transform var(--duration-fast) var(--ease);
 }
 .card--interactive { cursor: pointer; }
 .card--interactive:hover {
-  transform: translateY(-4px);
+  border-color: var(--color-ink);
   box-shadow: var(--shadow-lg);
-  border-color: var(--color-border-strong);
 }
 
 /* Rating star colour helper. */
-.rating-star { color: var(--color-rating); }
+.rating-star { color: var(--gold); }
 
 /* ============================================================
    Scroll reveal (see RevealDirective)
@@ -308,7 +334,7 @@ input[type=range]::-webkit-slider-runnable-track {
   animation-delay: var(--reveal-delay, 0ms);
 }
 @keyframes reveal-rise {
-  from { opacity: 0; transform: translateY(24px); }
+  from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: none; }
 }
 @media (prefers-reduced-motion: reduce) {

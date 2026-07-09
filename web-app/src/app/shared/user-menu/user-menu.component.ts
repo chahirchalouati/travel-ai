@@ -84,7 +84,7 @@ const MENU_ITEMS: MenuItem[] = [
 
     .avatar-circle {
       width: 36px; height: 36px; border-radius: 50%;
-      background: linear-gradient(135deg, #2563EB 0%, #38BDF8 100%);
+      background: linear-gradient(135deg, #E5352B 0%, #E5352B 100%);
       display: flex; align-items: center; justify-content: center;
       border: 2px solid #e0e0e0;
       transition: border-color 150ms ease;
@@ -127,7 +127,7 @@ const MENU_ITEMS: MenuItem[] = [
     .menu-item--danger:hover { background: #FEE2E2; }
 
     .menu-item--admin { color: #1a1a1a; font-weight: 700; }
-    .menu-item--admin .menu-icon { color: #2563EB; }
+    .menu-item--admin .menu-icon { color: #E5352B; }
     .menu-item--admin:hover { background: #EFF4FF; }
 
     .menu-icon { font-size: 18px; color: #8a8a8a; }
