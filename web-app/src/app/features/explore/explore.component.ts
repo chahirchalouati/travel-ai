@@ -42,7 +42,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
       <section class="section" aria-labelledby="featured-heading">
         <div class="section-header" appReveal>
           <div>
-            <h2 class="section-title" id="featured-heading">{{ 'explore.sections.featured' | transloco }}</h2>
+            <h2 class="section-title" data-index="01" id="featured-heading">{{ 'explore.sections.featured' | transloco }}</h2>
           </div>
           <button class="see-all-link" (click)="filterByTag('All')">{{ 'explore.sections.seeAll' | transloco }}
             <span class="ms see-all-arrow">arrow_forward</span>
@@ -93,7 +93,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
       <section class="section section--gray" aria-labelledby="trending-heading">
         <div class="section-header" appReveal>
           <div>
-            <h2 class="section-title" id="trending-heading">{{ 'explore.sections.trending' | transloco }}</h2>
+            <h2 class="section-title" data-index="02" id="trending-heading">{{ 'explore.sections.trending' | transloco }}</h2>
           </div>
           <button class="see-all-link" (click)="filterByTag('All')">{{ 'explore.sections.seeAll' | transloco }}
             <span class="ms see-all-arrow">arrow_forward</span>
@@ -133,7 +133,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     <section class="section" aria-labelledby="interest-heading">
       <div class="section-header" appReveal>
         <div>
-          <h2 class="section-title" id="interest-heading">{{ 'explore.sections.interests' | transloco }}</h2>
+          <h2 class="section-title" data-index="03" id="interest-heading">{{ 'explore.sections.interests' | transloco }}</h2>
         </div>
       </div>
       <div class="interest-grid">
@@ -176,7 +176,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     <section class="section" aria-labelledby="region-heading">
       <div class="section-header" appReveal>
         <div>
-          <h2 class="section-title" id="region-heading">{{ 'explore.sections.regions' | transloco }}</h2>
+          <h2 class="section-title" data-index="04" id="region-heading">{{ 'explore.sections.regions' | transloco }}</h2>
         </div>
       </div>
       <div class="continent-grid">
@@ -281,10 +281,14 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     }
 
     .section-title::before {
-      content: '';
-      width: 10px;
-      height: 10px;
-      background: var(--color-red);
+      content: attr(data-index);
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: var(--color-red);
+      align-self: flex-start;
+      margin-top: 0.4em;
       flex-shrink: 0;
     }
 
@@ -420,14 +424,16 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     }
 
     .rating-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--border);
+      width: 8px;
+      height: 8px;
+      border-radius: 0;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
     }
 
     .rating-dot.filled {
-      background: var(--teal);
+      background: var(--color-red);
+      border-color: var(--color-red);
     }
 
     .rating-score {
