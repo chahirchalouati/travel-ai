@@ -13,7 +13,14 @@ import {
   UiAvatarComponent,
   UiEmptyComponent,
   UiCheckboxComponent,
+  UiFareGridComponent,
+  UiSpecSheetComponent,
+  UiSentenceBriefComponent,
   type UiSegment,
+  type FareDay,
+  type SpecColumn,
+  type SpecRow,
+  type TripBrief,
 } from '../../shared/ui';
 
 interface Swatch {
@@ -30,7 +37,7 @@ interface Swatch {
     UiKickerComponent, UiBadgeComponent, UiButtonComponent, UiToggleComponent,
     UiSegmentedComponent, UiStatComponent, UiRatingComponent, UiAlertComponent,
     UiSpinnerComponent, UiSkeletonComponent, UiAvatarComponent, UiEmptyComponent,
-    UiCheckboxComponent,
+    UiCheckboxComponent, UiFareGridComponent, UiSpecSheetComponent, UiSentenceBriefComponent,
   ],
   template: `
     <div class="kit">
@@ -167,6 +174,30 @@ interface Swatch {
           </app-ui-empty>
         </div>
       </section>
+
+      <!-- Sentence brief -->
+      <section class="kit-sec">
+        <app-ui-kicker>Forms · sentence brief</app-ui-kicker>
+        <app-ui-sentence-brief (compose)="lastBrief.set($event)" (briefChange)="lastBrief.set($event)" />
+        @if (lastBrief(); as b) {
+          <p class="kit-echo">→ {{ b.nights }} nights · {{ b.place }} · {{ b.travellers }} pax · budget {{ b.budget }} · {{ b.focus.join(', ') || 'anything' }}</p>
+        }
+      </section>
+
+      <!-- Spec sheet -->
+      <section class="kit-sec">
+        <app-ui-kicker>Data · spec sheet</app-ui-kicker>
+        <app-ui-spec-sheet [columns]="specCols" [rows]="specRows" highlight="a" />
+      </section>
+
+      <!-- Fare grid -->
+      <section class="kit-sec">
+        <app-ui-kicker>Data · fare grid</app-ui-kicker>
+        <app-ui-fare-grid [days]="fareDays" [(selected)]="fareSelected" />
+        @if (fareSelected() > -1) {
+          <p class="kit-echo">→ selected {{ fareDays[fareSelected()].label }} at {{ fareDays[fareSelected()].price }}</p>
+        }
+      </section>
     </div>
   `,
   styles: [
@@ -205,6 +236,7 @@ interface Swatch {
 
       .skel-card { flex: 1; min-width: 220px; max-width: 280px; display: flex; flex-direction: column; gap: 10px; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); }
       .card-frame { border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); }
+      .kit-echo { margin: 12px 0 0; font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-secondary); }
     `,
   ],
 })
@@ -231,4 +263,45 @@ export class UiKitComponent {
   readonly toggleB = signal(false);
   readonly checkA = signal(true);
   readonly checkB = signal(false);
+
+  readonly lastBrief = signal<TripBrief | null>(null);
+
+  readonly specCols: SpecColumn[] = [
+    { id: 'a', label: 'Ryokan Genhouin' },
+    { id: 'b', label: 'Hotel Kanra' },
+    { id: 'c', label: 'Nazuna Inn' },
+  ];
+  readonly specRows: SpecRow[] = [
+    { label: 'Price / night', cells: [
+      { display: '€182', best: true, bar: 0.55 },
+      { display: '€214', bar: 0.85 },
+      { display: '€168', bar: 0.45 },
+    ] },
+    { label: 'Rating', cells: [
+      { display: '9.4', best: true },
+      { display: '9.1' },
+      { display: '8.8' },
+    ] },
+    { label: 'To centre', cells: [
+      { display: '0.4 km', mono: true },
+      { display: '1.2 km', mono: true },
+      { display: '0.2 km', mono: true, best: true },
+    ] },
+    { label: 'Free cancel', cells: [
+      { display: 'Yes' },
+      { display: 'Yes' },
+      { display: 'No', muted: true },
+    ] },
+  ];
+
+  readonly fareDays: FareDay[] = [
+    { label: 'MON 14', price: 139 },
+    { label: 'TUE 15', price: 122 },
+    { label: 'WED 16', price: 98 },
+    { label: 'THU 17', price: 110 },
+    { label: 'FRI 18', price: 164 },
+    { label: 'SAT 19', price: 188 },
+    { label: 'SUN 20', price: 151 },
+  ];
+  readonly fareSelected = signal(-1);
 }

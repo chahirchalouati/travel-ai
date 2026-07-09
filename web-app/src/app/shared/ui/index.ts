@@ -29,3 +29,11 @@ export type { UiAlertVariant } from './ui-alert.component';
 export { UiSpinnerComponent } from './ui-spinner.component';
 export { UiSkeletonComponent } from './ui-skeleton.component';
 export { UiEmptyComponent } from './ui-empty.component';
+
+// Data & rich forms
+export { UiFareGridComponent } from './ui-fare-grid.component';
+export type { FareDay } from './ui-fare-grid.component';
+export { UiSpecSheetComponent } from './ui-spec-sheet.component';
+export type { SpecColumn, SpecRow, SpecCell } from './ui-spec-sheet.component';
+export { UiSentenceBriefComponent } from './ui-sentence-brief.component';
+export type { TripBrief } from './ui-sentence-brief.component';
