@@ -72,20 +72,20 @@ import type { TripMemberResponse, TripRole } from '../../core/models/api.models'
     </ng-container>
   `,
   styles: [`
-    .tc-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.25rem 1.4rem; margin-top: 1.5rem; }
+    .tc-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1.25rem 1.4rem; margin-top: 1.5rem; }
     .tc-eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--teal); }
     .tc-eyebrow .ms { font-size: 16px; }
     .tc-panel__title { margin: 0.35rem 0 1rem; font-size: 1.15rem; font-weight: 800; letter-spacing: -0.01em; }
-    .tc-skeleton { height: 64px; border-radius: 12px; background: linear-gradient(90deg, var(--bg-secondary), var(--bg-tertiary), var(--bg-secondary)); background-size: 200% 100%; animation: tc-sh 1.2s infinite; }
+    .tc-skeleton { height: 64px; border-radius: 3px; background: linear-gradient(90deg, var(--bg-secondary), var(--bg-tertiary), var(--bg-secondary)); background-size: 200% 100%; animation: tc-sh 1.2s infinite; }
     @keyframes tc-sh { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
     .tc-empty { color: var(--text-tertiary); font-size: 0.9rem; margin: 0 0 1rem; }
     .tc-list { list-style: none; margin: 0 0 1rem; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; }
-    .tc-member { display: flex; align-items: center; gap: 0.7rem; padding: 0.6rem 0.7rem; border: 1px solid var(--border); border-radius: 12px; }
+    .tc-member { display: flex; align-items: center; gap: 0.7rem; padding: 0.6rem 0.7rem; border: 1px solid var(--border); border-radius: 3px; }
     .tc-avatar { flex: 0 0 34px; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 0.78rem; font-weight: 800; color: #fff; background: var(--brand); }
     .tc-member__main { display: flex; flex-direction: column; min-width: 0; margin-right: auto; }
     .tc-member__name { font-weight: 700; font-size: 0.92rem; }
     .tc-member__email { font-size: 0.75rem; color: var(--text-tertiary); overflow: hidden; text-overflow: ellipsis; }
-    .tc-chip { font-size: 0.68rem; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+    .tc-chip { font-size: 0.68rem; font-weight: 700; padding: 3px 9px; border-radius: 2px; white-space: nowrap; }
     .tc-chip--role { background: var(--brand-light); color: var(--brand); }
     .tc-chip--status[data-status="ACCEPTED"] { background: #dcfce7; color: #15803d; }
     .tc-chip--status[data-status="PENDING"] { background: #fef9c3; color: #a16207; }
@@ -94,9 +94,9 @@ import type { TripMemberResponse, TripRole } from '../../core/models/api.models'
     .tc-remove:hover { background: #fee2e2; color: #b91c1c; }
     .tc-remove .ms { font-size: 18px; }
     .tc-invite { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    .tc-input { flex: 1 1 180px; padding: 0.6rem 0.8rem; border: 1px solid var(--border); border-radius: 10px; font: inherit; }
+    .tc-input { flex: 1 1 180px; padding: 0.6rem 0.8rem; border: 1px solid var(--border); border-radius: 3px; font: inherit; }
     .tc-input--role { flex: 0 0 130px; }
-    .tc-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--brand); color: #fff; border: none; border-radius: 10px; padding: 0.6rem 1.1rem; font-weight: 700; cursor: pointer; transition: filter 120ms; }
+    .tc-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--brand); color: #fff; border: none; border-radius: 3px; padding: 0.6rem 1.1rem; font-weight: 700; cursor: pointer; transition: filter 120ms; }
     .tc-btn:hover:not(:disabled) { filter: brightness(1.08); }
     .tc-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .tc-btn .ms { font-size: 16px; }

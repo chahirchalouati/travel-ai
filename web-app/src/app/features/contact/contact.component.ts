@@ -108,7 +108,7 @@ import { ContactService } from '../../core/services/contact.service';
     .contact-grid { display: grid; grid-template-columns: 1fr 380px; gap: 2.5rem; align-items: start; }
 
     /* Form card */
-    .form-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 2.25rem; }
+    .form-card { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 2.25rem; }
     .form-card h2 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; margin: 0 0 1.75rem; letter-spacing: -0.02em; }
 
     .cform { display: flex; flex-direction: column; gap: 1.1rem; }
@@ -116,7 +116,7 @@ import { ContactService } from '../../core/services/contact.service';
     .field { display: flex; flex-direction: column; gap: 0.35rem; }
     .flabel { font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.02em; }
     .finput {
-      border: 1px solid var(--border); border-radius: 10px; padding: 11px 14px;
+      border: 1px solid var(--border); border-radius: 3px; padding: 11px 14px;
       font-family: inherit; font-size: 0.95rem; color: var(--text-primary); background: var(--bg-primary); width: 100%;
       transition: border-color 140ms ease;
       &:focus { outline: none; border-color: var(--brand); }
@@ -126,7 +126,7 @@ import { ContactService } from '../../core/services/contact.service';
     .form-error { margin: 0; font-size: 0.85rem; font-weight: 600; color: var(--brand); }
     .submit-btn {
       display: inline-flex; align-items: center; gap: 8px; align-self: flex-start;
-      background: var(--brand); color: #fff; border: none; border-radius: 999px;
+      background: var(--brand); color: #fff; border: none; border-radius: 2px;
       padding: 13px 28px; font-family: inherit; font-weight: 700; font-size: 0.95rem; cursor: pointer;
       transition: background 140ms ease, transform 140ms ease;
       .ms { font-size: 20px; }
@@ -139,17 +139,17 @@ import { ContactService } from '../../core/services/contact.service';
     .sent-icon-wrap { width: 72px; height: 72px; border-radius: 50%; background: var(--teal-light); display: flex; align-items: center; justify-content: center; .ms { font-size: 2.5rem; color: var(--teal); } }
     .sent-state h2 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; margin: 0; }
     .sent-state p { font-size: 1rem; color: var(--text-secondary); margin: 0; }
-    .reset-btn { background: none; border: 1px solid var(--border); border-radius: 999px; padding: 10px 22px; font-family: inherit; font-weight: 700; font-size: 0.9rem; cursor: pointer; color: var(--text-primary); &:hover { background: var(--bg-secondary); } }
+    .reset-btn { background: none; border: 1px solid var(--border); border-radius: 2px; padding: 10px 22px; font-family: inherit; font-weight: 700; font-size: 0.9rem; cursor: pointer; color: var(--text-primary); &:hover { background: var(--bg-secondary); } }
 
     /* Channels */
     .channels { display: flex; flex-direction: column; gap: 1.5rem; }
     .channels h2 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; margin: 0; letter-spacing: -0.02em; }
     .channel-list { display: flex; flex-direction: column; gap: 1rem; }
-    .channel-item { display: flex; align-items: center; gap: 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.1rem 1.25rem; }
-    .channel-icon-wrap { width: 42px; height: 42px; flex-shrink: 0; border-radius: 10px; background: var(--brand-light); display: flex; align-items: center; justify-content: center; .ms { font-size: 1.4rem; color: var(--brand); } }
+    .channel-item { display: flex; align-items: center; gap: 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1.1rem 1.25rem; }
+    .channel-icon-wrap { width: 42px; height: 42px; flex-shrink: 0; border-radius: 3px; background: var(--brand-light); display: flex; align-items: center; justify-content: center; .ms { font-size: 1.4rem; color: var(--brand); } }
     .channel-label { font-size: 0.78rem; font-weight: 700; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 2px; }
     .channel-value { font-size: 0.9rem; font-weight: 600; color: var(--brand); text-decoration: none; &:hover { text-decoration: underline; } }
-    .hours-box { background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 14px; padding: 1.25rem; }
+    .hours-box { background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 3px; padding: 1.25rem; }
     .hours-title { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-tertiary); margin: 0 0 6px; }
     .hours-body { font-size: 0.9rem; color: var(--text-secondary); margin: 0; line-height: 1.6; }
 

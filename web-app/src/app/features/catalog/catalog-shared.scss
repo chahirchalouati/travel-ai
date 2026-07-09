@@ -41,13 +41,14 @@
   gap: 6px;
   padding: 6px 14px;
   margin-bottom: 1rem;
-  border-radius: 40px;
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(10px);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -73,13 +74,13 @@
   flex-wrap: wrap;
   align-items: flex-end;
   gap: 16px 14px;
-  background: linear-gradient(180deg, var(--surface) 0%, var(--bg-secondary) 140%);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 22px 22px 24px;
+  padding: 24px 22px;
   max-width: 1060px;
   margin: 0 auto;
-  box-shadow: 0 28px 70px -20px rgba(15, 18, 22, 0.55), 0 2px 6px rgba(15, 18, 22, 0.12);
+  box-shadow: var(--shadow-xl);
   text-align: left;
   isolation: isolate;
   /* No fill-mode: a lingering "forwards"/"both" transform (even an at-rest
@@ -95,12 +96,12 @@
   content: '';
   position: absolute;
   top: 0;
-  left: 22px;
-  right: 22px;
+  left: 0;
+  right: 0;
   height: 3px;
-  border-radius: 0 0 3px 3px;
-  background: linear-gradient(90deg, var(--brand), var(--gold));
-  opacity: 0.9;
+  border-radius: 0;
+  background: var(--color-red);
+  opacity: 1;
 }
 
 @keyframes panel-rise {
@@ -271,7 +272,7 @@
   align-items: center;
   gap: 5px;
   padding: 5px 10px 5px 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   background: rgba(255, 255, 255, 0.18);
   border: 1px solid rgba(255, 255, 255, 0.35);
   color: #fff;
@@ -318,7 +319,7 @@
   text-transform: uppercase;
   letter-spacing: 0.03em;
   padding: 5px 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background 150ms ease, border-color 150ms ease;
   .ms { font-size: 14px; }
@@ -342,11 +343,14 @@
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-ink);
 }
 
 .results-count {
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .results-count span {
@@ -363,19 +367,20 @@
 
 /* ── Card ───────────────────────────────────────────── */
 .card {
-  background: var(--bg-primary);
-  border: 1px solid var(--border-light);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
   overflow: hidden;
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  transition: transform var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
+  transition: transform var(--duration) var(--ease), border-color var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
 }
 
 .card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--color-ink);
+  box-shadow: var(--shadow-lg);
 }
 
 .card:focus-visible {
@@ -411,7 +416,7 @@
   font-size: 0.72rem;
   font-weight: 600;
   padding: 4px 10px;
-  border-radius: 20px;
+  border-radius: var(--radius-sm);
   backdrop-filter: blur(6px);
 }
 
@@ -467,7 +472,7 @@
   font-size: 0.7rem;
   font-weight: 500;
   padding: 3px 8px;
-  border-radius: 20px;
+  border-radius: var(--radius-sm);
 }
 
 .tag-pill--ai {
@@ -492,7 +497,8 @@
 .card__price {
   font-size: 1.15rem;
   font-weight: 800;
-  color: var(--teal);
+  color: var(--color-ink);
+  letter-spacing: -0.02em;
   line-height: 1;
 }
 
@@ -653,7 +659,7 @@
   font-weight: 600;
   letter-spacing: 0.01em;
   padding: 7px 16px;
-  border-radius: 22px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   backdrop-filter: blur(6px);
   transition: background var(--duration-fast, 150ms) ease,
@@ -672,8 +678,8 @@
 }
 
 .chip--active {
-  background: var(--teal);
-  border-color: var(--teal);
+  background: var(--color-red);
+  border-color: var(--color-red);
   color: #fff;
 }
 

@@ -42,7 +42,7 @@ import { AuthService } from '../../core/services/auth.service';
     .ti-icon { font-size: 46px; color: var(--text-tertiary); }
     .ti-title { margin: 0; font-size: 1.4rem; font-weight: 800; }
     .ti-msg { margin: 0; color: var(--text-tertiary); }
-    .ti-btn { margin-top: 0.5rem; background: var(--brand); color: #fff; border: none; border-radius: 10px; padding: 0.7rem 1.4rem; font-weight: 700; cursor: pointer; }
+    .ti-btn { margin-top: 0.5rem; background: var(--brand); color: #fff; border: none; border-radius: 3px; padding: 0.7rem 1.4rem; font-weight: 700; cursor: pointer; }
   `],
 })
 export class TripInviteComponent implements OnInit {

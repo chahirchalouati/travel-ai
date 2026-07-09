@@ -98,7 +98,7 @@ export interface EntityAttachment {
       display: flex;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-radius: 3px;
       overflow: hidden;
       transition: box-shadow 200ms ease, border-color 200ms ease;
       min-width: 280px;
@@ -231,7 +231,7 @@ export interface EntityAttachment {
       font-size: 10px;
       font-weight: 500;
       padding: 3px 8px;
-      border-radius: 12px;
+      border-radius: 3px;
       background: var(--bg-secondary);
       color: var(--text-secondary);
     }
@@ -286,7 +286,7 @@ export interface EntityAttachment {
     .card-action-btn.primary:hover { background: var(--brand-hover); }
 
     .entity-card--hotel .card-action-btn.primary { background: var(--teal); }
-    .entity-card--hotel .card-action-btn.primary:hover { background: #0d5640; }
+    .entity-card--hotel .card-action-btn.primary:hover { background: #242424; }
 
     .entity-card--restaurant .card-action-btn.primary { background: var(--gold); color: var(--text-primary); }
     .entity-card--restaurant .card-action-btn.primary:hover { background: #a77025; }

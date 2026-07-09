@@ -95,14 +95,14 @@ import type { NotificationView } from '../../core/models/api.models';
     .unread-banner {
       display: flex; align-items: center; gap: 0.6rem;
       background: var(--accent-soft); color: var(--accent);
-      border-radius: 10px; padding: 0.7rem 1.1rem;
+      border-radius: 3px; padding: 0.7rem 1.1rem;
       font-size: 0.9rem; font-weight: 700; margin-bottom: 1.25rem;
     }
     .rows { display: flex; flex-direction: column; gap: 1rem; }
     .row { display: flex; align-items: center; gap: 1.1rem; padding: 1.1rem 1.3rem; cursor: pointer; transition: box-shadow 200ms; }
     .row:hover { box-shadow: var(--shadow-md); }
     .row--unread { border-left: 3px solid var(--accent); }
-    .row-icon { width: 48px; height: 48px; flex: none; border-radius: 12px; background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; }
+    .row-icon { width: 48px; height: 48px; flex: none; border-radius: 3px; background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; }
     .row-icon .ms { font-size: 24px; }
     .row-icon.failed { background: #fdecec; color: #c0392b; }
     .row-main { flex: 1; min-width: 0; }

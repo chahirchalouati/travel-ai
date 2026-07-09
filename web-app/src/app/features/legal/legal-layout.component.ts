@@ -64,7 +64,7 @@ export interface LegalSection {
     .sec-num { color: var(--brand); font-size: 0.85em; }
     .legal-section p { font-size: 0.98rem; color: var(--text-secondary); line-height: 1.8; margin: 0 0 0.9rem; &:last-child { margin-bottom: 0; } }
 
-    .legal-foot { display: flex; align-items: center; gap: 0.85rem; margin-top: 3rem; padding: 1.4rem 1.6rem; background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    .legal-foot { display: flex; align-items: center; gap: 0.85rem; margin-top: 3rem; padding: 1.4rem 1.6rem; background: var(--surface); border: 1px solid var(--border); border-radius: 3px;
       .ms { font-size: 1.5rem; color: var(--brand); flex-shrink: 0; }
       p { margin: 0; font-size: 0.92rem; color: var(--text-secondary); }
       a { color: var(--brand); font-weight: 700; text-decoration: none; &:hover { text-decoration: underline; } }

@@ -278,14 +278,14 @@ import { FavoritesService } from '../../core/services/favorites.service';
       </div>
     } @else {
       <div style="max-width:1100px; margin:0 auto; padding:32px;">
-        <div class="shimmer" style="height:300px; border-radius:16px; margin-bottom:24px;"></div>
+        <div class="shimmer" style="height:300px; border-radius: 3px; margin-bottom:24px;"></div>
         <div style="display:grid; grid-template-columns:2fr 1fr; gap:24px;">
           <div style="display:flex; flex-direction:column; gap:20px;">
-            <div class="shimmer" style="height:180px; border-radius:12px;"></div>
-            <div class="shimmer" style="height:200px; border-radius:12px;"></div>
-            <div class="shimmer" style="height:140px; border-radius:12px;"></div>
+            <div class="shimmer" style="height:180px; border-radius: 3px;"></div>
+            <div class="shimmer" style="height:200px; border-radius: 3px;"></div>
+            <div class="shimmer" style="height:140px; border-radius: 3px;"></div>
           </div>
-          <div class="shimmer" style="height:400px; border-radius:12px;"></div>
+          <div class="shimmer" style="height:400px; border-radius: 3px;"></div>
         </div>
       </div>
     }
@@ -306,13 +306,13 @@ import { FavoritesService } from '../../core/services/favorites.service';
       cursor: pointer; padding: 0; transition: color 150ms ease;
     }
     .back-link:hover { color: var(--brand); }
-    .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 999px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 150ms ease; }
+    .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 2px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 150ms ease; }
     .fav-toggle:hover { border-color: var(--brand); color: var(--brand); }
     .fav-toggle--on { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
     .fav-toggle .ms { font-size: 18px; }
 
     .hero-card {
-      position: relative; border-radius: 16px; overflow: hidden;
+      position: relative; border-radius: 3px; overflow: hidden;
       margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,.15);
     }
 
@@ -321,7 +321,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
     }
 
     .hero-card__img-placeholder {
-      width: 100%; height: 300px; background: #1a2a4a;
+      width: 100%; height: 300px; background: #1c1c1c;
       display: flex; align-items: center; justify-content: center;
     }
 
@@ -337,7 +337,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
     }
 
     .badge {
-      display: inline-block; border-radius: 100px;
+      display: inline-block; border-radius: 2px;
       padding: 4px 12px; font-size: 12px; font-weight: 600;
     }
     .badge--teal { background: var(--teal); color: #fff; }
@@ -366,7 +366,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
 
     .duration-chip {
       background: rgba(255,255,255,.2); color: #fff; border: 1px solid rgba(255,255,255,.3);
-      border-radius: 100px; padding: 3px 12px; font-size: 12px; font-weight: 600;
+      border-radius: 2px; padding: 3px 12px; font-size: 12px; font-weight: 600;
       backdrop-filter: blur(4px);
     }
 
@@ -376,7 +376,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
     }
 
     .info-card {
-      background: var(--surface); border-radius: 12px; padding: 24px;
+      background: var(--surface); border-radius: 3px; padding: 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,.08);
     }
 
@@ -414,7 +414,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
 
     .divider-badge {
       background: var(--bg-primary); border: 1px solid var(--border);
-      border-radius: 100px; padding: 4px 12px;
+      border-radius: 2px; padding: 4px 12px;
       font-size: 12px; font-weight: 600; color: var(--text-secondary);
       white-space: nowrap;
     }
@@ -431,7 +431,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
     .feature-item--no .ms { color: var(--border); }
 
     .booking-card {
-      background: var(--surface); border-radius: 12px; padding: 24px;
+      background: var(--surface); border-radius: 3px; padding: 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,.08); border: 1px solid var(--border);
     }
 
@@ -456,18 +456,18 @@ import { FavoritesService } from '../../core/services/favorites.service';
 
     .btn-book {
       width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
-      background: var(--brand); color: #fff; border: none; border-radius: 10px;
+      background: var(--brand); color: #fff; border: none; border-radius: 2px;
       padding: 14px; font-family: inherit; font-size: 15px; font-weight: 600;
       cursor: pointer; transition: background 150ms ease; margin-bottom: 10px;
     }
     .btn-book:hover { background: var(--brand-hover); }
-    .btn-watch { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; background: var(--surface); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 12px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 150ms ease; }
+    .btn-watch { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; background: var(--surface); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 2px; padding: 12px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 150ms ease; }
     .btn-watch:hover { border-color: var(--brand); color: var(--brand); }
     .btn-watch--on { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
 
     .btn-chat {
       width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
-      background: var(--surface); color: var(--brand); border: 1.5px solid var(--brand); border-radius: 10px;
+      background: var(--surface); color: var(--brand); border: 1.5px solid var(--brand); border-radius: 2px;
       padding: 13px; font-family: inherit; font-size: 15px; font-weight: 600;
       cursor: pointer; transition: background 150ms ease;
     }
@@ -507,7 +507,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
     .cruise-timeline__day {
       flex-shrink: 0; width: 78px; text-align: center;
       font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
-      color: var(--teal); background: var(--teal-light); border-radius: 999px; padding: 6px 0; height: fit-content;
+      color: var(--teal); background: var(--teal-light); border-radius: 2px; padding: 6px 0; height: fit-content;
     }
     .cruise-timeline__body { display: flex; flex-direction: column; gap: 2px; padding-top: 2px; }
     .cruise-timeline__port { font-size: 15px; font-weight: 700; color: var(--text-primary); }
@@ -516,7 +516,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
 
     /* Cabin categories */
     .cabin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
-    .cabin-card { border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+    .cabin-card { border: 1px solid var(--border); border-radius: 3px; padding: 14px; }
     .cabin-card__head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
     .cabin-card__name { font-size: 15px; font-weight: 700; }
     .cabin-card__price { font-size: 15px; font-weight: 800; color: var(--brand); }

@@ -302,7 +302,7 @@ interface ChatMsg {
     .topbar {
       position: relative; z-index: 20; flex-shrink: 0;
       margin: 14px clamp(12px, 4vw, 28px) 0;
-      height: 54px; border-radius: var(--radius-pill);
+      height: 54px; border-radius: var(--radius-sm);
       display: flex; align-items: center; justify-content: flex-end;
       gap: 10px; padding: 0 14px;
       background: var(--surface); border: 1px solid var(--border);
@@ -311,7 +311,7 @@ interface ChatMsg {
     .topbar-actions { display: flex; gap: 8px; }
     .pill-btn {
       display: inline-flex; align-items: center; gap: 7px;
-      height: 36px; padding: 0 14px; border-radius: var(--radius-pill);
+      height: 36px; padding: 0 14px; border-radius: var(--radius-sm);
       border: 1px solid var(--border); background: var(--bg-secondary);
       color: var(--text-primary); font-family: var(--font-body); font-size: 13px; font-weight: 700;
       cursor: pointer; transition: background var(--duration-fast), box-shadow var(--duration-fast);
@@ -356,7 +356,7 @@ interface ChatMsg {
     .chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 26px; }
     .chip {
       display: inline-flex; align-items: center; gap: 6px;
-      padding: 6px 13px; border-radius: var(--radius-pill);
+      padding: 6px 13px; border-radius: var(--radius-sm);
       background: var(--surface); border: 1px solid var(--border);
       color: var(--text-secondary); font-size: 12.5px; font-weight: 600;
       box-shadow: var(--shadow-sm);
@@ -426,7 +426,7 @@ interface ChatMsg {
     .row:hover .actions { opacity: 1; }
     .ghost-btn {
       display: inline-flex; align-items: center; gap: 5px;
-      padding: 5px 11px; border-radius: var(--radius-pill);
+      padding: 5px 11px; border-radius: var(--radius-sm);
       background: var(--bg-secondary); border: 1px solid var(--border);
       color: var(--text-secondary); font-family: var(--font-body); font-size: 11.5px; font-weight: 700; cursor: pointer;
       transition: color var(--duration-fast), background var(--duration-fast), border-color var(--duration-fast);
@@ -437,7 +437,7 @@ interface ChatMsg {
     .followups { display: flex; flex-wrap: wrap; gap: 8px; }
     .followup {
       display: inline-flex; align-items: center; gap: 6px;
-      padding: 8px 14px; border-radius: var(--radius-pill);
+      padding: 8px 14px; border-radius: var(--radius-sm);
       background: var(--surface); border: 1px solid var(--border);
       color: var(--brand); font-family: var(--font-body); font-size: 12.5px; font-weight: 700; cursor: pointer;
       box-shadow: var(--shadow-sm);
@@ -453,7 +453,7 @@ interface ChatMsg {
       padding: 6px; border-radius: var(--radius-md);
       background: var(--surface); border: 1px solid var(--border);
     }
-    .map-frame ::ng-deep .map-container { border: none; border-radius: 12px; height: 240px; }
+    .map-frame ::ng-deep .map-container { border: none; border-radius: 3px; height: 240px; }
 
     /* ── Composer ─────────────────────────────────────────────────────────── */
     .composer-zone {
@@ -491,7 +491,7 @@ interface ChatMsg {
 
     .auth-cta {
       display: inline-flex; align-items: center; gap: 11px;
-      padding: 14px 22px; border-radius: var(--radius-pill);
+      padding: 14px 22px; border-radius: var(--radius-sm);
       background: var(--surface); border: 1px solid var(--border);
       font-size: 14px; font-weight: 700; color: var(--text-primary); cursor: pointer;
       box-shadow: var(--shadow-md);
@@ -555,7 +555,7 @@ interface ChatMsg {
     .drawer-locked .ms { font-size: 32px; color: var(--text-tertiary); }
     .drawer-locked p { font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5; }
     .solid-btn {
-      padding: 10px 22px; border-radius: var(--radius-pill); border: none; cursor: pointer;
+      padding: 10px 22px; border-radius: var(--radius-sm); border: none; cursor: pointer;
       background: var(--brand); color: #fff; font-family: var(--font-body); font-size: 13.5px; font-weight: 800;
       transition: background var(--duration-fast), box-shadow var(--duration-fast);
     }

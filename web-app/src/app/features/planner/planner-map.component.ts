@@ -33,7 +33,7 @@ export interface PlannerPin {
       position: relative;
       display: flex; align-items: center; gap: 6px;
       padding: 6px 11px 6px 8px;
-      border-radius: 999px;
+      border-radius: 2px;
       background: rgba(255,255,255,0.86);
       -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
       border: 1.5px solid rgba(255,255,255,0.9);

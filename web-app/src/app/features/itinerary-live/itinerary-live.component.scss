@@ -82,7 +82,7 @@
   max-width: 760px;
   margin: 18px auto 0;
   padding: 12px 18px;
-  border-radius: 12px;
+  border-radius: 3px;
   background: linear-gradient(135deg, #fef3c7, #fde68a);
   color: #92400e;
   font-weight: 600;
@@ -115,7 +115,7 @@
   padding: 16px 18px;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 3px;
   border-left: 4px solid var(--border);
   transition: border-color 200ms ease;
 
@@ -131,7 +131,7 @@
   width: 44px;
   height: 44px;
   flex-shrink: 0;
-  border-radius: 12px;
+  border-radius: 3px;
   background: var(--bg-tertiary);
   color: var(--teal);
   .ms { font-size: 24px; }
@@ -157,7 +157,7 @@
   font-size: 0.74rem;
   font-weight: 700;
   padding: 3px 9px;
-  border-radius: 20px;
+  border-radius: 3px;
   .ms { font-size: 14px; }
 
   &--ON_SCHEDULE { background: rgba(15, 118, 110, 0.12); color: var(--teal); }
@@ -187,7 +187,7 @@
 .il-input {
   width: 100%;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 3px;
   padding: 10px 12px;
   font: inherit;
   font-size: 0.92rem;
@@ -209,7 +209,7 @@
   font-size: 0.86rem;
   font-weight: 600;
   padding: 8px 15px;
-  border-radius: 22px;
+  border-radius: 3px;
   cursor: pointer;
   transition: transform 150ms ease, background 150ms ease;
   .ms { font-size: 17px; }
@@ -221,14 +221,14 @@
   background: var(--teal);
   border-color: var(--teal);
   color: #fff;
-  &:hover { background: #0d5640; }
+  &:hover { background: #242424; }
 }
 
 /* ── Proposals ─────────────────────────────────────────────────── */
 .il-proposal {
   background: var(--bg-secondary);
   border: 1px solid rgba(15, 118, 110, 0.22);
-  border-radius: 16px;
+  border-radius: 3px;
   padding: 20px;
   margin-bottom: 16px;
   box-shadow: 0 8px 30px rgba(15, 118, 110, 0.06);
@@ -266,7 +266,7 @@
   flex-wrap: wrap;
   gap: 8px;
   padding: 10px 12px;
-  border-radius: 10px;
+  border-radius: 3px;
   background: var(--bg-tertiary);
 }
 

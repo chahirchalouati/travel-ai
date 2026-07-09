@@ -95,7 +95,7 @@ import { SiteContentService, SiteContentItem } from '../../core/services/site-co
     .hero-cta {
       display: inline-flex; align-items: center; gap: 8px;
       background: var(--brand); color: #fff; text-decoration: none;
-      font-weight: 700; font-size: 0.95rem; padding: 14px 28px; border-radius: 999px;
+      font-weight: 700; font-size: 0.95rem; padding: 14px 28px; border-radius: 2px;
       transition: background 140ms ease, transform 140ms ease;
       .ms { font-size: 20px; }
       &:hover { background: var(--brand-hover); transform: translateY(-1px); }
@@ -123,7 +123,7 @@ import { SiteContentService, SiteContentItem } from '../../core/services/site-co
     .mission-text .body-lg { font-size: 1.1rem; line-height: 1.8; color: var(--text-secondary); margin: 0; }
     .img-stack { position: relative; height: 280px; }
     .img-card {
-      position: absolute; border-radius: 20px; display: flex; align-items: center; justify-content: center;
+      position: absolute; border-radius: 3px; display: flex; align-items: center; justify-content: center;
       box-shadow: 0 12px 40px rgba(33,27,20,0.14);
       .ms { font-size: 3rem; color: #fff; }
     }
@@ -133,8 +133,8 @@ import { SiteContentService, SiteContentItem } from '../../core/services/site-co
 
     /* Values */
     .values-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
-    .value-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem 1.5rem; }
-    .value-icon-wrap { width: 48px; height: 48px; border-radius: 12px; background: var(--brand-light); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+    .value-card { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1.75rem 1.5rem; }
+    .value-icon-wrap { width: 48px; height: 48px; border-radius: 3px; background: var(--brand-light); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
     .value-icon { font-size: 1.6rem; color: var(--brand); }
     .value-card h3 { font-size: 1rem; font-weight: 700; margin: 0 0 0.5rem; }
     .value-card p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.65; margin: 0; }
@@ -147,12 +147,12 @@ import { SiteContentService, SiteContentItem } from '../../core/services/site-co
     .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
     .btn-primary {
       background: var(--brand); color: #fff; text-decoration: none; font-weight: 700;
-      padding: 13px 28px; border-radius: 999px; font-size: 0.95rem;
+      padding: 13px 28px; border-radius: 2px; font-size: 0.95rem;
       transition: background 140ms ease; &:hover { background: var(--brand-hover); }
     }
     .btn-secondary {
       background: rgba(255,255,255,0.08); color: var(--bg-secondary); text-decoration: none;
-      font-weight: 700; padding: 13px 28px; border-radius: 999px; font-size: 0.95rem;
+      font-weight: 700; padding: 13px 28px; border-radius: 2px; font-size: 0.95rem;
       border: 1px solid rgba(255,255,255,0.18); transition: background 140ms ease;
       &:hover { background: rgba(255,255,255,0.14); }
     }

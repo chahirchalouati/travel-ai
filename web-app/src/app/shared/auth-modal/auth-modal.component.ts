@@ -267,7 +267,7 @@ const GIS_SRC = 'https://accounts.google.com/gsi/client';
       color: #c0392b;
       background: #fdecea;
       border: 1px solid #f5c6cb;
-      border-radius: 10px;
+      border-radius: 3px;
       padding: 9px 12px;
     }
 
@@ -283,7 +283,7 @@ const GIS_SRC = 'https://accounts.google.com/gsi/client';
       color: #fff;
       background: var(--brand);
       border: none;
-      border-radius: 10px;
+      border-radius: 3px;
       cursor: pointer;
       transition: background 150ms ease, transform 150ms ease, box-shadow 150ms ease;
     }

@@ -60,7 +60,7 @@ const TYPE_ICON: Record<FavoriteType, string> = {
   `,
   styles: [`
     .fav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.1rem; }
-    .fav-card { position: relative; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; cursor: pointer; background: var(--surface, #fff); transition: transform 150ms ease, box-shadow 150ms ease; }
+    .fav-card { position: relative; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 3px; overflow: hidden; cursor: pointer; background: var(--surface, #fff); transition: transform 150ms ease, box-shadow 150ms ease; }
     .fav-card:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,.08); }
     .fav-card__img { width: 100%; height: 150px; object-fit: cover; }
     .fav-card__img--icon { display: grid; place-items: center; background: var(--brand-light); color: var(--brand); }

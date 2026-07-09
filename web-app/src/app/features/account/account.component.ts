@@ -250,7 +250,7 @@ type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
     .identity-avatar { width: 60px; height: 60px; flex: none; border-radius: 50%; background: linear-gradient(135deg, var(--brand), var(--brand-hover)); color: #fff; font-weight: 800; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; }
     .identity-name { margin: 0; font-size: 1.3rem; font-weight: 800; }
     .identity-email { color: var(--muted); font-size: 0.9rem; }
-    .role-badge { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; background: var(--teal-light); color: var(--teal); font-weight: 800; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 5px 11px; border-radius: 999px; }
+    .role-badge { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; background: var(--teal-light); color: var(--teal); font-weight: 800; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 5px 11px; border-radius: 2px; }
     .role-badge .ms { font-size: 15px; }
     .role-badge.admin { background: var(--brand-light); color: var(--accent); }
     .form { display: flex; flex-direction: column; gap: 1rem; }
@@ -258,7 +258,7 @@ type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
     .field { display: flex; flex-direction: column; gap: 6px; }
     .field span { font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); }
     .field small { color: var(--muted); font-weight: 500; }
-    .field input { border: 1px solid var(--line); border-radius: 10px; padding: 0.65rem 0.85rem; font-family: inherit; font-size: 0.95rem; outline: none; transition: border-color 120ms ease; }
+    .field input { border: 1px solid var(--line); border-radius: 3px; padding: 0.65rem 0.85rem; font-family: inherit; font-size: 0.95rem; outline: none; transition: border-color 120ms ease; }
     .field input:focus { border-color: var(--accent); }
     .field input:disabled { background: var(--bg-secondary); color: var(--muted); }
     .form-actions { display: flex; justify-content: flex-end; gap: 0.7rem; margin-top: 0.5rem; }
@@ -272,13 +272,13 @@ type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
     .status-line { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; padding: 0.3rem 0; color: var(--text-secondary); }
     .status-line .ms { font-size: 18px; color: var(--muted); }
     .status-line .ms.ok { color: var(--teal); }
-    .danger { display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--surface); border: 1px solid var(--line); color: var(--accent); border-radius: 12px; padding: 0.85rem; font-family: inherit; font-weight: 700; cursor: pointer; transition: background 120ms ease; }
+    .danger { display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--surface); border: 1px solid var(--line); color: var(--accent); border-radius: 3px; padding: 0.85rem; font-family: inherit; font-weight: 700; cursor: pointer; transition: background 120ms ease; }
     .danger:hover { background: var(--accent-soft); }
-    .toast { background: var(--ink); color: #fff; padding: 0.7rem 1.1rem; border-radius: 12px; margin-bottom: 1.2rem; font-weight: 600; font-size: 0.9rem; }
+    .toast { background: var(--ink); color: #fff; padding: 0.7rem 1.1rem; border-radius: 3px; margin-bottom: 1.2rem; font-weight: 600; font-size: 0.9rem; }
     /* Loyalty card — occupies the main column, below the identity card. */
     .loyalty { grid-column: 1; }
     .loyalty-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding-bottom: 1.1rem; margin-bottom: 1.1rem; border-bottom: 1px solid var(--line); }
-    .loyalty-tier { display: inline-flex; align-items: center; gap: 7px; font-weight: 800; font-size: 1.05rem; letter-spacing: 0.01em; padding: 6px 13px; border-radius: 999px; background: linear-gradient(135deg, #1f2733, #3a4656); color: #fff; }
+    .loyalty-tier { display: inline-flex; align-items: center; gap: 7px; font-weight: 800; font-size: 1.05rem; letter-spacing: 0.01em; padding: 6px 13px; border-radius: 2px; background: linear-gradient(135deg, #1f2733, #3a4656); color: #fff; }
     .loyalty[data-tier="VOYAGER"] .loyalty-tier { background: linear-gradient(135deg, #1d5c8f, #4aa3d6); }
     .loyalty[data-tier="ELITE"] .loyalty-tier { background: linear-gradient(135deg, #9a6a12, #e0b64a); }
     .loyalty-tier .ms { font-size: 19px; }
@@ -288,8 +288,8 @@ type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
     .loyalty-points-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 700; }
     .loyalty-progress { margin-bottom: 1rem; }
     .loyalty-progress__labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary); font-weight: 600; margin-bottom: 6px; }
-    .loyalty-bar { height: 8px; border-radius: 999px; background: var(--bg-tertiary); overflow: hidden; }
-    .loyalty-bar__fill { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--brand), var(--brand-hover)); transition: width var(--duration-normal) var(--ease-out-expo); }
+    .loyalty-bar { height: 8px; border-radius: 2px; background: var(--bg-tertiary); overflow: hidden; }
+    .loyalty-bar__fill { display: block; height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--brand), var(--brand-hover)); transition: width var(--duration-normal) var(--ease-out-expo); }
     .loyalty-top { margin: 0 0 1rem; font-weight: 700; color: var(--gold); font-size: 0.9rem; }
     .loyalty-meta { display: flex; justify-content: space-between; gap: 1rem; font-size: 0.82rem; color: var(--muted); font-weight: 600; padding-bottom: 1rem; margin-bottom: 0.6rem; border-bottom: 1px solid var(--line); }
     .loyalty-h { margin: 0 0 0.6rem; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
@@ -311,10 +311,10 @@ type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
     .security-icon .ms { font-size: 22px; }
     .security-title { margin: 0; font-size: 1.05rem; font-weight: 800; }
     .security-sub { margin: 0.3rem 0 0; color: var(--muted); font-size: 0.85rem; }
-    .security-badge { margin-left: auto; flex: none; align-self: center; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; padding: 5px 11px; border-radius: 999px; background: var(--bg-secondary); color: var(--muted); }
+    .security-badge { margin-left: auto; flex: none; align-self: center; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; padding: 5px 11px; border-radius: 2px; background: var(--bg-secondary); color: var(--muted); }
     .security-badge.on { background: var(--teal-light); color: var(--teal); }
     .security-body { margin: 0 0 1rem; color: var(--text-secondary); font-size: 0.92rem; line-height: 1.5; }
-    .security-qr { display: block; border: 1px solid var(--line); border-radius: 12px; padding: 8px; background: var(--surface); margin: 0 0 0.9rem; }
+    .security-qr { display: block; border: 1px solid var(--line); border-radius: 3px; padding: 8px; background: var(--surface); margin: 0 0 0.9rem; }
     .security-secret-label { margin: 0 0 0.3rem; font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); }
     .security-secret { display: inline-block; font-family: 'SF Mono', ui-monospace, monospace; font-size: 0.95rem; letter-spacing: 0.08em; background: var(--bg-secondary); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 0.5rem 0.8rem; margin-bottom: 1rem; word-break: break-all; }
     .security-code-field { margin-bottom: 0.5rem; }
@@ -325,11 +325,11 @@ type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
     .security-recovery { list-style: none; margin: 0 0 1rem; padding: 0.9rem 1rem; background: var(--bg-secondary); border: 1px dashed var(--border); border-radius: var(--radius-sm); display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1.2rem; }
     .security-recovery li { font-family: 'SF Mono', ui-monospace, monospace; font-size: 0.95rem; letter-spacing: 0.06em; color: var(--ink); }
     @media (max-width: 480px) { .security-recovery { grid-template-columns: 1fr; } }
-    .verify-banner { display: flex; align-items: center; gap: 12px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 0.8rem 1.1rem; margin-bottom: 1.2rem; }
+    .verify-banner { display: flex; align-items: center; gap: 12px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 3px; padding: 0.8rem 1.1rem; margin-bottom: 1.2rem; }
     .verify-banner .ms { color: #c2620a; font-size: 22px; flex: none; }
     .verify-banner-text { display: flex; flex-direction: column; gap: 2px; font-size: 0.88rem; color: #7c4a10; }
     .verify-banner-text strong { font-size: 0.92rem; color: #6b3c07; }
-    .verify-banner-btn { margin-left: auto; flex: none; background: #c2620a; color: #fff; border: none; border-radius: 999px; padding: 0.5rem 1rem; font-family: inherit; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: background 120ms ease; }
+    .verify-banner-btn { margin-left: auto; flex: none; background: #c2620a; color: #fff; border: none; border-radius: 2px; padding: 0.5rem 1rem; font-family: inherit; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: background 120ms ease; }
     .verify-banner-btn:hover:not(:disabled) { background: #a5520a; }
     .verify-banner-btn:disabled { opacity: 0.7; cursor: default; }
     @media (max-width: 560px) { .verify-banner { flex-wrap: wrap; } .verify-banner-btn { margin-left: 0; } }

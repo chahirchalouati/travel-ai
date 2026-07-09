@@ -252,13 +252,13 @@ function localToday(): string {
       </div>
     } @else {
       <div style="max-width:1100px; margin:0 auto; padding:32px;">
-        <div class="shimmer" style="height:260px; border-radius:16px; margin-bottom:24px;"></div>
+        <div class="shimmer" style="height:260px; border-radius: 3px; margin-bottom:24px;"></div>
         <div style="display:grid; grid-template-columns:2fr 1fr; gap:24px;">
           <div style="display:flex; flex-direction:column; gap:20px;">
-            <div class="shimmer" style="height:180px; border-radius:12px;"></div>
-            <div class="shimmer" style="height:140px; border-radius:12px;"></div>
+            <div class="shimmer" style="height:180px; border-radius: 3px;"></div>
+            <div class="shimmer" style="height:140px; border-radius: 3px;"></div>
           </div>
-          <div class="shimmer" style="height:340px; border-radius:12px;"></div>
+          <div class="shimmer" style="height:340px; border-radius: 3px;"></div>
         </div>
       </div>
     }
@@ -279,7 +279,7 @@ function localToday(): string {
       cursor: pointer; padding: 0; transition: color 150ms ease;
     }
     .back-link:hover { color: var(--brand); }
-    .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 999px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 150ms ease; }
+    .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 2px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 150ms ease; }
     .fav-toggle:hover { border-color: var(--brand); color: var(--brand); }
     .fav-toggle--on { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
     .fav-toggle .ms { font-size: 18px; }
@@ -309,7 +309,7 @@ function localToday(): string {
     }
 
     .badge {
-      display: inline-flex; align-items: center; gap: 4px; border-radius: 100px;
+      display: inline-flex; align-items: center; gap: 4px; border-radius: 2px;
       padding: 5px 13px; font-size: 12.5px; font-weight: 700;
     }
     .badge--teal { background: rgba(255,255,255,.94); color: var(--teal); }
@@ -336,7 +336,7 @@ function localToday(): string {
 
     .feature-chip {
       display: inline-flex; align-items: center; gap: 5px;
-      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.28); border-radius: 100px;
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.28); border-radius: 2px;
       padding: 6px 13px; font-size: 12.5px; font-weight: 600; color: #fff; backdrop-filter: blur(8px);
     }
 
@@ -419,7 +419,7 @@ function localToday(): string {
 
     .btn-book {
       width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
-      background: var(--brand); color: #fff; border: none; border-radius: 10px;
+      background: var(--brand); color: #fff; border: none; border-radius: 2px;
       padding: 14px; font-family: inherit; font-size: 15px; font-weight: 600;
       cursor: pointer; transition: background 150ms ease; margin-bottom: 10px;
     }
@@ -428,7 +428,7 @@ function localToday(): string {
 
     .btn-chat {
       width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
-      background: var(--surface); color: var(--brand); border: 1.5px solid var(--brand); border-radius: 10px;
+      background: var(--surface); color: var(--brand); border: 1.5px solid var(--brand); border-radius: 2px;
       padding: 13px; font-family: inherit; font-size: 15px; font-weight: 600;
       cursor: pointer; transition: background 150ms ease;
     }

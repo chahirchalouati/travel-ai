@@ -96,7 +96,7 @@ import type { Conversation } from '../../core/services/messaging.service';
   styles: [`
     .inbox { display: grid; grid-template-columns: 340px 1fr; gap: 1.25rem; align-items: start; }
     .thread-list { display: flex; flex-direction: column; gap: 0.6rem; }
-    .thread-item { display: flex; align-items: center; gap: 0.75rem; text-align: left; width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 0.85rem 0.9rem; cursor: pointer; transition: border-color 120ms ease, background 120ms ease; }
+    .thread-item { display: flex; align-items: center; gap: 0.75rem; text-align: left; width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: 0.85rem 0.9rem; cursor: pointer; transition: border-color 120ms ease, background 120ms ease; }
     .thread-item:hover { border-color: var(--border); }
     .thread-item.active { border-color: var(--accent); background: var(--accent-soft); }
     .thread-avatar { width: 40px; height: 40px; flex: none; border-radius: 50%; background: linear-gradient(135deg, var(--brand), var(--brand-hover)); color: #fff; display: flex; align-items: center; justify-content: center; }
@@ -111,17 +111,17 @@ import type { Conversation } from '../../core/services/messaging.service';
     .thread-scroll { flex: 1; overflow-y: auto; max-height: 420px; padding: 1.2rem 1.3rem; display: flex; flex-direction: column; gap: 0.7rem; }
     .bubble-row { display: flex; }
     .bubble-row.mine { justify-content: flex-end; }
-    .bubble { max-width: 78%; background: var(--bg-secondary); border-radius: 16px 16px 16px 4px; padding: 0.7rem 0.95rem; font-size: 0.92rem; line-height: 1.4; }
+    .bubble { max-width: 78%; background: var(--bg-secondary); border-radius: 3px 16px 16px 4px; padding: 0.7rem 0.95rem; font-size: 0.92rem; line-height: 1.4; }
     .bubble.support { background: var(--bg-secondary); }
-    .bubble-row.mine .bubble { background: var(--accent); color: #fff; border-radius: 16px 16px 4px 16px; }
+    .bubble-row.mine .bubble { background: var(--accent); color: #fff; border-radius: 3px 16px 4px 16px; }
     .bubble-time { display: block; font-size: 0.66rem; opacity: 0.6; margin-top: 4px; }
     .reply-bar { display: flex; gap: 0.6rem; padding: 0.9rem 1.1rem; border-top: 1px solid var(--line); }
-    .reply-bar input { flex: 1; border: 1px solid var(--line); border-radius: 999px; padding: 0.65rem 1.1rem; font-family: inherit; font-size: 0.92rem; outline: none; }
+    .reply-bar input { flex: 1; border: 1px solid var(--line); border-radius: 2px; padding: 0.65rem 1.1rem; font-family: inherit; font-size: 0.92rem; outline: none; }
     .reply-bar input:focus { border-color: var(--accent); }
     .reply-send { width: 42px; height: 42px; flex: none; border-radius: 50%; background: var(--accent); color: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .reply-send:disabled { opacity: 0.5; cursor: default; }
     .compose { padding: 1rem; display: flex; flex-direction: column; gap: 0.7rem; }
-    .compose-subject, .compose-body { border: 1px solid var(--line); border-radius: 10px; padding: 0.6rem 0.8rem; font-family: inherit; font-size: 0.9rem; outline: none; resize: vertical; }
+    .compose-subject, .compose-body { border: 1px solid var(--line); border-radius: 3px; padding: 0.6rem 0.8rem; font-family: inherit; font-size: 0.9rem; outline: none; resize: vertical; }
     .compose-subject:focus, .compose-body:focus { border-color: var(--accent); }
     .compose-actions { display: flex; justify-content: flex-end; gap: 0.6rem; }
     .back-btn { display: none; background: none; border: none; cursor: pointer; color: var(--accent); padding: 0; align-items: center; margin-right: 8px; }

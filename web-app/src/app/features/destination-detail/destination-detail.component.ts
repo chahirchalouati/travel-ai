@@ -148,7 +148,7 @@ const MONTH_NAMES = [
 
             <div
               style="
-                background: var(--bg-secondary); border-radius: 10px; padding: 20px;
+                background: var(--bg-secondary); border-radius: 2px; padding: 20px;
               "
             >
               <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
@@ -165,7 +165,7 @@ const MONTH_NAMES = [
                   <span
                     style="
                       background: var(--brand-light); color: var(--brand);
-                      padding: 5px 14px; border-radius: 100px;
+                      padding: 5px 14px; border-radius: 2px;
                       font-family: var(--font-body); font-size: 13px;
                       font-weight: 600;
                     "
@@ -188,7 +188,7 @@ const MONTH_NAMES = [
               <div style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory;">
                 @for (a of attractions(); track a.id) {
                   <article
-                    style="flex: 0 0 230px; scroll-snap-align: start; cursor: pointer; border-radius: 14px; overflow: hidden; background: var(--surface); border: 1px solid var(--border);"
+                    style="flex: 0 0 230px; scroll-snap-align: start; cursor: pointer; border-radius: 3px; overflow: hidden; background: var(--surface); border: 1px solid var(--border);"
                     (click)="openAttraction(a.id)"
                     tabindex="0"
                     (keydown.enter)="openAttraction(a.id)"
@@ -222,7 +222,7 @@ const MONTH_NAMES = [
               <div
                 style="
                   display: flex; align-items: flex-start; gap: 20px;
-                  background: var(--teal-light); border-radius: 10px; padding: 20px;
+                  background: var(--teal-light); border-radius: 2px; padding: 20px;
                   border-left: 4px solid var(--teal); margin-bottom: 24px;
                 "
               >
@@ -242,7 +242,7 @@ const MONTH_NAMES = [
                       <span
                         style="
                           display: inline-flex; align-items: center; gap: 4px; margin-left: auto;
-                          background: var(--teal); color: #fff; border-radius: 999px;
+                          background: var(--teal); color: #fff; border-radius: 2px;
                           padding: 4px 12px; font-size: 12px; font-weight: 700;
                           font-family: var(--font-body); letter-spacing: 0.3px;
                         "
@@ -272,7 +272,7 @@ const MONTH_NAMES = [
             } @else {
               <div
                 style="
-                  background: var(--bg-secondary); border-radius: 10px; padding: 32px;
+                  background: var(--bg-secondary); border-radius: 2px; padding: 32px;
                   text-align: center; margin-bottom: 24px;
                 "
               >
@@ -291,7 +291,7 @@ const MONTH_NAMES = [
                   <article
                     style="
                       background: var(--surface);
-                      border: 1px solid var(--border); border-radius: 10px; padding: 20px;
+                      border: 1px solid var(--border); border-radius: 2px; padding: 20px;
                     "
                   >
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
@@ -403,9 +403,9 @@ const MONTH_NAMES = [
 
             @if (guideLoading()) {
               <div style="display: flex; flex-direction: column; gap: 16px; padding: 8px 0;">
-                <div class="shimmer-card" style="height: 80px; border-radius: 10px;"></div>
-                <div class="shimmer-card" style="height: 120px; border-radius: 10px;"></div>
-                <div class="shimmer-card" style="height: 100px; border-radius: 10px;"></div>
+                <div class="shimmer-card" style="height: 80px; border-radius: 2px;"></div>
+                <div class="shimmer-card" style="height: 120px; border-radius: 2px;"></div>
+                <div class="shimmer-card" style="height: 100px; border-radius: 2px;"></div>
               </div>
             }
 
@@ -562,12 +562,12 @@ const MONTH_NAMES = [
         ></div>
         <div style="max-width: 1200px; margin: 32px auto; padding: 0 32px; display: grid; grid-template-columns: 65fr 35fr; gap: 32px;">
           <div style="display: flex; flex-direction: column; gap: 24px;">
-            <div class="shimmer-card" style="border-radius: 10px; height: 300px;"></div>
-            <div class="shimmer-card" style="border-radius: 10px; height: 200px;"></div>
+            <div class="shimmer-card" style="border-radius: 2px; height: 300px;"></div>
+            <div class="shimmer-card" style="border-radius: 2px; height: 200px;"></div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 20px;">
-            <div class="shimmer-card" style="border-radius: 10px; height: 350px;"></div>
-            <div class="shimmer-card" style="border-radius: 10px; height: 200px;"></div>
+            <div class="shimmer-card" style="border-radius: 2px; height: 350px;"></div>
+            <div class="shimmer-card" style="border-radius: 2px; height: 200px;"></div>
           </div>
         </div>
       </div>
@@ -604,14 +604,14 @@ const MONTH_NAMES = [
     .content-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 3px;
       padding: 28px;
     }
 
     .sidebar-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 3px;
       padding: 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
@@ -626,7 +626,7 @@ const MONTH_NAMES = [
 
     .guide-section-card {
       background: var(--bg-secondary);
-      border-radius: 10px;
+      border-radius: 2px;
       padding: 20px;
     }
 
@@ -653,7 +653,7 @@ const MONTH_NAMES = [
       background: var(--brand);
       color: #fff;
       border: none;
-      border-radius: 10px;
+      border-radius: 2px;
       padding: 13px 24px;
       font-family: var(--font-body);
       font-size: 15px;
@@ -673,7 +673,7 @@ const MONTH_NAMES = [
       background: var(--surface);
       color: var(--brand);
       border: 1.5px solid var(--brand);
-      border-radius: 10px;
+      border-radius: 2px;
       padding: 12px 24px;
       font-family: var(--font-body);
       font-size: 15px;
@@ -692,7 +692,7 @@ const MONTH_NAMES = [
       gap: 5px;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 100px;
+      border-radius: 2px;
       padding: 5px 14px;
       cursor: pointer;
       font-family: var(--font-body);

@@ -97,8 +97,8 @@ import { SiteContentService, SiteContentItem } from '../../core/services/site-co
     .section-inner h2 { font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 800; letter-spacing: -0.02em; margin: 0 0 2rem; }
 
     .types-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
-    .type-card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 2rem; display: flex; flex-direction: column; gap: 0.75rem; }
-    .type-icon-wrap { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; .ms { font-size: 1.7rem; color: #fff; } }
+    .type-card { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 2rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .type-icon-wrap { width: 52px; height: 52px; border-radius: 3px; display: flex; align-items: center; justify-content: center; .ms { font-size: 1.7rem; color: #fff; } }
     .type-card h3 { font-size: 1.05rem; font-weight: 700; margin: 0; }
     .type-card p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.65; margin: 0; }
     .type-benefits { list-style: none; margin: 0.25rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 5px; li { display: flex; align-items: center; gap: 6px; font-size: 0.84rem; color: var(--text-secondary); .ms { font-size: 15px; color: var(--teal); } } }
@@ -115,7 +115,7 @@ import { SiteContentService, SiteContentItem } from '../../core/services/site-co
     .apply-band .section-eye { color: rgba(255,255,255,0.7); }
     .apply-band h2 { font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 3rem); color: #fff; font-weight: 800; margin: 0 0 0.75rem; letter-spacing: -0.02em; }
     .apply-band p { color: rgba(255,255,255,0.85); font-size: 1.05rem; margin: 0 0 2rem; line-height: 1.7; }
-    .apply-btn { display: inline-flex; align-items: center; gap: 10px; background: #fff; color: var(--gold); text-decoration: none; font-weight: 800; font-size: 1rem; padding: 14px 32px; border-radius: 999px; transition: background 140ms ease, transform 140ms ease; .ms { font-size: 22px; } &:hover { background: var(--bg-primary); transform: translateY(-1px); } }
+    .apply-btn { display: inline-flex; align-items: center; gap: 10px; background: #fff; color: var(--gold); text-decoration: none; font-weight: 800; font-size: 1rem; padding: 14px 32px; border-radius: 2px; transition: background 140ms ease, transform 140ms ease; .ms { font-size: 22px; } &:hover { background: var(--bg-primary); transform: translateY(-1px); } }
 
     @media (max-width: 640px) { .steps-row { grid-template-columns: 1fr; } .step-divider { display: none; } }
   `]

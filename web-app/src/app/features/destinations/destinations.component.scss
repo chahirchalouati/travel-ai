@@ -39,7 +39,7 @@ section {
 
 .filter-pill {
   padding: 0.4rem 0.9rem;
-  border-radius: 100px;
+  border-radius: 2px;
   font-family: var(--font-body);
   font-size: 0.8rem;
   font-weight: 600;
@@ -72,7 +72,7 @@ section {
 .dest-card {
   background: #fff;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 3px;
   overflow: hidden;
   cursor: pointer;
   transition: transform var(--duration-normal) var(--ease-out-expo),
@@ -281,7 +281,7 @@ section {
   padding: 0 0.85rem;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: 2px;
   transition: border-color var(--duration-normal, 200ms) var(--ease-out-expo, ease);
 
   .ms { font-size: 1.1rem; color: var(--text-tertiary); }

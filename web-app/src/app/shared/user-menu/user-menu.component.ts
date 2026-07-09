@@ -95,7 +95,7 @@ const MENU_ITEMS: MenuItem[] = [
 
     .dropdown {
       position: absolute; top: calc(100% + 8px); right: 0;
-      background: #fff; border: 1px solid #e8e8e8; border-radius: 12px;
+      background: #fff; border: 1px solid #e8e8e8; border-radius: 3px;
       box-shadow: 0 8px 32px rgba(0,0,0,.14);
       min-width: 200px; z-index: 2000;
       padding: 6px;

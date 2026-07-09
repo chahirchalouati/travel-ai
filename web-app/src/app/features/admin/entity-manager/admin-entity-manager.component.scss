@@ -11,17 +11,17 @@
 .em-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
 .em-new {
   display: inline-flex; align-items: center; gap: 7px;
-  background: var(--ink); color: #fff; border: none; border-radius: 10px;
+  background: var(--ink); color: #fff; border: none; border-radius: 3px;
   padding: 0.6rem 1.1rem; font-family: inherit; font-weight: 700; font-size: 0.9rem; cursor: pointer;
   transition: transform 0.12s ease, background 0.14s ease;
 }
 .em-new:hover { background: var(--accent); transform: translateY(-1px); }
 .em-new .ms { font-size: 19px; }
 .em-count { color: var(--muted); font-size: 0.85rem; font-weight: 600; }
-.em-toast { background: var(--ink); color: #fff; padding: 0.7rem 1.1rem; border-radius: 10px; margin-bottom: 1rem; font-weight: 600; font-size: 0.9rem; }
+.em-toast { background: var(--ink); color: #fff; padding: 0.7rem 1.1rem; border-radius: 3px; margin-bottom: 1rem; font-weight: 600; font-size: 0.9rem; }
 
 // ── Table ──────────────────────────────────────────────────────────────
-.table-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.table-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
 .em-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 .em-table thead th {
   text-align: left; padding: 0.85rem 1.1rem; background: var(--bg-secondary);
@@ -34,7 +34,7 @@
 .empty-row { text-align: center; color: var(--muted); padding: 2.5rem; }
 .row-actions { display: flex; gap: 0.4rem; justify-content: flex-end; }
 
-.tag { display: inline-block; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; padding: 4px 9px; border-radius: 999px; }
+.tag { display: inline-block; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; padding: 4px 9px; border-radius: 2px; }
 .tag-ok { background: #e7f6ec; color: #1a7f43; }
 .tag-off { background: #fdecec; color: #c0392b; }
 .tag-neutral { background: #eef0f4; color: #4a5160; }
@@ -63,7 +63,7 @@
   padding: 4vh 1rem; z-index: 1000; overflow-y: auto;
 }
 .em-modal {
-  background: var(--surface); border-radius: 18px; width: min(720px, 100%);
+  background: var(--surface); border-radius: 3px; width: min(720px, 100%);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25); overflow: hidden;
 }
 .em-modal-head {
@@ -105,11 +105,11 @@
   padding: 1.1rem 1.5rem; border-top: 1px solid var(--line);
 }
 .em-btn-ghost {
-  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 3px;
   padding: 0.6rem 1.2rem; font-family: inherit; font-weight: 700; font-size: 0.9rem; cursor: pointer;
 }
 .em-btn-primary {
-  background: var(--accent); color: #fff; border: none; border-radius: 10px;
+  background: var(--accent); color: #fff; border: none; border-radius: 3px;
   padding: 0.6rem 1.4rem; font-family: inherit; font-weight: 700; font-size: 0.9rem; cursor: pointer;
 }
 .em-btn-primary:disabled { opacity: 0.6; cursor: default; }

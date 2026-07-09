@@ -56,7 +56,7 @@
   background: var(--brand);
   color: #fff;
   border: none;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   padding: 0.7rem 1.3rem;
   font-weight: 700;
   font-size: 0.95rem;
@@ -97,7 +97,7 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: 2px;
 }
 .pill--confirmed { background: var(--teal-light); color: var(--teal); }
 .pill--pending   { background: var(--gold-light); color: var(--gold); }

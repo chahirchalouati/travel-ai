@@ -187,7 +187,7 @@ interface ReviewTarget {
   styles: [`
     .rows { display: flex; flex-direction: column; gap: 1rem; }
     .row { display: flex; align-items: center; gap: 1.1rem; padding: 1.1rem 1.3rem; }
-    .row-icon { width: 48px; height: 48px; flex: none; border-radius: 12px; background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; }
+    .row-icon { width: 48px; height: 48px; flex: none; border-radius: 3px; background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; }
     .row-icon .ms { font-size: 24px; }
     .row-icon.cancelled { background: var(--bg-secondary); color: var(--muted); }
     .row-main { flex: 1; min-width: 0; }
@@ -198,17 +198,17 @@ interface ReviewTarget {
     .dot { margin: 0 3px; }
     .row-side { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex: none; }
     .row-amount { font-weight: 800; font-size: 1.05rem; }
-    .row-cancel { background: none; border: 1px solid var(--line); color: #c0392b; border-radius: 999px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease; }
+    .row-cancel { background: none; border: 1px solid var(--line); color: #c0392b; border-radius: 2px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease; }
     .row-cancel:hover:not(:disabled) { background: #fdecec; }
     .row-cancel:disabled { opacity: 0.6; cursor: default; }
-    .row-live { display: inline-flex; align-items: center; gap: 5px; background: var(--accent-soft); border: 1px solid var(--accent); color: var(--accent); border-radius: 999px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease; }
+    .row-live { display: inline-flex; align-items: center; gap: 5px; background: var(--accent-soft); border: 1px solid var(--accent); color: var(--accent); border-radius: 2px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease; }
     .row-live:hover { background: var(--accent); color: #fff; }
     .row-live .ms { font-size: 15px; }
-    .toast { background: var(--ink); color: #fff; padding: 0.7rem 1.1rem; border-radius: 12px; margin-bottom: 1.2rem; font-weight: 600; font-size: 0.9rem; }
-    .row-review { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--line); color: var(--accent); border-radius: 999px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease; }
-    .row-invoice { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: all 120ms ease; }
+    .toast { background: var(--ink); color: #fff; padding: 0.7rem 1.1rem; border-radius: 3px; margin-bottom: 1.2rem; font-weight: 600; font-size: 0.9rem; }
+    .row-review { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--line); color: var(--accent); border-radius: 2px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease; }
+    .row-invoice { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 2px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: all 120ms ease; }
     .row-invoice:hover { border-color: var(--accent); color: var(--accent); }
-    .row-ticket, .row-calendar { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--line); color: var(--ink); border-radius: 999px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease, border-color 120ms ease; }
+    .row-ticket, .row-calendar { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--line); color: var(--ink); border-radius: 2px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease, border-color 120ms ease; }
     .row-ticket:hover, .row-calendar:hover:not(:disabled) { background: var(--bg-secondary); border-color: var(--ink); }
     .row-calendar:disabled { opacity: 0.6; cursor: default; }
     .row-ticket .ms, .row-calendar .ms { font-size: 15px; }
@@ -228,7 +228,7 @@ interface ReviewTarget {
     .cancel-policy { background: var(--bg-secondary); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 0.6rem 0.9rem; }
     .cancel-policy__title { display: block; font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); margin-bottom: 0.3rem; }
     .cancel-policy ul { margin: 0; padding-left: 1.1rem; color: var(--muted); font-size: 0.84rem; line-height: 1.5; }
-    .cancel-confirm { background: #c0392b; color: #fff; border: none; border-radius: 999px; padding: 7px 18px; font-weight: 700; font-size: 0.82rem; cursor: pointer; }
+    .cancel-confirm { background: #c0392b; color: #fff; border: none; border-radius: 2px; padding: 7px 18px; font-weight: 700; font-size: 0.82rem; cursor: pointer; }
     .cancel-confirm:disabled { opacity: 0.5; cursor: default; }
     .row { flex-wrap: wrap; }
     .review-form { flex-basis: 100%; border-top: 1px dashed var(--line); margin-top: 0.9rem; padding-top: 0.9rem; display: flex; flex-direction: column; gap: 0.6rem; }
@@ -237,11 +237,11 @@ interface ReviewTarget {
     .star { background: none; border: none; cursor: pointer; padding: 2px; color: var(--border); line-height: 0; }
     .star .ms { font-size: 26px; }
     .star--on { color: var(--gold); }
-    .review-input { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; font: inherit; font-size: 0.9rem; resize: vertical; }
+    .review-input { width: 100%; border: 1px solid var(--line); border-radius: 3px; padding: 9px 12px; font: inherit; font-size: 0.9rem; resize: vertical; }
     .review-input:focus { outline: none; border-color: var(--accent); }
     .review-actions { display: flex; justify-content: flex-end; gap: 0.6rem; }
-    .review-cancel { background: none; border: 1px solid var(--line); border-radius: 999px; padding: 7px 16px; font-weight: 700; font-size: 0.82rem; cursor: pointer; }
-    .review-submit { background: var(--accent); color: #fff; border: none; border-radius: 999px; padding: 7px 18px; font-weight: 700; font-size: 0.82rem; cursor: pointer; }
+    .review-cancel { background: none; border: 1px solid var(--line); border-radius: 2px; padding: 7px 16px; font-weight: 700; font-size: 0.82rem; cursor: pointer; }
+    .review-submit { background: var(--accent); color: #fff; border: none; border-radius: 2px; padding: 7px 18px; font-weight: 700; font-size: 0.82rem; cursor: pointer; }
     .review-submit:disabled { opacity: 0.5; cursor: default; }
     @media (max-width: 560px) { .row-side { width: 100%; flex-direction: row; justify-content: space-between; flex-wrap: wrap; } }
   `],

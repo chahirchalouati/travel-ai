@@ -16,7 +16,7 @@
 /* Hero — dark-luxury band */
 .pm-hero {
   position: relative;
-  border-radius: 20px;
+  border-radius: 3px;
   padding: clamp(2rem, 1.4rem + 3vw, 3.5rem);
   color: #f6efe4;
   background:
@@ -59,7 +59,7 @@
   gap: 12px;
   margin-top: 22px;
   padding: 10px 16px;
-  border-radius: 999px;
+  border-radius: 2px;
   background: rgba(184, 137, 74, 0.16);
   border: 1px solid rgba(184, 137, 74, 0.4);
 }
@@ -93,7 +93,7 @@
 /* Plan card */
 .pm-card {
   border: 1px solid var(--pm-line);
-  border-radius: 18px;
+  border-radius: 3px;
   padding: 28px;
   background: var(--surface);
   box-shadow: 0 22px 50px -30px rgba(20, 17, 13, 0.35);
@@ -110,7 +110,7 @@
 .pm-btn {
   width: 100%;
   border: none;
-  border-radius: 12px;
+  border-radius: 3px;
   padding: 14px 18px;
   font-size: 1rem;
   font-weight: 700;

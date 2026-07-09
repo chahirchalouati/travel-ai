@@ -214,7 +214,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     }
     .explore-filter .chip {
       padding: 0.5rem 1.1rem;
-      border-radius: 999px;
+      border-radius: 2px;
       border: 1px solid var(--border);
       background: var(--bg-secondary);
       color: var(--text-secondary);
@@ -448,7 +448,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
       font-size: 0.72rem;
       font-weight: 500;
       padding: 3px 8px;
-      border-radius: 20px;
+      border-radius: 3px;
       text-transform: capitalize;
     }
 
@@ -691,7 +691,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     }
 
     .ai-banner__cta:hover {
-      background: #0d5640;
+      background: #242424;
     }
 
     .ai-banner__cta:focus-visible {

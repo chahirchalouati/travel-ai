@@ -20,7 +20,7 @@ export interface MapPin {
     .map-container {
       width: 100%;
       height: 220px;
-      border-radius: 12px;
+      border-radius: 3px;
       overflow: hidden;
       border: 1px solid var(--border);
     }

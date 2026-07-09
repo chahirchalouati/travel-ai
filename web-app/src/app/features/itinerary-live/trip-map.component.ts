@@ -19,7 +19,7 @@ import type { ApiWrapper, TripMapResponse, TripMapStop } from '../../core/models
 
 /** Consistent color per trip day; cycles when a trip is longer than the palette. */
 const DAY_PALETTE = [
-  '#0f766e', // teal (app accent)
+  '#242424', // teal (app accent)
   '#e15023', // burnt orange
   '#E5352B', // violet
   '#0369a1', // ocean blue
@@ -100,7 +100,7 @@ const MATERIAL_ICONS: Record<string, string> = {
       .tm-card {
         background: var(--bg-secondary);
         border: 1px solid var(--border);
-        border-radius: 18px;
+        border-radius: 3px;
         overflow: hidden;
       }
       .tm-head {
@@ -137,7 +137,7 @@ const MATERIAL_ICONS: Record<string, string> = {
         gap: 6px;
         padding: 5px 12px;
         border: 1px solid var(--border);
-        border-radius: 999px;
+        border-radius: 2px;
         background: var(--bg-secondary);
         color: var(--text-secondary);
         font-size: 0.78rem;

@@ -309,14 +309,14 @@ const TARGET_TYPE = 'HOTEL';
       </div>
     } @else {
       <div style="max-width:1100px; margin:0 auto; padding:32px;">
-        <div class="shimmer" style="height:260px; border-radius:16px; margin-bottom:24px;"></div>
+        <div class="shimmer" style="height:260px; border-radius: 3px; margin-bottom:24px;"></div>
         <div style="display:grid; grid-template-columns:2fr 1fr; gap:24px;">
           <div style="display:flex; flex-direction:column; gap:20px;">
-            <div class="shimmer" style="height:180px; border-radius:12px;"></div>
-            <div class="shimmer" style="height:140px; border-radius:12px;"></div>
-            <div class="shimmer" style="height:240px; border-radius:12px;"></div>
+            <div class="shimmer" style="height:180px; border-radius: 3px;"></div>
+            <div class="shimmer" style="height:140px; border-radius: 3px;"></div>
+            <div class="shimmer" style="height:240px; border-radius: 3px;"></div>
           </div>
-          <div class="shimmer" style="height:340px; border-radius:12px;"></div>
+          <div class="shimmer" style="height:340px; border-radius: 3px;"></div>
         </div>
       </div>
     }
@@ -325,7 +325,7 @@ const TARGET_TYPE = 'HOTEL';
     :host { display: block; background: var(--bg-primary); min-height: 100vh; font-family: var(--font-body); color: var(--text-primary); }
     .back-link { display: inline-flex; align-items: center; gap: 4px; background: none; border: none; color: var(--text-secondary); font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; padding: 0; transition: color 150ms ease; }
     .back-link:hover { color: var(--brand); }
-    .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 999px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 150ms ease; }
+    .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 2px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 150ms ease; }
     .fav-toggle:hover { border-color: var(--brand); color: var(--brand); }
     .fav-toggle--on { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
     .fav-toggle .ms { font-size: 18px; }
@@ -336,7 +336,7 @@ const TARGET_TYPE = 'HOTEL';
     .hero-card__scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,23,42,0) 32%, rgba(15,23,42,.55) 68%, rgba(15,23,42,.88) 100%); }
     .hero-card__content { position: absolute; left: 0; right: 0; bottom: 0; padding: clamp(24px, 3vw, 40px); display: flex; flex-direction: column; gap: 12px; z-index: 2; }
     .hero-card__badges { display: flex; gap: 8px; flex-wrap: wrap; }
-    .badge { display: inline-flex; align-items: center; gap: 4px; border-radius: 100px; padding: 5px 13px; font-size: 12.5px; font-weight: 700; }
+    .badge { display: inline-flex; align-items: center; gap: 4px; border-radius: 2px; padding: 5px 13px; font-size: 12.5px; font-weight: 700; }
     .badge--stars { background: rgba(255,255,255,.16); color: #FBBF24; letter-spacing: 2px; border: 1px solid rgba(255,255,255,.22); backdrop-filter: blur(8px); }
     .badge--rating { background: rgba(255,255,255,.94); color: #B26A00; }
     .badge--rating .ms { color: var(--color-rating); }
@@ -344,7 +344,7 @@ const TARGET_TYPE = 'HOTEL';
     .hero-card__name { font-size: clamp(2rem, 1.4rem + 2.4vw, 3rem); font-weight: 800; margin: 0; line-height: 1.05; color: #fff; text-shadow: 0 2px 20px rgba(0,0,0,.3); }
     .hero-card__city { font-size: 15px; color: rgba(255,255,255,.9); margin: 0; font-weight: 500; display: flex; align-items: center; gap: 5px; }
     .hero-card__features { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
-    .feature-chip { display: inline-flex; align-items: center; gap: 5px; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.28); border-radius: 100px; padding: 6px 13px; font-size: 12.5px; font-weight: 600; color: #fff; backdrop-filter: blur(8px); }
+    .feature-chip { display: inline-flex; align-items: center; gap: 5px; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.28); border-radius: 2px; padding: 6px 13px; font-size: 12.5px; font-weight: 600; color: #fff; backdrop-filter: blur(8px); }
 
     .detail-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; align-items: start; }
     .info-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 26px; box-shadow: var(--shadow-sm); }
@@ -355,7 +355,7 @@ const TARGET_TYPE = 'HOTEL';
     .feature-item--no { color: var(--text-tertiary); } .feature-item--no .ms { color: var(--border); }
 
     .ai-card { background: linear-gradient(135deg, var(--color-ocean-tint), #FDECEA); border: 1px solid rgba(229,53,43,0.18); }
-    .ai-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #A81F18; background: rgba(229,53,43,0.1); padding: 5px 11px; border-radius: 100px; margin-bottom: 12px; }
+    .ai-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #A81F18; background: rgba(229,53,43,0.1); padding: 5px 11px; border-radius: 2px; margin-bottom: 12px; }
     .ai-badge .ms { font-size: 15px; color: #E5352B; }
 
     .rating-grid { display: flex; flex-direction: column; gap: 12px; }
@@ -366,11 +366,11 @@ const TARGET_TYPE = 'HOTEL';
     .rating-score { font-size: 13px; font-weight: 700; color: var(--text-primary); width: 30px; text-align: right; }
 
     .reviews-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
-    .review-count-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; border-radius: 100px; background: var(--brand); color: #fff; font-size: 11px; font-weight: 700; padding: 0 6px; margin-left: 4px; }
+    .review-count-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; border-radius: 2px; background: var(--brand); color: #fff; font-size: 11px; font-weight: 700; padding: 0 6px; margin-left: 4px; }
     .btn-write-review { display: inline-flex; align-items: center; gap: 6px; background: var(--brand); color: #fff; border: none; border-radius: 8px; padding: 9px 16px; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 150ms ease; }
     .btn-write-review:hover { background: var(--brand-hover); }
 
-    .review-form { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 14px; }
+    .review-form { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 2px; padding: 20px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 14px; }
     .form-row { display: flex; gap: 16px; flex-wrap: wrap; }
     .form-row--4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
@@ -404,7 +404,7 @@ const TARGET_TYPE = 'HOTEL';
     .review-star { font-size: 15px; color: var(--gold); }
     .review-title { font-size: 14px; font-weight: 700; color: var(--text-primary); margin: 0 0 6px; }
     .review-body { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin: 0 0 10px; }
-    .helpful-btn { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--border); border-radius: 100px; padding: 5px 12px; font-family: inherit; font-size: 12px; font-weight: 600; color: var(--text-tertiary); cursor: pointer; transition: all 150ms ease; }
+    .helpful-btn { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--border); border-radius: 2px; padding: 5px 12px; font-family: inherit; font-size: 12px; font-weight: 600; color: var(--text-tertiary); cursor: pointer; transition: all 150ms ease; }
     .helpful-btn.is-on { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
     .helpful-btn .ms { font-size: 14px; }
     .no-reviews { text-align: center; padding: 32px 16px; color: var(--text-tertiary); display: flex; flex-direction: column; align-items: center; gap: 10px; }
@@ -416,9 +416,9 @@ const TARGET_TYPE = 'HOTEL';
     .meta-item { display: flex; align-items: center; gap: 12px; }
     .meta-label { display: block; font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500; }
     .meta-value { display: block; font-size: 15px; font-weight: 600; color: var(--text-primary); }
-    .btn-book { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--brand); color: #fff; border: none; border-radius: 10px; padding: 14px; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 150ms ease; margin-bottom: 10px; }
+    .btn-book { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--brand); color: #fff; border: none; border-radius: 2px; padding: 14px; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 150ms ease; margin-bottom: 10px; }
     .btn-book:hover { background: var(--brand-hover); }
-    .btn-chat { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--surface); color: var(--brand); border: 1.5px solid var(--brand); border-radius: 10px; padding: 13px; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 150ms ease; }
+    .btn-chat { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--surface); color: var(--brand); border: 1.5px solid var(--brand); border-radius: 2px; padding: 13px; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 150ms ease; }
     .btn-chat:hover { background: var(--brand-light); }
 
     @keyframes shimmer { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }

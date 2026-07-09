@@ -367,7 +367,7 @@ section {
   gap: 0.35rem;
   flex-shrink: 0;
   padding: 0.28rem 0.6rem;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   background: rgba(244, 238, 229, 0.1);
   font-size: 0.7rem;
   font-weight: 600;
@@ -570,7 +570,7 @@ section {
   align-items: center;
   gap: 0.4rem;
   padding: 0.55rem 1rem;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   background: var(--text-primary);
   border: none;
   color: var(--bg-primary);
@@ -598,7 +598,7 @@ section {
   align-items: center;
   gap: 0.35rem;
   padding: 0.45rem 0.75rem;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   background: var(--surface);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-md);

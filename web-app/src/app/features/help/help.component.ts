@@ -83,7 +83,7 @@ import { HelpService, HelpFaq } from '../../core/services/help.service';
     .help-hero h1 { font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.06; margin: 0 0 1rem; }
     .hero-sub { font-size: 1.05rem; color: var(--text-secondary); margin: 0 0 2rem; line-height: 1.7; }
 
-    .search-bar { display: flex; align-items: center; background: var(--surface); border: 1.5px solid var(--border); border-radius: 999px; padding: 14px 20px; gap: 12px; max-width: 520px; margin: 0 auto; box-shadow: 0 4px 20px rgba(33,27,20,0.07); transition: border-color 140ms ease; &:focus-within { border-color: var(--teal); } }
+    .search-bar { display: flex; align-items: center; background: var(--surface); border: 1.5px solid var(--border); border-radius: 2px; padding: 14px 20px; gap: 12px; max-width: 520px; margin: 0 auto; box-shadow: 0 4px 20px rgba(33,27,20,0.07); transition: border-color 140ms ease; &:focus-within { border-color: var(--teal); } }
     .search-icon { font-size: 22px; color: var(--text-tertiary); }
     .search-input { flex: 1; border: none; background: none; font-family: inherit; font-size: 1rem; color: var(--text-primary); &:focus { outline: none; } &::placeholder { color: var(--text-tertiary); } }
 
@@ -94,8 +94,8 @@ import { HelpService, HelpFaq } from '../../core/services/help.service';
     .faq-section h2 { font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; letter-spacing: -0.02em; margin: 0 0 1.5rem; }
 
     .topics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1rem; }
-    .topic-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; cursor: default; transition: box-shadow 150ms ease, transform 150ms ease; &:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(33,27,20,0.08); } }
-    .topic-icon-wrap { width: 44px; height: 44px; border-radius: 10px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; margin-bottom: 0.85rem; .ms { font-size: 1.4rem; color: var(--teal); } }
+    .topic-card { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1.5rem; cursor: default; transition: box-shadow 150ms ease, transform 150ms ease; &:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(33,27,20,0.08); } }
+    .topic-icon-wrap { width: 44px; height: 44px; border-radius: 3px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; margin-bottom: 0.85rem; .ms { font-size: 1.4rem; color: var(--teal); } }
     .topic-card h3 { font-size: 0.95rem; font-weight: 700; margin: 0 0 0.35rem; }
     .topic-card p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin: 0; }
 
@@ -105,14 +105,14 @@ import { HelpService, HelpFaq } from '../../core/services/help.service';
     .faq-chevron { font-size: 22px; color: var(--text-tertiary); flex-shrink: 0; }
     .faq-answer { padding: 0 0 1.25rem; p { margin: 0; font-size: 0.96rem; color: var(--text-secondary); line-height: 1.75; } }
 
-    .still-help { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 20px; padding: clamp(2.5rem, 5vw, 4rem) 2rem; }
+    .still-help { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 3px; padding: clamp(2.5rem, 5vw, 4rem) 2rem; }
     .still-inner { text-align: center; max-width: 480px; margin: 0 auto; }
     .still-icon { font-size: 2.8rem; color: var(--brand); display: block; margin-bottom: 1rem; }
     .still-inner h2 { font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; margin: 0 0 0.75rem; letter-spacing: -0.02em; }
     .still-inner p { color: var(--text-secondary); margin: 0 0 1.75rem; line-height: 1.65; font-size: 1rem; }
     .still-btns { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
-    .btn-primary { display: inline-flex; background: var(--brand); color: #fff; text-decoration: none; font-weight: 700; padding: 12px 26px; border-radius: 999px; font-size: 0.92rem; transition: background 140ms ease; &:hover { background: var(--brand-hover); } }
-    .btn-secondary { display: inline-flex; background: var(--surface); color: var(--text-primary); text-decoration: none; font-weight: 700; padding: 12px 26px; border-radius: 999px; font-size: 0.92rem; border: 1px solid var(--border); transition: background 140ms ease; &:hover { background: var(--bg-tertiary); } }
+    .btn-primary { display: inline-flex; background: var(--brand); color: #fff; text-decoration: none; font-weight: 700; padding: 12px 26px; border-radius: 2px; font-size: 0.92rem; transition: background 140ms ease; &:hover { background: var(--brand-hover); } }
+    .btn-secondary { display: inline-flex; background: var(--surface); color: var(--text-primary); text-decoration: none; font-weight: 700; padding: 12px 26px; border-radius: 2px; font-size: 0.92rem; border: 1px solid var(--border); transition: background 140ms ease; &:hover { background: var(--bg-tertiary); } }
   `]
 })
 export class HelpComponent {

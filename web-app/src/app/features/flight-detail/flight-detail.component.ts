@@ -188,13 +188,13 @@ import { FavoritesService } from '../../core/services/favorites.service';
     } @else {
       <div class="skeleton-wrap">
         <div style="max-width:1100px; margin:0 auto; padding:32px;">
-          <div class="shimmer" style="height:200px; border-radius:16px; margin-bottom:24px;"></div>
+          <div class="shimmer" style="height:200px; border-radius: 3px; margin-bottom:24px;"></div>
           <div style="display:grid; grid-template-columns:2fr 1fr; gap:24px;">
             <div style="display:flex; flex-direction:column; gap:20px;">
-              <div class="shimmer" style="height:180px; border-radius:12px;"></div>
-              <div class="shimmer" style="height:140px; border-radius:12px;"></div>
+              <div class="shimmer" style="height:180px; border-radius: 3px;"></div>
+              <div class="shimmer" style="height:140px; border-radius: 3px;"></div>
             </div>
-            <div class="shimmer" style="height:340px; border-radius:12px;"></div>
+            <div class="shimmer" style="height:340px; border-radius: 3px;"></div>
           </div>
         </div>
       </div>
@@ -217,14 +217,14 @@ import { FavoritesService } from '../../core/services/favorites.service';
       transition: color 150ms ease;
     }
     .back-link:hover { color: var(--brand); }
-    .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 999px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 150ms ease; }
+    .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 2px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 150ms ease; }
     .fav-toggle:hover { border-color: var(--brand); color: var(--brand); }
     .fav-toggle--on { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
     .fav-toggle .ms { font-size: 18px; }
 
     .hero-card {
       background: var(--surface);
-      border-radius: 16px;
+      border-radius: 3px;
       padding: 32px;
       margin-bottom: 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,.08);
@@ -251,13 +251,13 @@ import { FavoritesService } from '../../core/services/favorites.service';
     .ai-badge {
       display: inline-flex; align-items: center; gap: 4px;
       font-size: 12px; font-weight: 700; color: var(--teal);
-      background: var(--teal-light); border-radius: 999px; padding: 3px 10px;
+      background: var(--teal-light); border-radius: 2px; padding: 3px 10px;
     }
     .ai-badge .ms { color: var(--teal); }
     .rating-badge {
       display: inline-flex; align-items: center; gap: 4px;
       font-size: 12px; font-weight: 700; color: var(--gold);
-      background: var(--gold-light); border-radius: 999px; padding: 3px 10px;
+      background: var(--gold-light); border-radius: 2px; padding: 3px 10px;
     }
     .rating-badge .ms { color: var(--gold); }
 
@@ -287,7 +287,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
     }
 
     .info-card {
-      background: var(--surface); border-radius: 12px; padding: 24px;
+      background: var(--surface); border-radius: 3px; padding: 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,.08);
     }
 
@@ -326,7 +326,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
 
     .duration-badge {
       background: var(--bg-secondary); border: 1px solid var(--border);
-      border-radius: 100px; padding: 4px 12px;
+      border-radius: 2px; padding: 4px 12px;
       font-size: 12px; font-weight: 600; color: var(--text-secondary);
       white-space: nowrap;
     }
@@ -346,7 +346,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
     .feature-item--no .ms { color: var(--border); }
 
     .booking-card {
-      background: var(--surface); border-radius: 12px; padding: 24px;
+      background: var(--surface); border-radius: 3px; padding: 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,.08);
       border: 1px solid var(--border);
     }
@@ -383,12 +383,12 @@ import { FavoritesService } from '../../core/services/favorites.service';
 
     .btn-book {
       width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
-      background: var(--brand); color: #fff; border: none; border-radius: 10px;
+      background: var(--brand); color: #fff; border: none; border-radius: 2px;
       padding: 14px; font-family: inherit; font-size: 15px; font-weight: 600;
       cursor: pointer; transition: background 150ms ease;
     }
     .btn-book:hover { background: var(--brand-hover); }
-    .btn-watch { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; background: var(--surface); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 12px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 150ms ease; }
+    .btn-watch { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; background: var(--surface); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 2px; padding: 12px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 150ms ease; }
     .btn-watch:hover { border-color: var(--brand); color: var(--brand); }
     .btn-watch--on { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
 
