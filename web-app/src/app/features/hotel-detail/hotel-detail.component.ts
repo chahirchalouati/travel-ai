@@ -362,7 +362,7 @@ const TARGET_TYPE = 'HOTEL';
     .rating-row { display: flex; align-items: center; gap: 12px; }
     .rating-label { font-size: 13px; font-weight: 600; color: var(--text-secondary); width: 100px; flex-shrink: 0; }
     .rating-bar { flex: 1; height: 6px; background: var(--bg-secondary); border-radius: 3px; overflow: hidden; }
-    .rating-bar__fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--brand)); border-radius: 3px; transition: width 600ms ease; }
+    .rating-bar__fill { height: 100%; background: var(--color-red); border-radius: 3px; transition: width 600ms ease; }
     .rating-score { font-size: 13px; font-weight: 700; color: var(--text-primary); width: 30px; text-align: right; }
 
     .reviews-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
@@ -394,7 +394,7 @@ const TARGET_TYPE = 'HOTEL';
     .review-item { border-bottom: 1px solid var(--border-light); padding-bottom: 20px; }
     .review-item:last-child { border-bottom: none; padding-bottom: 0; }
     .review-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-    .review-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--brand), #E5352B); color: #fff; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .review-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--color-red); color: #fff; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .review-meta { flex: 1; min-width: 0; }
     .review-name { display: block; font-size: 14px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 6px; }
     .review-date { display: block; font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }

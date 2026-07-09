@@ -99,7 +99,7 @@ import type { Conversation } from '../../core/services/messaging.service';
     .thread-item { display: flex; align-items: center; gap: 0.75rem; text-align: left; width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: 0.85rem 0.9rem; cursor: pointer; transition: border-color 120ms ease, background 120ms ease; }
     .thread-item:hover { border-color: var(--border); }
     .thread-item.active { border-color: var(--accent); background: var(--accent-soft); }
-    .thread-avatar { width: 40px; height: 40px; flex: none; border-radius: 50%; background: linear-gradient(135deg, var(--brand), var(--brand-hover)); color: #fff; display: flex; align-items: center; justify-content: center; }
+    .thread-avatar { width: 40px; height: 40px; flex: none; border-radius: 50%; background: var(--color-red); color: #fff; display: flex; align-items: center; justify-content: center; }
     .thread-text { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
     .thread-subject { font-weight: 700; font-size: 0.92rem; display: flex; align-items: center; gap: 6px; }
     .unread-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }

@@ -165,7 +165,7 @@ console<span class="c-op">.</span><span class="c-fn">log</span>(results<span cla
     .sdk-card h3 { font-size: 0.92rem; font-weight: 700; margin: 0 0 4px; }
     .sdk-card code { font-family: 'SFMono-Regular', ui-monospace, monospace; font-size: 0.78rem; color: var(--text-tertiary); }
 
-    .cta-section { background: linear-gradient(135deg, var(--brand) 0%, var(--brand-hover) 100%); border-radius: 3px; padding: clamp(2.5rem, 5vw, 4rem) 2rem; }
+    .cta-section { background: var(--color-red); border-radius: 3px; padding: clamp(2.5rem, 5vw, 4rem) 2rem; }
     .cta-inner { max-width: 500px; margin: 0 auto; text-align: center; }
     .cta-icon { font-size: 2.5rem; color: rgba(255,255,255,0.7); display: block; margin-bottom: 1rem; }
     .cta-section h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); color: #fff; margin: 0 0 0.75rem; font-weight: 800; }

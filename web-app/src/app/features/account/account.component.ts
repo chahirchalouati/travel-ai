@@ -247,7 +247,7 @@ type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
     .account-grid { display: grid; grid-template-columns: 1fr 320px; gap: 1.25rem; align-items: start; }
     .pad { padding: 1.6rem; }
     .identity { display: flex; align-items: center; gap: 1rem; padding-bottom: 1.4rem; margin-bottom: 1.4rem; border-bottom: 1px solid var(--line); }
-    .identity-avatar { width: 60px; height: 60px; flex: none; border-radius: 50%; background: linear-gradient(135deg, var(--brand), var(--brand-hover)); color: #fff; font-weight: 800; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; }
+    .identity-avatar { width: 60px; height: 60px; flex: none; border-radius: 50%; background: var(--color-red); color: #fff; font-weight: 800; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; }
     .identity-name { margin: 0; font-size: 1.3rem; font-weight: 800; }
     .identity-email { color: var(--muted); font-size: 0.9rem; }
     .role-badge { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; background: var(--teal-light); color: var(--teal); font-weight: 800; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 5px 11px; border-radius: 2px; }
@@ -289,7 +289,7 @@ type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
     .loyalty-progress { margin-bottom: 1rem; }
     .loyalty-progress__labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary); font-weight: 600; margin-bottom: 6px; }
     .loyalty-bar { height: 8px; border-radius: 2px; background: var(--bg-tertiary); overflow: hidden; }
-    .loyalty-bar__fill { display: block; height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--brand), var(--brand-hover)); transition: width var(--duration-normal) var(--ease-out-expo); }
+    .loyalty-bar__fill { display: block; height: 100%; border-radius: 2px; background: var(--color-red); transition: width var(--duration-normal) var(--ease-out-expo); }
     .loyalty-top { margin: 0 0 1rem; font-weight: 700; color: var(--gold); font-size: 0.9rem; }
     .loyalty-meta { display: flex; justify-content: space-between; gap: 1rem; font-size: 0.82rem; color: var(--muted); font-weight: 600; padding-bottom: 1rem; margin-bottom: 0.6rem; border-bottom: 1px solid var(--line); }
     .loyalty-h { margin: 0 0 0.6rem; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }

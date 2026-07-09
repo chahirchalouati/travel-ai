@@ -124,7 +124,7 @@ import { BlogService, BlogPost } from '../../core/services/blog.service';
     .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-tertiary); display: inline-block; }
 
     /* Newsletter */
-    .newsletter { margin-top: 3.5rem; background: linear-gradient(135deg, var(--brand) 0%, var(--brand-hover) 100%); border-radius: 3px; padding: clamp(2.5rem, 5vw, 4rem) 2rem; }
+    .newsletter { margin-top: 3.5rem; background: var(--color-red); border-radius: 3px; padding: clamp(2.5rem, 5vw, 4rem) 2rem; }
     .newsletter-inner { max-width: 540px; margin: 0 auto; text-align: center; }
     .nl-icon { font-size: 2.5rem; color: rgba(255,255,255,0.7); display: block; margin-bottom: 1rem; }
     .newsletter h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); color: #fff; margin: 0 0 0.75rem; font-weight: 800; }

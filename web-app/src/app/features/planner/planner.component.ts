@@ -382,7 +382,7 @@ export class PlannerComponent implements OnDestroy {
         fitBar: Math.min(100, Math.round(ratio * 100)) + '%',
         fitLabel: over ? t.fit_over : t.fit_in,
         fitFg: over ? 'var(--brand)' : 'var(--teal)',
-        fitColor: over ? 'var(--brand)' : 'linear-gradient(90deg, var(--brand), var(--brand-hover))',
+        fitColor: over ? 'var(--brand)' : 'var(--color-red)',
       };
     };
 

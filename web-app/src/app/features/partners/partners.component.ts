@@ -110,7 +110,7 @@ import { SiteContentService, SiteContentItem } from '../../core/services/site-co
     .step p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin: 0; }
     .step-divider { display: flex; align-items: flex-start; justify-content: center; padding-top: 14px; .ms { font-size: 20px; color: var(--text-tertiary); } }
 
-    .apply-band { background: linear-gradient(135deg, var(--gold) 0%, #a0731f 100%); padding: clamp(4rem, 8vw, 7rem) 1.5rem; }
+    .apply-band { background: var(--color-ink); padding: clamp(4rem, 8vw, 7rem) 1.5rem; }
     .apply-inner { max-width: 620px; margin: 0 auto; text-align: center; }
     .apply-band .section-eye { color: rgba(255,255,255,0.7); }
     .apply-band h2 { font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 3rem); color: #fff; font-weight: 800; margin: 0 0 0.75rem; letter-spacing: -0.02em; }

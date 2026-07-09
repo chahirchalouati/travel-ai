@@ -394,7 +394,7 @@ interface ChatMsg {
 
     .avatar {
       width: 36px; height: 36px; flex-shrink: 0; border-radius: var(--radius-sm);
-      background: linear-gradient(135deg, var(--brand), var(--brand-hover));
+      background: var(--color-red);
       display: grid; place-items: center; margin-top: 2px;
       box-shadow: var(--shadow-sm);
     }
@@ -405,7 +405,7 @@ interface ChatMsg {
 
     .bubble { padding: 13px 17px; font-size: 14.5px; line-height: 1.62; word-break: break-word; border-radius: var(--radius-md); }
     .bubble--user {
-      background: linear-gradient(140deg, var(--brand), var(--brand-hover));
+      background: var(--color-red);
       color: #fff; border-radius: var(--radius-md) var(--radius-md) 6px var(--radius-md);
       box-shadow: var(--shadow-md);
     }
@@ -479,7 +479,7 @@ interface ChatMsg {
     .composer-input::placeholder { color: var(--text-tertiary); }
     .send {
       width: 42px; height: 42px; flex-shrink: 0; border-radius: var(--radius-sm); border: none;
-      background: linear-gradient(140deg, var(--brand), var(--brand-hover));
+      background: var(--color-red);
       color: #fff; cursor: pointer; display: grid; place-items: center;
       box-shadow: var(--shadow-sm);
       transition: transform var(--duration-fast), opacity var(--duration-fast), box-shadow var(--duration-fast);
@@ -585,7 +585,7 @@ interface ChatMsg {
     .auth-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
     .auth-logo-icon {
       width: 40px; height: 40px; border-radius: var(--radius-sm); display: grid; place-items: center;
-      background: linear-gradient(135deg, var(--brand), var(--brand-hover)); box-shadow: var(--shadow-sm);
+      background: var(--color-red); box-shadow: var(--shadow-sm);
     }
     .auth-logo-icon .ms { font-size: 21px; color: #fff; }
     .auth-logo-name { font-size: 17px; font-weight: 800; color: var(--text-primary); }

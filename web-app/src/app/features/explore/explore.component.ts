@@ -262,17 +262,30 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.75rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-ink);
       gap: 1rem;
     }
 
     .section-title {
-      font-family: var(--font-body);
-      font-size: clamp(1.4rem, 1rem + 1.2vw, 1.8rem);
-      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 1rem + 1.4vw, 2rem);
+      font-weight: 800;
       color: var(--text-primary);
       margin: 0;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.03em;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 10px;
+      height: 10px;
+      background: var(--color-red);
+      flex-shrink: 0;
     }
 
     .see-all-link {
@@ -281,13 +294,15 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
       gap: 4px;
       background: none;
       border: none;
-      color: var(--brand);
-      font-family: var(--font-body);
-      font-size: 0.9rem;
-      font-weight: 600;
+      color: var(--color-red);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
       cursor: pointer;
       padding: 6px 10px;
-      border-radius: 6px;
+      border-radius: 2px;
       transition: background var(--duration) var(--ease);
       white-space: nowrap;
       flex-shrink: 0;

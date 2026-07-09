@@ -49,7 +49,7 @@ export interface PlannerPin {
     }
     :host ::ng-deep .pmap-dot__price { font-variant-numeric: tabular-nums; }
     :host ::ng-deep .pmap-pin--sel .pmap-dot {
-      background: linear-gradient(135deg, var(--brand), var(--brand-hover));
+      background: var(--color-red);
       border-color: rgba(255,255,255,0.95);
       color: #fff;
       box-shadow: 0 10px 26px rgba(190,67,41,0.5);

@@ -510,7 +510,7 @@
 // Confirmation
 .conf-orb {
   width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center;
-  background: linear-gradient(135deg, var(--teal), #00C29E); box-shadow: 0 12px 30px rgba(0,168,138,0.4);
+  background: var(--teal); box-shadow: 0 12px 30px rgba(0,168,138,0.4);
   .ms { font-size: 34px; color: #fff; }
 }
 .modal--center h2 { font-size: 22px; font-weight: 900; letter-spacing: -0.03em; margin: 0; }
@@ -544,7 +544,7 @@
   strong { display: block; font-size: 14.5px; font-weight: 800; }
 }
 .conc-avatar { width: 36px; height: 36px; border-radius: 3px; display: grid; place-items: center;
-  background: linear-gradient(135deg, var(--teal), #00C29E); .ms { font-size: 19px; color: #fff; } }
+  background: var(--teal); .ms { font-size: 19px; color: #fff; } }
 .conc-on { font-size: 11px; color: var(--teal); font-weight: 700; }
 .conc-context {
   font-size: 12px; line-height: 1.5; color: var(--ink-2); margin: 0;
