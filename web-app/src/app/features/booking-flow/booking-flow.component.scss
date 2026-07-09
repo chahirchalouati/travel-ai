@@ -6,7 +6,7 @@
   --bf-muted: var(--text-tertiary);
   --bf-line: var(--border);
   --bf-surface: var(--surface);
-  --bf-radius: 14px;
+  --bf-radius: 18px;
 
   display: block;
   min-height: 100vh;
@@ -73,7 +73,7 @@
   border: 1px solid var(--bf-line);
   border-radius: var(--bf-radius);
   padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Item header */
@@ -182,10 +182,11 @@
 .bf-review-line span:last-child { font-weight: 700; text-align: right; }
 .bf-ai {
   display: flex; gap: 10px; align-items: flex-start;
-  background: var(--teal-light); border: 1px solid rgba(17,102,76,0.25); border-radius: 12px;
-  padding: 14px 16px; margin-top: 18px; color: var(--teal);
+  background: linear-gradient(135deg, var(--color-ocean-tint), #EDE9FE);
+  border: 1px solid rgba(147,51,234,0.2); border-radius: 14px;
+  padding: 14px 16px; margin-top: 18px; color: #6D28D9;
 }
-.bf-ai .ms { color: var(--bf-teal); flex-shrink: 0; margin-top: 1px; }
+.bf-ai .ms { color: #7C3AED; flex-shrink: 0; margin-top: 1px; }
 .bf-ai p { margin: 0; font-size: 13.5px; line-height: 1.5; }
 .bf-error {
   display: flex; align-items: center; gap: 6px; margin: 16px 0 0;
@@ -202,13 +203,14 @@
 .bf-nav { display: flex; justify-content: space-between; gap: 12px; }
 .bf-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  border: none; border-radius: 10px; padding: 13px 22px;
+  border: none; border-radius: var(--radius-pill); padding: 13px 24px;
   font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer;
-  transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+  transition: background 200ms var(--ease-out-expo), border-color 200ms ease, color 200ms ease,
+    box-shadow 200ms ease, transform 150ms var(--ease-out-expo);
 }
 .bf-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.bf-btn--primary { background: var(--bf-accent); color: #fff; }
-.bf-btn--primary:hover:not(:disabled) { background: var(--bf-accent-dark); }
+.bf-btn--primary { background: var(--bf-accent); color: #fff; box-shadow: 0 6px 16px rgba(37,99,235,.25); }
+.bf-btn--primary:hover:not(:disabled) { background: var(--bf-accent-dark); box-shadow: 0 10px 24px rgba(37,99,235,.34); transform: translateY(-2px); }
 .bf-btn--ghost { background: transparent; color: var(--text-secondary); border: 1px solid var(--bf-line); }
 .bf-btn--ghost:hover { border-color: var(--border); color: var(--bf-ink); }
 
@@ -224,7 +226,7 @@
 .bf-summary {
   background: var(--bf-surface); border: 1px solid var(--bf-line);
   border-radius: var(--bf-radius); padding: 22px; position: sticky; top: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-md);
 }
 .bf-summary__title { font-size: 1rem; font-weight: 800; margin: 0 0 16px; }
 .bf-summary__line {
@@ -275,7 +277,7 @@
 .bf-addon--on {
   border-color: var(--bf-accent);
   background: linear-gradient(135deg, var(--brand-light), var(--surface));
-  box-shadow: 0 1px 0 rgba(190, 67, 41, 0.06);
+  box-shadow: 0 1px 0 rgba(37, 99, 235, 0.06);
 }
 .bf-addon input { width: 18px; height: 18px; accent-color: var(--bf-accent); flex: none; }
 .bf-addon__body { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }

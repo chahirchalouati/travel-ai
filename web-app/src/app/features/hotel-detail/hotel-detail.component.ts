@@ -39,15 +39,15 @@ const TARGET_TYPE = 'HOTEL';
       <div style="max-width: 1100px; margin: 0 auto; padding: 0 32px 80px;">
         <div class="hero-card">
           @if (h.imageUrl) {
-            <img [src]="h.imageUrl" [alt]="h.name" class="hero-card__img" width="400" height="260" loading="eager" fetchpriority="high" />
+            <img [src]="h.imageUrl" [alt]="h.name" class="hero-card__img" width="1200" height="440" loading="eager" fetchpriority="high" />
           } @else {
-            <div class="hero-card__img-placeholder"><span class="ms" style="font-size:64px; color:var(--border)">hotel</span></div>
+            <div class="hero-card__img-placeholder"><span class="ms" style="font-size:72px; color:rgba(255,255,255,.6)">hotel</span></div>
           }
+          <div class="hero-card__scrim"></div>
 
           <div class="hero-card__content">
             <div class="hero-card__badges">
-              @if (h.stars) { <span class="badge badge--gray">{{ stars(h.stars) }}</span> }
-              <span class="badge badge--teal">{{ h.pricePerNight | currency:'EUR':'symbol':'1.0-0' }} / {{ 'catalog.perNight' | transloco }}</span>
+              @if (h.stars) { <span class="badge badge--stars">{{ stars(h.stars) }}</span> }
               @if (summary(); as s) {
                 @if (s.totalReviews > 0) {
                   <span class="badge badge--rating">
@@ -56,10 +56,11 @@ const TARGET_TYPE = 'HOTEL';
                   </span>
                 }
               }
+              <span class="badge badge--price">{{ h.pricePerNight | currency:'EUR':'symbol':'1.0-0' }} / {{ 'catalog.perNight' | transloco }}</span>
             </div>
-            <h1 class="hero-card__name">{{ h.name }}</h1>
+            <h1 class="hero-card__name display">{{ h.name }}</h1>
             <p class="hero-card__city">
-              <span class="ms" style="font-size:16px; color:var(--text-tertiary); vertical-align:middle">location_on</span>
+              <span class="ms" style="font-size:18px; vertical-align:middle">location_on</span>
               {{ h.city }}
             </p>
             <div class="hero-card__features">
@@ -271,7 +272,7 @@ const TARGET_TYPE = 'HOTEL';
           <aside style="position:sticky; top:80px;">
             <div class="booking-card">
               <div style="display:flex; align-items:baseline; gap:6px; margin-bottom:16px;">
-                <span style="font-size:28px; font-weight:800; color:var(--teal);">{{ h.pricePerNight | currency:'EUR':'symbol':'1.0-0' }}</span>
+                <span style="font-size:30px; font-weight:800; color:var(--brand);">{{ h.pricePerNight | currency:'EUR':'symbol':'1.0-0' }}</span>
                 <span style="font-size:13px; color:var(--text-tertiary);">/ {{ 'catalog.perNight' | transloco }}</span>
               </div>
               <div class="meta-list">
@@ -329,32 +330,33 @@ const TARGET_TYPE = 'HOTEL';
     .fav-toggle--on { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
     .fav-toggle .ms { font-size: 18px; }
 
-    .hero-card { background: var(--surface); border-radius: 16px; overflow: hidden; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.08); display: flex; }
-    .hero-card__img { width: 400px; height: 260px; object-fit: cover; flex-shrink: 0; }
-    .hero-card__img-placeholder { width: 400px; height: 260px; background: var(--bg-secondary); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-    .hero-card__content { padding: 28px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .hero-card { position: relative; border-radius: var(--radius-xl); overflow: hidden; margin-bottom: 24px; box-shadow: var(--shadow-lg); min-height: 440px; display: block; }
+    .hero-card__img, .hero-card__img-placeholder { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .hero-card__img-placeholder { background: var(--color-deep-ocean); display: flex; align-items: center; justify-content: center; }
+    .hero-card__scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,23,42,0) 32%, rgba(15,23,42,.55) 68%, rgba(15,23,42,.88) 100%); }
+    .hero-card__content { position: absolute; left: 0; right: 0; bottom: 0; padding: clamp(24px, 3vw, 40px); display: flex; flex-direction: column; gap: 12px; z-index: 2; }
     .hero-card__badges { display: flex; gap: 8px; flex-wrap: wrap; }
-    .badge { display: inline-block; border-radius: 100px; padding: 4px 12px; font-size: 12px; font-weight: 600; }
-    .badge--teal { background: var(--teal-light); color: var(--teal); }
-    .badge--gray { background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
-    .badge--rating { background: var(--gold-light); color: #B26A00; }
-    .badge--rating .ms { color: var(--gold); }
-    .hero-card__name { font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.2rem); font-weight: 800; margin: 0; line-height: 1.1; }
-    .hero-card__city { font-size: 14px; color: var(--text-tertiary); margin: 0; font-weight: 500; }
-    .hero-card__features { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
-    .feature-chip { display: inline-flex; align-items: center; gap: 5px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 100px; padding: 5px 12px; font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+    .badge { display: inline-flex; align-items: center; gap: 4px; border-radius: 100px; padding: 5px 13px; font-size: 12.5px; font-weight: 700; }
+    .badge--stars { background: rgba(255,255,255,.16); color: #FBBF24; letter-spacing: 2px; border: 1px solid rgba(255,255,255,.22); backdrop-filter: blur(8px); }
+    .badge--rating { background: rgba(255,255,255,.94); color: #B26A00; }
+    .badge--rating .ms { color: var(--color-rating); }
+    .badge--price { background: var(--brand); color: #fff; box-shadow: 0 6px 16px rgba(37,99,235,.4); }
+    .hero-card__name { font-size: clamp(2rem, 1.4rem + 2.4vw, 3rem); font-weight: 800; margin: 0; line-height: 1.05; color: #fff; text-shadow: 0 2px 20px rgba(0,0,0,.3); }
+    .hero-card__city { font-size: 15px; color: rgba(255,255,255,.9); margin: 0; font-weight: 500; display: flex; align-items: center; gap: 5px; }
+    .hero-card__features { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+    .feature-chip { display: inline-flex; align-items: center; gap: 5px; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.28); border-radius: 100px; padding: 6px 13px; font-size: 12.5px; font-weight: 600; color: #fff; backdrop-filter: blur(8px); }
 
     .detail-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; align-items: start; }
-    .info-card { background: var(--surface); border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    .info-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 26px; box-shadow: var(--shadow-sm); }
     .card-heading { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; margin: 0 0 20px; color: var(--text-primary); }
     .feature-list { display: flex; flex-direction: column; gap: 12px; }
     .feature-item { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; }
     .feature-item--yes { color: var(--text-primary); } .feature-item--yes .ms { color: var(--teal); }
     .feature-item--no { color: var(--text-tertiary); } .feature-item--no .ms { color: var(--border); }
 
-    .ai-card { background: linear-gradient(135deg, #EEF1FF, #F5F3FF); border: 1px solid rgba(99,102,241,0.2); }
-    .ai-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #4338CA; background: rgba(99,102,241,0.1); padding: 4px 10px; border-radius: 100px; margin-bottom: 12px; }
-    .ai-badge .ms { font-size: 15px; color: #6366F1; }
+    .ai-card { background: linear-gradient(135deg, var(--color-ocean-tint), #EDE9FE); border: 1px solid rgba(147,51,234,0.18); }
+    .ai-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #6D28D9; background: rgba(147,51,234,0.1); padding: 5px 11px; border-radius: 100px; margin-bottom: 12px; }
+    .ai-badge .ms { font-size: 15px; color: #7C3AED; }
 
     .rating-grid { display: flex; flex-direction: column; gap: 12px; }
     .rating-row { display: flex; align-items: center; gap: 12px; }
@@ -392,7 +394,7 @@ const TARGET_TYPE = 'HOTEL';
     .review-item { border-bottom: 1px solid var(--border-light); padding-bottom: 20px; }
     .review-item:last-child { border-bottom: none; padding-bottom: 0; }
     .review-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-    .review-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--brand), #F6873F); color: #fff; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .review-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--brand), #38BDF8); color: #fff; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .review-meta { flex: 1; min-width: 0; }
     .review-name { display: block; font-size: 14px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 6px; }
     .review-date { display: block; font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
@@ -409,7 +411,7 @@ const TARGET_TYPE = 'HOTEL';
     .no-reviews .ms { font-size: 36px; }
     .no-reviews p { margin: 0; font-size: 14px; }
 
-    .booking-card { background: var(--surface); border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.08); border: 1px solid var(--border); }
+    .booking-card { background: var(--surface); border-radius: var(--radius-lg); padding: 26px; box-shadow: var(--shadow-md); border: 1px solid var(--border); }
     .meta-list { display: flex; flex-direction: column; gap: 14px; }
     .meta-item { display: flex; align-items: center; gap: 12px; }
     .meta-label { display: block; font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500; }
@@ -425,8 +427,7 @@ const TARGET_TYPE = 'HOTEL';
     @media (max-width: 900px) { .form-row--4 { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 768px) {
       .detail-grid { grid-template-columns: 1fr; }
-      .hero-card { flex-direction: column; }
-      .hero-card__img, .hero-card__img-placeholder { width: 100%; height: 200px; }
+      .hero-card { min-height: 340px; }
       .form-row--4 { grid-template-columns: repeat(2, 1fr); }
     }
   `],

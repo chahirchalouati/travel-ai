@@ -59,16 +59,17 @@ function localToday(): string {
               [src]="r.imageUrl"
               [alt]="r.name"
               class="hero-card__img"
-              width="400"
-              height="260"
+              width="1200"
+              height="440"
               loading="eager"
               fetchpriority="high"
             />
           } @else {
             <div class="hero-card__img-placeholder">
-              <span class="ms" style="font-size:64px; color:var(--border)">restaurant</span>
+              <span class="ms" style="font-size:72px; color:rgba(255,255,255,.6)">restaurant</span>
             </div>
           }
+          <div class="hero-card__scrim"></div>
 
           <div class="hero-card__content">
             <div class="hero-card__badges">
@@ -93,9 +94,9 @@ function localToday(): string {
                 </span>
               }
             </div>
-            <h1 class="hero-card__name">{{ r.name }}</h1>
+            <h1 class="hero-card__name display">{{ r.name }}</h1>
             <p class="hero-card__city">
-              <span class="ms" style="font-size:16px; color:var(--text-tertiary); vertical-align:middle">location_on</span>
+              <span class="ms" style="font-size:18px; vertical-align:middle">location_on</span>
               {{ r.city }}
             </p>
             <div class="hero-card__features">
@@ -284,22 +285,23 @@ function localToday(): string {
     .fav-toggle .ms { font-size: 18px; }
 
     .hero-card {
-      background: var(--surface); border-radius: 16px; overflow: hidden;
-      margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.08);
-      display: flex; gap: 0;
+      position: relative; border-radius: var(--radius-xl); overflow: hidden;
+      margin-bottom: 24px; box-shadow: var(--shadow-lg); min-height: 440px; display: block;
     }
 
-    .hero-card__img {
-      width: 400px; height: 260px; object-fit: cover; flex-shrink: 0;
+    .hero-card__img, .hero-card__img-placeholder {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
     }
 
     .hero-card__img-placeholder {
-      width: 400px; height: 260px; background: var(--bg-secondary); flex-shrink: 0;
+      background: var(--color-deep-ocean);
       display: flex; align-items: center; justify-content: center;
     }
+    .hero-card__scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,23,42,0) 32%, rgba(15,23,42,.55) 68%, rgba(15,23,42,.88) 100%); }
 
     .hero-card__content {
-      padding: 28px; display: flex; flex-direction: column; gap: 10px; flex: 1;
+      position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+      padding: clamp(24px, 3vw, 40px); display: flex; flex-direction: column; gap: 12px;
     }
 
     .hero-card__badges {
@@ -307,36 +309,38 @@ function localToday(): string {
     }
 
     .badge {
-      display: inline-block; border-radius: 100px;
-      padding: 4px 12px; font-size: 12px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 4px; border-radius: 100px;
+      padding: 5px 13px; font-size: 12.5px; font-weight: 700;
     }
-    .badge--teal { background: var(--teal-light); color: var(--teal); }
-    .badge--gray { background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
-    .badge--rating { background: var(--gold-light); color: var(--gold); }
-    .badge--rating .ms { color: var(--gold); }
-    .badge--ai { background: var(--teal-light); color: var(--teal); }
-    .badge--ai .ms { color: var(--teal); }
+    .badge--teal { background: rgba(255,255,255,.94); color: var(--teal); }
+    .badge--gray { background: rgba(255,255,255,.16); color: #fff; border: 1px solid rgba(255,255,255,.28); backdrop-filter: blur(8px); }
+    .badge--rating { background: rgba(255,255,255,.94); color: #B26A00; }
+    .badge--rating .ms { color: var(--color-rating); }
+    .badge--ai { background: rgba(147,51,234,.92); color: #fff; }
+    .badge--ai .ms { color: #fff; }
 
     .hero-card__name {
-      font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.2rem);
-      font-weight: 800; margin: 0; line-height: 1.1;
+      font-size: clamp(2rem, 1.4rem + 2.4vw, 3rem);
+      font-weight: 800; margin: 0; line-height: 1.05; color: #fff;
+      text-shadow: 0 2px 20px rgba(0,0,0,.3);
     }
 
     .hero-card__city {
-      font-size: 14px; color: var(--text-tertiary); margin: 0; font-weight: 500;
+      font-size: 15px; color: rgba(255,255,255,.9); margin: 0; font-weight: 500;
+      display: flex; align-items: center; gap: 5px;
     }
 
     .hero-card__features {
-      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px;
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px;
     }
 
     .feature-chip {
       display: inline-flex; align-items: center; gap: 5px;
-      background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 100px;
-      padding: 5px 12px; font-size: 12px; font-weight: 600; color: var(--text-secondary);
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.28); border-radius: 100px;
+      padding: 6px 13px; font-size: 12.5px; font-weight: 600; color: #fff; backdrop-filter: blur(8px);
     }
 
-    .feature-chip--green { background: var(--teal-light); border-color: var(--teal); color: var(--teal); }
+    .feature-chip--green { background: rgba(16,185,129,.9); border-color: transparent; color: #fff; }
 
     .detail-grid {
       display: grid; grid-template-columns: 2fr 1fr;
@@ -344,8 +348,8 @@ function localToday(): string {
     }
 
     .info-card {
-      background: var(--surface); border-radius: 12px; padding: 24px;
-      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 26px;
+      box-shadow: var(--shadow-sm);
     }
 
     .card-heading {
@@ -365,8 +369,8 @@ function localToday(): string {
     .feature-item--no .ms { color: var(--border); }
 
     .booking-card {
-      background: var(--surface); border-radius: 12px; padding: 24px;
-      box-shadow: 0 1px 3px rgba(0,0,0,.08); border: 1px solid var(--border);
+      background: var(--surface); border-radius: var(--radius-lg); padding: 26px;
+      box-shadow: var(--shadow-md); border: 1px solid var(--border);
     }
 
     .meta-list { display: flex; flex-direction: column; gap: 14px; }
@@ -441,8 +445,7 @@ function localToday(): string {
 
     @media (max-width: 768px) {
       .detail-grid { grid-template-columns: 1fr; }
-      .hero-card { flex-direction: column; }
-      .hero-card__img, .hero-card__img-placeholder { width: 100%; height: 200px; }
+      .hero-card { min-height: 340px; }
     }
   `],
 })

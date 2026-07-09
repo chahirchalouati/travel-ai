@@ -268,7 +268,7 @@
         <div class="bf-summary__line bf-summary__line--muted">
           <span>{{ 'booking.flow.serviceFee' | transloco }}</span>
           @if (primeActive()) {
-            <span style="color:#00856a;font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.04em;">
+            <span style="color:var(--color-success-strong);font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.04em;">
               {{ 'membership.checkout.feeWaived' | transloco }}
             </span>
           } @else {
@@ -276,7 +276,7 @@
           }
         </div>
         @if (store.memberDiscount() > 0) {
-          <div class="bf-summary__line" style="color:#00856a;font-weight:700;">
+          <div class="bf-summary__line" style="color:var(--color-success-strong);font-weight:700;">
             <span>{{ 'membership.checkout.memberDiscount' | transloco }}</span>
             <span>−{{ store.memberDiscount() | currency:d.currency:'symbol':'1.2-2' }}</span>
           </div>
@@ -288,13 +288,13 @@
           </div>
         }
         @if (store.discount() > 0) {
-          <div class="bf-summary__line" style="color:#00856a;font-weight:700;">
+          <div class="bf-summary__line" style="color:var(--color-success-strong);font-weight:700;">
             <span>{{ 'booking.flow.discount' | transloco }} @if (store.appliedPromo(); as c) { ({{ c }}) }</span>
             <span>−{{ store.discount() | currency:d.currency:'symbol':'1.2-2' }}</span>
           </div>
         }
         @if (store.loyaltyDiscount() > 0) {
-          <div class="bf-summary__line" style="color:#00856a;font-weight:700;">
+          <div class="bf-summary__line" style="color:var(--color-success-strong);font-weight:700;">
             <span>{{ 'loyalty.checkout.discountLine' | transloco: { points: store.redeemedPoints() } }}</span>
             <span>−{{ store.loyaltyDiscount() | currency:d.currency:'symbol':'1.2-2' }}</span>
           </div>
