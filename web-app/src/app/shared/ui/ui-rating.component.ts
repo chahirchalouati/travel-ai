@@ -28,7 +28,7 @@ import { Component, computed, input } from '@angular/core';
         background: var(--bg-tertiary);
         border: 1px solid var(--border);
       }
-      .ui-rating__dot--on { background: var(--color-red); border-color: var(--color-red); }
+      .ui-rating__dot--on { background: var(--color-red); border-color: var(--color-red-ink); }
       .ui-rating__score {
         font-weight: 800; font-size: 0.9rem; color: var(--color-ink);
         font-variant-numeric: tabular-nums; letter-spacing: -0.01em;

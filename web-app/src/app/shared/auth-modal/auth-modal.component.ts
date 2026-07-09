@@ -203,7 +203,7 @@ const GIS_SRC = 'https://accounts.google.com/gsi/client';
 
     .auth-brand { margin-bottom: 14px; }
     .auth-logo { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; color: var(--text-primary); }
-    .auth-logo-accent { color: var(--brand); }
+    .auth-logo-accent { color: var(--color-red-ink); }
 
     .auth-title {
       font-size: 1.5rem;
@@ -248,7 +248,7 @@ const GIS_SRC = 'https://accounts.google.com/gsi/client';
       outline: none;
       transition: border-color var(--duration-fast) ease, background var(--duration-fast) ease;
     }
-    .auth-input:focus { border-color: var(--brand); background: var(--surface); }
+    .auth-input:focus { border-color: var(--color-red-ink); background: var(--surface); }
 
     .auth-code {
       text-align: center;
@@ -357,7 +357,7 @@ const GIS_SRC = 'https://accounts.google.com/gsi/client';
     .auth-link {
       background: none;
       border: none;
-      color: var(--brand);
+      color: var(--color-red-ink);
       font-family: inherit;
       font-size: 0.88rem;
       font-weight: 700;

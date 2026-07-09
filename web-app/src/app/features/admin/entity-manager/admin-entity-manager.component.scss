@@ -81,7 +81,7 @@
 .em-field { display: flex; flex-direction: column; gap: 0.35rem; }
 .em-field-full { grid-column: 1 / -1; }
 .em-label { font-size: 0.78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; }
-.req { color: var(--accent); }
+.req { color: var(--color-red-ink); }
 .em-field input[type='text'],
 .em-field input[type='number'],
 .em-field input[type='date'],
@@ -92,11 +92,11 @@
   font-family: inherit; font-size: 0.9rem; color: var(--ink); background: var(--surface); width: 100%;
 }
 .em-field input:focus, .em-field select:focus, .em-field textarea:focus {
-  outline: none; border-color: var(--accent);
+  outline: none; border-color: var(--color-red-ink);
 }
 .em-field textarea { resize: vertical; }
 .em-check { display: flex; align-items: center; height: 38px; }
-.em-check input { width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; }
+.em-check input { width: 20px; height: 20px; accent-color: var(--color-red-ink); cursor: pointer; }
 
 .em-error { color: #c0392b; font-size: 0.85rem; font-weight: 600; margin: 0 1.5rem; }
 

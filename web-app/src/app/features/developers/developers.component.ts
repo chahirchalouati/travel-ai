@@ -110,7 +110,7 @@ console<span class="c-op">.</span><span class="c-fn">log</span>(results<span cla
       display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
     }
     .devs-hero__inner { max-width: 540px; }
-    .eyebrow { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); margin: 0 0 1rem; }
+    .eyebrow { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-red-ink); margin: 0 0 1rem; }
     .devs-hero h1 { font-family: var(--font-display); font-size: clamp(2.4rem, 4.5vw, 4.5rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.06; margin: 0 0 1.2rem; color: var(--bg-primary); }
     .hero-sub { font-size: 1.05rem; color: var(--text-tertiary); margin: 0 0 2rem; line-height: 1.7; }
     .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
@@ -137,7 +137,7 @@ console<span class="c-op">.</span><span class="c-fn">log</span>(results<span cla
     /* Body */
     .devs-body { padding: clamp(3rem, 6vw, 5.5rem) 1.5rem; }
     .devs-inner { max-width: 960px; margin: 0 auto; display: flex; flex-direction: column; gap: 3.5rem; }
-    .section-eye { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brand); margin: 0 0 0.6rem; }
+    .section-eye { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-red-ink); margin: 0 0 0.6rem; }
 
     .features-section h2,
     .endpoints-section h2,
@@ -145,7 +145,7 @@ console<span class="c-op">.</span><span class="c-fn">log</span>(results<span cla
 
     .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.25rem; }
     .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1.5rem; }
-    .feature-icon-wrap { width: 44px; height: 44px; border-radius: 3px; background: var(--brand-light); display: flex; align-items: center; justify-content: center; margin-bottom: 0.85rem; .ms { font-size: 1.4rem; color: var(--brand); } }
+    .feature-icon-wrap { width: 44px; height: 44px; border-radius: 3px; background: var(--brand-light); display: flex; align-items: center; justify-content: center; margin-bottom: 0.85rem; .ms { font-size: 1.4rem; color: var(--color-red-ink); } }
     .feature-card h3 { font-size: 0.95rem; font-weight: 700; margin: 0 0 0.35rem; }
     .feature-card p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin: 0; }
 
@@ -153,7 +153,7 @@ console<span class="c-op">.</span><span class="c-fn">log</span>(results<span cla
     .endpoint-row { display: grid; grid-template-columns: 72px 240px 1fr; align-items: center; gap: 1rem; padding: 0.9rem 1.25rem; background: var(--surface); border-bottom: 1px solid var(--border-light); &:last-child { border-bottom: none; } }
     .method { font-family: 'SFMono-Regular', ui-monospace, monospace; font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-align: center; }
     .method--get { background: #e1f5e8; color: #15803d; }
-    .method--post { background: var(--brand-light); color: var(--brand); }
+    .method--post { background: var(--brand-light); color: var(--color-red-ink); }
     .method--patch { background: var(--gold-light); color: var(--gold); }
     .method--delete { background: #fde8e8; color: #c0392b; }
     .ep-path { font-family: 'SFMono-Regular', ui-monospace, monospace; font-size: 0.82rem; color: var(--text-primary); }
@@ -170,7 +170,7 @@ console<span class="c-op">.</span><span class="c-fn">log</span>(results<span cla
     .cta-icon { font-size: 2.5rem; color: rgba(255,255,255,0.7); display: block; margin-bottom: 1rem; }
     .cta-section h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); color: #fff; margin: 0 0 0.75rem; font-weight: 800; }
     .cta-section p { color: rgba(255,255,255,0.82); margin: 0 0 1.75rem; font-size: 1rem; }
-    .cta-btn { display: inline-flex; background: #fff; color: var(--brand); font-weight: 800; text-decoration: none; padding: 13px 28px; border-radius: 2px; font-size: 0.95rem; transition: background 140ms ease; &:hover { background: var(--bg-primary); } }
+    .cta-btn { display: inline-flex; background: #fff; color: var(--color-red-ink); font-weight: 800; text-decoration: none; padding: 13px 28px; border-radius: 2px; font-size: 0.95rem; transition: background 140ms ease; &:hover { background: var(--bg-primary); } }
 
     @media (max-width: 880px) { .devs-hero { grid-template-columns: 1fr; } .hero-code { display: none; } }
     @media (max-width: 600px) { .endpoint-row { grid-template-columns: 60px 1fr; } .ep-desc { display: none; } }

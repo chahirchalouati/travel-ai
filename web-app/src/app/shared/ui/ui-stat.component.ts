@@ -43,14 +43,14 @@ export type UiStatTrend = 'up' | 'down' | 'flat';
         font-variant-numeric: tabular-nums;
         color: var(--color-ink);
       }
-      .ui-stat__value--red { color: var(--color-red); }
+      .ui-stat__value--red { color: var(--color-red-ink); }
       .ui-stat__delta {
         display: inline-flex; align-items: center; gap: 3px;
         font-size: 0.78rem; font-weight: 600;
       }
       .ui-stat__delta .ms { font-size: 1rem; }
       .ui-stat__delta--up { color: var(--color-success-strong, #145C39); }
-      .ui-stat__delta--down { color: var(--color-red); }
+      .ui-stat__delta--down { color: var(--color-red-ink); }
       .ui-stat__delta--flat { color: var(--text-subtle, var(--text-tertiary)); }
     `,
   ],

@@ -95,7 +95,7 @@ interface TripCard extends BookingResponse {
     .trip { cursor: pointer; }
     .trip-banner { height: 132px; background-size: cover; background-position: center; position: relative; display: flex; align-items: flex-start; padding: 12px; }
     .trip-banner .pill { background: rgba(255,255,255,0.92); }
-    .trip-live { position: absolute; top: 12px; right: 12px; display: inline-flex; align-items: center; gap: 5px; background: var(--accent-soft); border: 1px solid var(--accent); color: var(--accent); border-radius: 2px; padding: 5px 12px; font-weight: 700; font-size: 0.78rem; cursor: pointer; transition: background 120ms ease, color 120ms ease; }
+    .trip-live { position: absolute; top: 12px; right: 12px; display: inline-flex; align-items: center; gap: 5px; background: var(--accent-soft); border: 1px solid var(--accent); color: var(--color-red-ink); border-radius: 2px; padding: 5px 12px; font-weight: 700; font-size: 0.78rem; cursor: pointer; transition: background 120ms ease, color 120ms ease; }
     .trip-live:hover { background: var(--accent); color: #fff; }
     .trip-live .ms { font-size: 15px; }
     .trip--past .trip-banner { filter: grayscale(0.35); }

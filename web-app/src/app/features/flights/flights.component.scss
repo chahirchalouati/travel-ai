@@ -9,7 +9,7 @@
   font-size: 0.86rem;
   color: var(--text-tertiary);
 
-  .ms { color: var(--brand); }
+  .ms { color: var(--color-red-ink); }
   .dot { opacity: 0.5; }
 }
 
@@ -57,7 +57,7 @@
   margin-left: auto;
   font-size: 0.86rem;
   font-weight: 700;
-  color: var(--brand);
+  color: var(--color-red-ink);
 }
 
 .city-group {
@@ -113,7 +113,7 @@
     cursor: pointer;
     transition: background 150ms ease, color 150ms ease;
   }
-  button.trip-toggle__on { background: #fff; color: var(--brand); }
+  button.trip-toggle__on { background: #fff; color: var(--color-red-ink); }
 }
 
 /* ── Multi-city leg editor ────────────────────────────────── */
@@ -148,7 +148,7 @@
   height: 24px;
   border-radius: 50%;
   background: #fff;
-  color: var(--brand);
+  color: var(--color-red-ink);
   font-size: 0.8rem;
   font-weight: 800;
   flex-shrink: 0;
@@ -194,7 +194,7 @@
   font-weight: 700;
   color: var(--text-secondary);
   margin-bottom: 10px;
-  .ms { color: var(--brand); }
+  .ms { color: var(--color-red-ink); }
 }
 .fare-cal__strip {
   display: flex;
@@ -217,13 +217,13 @@
   cursor: pointer;
   transition: border-color 150ms ease, transform 150ms ease;
 
-  &:hover { border-color: var(--brand); transform: translateY(-2px); }
+  &:hover { border-color: var(--color-red-ink); transform: translateY(-2px); }
 }
 .fare-cal__date { font-size: 0.72rem; color: var(--text-tertiary); text-transform: capitalize; }
 .fare-cal__price { font-size: 0.95rem; font-weight: 800; }
 .fare-cal__day--cheap { border-color: var(--teal); }
 .fare-cal__day--cheap .fare-cal__price { color: var(--teal); }
-.fare-cal__day--on { background: var(--brand); border-color: var(--brand); }
+.fare-cal__day--on { background: var(--brand); border-color: var(--color-red-ink); }
 .fare-cal__day--on .fare-cal__date,
 .fare-cal__day--on .fare-cal__price { color: #fff; }
 
@@ -244,7 +244,7 @@
   font-size: 0.8rem;
   font-weight: 700;
   color: var(--text-secondary);
-  .ms { color: var(--brand); }
+  .ms { color: var(--color-red-ink); }
 }
 .flight-filters__airlines { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip-toggle {
@@ -258,8 +258,8 @@
   cursor: pointer;
   transition: all 150ms ease;
 
-  &:hover { border-color: var(--brand); }
-  &--on { background: var(--brand); border-color: var(--brand); color: #fff; }
+  &:hover { border-color: var(--color-red-ink); }
+  &--on { background: var(--brand); border-color: var(--color-red-ink); color: #fff; }
 }
 .flight-filters__duration {
   display: inline-flex;
@@ -278,7 +278,7 @@
   margin-left: auto;
   border: none;
   background: transparent;
-  color: var(--brand);
+  color: var(--color-red-ink);
   font: inherit;
   font-size: 0.8rem;
   font-weight: 700;
@@ -294,7 +294,7 @@
   font-size: 1.15rem;
   font-weight: 800;
   letter-spacing: -0.01em;
-  .ms { color: var(--brand); }
+  .ms { color: var(--color-red-ink); }
 
   &--return { margin-top: 40px; padding-top: 24px; border-top: 2px dashed var(--border); }
 }

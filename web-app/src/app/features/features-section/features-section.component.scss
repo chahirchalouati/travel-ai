@@ -54,7 +54,7 @@ section {
 
   &.active {
     background: var(--bg-secondary);
-    border-color: var(--brand);
+    border-color: var(--color-red-ink);
     box-shadow: var(--shadow-sm);
   }
 }
@@ -73,7 +73,7 @@ section {
     background: var(--brand-light);
 
     .feature-icon {
-      color: var(--brand);
+      color: var(--color-red-ink);
     }
   }
 }

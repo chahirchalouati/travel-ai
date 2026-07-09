@@ -85,7 +85,7 @@ import { SiteContentService, SiteContentItem } from '../../core/services/site-co
       text-align: center;
     }
     .hero-inner { max-width: 780px; margin: 0 auto; }
-    .eyebrow { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); margin: 0 0 1.1rem; }
+    .eyebrow { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-red-ink); margin: 0 0 1.1rem; }
     .hero-h1 {
       font-family: var(--font-display);
       font-size: clamp(2.8rem, 6vw, 5.5rem);
@@ -108,14 +108,14 @@ import { SiteContentService, SiteContentItem } from '../../core/services/site-co
     }
     .stat { flex: 1; min-width: 160px; max-width: 240px; text-align: center; padding: 2.5rem 1.5rem; border-right: 1px solid var(--border-light); }
     .stat:last-child { border-right: none; }
-    .stat-val { display: block; font-family: var(--font-display); font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 800; color: var(--brand); letter-spacing: -0.02em; }
+    .stat-val { display: block; font-family: var(--font-display); font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 800; color: var(--color-red-ink); letter-spacing: -0.02em; }
     .stat-label { font-size: 0.88rem; color: var(--text-secondary); font-weight: 600; }
 
     /* Sections */
     .section { padding: clamp(4rem, 8vw, 7rem) 1.5rem; }
     .section--tinted { background: var(--bg-secondary); }
     .section-inner { max-width: 960px; margin: 0 auto; }
-    .section-eye { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brand); margin: 0 0 0.75rem; }
+    .section-eye { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-red-ink); margin: 0 0 0.75rem; }
     .section-inner h2 { font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 800; letter-spacing: -0.02em; margin: 0 0 1.5rem; line-height: 1.15; }
 
     /* Mission two-col */
@@ -135,7 +135,7 @@ import { SiteContentService, SiteContentItem } from '../../core/services/site-co
     .values-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
     .value-card { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1.75rem 1.5rem; }
     .value-icon-wrap { width: 48px; height: 48px; border-radius: 3px; background: var(--brand-light); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
-    .value-icon { font-size: 1.6rem; color: var(--brand); }
+    .value-icon { font-size: 1.6rem; color: var(--color-red-ink); }
     .value-card h3 { font-size: 1rem; font-weight: 700; margin: 0 0 0.5rem; }
     .value-card p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.65; margin: 0; }
 

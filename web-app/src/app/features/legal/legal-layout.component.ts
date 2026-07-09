@@ -51,7 +51,7 @@ export interface LegalSection {
       border-bottom: 1px solid var(--border-light);
     }
     .legal-hero__inner { max-width: 760px; margin: 0 auto; }
-    .eyebrow { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); margin: 0 0 0.9rem; }
+    .eyebrow { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-red-ink); margin: 0 0 0.9rem; }
     .legal-hero h1 { font-family: var(--font-display); font-size: clamp(2.2rem, 4.5vw, 3.6rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.08; margin: 0 0 0.9rem; }
     .updated { font-size: 0.9rem; color: var(--text-tertiary); margin: 0; font-weight: 600; }
 
@@ -61,13 +61,13 @@ export interface LegalSection {
 
     .legal-section { margin-bottom: 2.25rem; }
     .legal-section h2 { font-family: var(--font-display); font-size: clamp(1.25rem, 2.4vw, 1.6rem); font-weight: 800; letter-spacing: -0.01em; margin: 0 0 0.9rem; display: flex; gap: 0.6rem; align-items: baseline; }
-    .sec-num { color: var(--brand); font-size: 0.85em; }
+    .sec-num { color: var(--color-red-ink); font-size: 0.85em; }
     .legal-section p { font-size: 0.98rem; color: var(--text-secondary); line-height: 1.8; margin: 0 0 0.9rem; &:last-child { margin-bottom: 0; } }
 
     .legal-foot { display: flex; align-items: center; gap: 0.85rem; margin-top: 3rem; padding: 1.4rem 1.6rem; background: var(--surface); border: 1px solid var(--border); border-radius: 3px;
-      .ms { font-size: 1.5rem; color: var(--brand); flex-shrink: 0; }
+      .ms { font-size: 1.5rem; color: var(--color-red-ink); flex-shrink: 0; }
       p { margin: 0; font-size: 0.92rem; color: var(--text-secondary); }
-      a { color: var(--brand); font-weight: 700; text-decoration: none; &:hover { text-decoration: underline; } }
+      a { color: var(--color-red-ink); font-weight: 700; text-decoration: none; &:hover { text-decoration: underline; } }
     }
   `]
 })

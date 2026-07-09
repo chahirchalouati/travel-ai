@@ -117,13 +117,13 @@ import { PressService, PressCoverage } from '../../core/services/press.service';
 
     .press-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
     .kit-card, .contact-card { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 2rem; display: flex; flex-direction: column; gap: 0.75rem; }
-    .kit-icon, .contact-icon { font-size: 2.2rem; color: var(--brand); }
+    .kit-icon, .contact-icon { font-size: 2.2rem; color: var(--color-red-ink); }
 
     .kit-card p, .contact-card p { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; margin: 0; }
     .kit-list { list-style: none; margin: 0.25rem 0; padding: 0; display: flex; flex-direction: column; gap: 6px; li { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--text-secondary); .ms { font-size: 17px; color: var(--teal); } } }
     .kit-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: 0.5rem; background: var(--brand); color: #fff; text-decoration: none; font-weight: 700; font-size: 0.9rem; padding: 11px 22px; border-radius: 2px; transition: background 140ms ease; .ms { font-size: 18px; } &:hover { background: var(--brand-hover); } }
 
-    .contact-email { color: var(--brand); font-weight: 700; font-size: 1rem; text-decoration: none; &:hover { text-decoration: underline; } }
+    .contact-email { color: var(--color-red-ink); font-weight: 700; font-size: 1rem; text-decoration: none; &:hover { text-decoration: underline; } }
     .response-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--text-tertiary); margin-top: 0.25rem; .ms { font-size: 16px; } }
 
     .brand-assets { display: flex; gap: 1rem; flex-wrap: wrap; }
@@ -132,8 +132,8 @@ import { PressService, PressCoverage } from '../../core/services/press.service';
     .brand-preview--light { background: var(--surface); }
     .brand-preview--dark { background: var(--text-primary); }
     .brand-preview--brand { background: var(--brand); }
-    .brand-logo-text { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; color: var(--text-primary); span { color: var(--brand); } }
-    .brand-preview--dark .brand-logo-text { color: var(--bg-primary); span { color: var(--brand); } }
+    .brand-logo-text { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; color: var(--text-primary); span { color: var(--color-red-ink); } }
+    .brand-preview--dark .brand-logo-text { color: var(--bg-primary); span { color: var(--color-red-ink); } }
     .brand-preview--brand .brand-logo-text { color: #fff; span { color: rgba(255,255,255,0.7); } }
     .asset-label { font-size: 0.8rem; color: var(--text-tertiary); font-weight: 600; }
 

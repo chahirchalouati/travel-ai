@@ -286,7 +286,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
       font-size: 0.82rem;
       font-weight: 500;
       letter-spacing: 0.05em;
-      color: var(--color-red);
+      color: var(--color-red-ink);
       align-self: flex-start;
       margin-top: 0.4em;
       flex-shrink: 0;
@@ -298,7 +298,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
       gap: 4px;
       background: none;
       border: none;
-      color: var(--color-red);
+      color: var(--color-red-ink);
       font-family: var(--font-mono);
       font-size: 0.72rem;
       font-weight: 500;
@@ -433,7 +433,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
 
     .rating-dot.filled {
       background: var(--color-red);
-      border-color: var(--color-red);
+      border-color: var(--color-red-ink);
     }
 
     .rating-score {

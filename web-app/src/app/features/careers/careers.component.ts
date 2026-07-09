@@ -97,7 +97,7 @@ import { CareersService, JobPosition } from '../../core/services/careers.service
     .section { padding: clamp(3.5rem, 7vw, 6rem) 1.5rem; }
     .section--tinted { background: var(--bg-secondary); }
     .section-inner { max-width: 960px; margin: 0 auto; }
-    .section-eye { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brand); margin: 0 0 0.6rem; }
+    .section-eye { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-red-ink); margin: 0 0 0.6rem; }
     .section-inner h2 { font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 800; letter-spacing: -0.02em; margin: 0 0 2rem; }
 
     .perks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 1.25rem; }
@@ -125,7 +125,7 @@ import { CareersService, JobPosition } from '../../core/services/careers.service
     .culture-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
     .culture-text h2 { color: var(--bg-primary); font-family: var(--font-display); }
     .culture-text p { color: var(--text-tertiary); line-height: 1.75; margin: 0 0 1.5rem; font-size: 1rem; }
-    .contact-link { display: inline-flex; align-items: center; gap: 6px; color: var(--brand); font-weight: 700; text-decoration: none; font-size: 0.95rem; .ms { font-size: 18px; transition: transform 140ms ease; } &:hover .ms { transform: translateX(3px); } }
+    .contact-link { display: inline-flex; align-items: center; gap: 6px; color: var(--color-red-ink); font-weight: 700; text-decoration: none; font-size: 0.95rem; .ms { font-size: 18px; transition: transform 140ms ease; } &:hover .ms { transform: translateX(3px); } }
     .culture-icons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
     .culture-bubble { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 3px; display: flex; align-items: center; justify-content: center; aspect-ratio: 1; .ms { font-size: 2rem; color: rgba(255,255,255,0.5); } }
 

@@ -252,27 +252,27 @@ type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
     .identity-email { color: var(--muted); font-size: 0.9rem; }
     .role-badge { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; background: var(--teal-light); color: var(--teal); font-weight: 800; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 5px 11px; border-radius: 2px; }
     .role-badge .ms { font-size: 15px; }
-    .role-badge.admin { background: var(--brand-light); color: var(--accent); }
+    .role-badge.admin { background: var(--brand-light); color: var(--color-red-ink); }
     .form { display: flex; flex-direction: column; gap: 1rem; }
     .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     .field { display: flex; flex-direction: column; gap: 6px; }
     .field span { font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); }
     .field small { color: var(--muted); font-weight: 500; }
     .field input { border: 1px solid var(--line); border-radius: 3px; padding: 0.65rem 0.85rem; font-family: inherit; font-size: 0.95rem; outline: none; transition: border-color 120ms ease; }
-    .field input:focus { border-color: var(--accent); }
+    .field input:focus { border-color: var(--color-red-ink); }
     .field input:disabled { background: var(--bg-secondary); color: var(--muted); }
     .form-actions { display: flex; justify-content: flex-end; gap: 0.7rem; margin-top: 0.5rem; }
     .side { display: flex; flex-direction: column; gap: 1.25rem; }
     .side-h { margin: 0 0 0.9rem; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
     .side-link { display: flex; align-items: center; gap: 10px; width: 100%; background: none; border: none; padding: 0.65rem 0; font-family: inherit; font-size: 0.95rem; font-weight: 600; color: var(--ink); cursor: pointer; border-radius: 8px; transition: color 120ms ease; }
-    .side-link:hover { color: var(--accent); }
+    .side-link:hover { color: var(--color-red-ink); }
     .side-link .ms { font-size: 19px; color: var(--muted); }
-    .side-link:hover .ms { color: var(--accent); }
-    .side-link.admin { color: var(--accent); font-weight: 800; }
+    .side-link:hover .ms { color: var(--color-red-ink); }
+    .side-link.admin { color: var(--color-red-ink); font-weight: 800; }
     .status-line { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; padding: 0.3rem 0; color: var(--text-secondary); }
     .status-line .ms { font-size: 18px; color: var(--muted); }
     .status-line .ms.ok { color: var(--teal); }
-    .danger { display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--surface); border: 1px solid var(--line); color: var(--accent); border-radius: 3px; padding: 0.85rem; font-family: inherit; font-weight: 700; cursor: pointer; transition: background 120ms ease; }
+    .danger { display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--surface); border: 1px solid var(--line); color: var(--color-red-ink); border-radius: 3px; padding: 0.85rem; font-family: inherit; font-weight: 700; cursor: pointer; transition: background 120ms ease; }
     .danger:hover { background: var(--accent-soft); }
     .toast { background: var(--ink); color: #fff; padding: 0.7rem 1.1rem; border-radius: 3px; margin-bottom: 1.2rem; font-weight: 600; font-size: 0.9rem; }
     /* Loyalty card — occupies the main column, below the identity card. */
@@ -301,7 +301,7 @@ type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
     .loyalty-tx__desc .ms { font-size: 18px; }
     .loyalty-tx__pts { font-weight: 800; font-size: 0.95rem; font-variant-numeric: tabular-nums; }
     .ms.earn, .loyalty-tx__pts.earn { color: var(--teal); }
-    .ms.redeem, .loyalty-tx__pts.redeem { color: var(--accent); }
+    .ms.redeem, .loyalty-tx__pts.redeem { color: var(--color-red-ink); }
     .loyalty-empty { color: var(--muted); font-size: 0.88rem; margin: 0.3rem 0 0; }
     /* Two-factor security card — main column, below loyalty. */
     .security { grid-column: 1; }
@@ -318,8 +318,8 @@ type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
     .security-secret-label { margin: 0 0 0.3rem; font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); }
     .security-secret { display: inline-block; font-family: 'SF Mono', ui-monospace, monospace; font-size: 0.95rem; letter-spacing: 0.08em; background: var(--bg-secondary); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 0.5rem 0.8rem; margin-bottom: 1rem; word-break: break-all; }
     .security-code-field { margin-bottom: 0.5rem; }
-    .security-err { color: var(--accent); font-size: 0.85rem; font-weight: 600; margin: 0.2rem 0 0.6rem; }
-    .security-danger { color: var(--accent); border-color: var(--accent); }
+    .security-err { color: var(--color-red-ink); font-size: 0.85rem; font-weight: 600; margin: 0.2rem 0 0.6rem; }
+    .security-danger { color: var(--color-red-ink); border-color: var(--color-red-ink); }
     .security-recovery-head { display: flex; align-items: center; gap: 8px; font-size: 1rem; color: var(--teal); margin-bottom: 0.6rem; }
     .security-recovery-head .ms { font-size: 20px; }
     .security-recovery { list-style: none; margin: 0 0 1rem; padding: 0.9rem 1rem; background: var(--bg-secondary); border: 1px dashed var(--border); border-radius: var(--radius-sm); display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1.2rem; }

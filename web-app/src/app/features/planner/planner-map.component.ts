@@ -55,7 +55,7 @@ export interface PlannerPin {
       box-shadow: 0 10px 26px rgba(17, 17, 17, 0.14);
       transform: scale(1.06);
     }
-    :host ::ng-deep .pmap-pin--sel .pmap-dot__head { background: #fff; color: var(--brand); }
+    :host ::ng-deep .pmap-pin--sel .pmap-dot__head { background: #fff; color: var(--color-red-ink); }
     :host ::ng-deep .pmap-pin--rec:not(.pmap-pin--sel) .pmap-dot__head { background: var(--gold); }
   `]
 })

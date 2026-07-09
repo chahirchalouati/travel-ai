@@ -33,7 +33,7 @@ export const AUTH_RECOVERY_STYLES = `
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     background: var(--brand-light);
-    color: var(--brand);
+    color: var(--color-red-ink);
     margin-bottom: 16px;
   }
   .rec-icon .ms { font-size: 26px; }
@@ -80,7 +80,7 @@ export const AUTH_RECOVERY_STYLES = `
     outline: none;
     transition: border-color var(--duration-fast) ease, background var(--duration-fast) ease;
   }
-  .rec-input:focus { border-color: var(--brand); background: var(--surface); }
+  .rec-input:focus { border-color: var(--color-red-ink); background: var(--surface); }
 
   .rec-error {
     display: flex;
@@ -126,7 +126,7 @@ export const AUTH_RECOVERY_STYLES = `
     border-radius: 50%;
     animation: recSpin 0.7s linear infinite;
   }
-  .rec-spinner.dark { border-color: rgba(0,0,0,0.15); border-top-color: var(--brand); }
+  .rec-spinner.dark { border-color: rgba(0,0,0,0.15); border-top-color: var(--color-red-ink); }
   @keyframes recSpin { to { transform: rotate(360deg); } }
 
   .rec-footer {
@@ -139,7 +139,7 @@ export const AUTH_RECOVERY_STYLES = `
   .rec-link {
     background: none;
     border: none;
-    color: var(--brand);
+    color: var(--color-red-ink);
     font-family: inherit;
     font-size: 0.88rem;
     font-weight: 700;

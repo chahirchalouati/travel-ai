@@ -278,10 +278,10 @@ function localToday(): string {
       font-family: inherit; font-size: 14px; font-weight: 500;
       cursor: pointer; padding: 0; transition: color 150ms ease;
     }
-    .back-link:hover { color: var(--brand); }
+    .back-link:hover { color: var(--color-red-ink); }
     .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 2px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 150ms ease; }
-    .fav-toggle:hover { border-color: var(--brand); color: var(--brand); }
-    .fav-toggle--on { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
+    .fav-toggle:hover { border-color: var(--color-red-ink); color: var(--color-red-ink); }
+    .fav-toggle--on { border-color: var(--color-red-ink); color: var(--color-red-ink); background: var(--brand-light); }
     .fav-toggle .ms { font-size: 18px; }
 
     .hero-card {
@@ -394,7 +394,7 @@ function localToday(): string {
       border: 1px solid var(--border); border-radius: 8px; padding: 9px 10px;
       font-family: inherit; font-size: 14px; color: var(--text-primary);
     }
-    .reserve__field input:focus { outline: none; border-color: var(--brand); }
+    .reserve__field input:focus { outline: none; border-color: var(--color-red-ink); }
     .reserve__label {
       display: block; font-size: 11px; font-weight: 600; text-transform: uppercase;
       letter-spacing: 0.4px; color: var(--text-tertiary); margin-bottom: 8px;
@@ -405,8 +405,8 @@ function localToday(): string {
       padding: 8px 13px; font-family: inherit; font-size: 14px; font-weight: 600;
       color: var(--text-primary); cursor: pointer; transition: all 150ms ease;
     }
-    .reserve__chip:hover { border-color: var(--brand); }
-    .reserve__chip--on { background: var(--brand); border-color: var(--brand); color: #fff; }
+    .reserve__chip:hover { border-color: var(--color-red-ink); }
+    .reserve__chip--on { background: var(--brand); border-color: var(--color-red-ink); color: #fff; }
     .reserve__skel {
       width: 56px; height: 35px; border-radius: 8px;
       background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
@@ -428,7 +428,7 @@ function localToday(): string {
 
     .btn-chat {
       width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
-      background: var(--surface); color: var(--brand); border: 1.5px solid var(--brand); border-radius: 2px;
+      background: var(--surface); color: var(--color-red-ink); border: 1.5px solid var(--brand); border-radius: 2px;
       padding: 13px; font-family: inherit; font-size: 15px; font-weight: 600;
       cursor: pointer; transition: background 150ms ease;
     }

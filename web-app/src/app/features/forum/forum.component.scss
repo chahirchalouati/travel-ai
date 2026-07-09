@@ -152,7 +152,7 @@
   &:disabled { opacity: 0.55; cursor: default; transform: none; }
 }
 
-.fo-btn--accent { background: var(--brand); border-color: var(--brand); color: #fff; }
+.fo-btn--accent { background: var(--brand); border-color: var(--color-red-ink); color: #fff; }
 
 /* ── List ───────────────────────────────────────────────────────── */
 .fo-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
@@ -228,7 +228,7 @@
   flex: 0 0 64px;
   border-left: 1px solid var(--border-light);
   padding-left: 14px;
-  color: var(--brand);
+  color: var(--color-red-ink);
 }
 
 .fo-answers__num { font-size: 1.4rem; font-weight: 800; line-height: 1; }

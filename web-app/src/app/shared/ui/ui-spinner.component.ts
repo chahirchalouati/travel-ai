@@ -13,7 +13,7 @@ import { Component, input } from '@angular/core';
       .ui-spinner {
         display: inline-block;
         border: 2px solid var(--border);
-        border-top-color: var(--color-red);
+        border-top-color: var(--color-red-ink);
         border-radius: 50%;
         animation: ui-spin 0.7s linear infinite;
       }

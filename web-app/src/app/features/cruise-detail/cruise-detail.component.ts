@@ -305,10 +305,10 @@ import { FavoritesService } from '../../core/services/favorites.service';
       font-family: inherit; font-size: 14px; font-weight: 500;
       cursor: pointer; padding: 0; transition: color 150ms ease;
     }
-    .back-link:hover { color: var(--brand); }
+    .back-link:hover { color: var(--color-red-ink); }
     .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 2px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 150ms ease; }
-    .fav-toggle:hover { border-color: var(--brand); color: var(--brand); }
-    .fav-toggle--on { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
+    .fav-toggle:hover { border-color: var(--color-red-ink); color: var(--color-red-ink); }
+    .fav-toggle--on { border-color: var(--color-red-ink); color: var(--color-red-ink); background: var(--brand-light); }
     .fav-toggle .ms { font-size: 18px; }
 
     .hero-card {
@@ -462,12 +462,12 @@ import { FavoritesService } from '../../core/services/favorites.service';
     }
     .btn-book:hover { background: var(--brand-hover); }
     .btn-watch { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; background: var(--surface); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 2px; padding: 12px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 150ms ease; }
-    .btn-watch:hover { border-color: var(--brand); color: var(--brand); }
-    .btn-watch--on { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
+    .btn-watch:hover { border-color: var(--color-red-ink); color: var(--color-red-ink); }
+    .btn-watch--on { border-color: var(--color-red-ink); color: var(--color-red-ink); background: var(--brand-light); }
 
     .btn-chat {
       width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
-      background: var(--surface); color: var(--brand); border: 1.5px solid var(--brand); border-radius: 2px;
+      background: var(--surface); color: var(--color-red-ink); border: 1.5px solid var(--brand); border-radius: 2px;
       padding: 13px; font-family: inherit; font-size: 15px; font-weight: 600;
       cursor: pointer; transition: background 150ms ease;
     }
@@ -475,7 +475,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
 
     .urgency-note {
       display: flex; align-items: center; gap: 5px;
-      margin: 12px 0 0; font-size: 13px; font-weight: 600; color: var(--brand);
+      margin: 12px 0 0; font-size: 13px; font-weight: 600; color: var(--color-red-ink);
       text-align: center; justify-content: center;
     }
 
@@ -519,7 +519,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
     .cabin-card { border: 1px solid var(--border); border-radius: 3px; padding: 14px; }
     .cabin-card__head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
     .cabin-card__name { font-size: 15px; font-weight: 700; }
-    .cabin-card__price { font-size: 15px; font-weight: 800; color: var(--brand); }
+    .cabin-card__price { font-size: 15px; font-weight: 800; color: var(--color-red-ink); }
     .cabin-card__desc { font-size: 13px; color: var(--text-tertiary); margin: 6px 0 10px; line-height: 1.5; }
     .cabin-card__avail { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
   `],

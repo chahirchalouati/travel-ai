@@ -49,7 +49,7 @@ import { Component, input, model } from '@angular/core';
       }
 
       .ui-check:hover:not(:disabled) {
-        border-color: var(--brand);
+        border-color: var(--color-red-ink);
       }
 
       .ui-check:focus-visible {
@@ -76,13 +76,13 @@ import { Component, input, model } from '@angular/core';
       }
 
       .ui-check--on {
-        border-color: var(--brand);
+        border-color: var(--color-red-ink);
         background: var(--brand-light);
-        color: var(--brand);
+        color: var(--color-red-ink);
       }
 
       .ui-check--on .ui-check__box {
-        border-color: var(--brand);
+        border-color: var(--color-red-ink);
         background: var(--brand);
       }
 

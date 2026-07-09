@@ -53,7 +53,7 @@ import { Component, input, model } from '@angular/core';
         box-shadow: 0 0 0 1px rgba(17, 17, 17, 0.12);
         transition: transform 180ms var(--ease, ease);
       }
-      .ui-toggle--on .ui-toggle__track { background: var(--color-red); border-color: var(--color-red); }
+      .ui-toggle--on .ui-toggle__track { background: var(--color-red); border-color: var(--color-red-ink); }
       .ui-toggle--on .ui-toggle__thumb { transform: translateX(18px); box-shadow: none; }
     `,
   ],

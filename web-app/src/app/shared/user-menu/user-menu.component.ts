@@ -123,15 +123,15 @@ const MENU_ITEMS: MenuItem[] = [
     }
     .menu-item:hover { background: var(--surface-hover); }
 
-    .menu-item--danger { color: var(--color-red); }
+    .menu-item--danger { color: var(--color-red-ink); }
     .menu-item--danger:hover { background: var(--color-red-tint); }
 
     .menu-item--admin { color: var(--text-primary); font-weight: 700; }
-    .menu-item--admin .menu-icon { color: var(--color-red); }
+    .menu-item--admin .menu-icon { color: var(--color-red-ink); }
     .menu-item--admin:hover { background: var(--surface-hover); }
 
     .menu-icon { font-size: 18px; color: var(--text-subtle); }
-    .menu-item--danger .menu-icon { color: var(--color-red); }
+    .menu-item--danger .menu-icon { color: var(--color-red-ink); }
 
     .divider {
       height: 1px; background: var(--border); margin: 4px 0;

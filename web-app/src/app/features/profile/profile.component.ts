@@ -416,7 +416,7 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
             <h2 class="sidebar-title">{{ 'profile.snapshot' | transloco }}</h2>
             <div class="snapshot-list">
               <div class="snapshot-row"><span class="ms" style="color:var(--teal)">rate_review</span> {{ contributions() }} {{ 'profile.reviews' | transloco }}</div>
-              <div class="snapshot-row"><span class="ms" style="color:var(--brand)">photo_camera</span> {{ photoCount() }} {{ 'profile.statPhotos' | transloco }}</div>
+              <div class="snapshot-row"><span class="ms" style="color: var(--color-red-ink)">photo_camera</span> {{ photoCount() }} {{ 'profile.statPhotos' | transloco }}</div>
               <div class="snapshot-row"><span class="ms" style="color:var(--gold)">place</span> {{ placesCount() }} {{ 'profile.places' | transloco }}</div>
               <div class="snapshot-row"><span class="ms" style="color:var(--text-tertiary)">luggage</span> {{ trips() }} {{ 'profile.statTrips' | transloco }}</div>
             </div>

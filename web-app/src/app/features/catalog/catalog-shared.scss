@@ -155,7 +155,7 @@
 }
 
 .field--primary label {
-  color: var(--brand);
+  color: var(--color-red-ink);
 }
 
 .field--compact {
@@ -190,7 +190,7 @@
 
 .field input:focus,
 .field select:focus {
-  border-color: var(--brand);
+  border-color: var(--color-red-ink);
   box-shadow: var(--ring-focus);
 }
 
@@ -511,7 +511,7 @@
 .card__cta {
   font-size: 0.82rem;
   font-weight: 700;
-  color: var(--brand);
+  color: var(--color-red-ink);
   display: inline-flex;
   align-items: center;
   gap: 2px;
@@ -626,7 +626,7 @@
   height: 18px;
   border-radius: 50%;
   border: 2px solid var(--border);
-  border-top-color: var(--brand);
+  border-top-color: var(--color-red-ink);
   animation: catalog-spin 0.7s linear infinite;
 }
 
@@ -679,7 +679,7 @@
 
 .chip--active {
   background: var(--color-red);
-  border-color: var(--color-red);
+  border-color: var(--color-red-ink);
   color: #fff;
 }
 

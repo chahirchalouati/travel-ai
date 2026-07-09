@@ -98,7 +98,7 @@ import type { Conversation } from '../../core/services/messaging.service';
     .thread-list { display: flex; flex-direction: column; gap: 0.6rem; }
     .thread-item { display: flex; align-items: center; gap: 0.75rem; text-align: left; width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: 0.85rem 0.9rem; cursor: pointer; transition: border-color 120ms ease, background 120ms ease; }
     .thread-item:hover { border-color: var(--border); }
-    .thread-item.active { border-color: var(--accent); background: var(--accent-soft); }
+    .thread-item.active { border-color: var(--color-red-ink); background: var(--accent-soft); }
     .thread-avatar { width: 40px; height: 40px; flex: none; border-radius: 50%; background: var(--color-red); color: #fff; display: flex; align-items: center; justify-content: center; }
     .thread-text { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
     .thread-subject { font-weight: 700; font-size: 0.92rem; display: flex; align-items: center; gap: 6px; }
@@ -117,14 +117,14 @@ import type { Conversation } from '../../core/services/messaging.service';
     .bubble-time { display: block; font-size: 0.66rem; opacity: 0.6; margin-top: 4px; }
     .reply-bar { display: flex; gap: 0.6rem; padding: 0.9rem 1.1rem; border-top: 1px solid var(--line); }
     .reply-bar input { flex: 1; border: 1px solid var(--line); border-radius: 2px; padding: 0.65rem 1.1rem; font-family: inherit; font-size: 0.92rem; outline: none; }
-    .reply-bar input:focus { border-color: var(--accent); }
+    .reply-bar input:focus { border-color: var(--color-red-ink); }
     .reply-send { width: 42px; height: 42px; flex: none; border-radius: 50%; background: var(--accent); color: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .reply-send:disabled { opacity: 0.5; cursor: default; }
     .compose { padding: 1rem; display: flex; flex-direction: column; gap: 0.7rem; }
     .compose-subject, .compose-body { border: 1px solid var(--line); border-radius: 3px; padding: 0.6rem 0.8rem; font-family: inherit; font-size: 0.9rem; outline: none; resize: vertical; }
-    .compose-subject:focus, .compose-body:focus { border-color: var(--accent); }
+    .compose-subject:focus, .compose-body:focus { border-color: var(--color-red-ink); }
     .compose-actions { display: flex; justify-content: flex-end; gap: 0.6rem; }
-    .back-btn { display: none; background: none; border: none; cursor: pointer; color: var(--accent); padding: 0; align-items: center; margin-right: 8px; }
+    .back-btn { display: none; background: none; border: none; cursor: pointer; color: var(--color-red-ink); padding: 0; align-items: center; margin-right: 8px; }
     .back-btn .ms { font-size: 22px; }
     .thread-header { display: flex; align-items: center; }
     .thread-header h2 { flex: 1; margin: 0; font-size: 1.1rem; font-weight: 800; }

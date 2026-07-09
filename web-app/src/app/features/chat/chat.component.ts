@@ -342,7 +342,7 @@ interface ChatMsg {
       background: var(--brand-light); border: 1px solid var(--border);
       box-shadow: var(--shadow-md);
     }
-    .welcome-orb .ms { font-size: 40px; color: var(--brand); }
+    .welcome-orb .ms { font-size: 40px; color: var(--color-red-ink); }
     .welcome-title {
       font-family: var(--font-display);
       font-size: clamp(28px, 5vw, 44px); font-weight: 600; letter-spacing: -0.015em;
@@ -381,12 +381,12 @@ interface ChatMsg {
       width: 42px; height: 42px; flex-shrink: 0; border-radius: var(--radius-sm);
       background: var(--brand-light); display: grid; place-items: center;
     }
-    .suggest-icon .ms { font-size: 21px; color: var(--brand); }
+    .suggest-icon .ms { font-size: 21px; color: var(--color-red-ink); }
     .suggest-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
     .suggest-kicker { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-tertiary); }
     .suggest-text { font-size: 13.5px; font-weight: 700; color: var(--text-primary); line-height: 1.35; }
     .suggest-go { font-size: 18px; color: var(--text-tertiary); transition: transform var(--duration-fast), color var(--duration-fast); }
-    .suggest:hover .suggest-go { color: var(--brand); transform: translate(2px,-2px); }
+    .suggest:hover .suggest-go { color: var(--color-red-ink); transform: translate(2px,-2px); }
 
     /* ── Messages ─────────────────────────────────────────────────────────── */
     .row { display: flex; gap: 12px; align-items: flex-start; animation: rise var(--duration-normal) var(--ease-out-expo); }
@@ -432,14 +432,14 @@ interface ChatMsg {
       transition: color var(--duration-fast), background var(--duration-fast), border-color var(--duration-fast);
     }
     .ghost-btn .ms { font-size: 14px; }
-    .ghost-btn:hover { color: var(--brand); background: var(--brand-light); border-color: var(--brand-light); }
+    .ghost-btn:hover { color: var(--color-red-ink); background: var(--brand-light); border-color: var(--brand-light); }
 
     .followups { display: flex; flex-wrap: wrap; gap: 8px; }
     .followup {
       display: inline-flex; align-items: center; gap: 6px;
       padding: 8px 14px; border-radius: var(--radius-sm);
       background: var(--surface); border: 1px solid var(--border);
-      color: var(--brand); font-family: var(--font-body); font-size: 12.5px; font-weight: 700; cursor: pointer;
+      color: var(--color-red-ink); font-family: var(--font-body); font-size: 12.5px; font-weight: 700; cursor: pointer;
       box-shadow: var(--shadow-sm);
       transition: transform var(--duration-fast), background var(--duration-fast), box-shadow var(--duration-fast);
     }
@@ -498,7 +498,7 @@ interface ChatMsg {
       transition: box-shadow var(--duration-fast), transform var(--duration-fast);
     }
     .auth-cta:hover { transform: translateY(-1px); box-shadow: var(--shadow-lg); }
-    .auth-cta .ms { font-size: 18px; color: var(--brand); }
+    .auth-cta .ms { font-size: 18px; color: var(--color-red-ink); }
 
     /* ── History drawer ───────────────────────────────────────────────────── */
     .drawer-scrim {
@@ -532,7 +532,7 @@ interface ChatMsg {
       transition: background var(--duration-fast);
     }
     .drawer-new:hover { background: var(--bg-tertiary); }
-    .drawer-new .ms { font-size: 18px; color: var(--brand); }
+    .drawer-new .ms { font-size: 18px; color: var(--color-red-ink); }
     .drawer-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
     .convo-item {
       display: flex; align-items: center; gap: 11px; text-align: left;
@@ -543,13 +543,13 @@ interface ChatMsg {
     .convo-item:hover { background: var(--bg-secondary); }
     .convo-item.active { background: var(--brand-light); border-color: rgba(190,67,41,0.2); }
     .convo-item__icon { font-size: 18px; color: var(--text-tertiary); }
-    .convo-item.active .convo-item__icon { color: var(--brand); }
+    .convo-item.active .convo-item__icon { color: var(--color-red-ink); }
     .convo-item__body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
     .convo-item__title { font-size: 13.5px; font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .convo-item__date { font-size: 11.5px; color: var(--text-tertiary); margin-top: 1px; }
     .convo-item__del { font-size: 17px; color: var(--text-tertiary); opacity: 0; transition: opacity var(--duration-fast), color var(--duration-fast); }
     .convo-item:hover .convo-item__del { opacity: 1; }
-    .convo-item__del:hover { color: var(--brand); }
+    .convo-item__del:hover { color: var(--color-red-ink); }
     .drawer-empty { font-size: 13px; color: var(--text-secondary); text-align: center; padding: 24px 8px; line-height: 1.5; }
     .drawer-locked { text-align: center; padding: 28px 10px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
     .drawer-locked .ms { font-size: 32px; color: var(--text-tertiary); }
@@ -613,7 +613,7 @@ interface ChatMsg {
       background: var(--bg-secondary); font-family: var(--font-body); font-size: 14px; color: var(--text-primary); outline: none;
       transition: border-color var(--duration-fast), background var(--duration-fast);
     }
-    .auth-field input:focus { border-color: var(--brand); background: var(--surface); }
+    .auth-field input:focus { border-color: var(--color-red-ink); background: var(--surface); }
     .auth-error {
       font-size: 12.5px; color: #C9322B; margin-bottom: 14px; padding: 9px 12px; border-radius: var(--radius-sm);
       background: rgba(201,50,43,0.06); border: 1px solid rgba(201,50,43,0.2);
@@ -652,7 +652,7 @@ interface ChatMsg {
     :host ::ng-deep .markdown-body th,
     :host ::ng-deep .markdown-body td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); }
     :host ::ng-deep .markdown-body th { font-weight: 800; color: var(--text-secondary); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
-    :host ::ng-deep .markdown-body a { color: var(--brand); text-decoration: none; font-weight: 700; }
+    :host ::ng-deep .markdown-body a { color: var(--color-red-ink); text-decoration: none; font-weight: 700; }
     :host ::ng-deep .markdown-body a:hover { text-decoration: underline; }
     :host ::ng-deep .markdown-body blockquote {
       margin: 8px 0; padding: 8px 14px; border-left: 3px solid var(--brand);

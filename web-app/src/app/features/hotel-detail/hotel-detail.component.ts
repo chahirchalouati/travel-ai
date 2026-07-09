@@ -272,7 +272,7 @@ const TARGET_TYPE = 'HOTEL';
           <aside style="position:sticky; top:80px;">
             <div class="booking-card">
               <div style="display:flex; align-items:baseline; gap:6px; margin-bottom:16px;">
-                <span style="font-size:30px; font-weight:800; color:var(--brand);">{{ h.pricePerNight | currency:'EUR':'symbol':'1.0-0' }}</span>
+                <span style="font-size:30px; font-weight:800; color: var(--color-red-ink);">{{ h.pricePerNight | currency:'EUR':'symbol':'1.0-0' }}</span>
                 <span style="font-size:13px; color:var(--text-tertiary);">/ {{ 'catalog.perNight' | transloco }}</span>
               </div>
               <div class="meta-list">
@@ -324,10 +324,10 @@ const TARGET_TYPE = 'HOTEL';
   styles: [`
     :host { display: block; background: var(--bg-primary); min-height: 100vh; font-family: var(--font-body); color: var(--text-primary); }
     .back-link { display: inline-flex; align-items: center; gap: 4px; background: none; border: none; color: var(--text-secondary); font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; padding: 0; transition: color 150ms ease; }
-    .back-link:hover { color: var(--brand); }
+    .back-link:hover { color: var(--color-red-ink); }
     .fav-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 2px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 150ms ease; }
-    .fav-toggle:hover { border-color: var(--brand); color: var(--brand); }
-    .fav-toggle--on { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
+    .fav-toggle:hover { border-color: var(--color-red-ink); color: var(--color-red-ink); }
+    .fav-toggle--on { border-color: var(--color-red-ink); color: var(--color-red-ink); background: var(--brand-light); }
     .fav-toggle .ms { font-size: 18px; }
 
     .hero-card { position: relative; border-radius: var(--radius-xl); overflow: hidden; margin-bottom: 24px; box-shadow: var(--shadow-lg); min-height: 440px; display: block; }
@@ -356,7 +356,7 @@ const TARGET_TYPE = 'HOTEL';
 
     .ai-card { background: linear-gradient(135deg, var(--color-ocean-tint), #FDECEA); border: 1px solid rgba(229,53,43,0.18); }
     .ai-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #A81F18; background: rgba(229,53,43,0.1); padding: 5px 11px; border-radius: 2px; margin-bottom: 12px; }
-    .ai-badge .ms { font-size: 15px; color: #E5352B; }
+    .ai-badge .ms { font-size: 15px; color: var(--color-red-ink); }
 
     .rating-grid { display: flex; flex-direction: column; gap: 12px; }
     .rating-row { display: flex; align-items: center; gap: 12px; }
@@ -381,10 +381,10 @@ const TARGET_TYPE = 'HOTEL';
     .star-btn.is-on { color: var(--gold); }
     .star-btn:hover { transform: scale(1.1); color: var(--gold); }
     .form-input { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: inherit; font-size: 14px; color: var(--text-primary); width: 100%; box-sizing: border-box; }
-    .form-input:focus { outline: none; border-color: var(--brand); }
-    .form-input.is-error { border-color: var(--brand); }
+    .form-input:focus { outline: none; border-color: var(--color-red-ink); }
+    .form-input.is-error { border-color: var(--color-red-ink); }
     .form-textarea { resize: vertical; min-height: 90px; }
-    .form-error { font-size: 12px; color: var(--brand); margin: 0; }
+    .form-error { font-size: 12px; color: var(--color-red-ink); margin: 0; }
     .form-actions { display: flex; gap: 10px; justify-content: flex-end; }
     .btn-cancel { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 9px 16px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; }
     .btn-submit { display: inline-flex; align-items: center; gap: 6px; background: var(--brand); color: #fff; border: none; border-radius: 8px; padding: 9px 16px; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity 150ms ease; }
@@ -418,7 +418,7 @@ const TARGET_TYPE = 'HOTEL';
     .meta-value { display: block; font-size: 15px; font-weight: 600; color: var(--text-primary); }
     .btn-book { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--brand); color: #fff; border: none; border-radius: 2px; padding: 14px; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 150ms ease; margin-bottom: 10px; }
     .btn-book:hover { background: var(--brand-hover); }
-    .btn-chat { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--surface); color: var(--brand); border: 1.5px solid var(--brand); border-radius: 2px; padding: 13px; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 150ms ease; }
+    .btn-chat { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--surface); color: var(--color-red-ink); border: 1.5px solid var(--brand); border-radius: 2px; padding: 13px; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 150ms ease; }
     .btn-chat:hover { background: var(--brand-light); }
 
     @keyframes shimmer { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }

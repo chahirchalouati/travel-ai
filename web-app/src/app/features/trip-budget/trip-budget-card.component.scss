@@ -51,7 +51,7 @@
   cursor: pointer;
   transition: border-color var(--duration-fast, 150ms) ease, color var(--duration-fast, 150ms) ease;
 }
-.tb-edit:hover { border-color: var(--brand); color: var(--brand); }
+.tb-edit:hover { border-color: var(--color-red-ink); color: var(--color-red-ink); }
 .tb-edit .ms { font-size: 15px; }
 
 .tb-skeleton {
@@ -213,7 +213,7 @@
   cursor: pointer;
   font-weight: 700;
   font-size: 0.86rem;
-  color: var(--brand);
+  color: var(--color-red-ink);
   list-style: none;
 }
 .tb-add__toggle::-webkit-details-marker { display: none; }

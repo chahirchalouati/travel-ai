@@ -102,7 +102,7 @@
 .pill--confirmed { background: var(--teal-light); color: var(--teal); }
 .pill--pending   { background: var(--gold-light); color: var(--gold); }
 .pill--cancelled { background: #fdecec; color: #c0392b; }
-.pill--completed { background: var(--brand-light); color: var(--brand); }
+.pill--completed { background: var(--brand-light); color: var(--color-red-ink); }
 
 .empty {
   text-align: center;
@@ -111,7 +111,7 @@
   border: 1px dashed var(--border);
   border-radius: var(--radius-lg);
 }
-.empty .ms { font-size: 46px; color: var(--brand); }
+.empty .ms { font-size: 46px; color: var(--color-red-ink); }
 .empty h3 { margin: 1rem 0 0.4rem; font-size: 1.3rem; }
 .empty p { color: var(--text-tertiary); margin: 0 0 1.5rem; }
 

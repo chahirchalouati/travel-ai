@@ -187,7 +187,7 @@ interface ReviewTarget {
   styles: [`
     .rows { display: flex; flex-direction: column; gap: 1rem; }
     .row { display: flex; align-items: center; gap: 1.1rem; padding: 1.1rem 1.3rem; }
-    .row-icon { width: 48px; height: 48px; flex: none; border-radius: 3px; background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; }
+    .row-icon { width: 48px; height: 48px; flex: none; border-radius: 3px; background: var(--accent-soft); color: var(--color-red-ink); display: flex; align-items: center; justify-content: center; }
     .row-icon .ms { font-size: 24px; }
     .row-icon.cancelled { background: var(--bg-secondary); color: var(--muted); }
     .row-main { flex: 1; min-width: 0; }
@@ -201,13 +201,13 @@ interface ReviewTarget {
     .row-cancel { background: none; border: 1px solid var(--line); color: #c0392b; border-radius: 2px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease; }
     .row-cancel:hover:not(:disabled) { background: #fdecec; }
     .row-cancel:disabled { opacity: 0.6; cursor: default; }
-    .row-live { display: inline-flex; align-items: center; gap: 5px; background: var(--accent-soft); border: 1px solid var(--accent); color: var(--accent); border-radius: 2px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease; }
+    .row-live { display: inline-flex; align-items: center; gap: 5px; background: var(--accent-soft); border: 1px solid var(--accent); color: var(--color-red-ink); border-radius: 2px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease; }
     .row-live:hover { background: var(--accent); color: #fff; }
     .row-live .ms { font-size: 15px; }
     .toast { background: var(--ink); color: #fff; padding: 0.7rem 1.1rem; border-radius: 3px; margin-bottom: 1.2rem; font-weight: 600; font-size: 0.9rem; }
-    .row-review { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--line); color: var(--accent); border-radius: 2px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease; }
+    .row-review { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--line); color: var(--color-red-ink); border-radius: 2px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease; }
     .row-invoice { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 2px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: all 120ms ease; }
-    .row-invoice:hover { border-color: var(--accent); color: var(--accent); }
+    .row-invoice:hover { border-color: var(--color-red-ink); color: var(--color-red-ink); }
     .row-ticket, .row-calendar { display: inline-flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--line); color: var(--ink); border-radius: 2px; padding: 5px 14px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: background 120ms ease, border-color 120ms ease; }
     .row-ticket:hover, .row-calendar:hover:not(:disabled) { background: var(--bg-secondary); border-color: var(--ink); }
     .row-calendar:disabled { opacity: 0.6; cursor: default; }
@@ -238,7 +238,7 @@ interface ReviewTarget {
     .star .ms { font-size: 26px; }
     .star--on { color: var(--gold); }
     .review-input { width: 100%; border: 1px solid var(--line); border-radius: 3px; padding: 9px 12px; font: inherit; font-size: 0.9rem; resize: vertical; }
-    .review-input:focus { outline: none; border-color: var(--accent); }
+    .review-input:focus { outline: none; border-color: var(--color-red-ink); }
     .review-actions { display: flex; justify-content: flex-end; gap: 0.6rem; }
     .review-cancel { background: none; border: 1px solid var(--line); border-radius: 2px; padding: 7px 16px; font-weight: 700; font-size: 0.82rem; cursor: pointer; }
     .review-submit { background: var(--accent); color: #fff; border: none; border-radius: 2px; padding: 7px 18px; font-weight: 700; font-size: 0.82rem; cursor: pointer; }

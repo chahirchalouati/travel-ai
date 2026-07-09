@@ -64,7 +64,7 @@ export type UiButtonSize = 'sm' | 'md' | 'lg';
       .ui-btn--outline:hover:not(:disabled) { background: var(--color-ink); color: #fff; }
 
       .ui-btn--ghost { background: transparent; color: var(--text-primary); }
-      .ui-btn--ghost:hover:not(:disabled) { background: var(--color-red-tint); color: var(--color-red); }
+      .ui-btn--ghost:hover:not(:disabled) { background: var(--color-red-tint); color: var(--color-red-ink); }
 
       .ui-btn--ai { background: var(--color-ink); color: #fff; }
       .ui-btn--ai:hover:not(:disabled) { background: var(--color-red); }

@@ -103,13 +103,13 @@ export type SuggestFetch = (query: string) => Observable<Suggestion[]>;
 
       .ui-ac__field:focus-within,
       .ui-ac__field--open {
-        border-color: var(--brand);
+        border-color: var(--color-red-ink);
         box-shadow: 0 0 0 3px rgba(224, 74, 47, 0.15);
       }
 
       .ui-ac__icon {
         font-size: 20px;
-        color: var(--brand);
+        color: var(--color-red-ink);
         flex: 0 0 auto;
       }
 
@@ -135,7 +135,7 @@ export type SuggestFetch = (query: string) => Observable<Suggestion[]>;
         height: 15px;
         border-radius: 50%;
         border: 2px solid var(--border);
-        border-top-color: var(--brand);
+        border-top-color: var(--color-red-ink);
         animation: ui-ac-spin 0.7s linear infinite;
         flex: 0 0 auto;
       }
@@ -183,7 +183,7 @@ export type SuggestFetch = (query: string) => Observable<Suggestion[]>;
       }
 
       .ui-ac__option--active .ui-ac__opt-icon {
-        color: var(--brand);
+        color: var(--color-red-ink);
       }
 
       .ui-ac__opt-text {

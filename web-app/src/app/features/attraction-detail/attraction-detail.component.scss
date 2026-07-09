@@ -184,7 +184,7 @@
 
   h3 { margin: 0 0 4px; font-size: 1.2rem; font-weight: 800; }
   p { margin: 0; opacity: 0.9; font-size: 0.92rem; }
-  .ad-btn--accent { background: #fff; border-color: #fff; color: var(--brand); }
+  .ad-btn--accent { background: #fff; border-color: #fff; color: var(--color-red-ink); }
   .ad-btn--accent:hover { background: rgba(255, 255, 255, 0.9); }
 }
 
@@ -234,7 +234,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #E5352B;
+  color: var(--color-red-ink);
   .ms { font-size: 16px; }
 }
 
@@ -269,7 +269,7 @@
 
 .ad-btn--accent {
   background: var(--brand);
-  border-color: var(--brand);
+  border-color: var(--color-red-ink);
   color: #fff;
   &:hover { background: var(--brand-hover); }
 }

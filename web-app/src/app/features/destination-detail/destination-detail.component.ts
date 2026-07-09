@@ -152,7 +152,7 @@ const MONTH_NAMES = [
               "
             >
               <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                <span class="ms" style="font-size: 20px; color: var(--brand);">calendar_month</span>
+                <span class="ms" style="font-size: 20px; color: var(--color-red-ink);">calendar_month</span>
                 <h3
                   style="
                     font-family: var(--font-body); font-size: 15px;
@@ -164,7 +164,7 @@ const MONTH_NAMES = [
                 @for (month of getMonthList(); track month) {
                   <span
                     style="
-                      background: var(--brand-light); color: var(--brand);
+                      background: var(--brand-light); color: var(--color-red-ink);
                       padding: 5px 14px; border-radius: 2px;
                       font-family: var(--font-body); font-size: 13px;
                       font-weight: 600;
@@ -181,7 +181,7 @@ const MONTH_NAMES = [
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
                 <h2 class="section-heading" style="margin-bottom: 0;">{{ 'destDetail.thingsToDo' | transloco }}</h2>
                 <button
-                  style="background: none; border: none; color: var(--brand); font-weight: 700; font-size: 14px; cursor: pointer;"
+                  style="background: none; border: none; color: var(--color-red-ink); font-weight: 700; font-size: 14px; cursor: pointer;"
                   (click)="seeAllAttractions()"
                 >{{ 'destDetail.seeAllThings' | transloco }} →</button>
               </div>
@@ -302,7 +302,7 @@ const MONTH_NAMES = [
                             background: var(--bg-secondary);
                             display: flex; align-items: center; justify-content: center;
                             font-family: var(--font-body); font-size: 14px;
-                            color: var(--brand); font-weight: 700;
+                            color: var(--color-red-ink); font-weight: 700;
                           "
                         >{{ review.userFirstName.charAt(0) }}</div>
                         <div>
@@ -374,7 +374,7 @@ const MONTH_NAMES = [
               <span
                 class="ms"
                 style="
-                  font-size: 24px; color: var(--brand);
+                  font-size: 24px; color: var(--color-red-ink);
                 "
               >auto_awesome</span>
               <h2 class="section-heading" style="margin-bottom: 0;">{{ 'destDetail.aiGuide' | transloco }}</h2>
@@ -387,7 +387,7 @@ const MONTH_NAMES = [
                 "
               >{{ 'destDetail.guideIntro' | transloco }}</p>
               @if (guideError()) {
-                <p style="font-size: 14px; color: var(--brand); margin: 0 0 16px; display: flex; align-items: center; gap: 6px;">
+                <p style="font-size: 14px; color: var(--color-red-ink); margin: 0 0 16px; display: flex; align-items: center; gap: 6px;">
                   <span class="ms" style="font-size: 16px;">error_outline</span>
                   {{ guideError() }}
                 </p>
@@ -422,7 +422,7 @@ const MONTH_NAMES = [
                 @if (g.topAttractions) {
                   <div class="guide-section-card">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                      <span class="ms" style="font-size: 22px; color: var(--brand);">attractions</span>
+                      <span class="ms" style="font-size: 22px; color: var(--color-red-ink);">attractions</span>
                       <h3 class="guide-section-title">{{ 'destDetail.topAttractions' | transloco }}</h3>
                     </div>
                     <p class="guide-section-text">{{ g.topAttractions }}</p>
@@ -432,7 +432,7 @@ const MONTH_NAMES = [
                 @if (g.foodRecommendations) {
                   <div class="guide-section-card">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                      <span class="ms" style="font-size: 22px; color: var(--brand);">restaurant</span>
+                      <span class="ms" style="font-size: 22px; color: var(--color-red-ink);">restaurant</span>
                       <h3 class="guide-section-title">{{ 'destDetail.foodRec' | transloco }}</h3>
                     </div>
                     <p class="guide-section-text">{{ g.foodRecommendations }}</p>
@@ -442,7 +442,7 @@ const MONTH_NAMES = [
                 @if (g.travelTips) {
                   <div class="guide-section-card">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                      <span class="ms" style="font-size: 22px; color: var(--brand);">lightbulb</span>
+                      <span class="ms" style="font-size: 22px; color: var(--color-red-ink);">lightbulb</span>
                       <h3 class="guide-section-title">{{ 'destDetail.travelTips' | transloco }}</h3>
                     </div>
                     <p class="guide-section-text">{{ g.travelTips }}</p>
@@ -598,7 +598,7 @@ const MONTH_NAMES = [
     }
 
     .back-link:hover {
-      color: var(--brand);
+      color: var(--color-red-ink);
     }
 
     .content-card {
@@ -671,7 +671,7 @@ const MONTH_NAMES = [
       align-items: center;
       gap: 8px;
       background: var(--surface);
-      color: var(--brand);
+      color: var(--color-red-ink);
       border: 1.5px solid var(--brand);
       border-radius: 2px;
       padding: 12px 24px;
@@ -702,14 +702,14 @@ const MONTH_NAMES = [
     }
 
     .helpful-btn:hover {
-      border-color: var(--brand);
-      color: var(--brand);
+      border-color: var(--color-red-ink);
+      color: var(--color-red-ink);
     }
 
     .helpful-btn--active {
       background: var(--brand-light);
-      border-color: var(--brand);
-      color: var(--brand);
+      border-color: var(--color-red-ink);
+      color: var(--color-red-ink);
       font-weight: 700;
     }
 

@@ -86,7 +86,7 @@ import type { TripMemberResponse, TripRole } from '../../core/models/api.models'
     .tc-member__name { font-weight: 700; font-size: 0.92rem; }
     .tc-member__email { font-size: 0.75rem; color: var(--text-tertiary); overflow: hidden; text-overflow: ellipsis; }
     .tc-chip { font-size: 0.68rem; font-weight: 700; padding: 3px 9px; border-radius: 2px; white-space: nowrap; }
-    .tc-chip--role { background: var(--brand-light); color: var(--brand); }
+    .tc-chip--role { background: var(--brand-light); color: var(--color-red-ink); }
     .tc-chip--status[data-status="ACCEPTED"] { background: #dcfce7; color: #15803d; }
     .tc-chip--status[data-status="PENDING"] { background: #fef9c3; color: #a16207; }
     .tc-chip--status[data-status="DECLINED"] { background: #fee2e2; color: #b91c1c; }

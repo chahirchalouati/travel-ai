@@ -99,7 +99,7 @@ import { ContactService } from '../../core/services/contact.service';
       text-align: center;
     }
     .contact-hero__inner { max-width: 640px; margin: 0 auto; }
-    .eyebrow { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); margin: 0 0 1rem; }
+    .eyebrow { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-red-ink); margin: 0 0 1rem; }
     .contact-hero h1 { font-family: var(--font-display); font-size: clamp(2.6rem, 5vw, 4.5rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.06; margin: 0 0 1.2rem; }
     .hero-sub { font-size: 1.05rem; color: var(--text-secondary); margin: 0; line-height: 1.7; }
 
@@ -119,11 +119,11 @@ import { ContactService } from '../../core/services/contact.service';
       border: 1px solid var(--border); border-radius: 3px; padding: 11px 14px;
       font-family: inherit; font-size: 0.95rem; color: var(--text-primary); background: var(--bg-primary); width: 100%;
       transition: border-color 140ms ease;
-      &:focus { outline: none; border-color: var(--brand); }
+      &:focus { outline: none; border-color: var(--color-red-ink); }
     }
     .finput--select { cursor: pointer; }
     .finput--ta { resize: vertical; min-height: 120px; }
-    .form-error { margin: 0; font-size: 0.85rem; font-weight: 600; color: var(--brand); }
+    .form-error { margin: 0; font-size: 0.85rem; font-weight: 600; color: var(--color-red-ink); }
     .submit-btn {
       display: inline-flex; align-items: center; gap: 8px; align-self: flex-start;
       background: var(--brand); color: #fff; border: none; border-radius: 2px;
@@ -146,9 +146,9 @@ import { ContactService } from '../../core/services/contact.service';
     .channels h2 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; margin: 0; letter-spacing: -0.02em; }
     .channel-list { display: flex; flex-direction: column; gap: 1rem; }
     .channel-item { display: flex; align-items: center; gap: 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1.1rem 1.25rem; }
-    .channel-icon-wrap { width: 42px; height: 42px; flex-shrink: 0; border-radius: 3px; background: var(--brand-light); display: flex; align-items: center; justify-content: center; .ms { font-size: 1.4rem; color: var(--brand); } }
+    .channel-icon-wrap { width: 42px; height: 42px; flex-shrink: 0; border-radius: 3px; background: var(--brand-light); display: flex; align-items: center; justify-content: center; .ms { font-size: 1.4rem; color: var(--color-red-ink); } }
     .channel-label { font-size: 0.78rem; font-weight: 700; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 2px; }
-    .channel-value { font-size: 0.9rem; font-weight: 600; color: var(--brand); text-decoration: none; &:hover { text-decoration: underline; } }
+    .channel-value { font-size: 0.9rem; font-weight: 600; color: var(--color-red-ink); text-decoration: none; &:hover { text-decoration: underline; } }
     .hours-box { background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 3px; padding: 1.25rem; }
     .hours-title { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-tertiary); margin: 0 0 6px; }
     .hours-body { font-size: 0.9rem; color: var(--text-secondary); margin: 0; line-height: 1.6; }

@@ -10,10 +10,11 @@
    ============================================================ */
 :root {
   /* ---- Canonical palette (Swiss) ---------------------------------- */
-  --color-red: #E5352B;          /* International Red — CTA, links, marks */
+  --color-red: #E5352B;          /* International Red — fills, marks, large text */
   --color-red-hover: #C42A22;
   --color-red-active: #A81F18;
   --color-red-tint: #FDECEA;     /* soft wash                            */
+  --color-red-ink: #C42A22;      /* AA-safe red (≈5.7:1 on white) for small text/links */
   --color-ink: #111111;          /* text, black rules, ink blocks        */
   --color-ink-soft: #201F1C;
 
@@ -167,7 +168,7 @@
   font-family: var(--font-display);
   font-weight: 800;
   letter-spacing: -0.04em;
-  color: var(--color-red);
+  color: var(--color-red-ink);
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
@@ -290,7 +291,7 @@ input[type=range]::-webkit-slider-runnable-track {
   background: transparent;
   color: var(--text-primary);
 
-  &:hover { color: var(--color-red); background: var(--color-red-tint); }
+  &:hover { color: var(--color-red-ink); background: var(--color-red-tint); }
 }
 
 /* Signature AI action — solid ink block, red focus. */

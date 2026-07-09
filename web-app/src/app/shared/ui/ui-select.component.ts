@@ -105,7 +105,7 @@ export interface UiSelectOption {
       .ui-select__trigger:focus-visible,
       .ui-select__trigger--open {
         outline: none;
-        border-color: var(--brand);
+        border-color: var(--color-red-ink);
         box-shadow: 0 0 0 3px rgba(224, 74, 47, 0.15);
       }
 
@@ -174,7 +174,7 @@ export interface UiSelectOption {
       }
 
       .ui-select__option--selected {
-        color: var(--brand);
+        color: var(--color-red-ink);
         font-weight: 600;
       }
 

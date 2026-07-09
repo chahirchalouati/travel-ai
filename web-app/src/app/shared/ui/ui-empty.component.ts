@@ -30,7 +30,7 @@ import { Component, input } from '@angular/core';
         background: var(--color-red-tint, #FDECEA);
         border-radius: var(--radius-sm);
       }
-      .ui-empty__icon .ms { font-size: 26px; color: var(--color-red); }
+      .ui-empty__icon .ms { font-size: 26px; color: var(--color-red-ink); }
       .ui-empty__title { margin: 0; font-size: 1.15rem; font-weight: 800; letter-spacing: -0.02em; color: var(--text-primary); }
       .ui-empty__msg { margin: 0; max-width: 34ch; font-size: 0.9rem; line-height: 1.5; color: var(--text-secondary); }
       .ui-empty__action { margin-top: 12px; }

@@ -85,18 +85,18 @@ import type { BookingResponse } from '../../core/models/api.models';
     .ticket-actions { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
     .tk-back, .tk-print { display: inline-flex; align-items: center; gap: 6px; border-radius: 2px; padding: 8px 18px; font-weight: 700; font-size: 0.86rem; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text-primary); transition: background 120ms ease, color 120ms ease, border-color 120ms ease; }
     .tk-back:hover { background: var(--bg-secondary); }
-    .tk-print { background: var(--brand); border-color: var(--brand); color: #fff; }
+    .tk-print { background: var(--brand); border-color: var(--color-red-ink); color: #fff; }
     .tk-print:hover { background: var(--brand-hover); border-color: var(--brand-hover); }
     .tk-back .ms, .tk-print .ms { font-size: 18px; }
 
     .pass { display: flex; border-radius: 3px; overflow: hidden; box-shadow: 0 18px 44px rgba(26,26,26,0.12); background: var(--surface); border: 1px solid var(--border); }
     .pass-main { flex: 1; padding: 2rem 2.2rem; min-width: 0; }
-    .pass-brand { display: flex; align-items: center; gap: 8px; font-weight: 800; letter-spacing: 0.02em; color: var(--brand); text-transform: uppercase; font-size: 0.82rem; }
+    .pass-brand { display: flex; align-items: center; gap: 8px; font-weight: 800; letter-spacing: 0.02em; color: var(--color-red-ink); text-transform: uppercase; font-size: 0.82rem; }
     .pass-brand .ms { font-size: 20px; }
     .pass-status { margin-left: auto; padding: 3px 12px; border-radius: 2px; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.04em; background: var(--bg-secondary); color: var(--text-tertiary); }
     .pass-status--confirmed { background: rgba(17,102,76,0.12); color: var(--teal); }
     .pass-status--completed { background: rgba(17,102,76,0.12); color: var(--teal); }
-    .pass-status--pending { background: rgba(190,67,41,0.12); color: var(--brand); }
+    .pass-status--pending { background: rgba(190,67,41,0.12); color: var(--color-red-ink); }
     .pass-status--cancelled { background: var(--bg-secondary); color: var(--text-tertiary); }
 
     .pass-dest { margin: 1rem 0 1.6rem; font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 800; letter-spacing: -0.02em; color: var(--text-primary); line-height: 1.05; }
@@ -114,7 +114,7 @@ import type { BookingResponse } from '../../core/models/api.models';
     .pass-status--stub { margin: 0; }
 
     .ticket-missing { display: flex; flex-direction: column; align-items: center; gap: 1rem; padding: 4rem 1rem; text-align: center; color: var(--text-secondary); }
-    .ticket-missing .ms { font-size: 48px; color: var(--brand); }
+    .ticket-missing .ms { font-size: 48px; color: var(--color-red-ink); }
     .ticket-missing h2 { margin: 0; color: var(--text-primary); }
 
     @media (max-width: 560px) {

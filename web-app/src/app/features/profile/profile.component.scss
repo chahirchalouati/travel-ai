@@ -781,7 +781,7 @@
   transition: border-color var(--duration-fast);
 
   &:focus {
-    border-color: var(--brand);
+    border-color: var(--color-red-ink);
     background: var(--bg-primary);
   }
 }
@@ -1008,7 +1008,7 @@
   font-family: var(--font-body);
   font-size: 13px;
   font-weight: 600;
-  color: var(--brand);
+  color: var(--color-red-ink);
   background: var(--brand-light);
   border: none;
   border-radius: 6px;
@@ -1052,7 +1052,7 @@
   margin: 8px 0 6px;
   max-width: 360px;
 
-  b { color: var(--color-red); }
+  b { color: var(--color-red-ink); }
 }
 
 .highlight-sub {
@@ -1497,7 +1497,7 @@
 
   &:hover {
     transform: translateY(-2px) rotate(-1deg);
-    border-color: var(--brand);
+    border-color: var(--color-red-ink);
   }
 }
 
@@ -1565,7 +1565,7 @@
 // ─── Place pins (travel map) ─────────────────────────────────────────────────
 .stamp-pin {
   font-size: 26px;
-  color: var(--brand);
+  color: var(--color-red-ink);
 }
 
 // ─── Review verified badge ───────────────────────────────────────────────────
@@ -1675,7 +1675,7 @@
   cursor: pointer;
   transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
 }
-.photo-add-tile:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
+.photo-add-tile:hover:not(:disabled) { border-color: var(--color-red-ink); color: var(--color-red-ink); background: var(--brand-light); }
 .photo-add-tile:disabled { opacity: 0.6; cursor: default; }
 
 .photo-del {
@@ -1717,7 +1717,7 @@
   outline: none;
   transition: border-color 0.15s ease;
 }
-.ap-input:focus { border-color: var(--brand); }
+.ap-input:focus { border-color: var(--color-red-ink); }
 .ap-save {
   background: var(--brand);
   color: #fff;

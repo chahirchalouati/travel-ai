@@ -51,8 +51,8 @@ export type UiAlertVariant = 'info' | 'success' | 'warning' | 'danger';
       .ui-alert--success .ui-alert__icon { color: var(--color-success-strong, #145C39); }
       .ui-alert--warning { border-left-color: var(--color-warning, #C25A17); background: var(--color-warning-tint, #FBEBDD); }
       .ui-alert--warning .ui-alert__icon { color: var(--color-warning, #C25A17); }
-      .ui-alert--danger  { border-left-color: var(--color-red); background: var(--color-red-tint, #FDECEA); }
-      .ui-alert--danger .ui-alert__icon { color: var(--color-red); }
+      .ui-alert--danger  { border-left-color: var(--color-red-ink); background: var(--color-red-tint, #FDECEA); }
+      .ui-alert--danger .ui-alert__icon { color: var(--color-red-ink); }
     `,
   ],
 })

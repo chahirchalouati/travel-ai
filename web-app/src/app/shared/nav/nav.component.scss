@@ -41,7 +41,7 @@ nav {
 }
 
 .nav-logo-accent {
-  color: var(--brand);
+  color: var(--color-red-ink);
 }
 
 .nav-logo-dot {
@@ -137,7 +137,7 @@ nav {
 
   &:hover,
   &.active {
-    color: var(--brand);
+    color: var(--color-red-ink);
     background: var(--bg-tertiary);
   }
 }

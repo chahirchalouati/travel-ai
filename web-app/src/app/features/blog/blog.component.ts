@@ -106,7 +106,7 @@ import { BlogService, BlogPost } from '../../core/services/blog.service';
     .featured-body { padding: 2.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
     .featured-body h2 { font-family: var(--font-display); font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 800; margin: 0; line-height: 1.2; }
     .featured-body p { font-size: 1rem; color: var(--text-secondary); line-height: 1.7; margin: 0; flex: 1; }
-    .read-more { display: inline-flex; align-items: center; gap: 6px; color: var(--brand); font-weight: 700; font-size: 0.9rem; text-decoration: none; margin-top: 0.5rem; .ms { font-size: 18px; transition: transform 140ms ease; } &:hover .ms { transform: translateX(3px); } }
+    .read-more { display: inline-flex; align-items: center; gap: 6px; color: var(--color-red-ink); font-weight: 700; font-size: 0.9rem; text-decoration: none; margin-top: 0.5rem; .ms { font-size: 18px; transition: transform 140ms ease; } &:hover .ms { transform: translateX(3px); } }
 
     /* Grid */
     .posts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
@@ -118,7 +118,7 @@ import { BlogService, BlogPost } from '../../core/services/blog.service';
     .post-excerpt { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
     /* Common */
-    .cat-badge { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 9px; border-radius: 2px; background: var(--brand-light); color: var(--brand); }
+    .cat-badge { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 9px; border-radius: 2px; background: var(--brand-light); color: var(--color-red-ink); }
     .cat-badge--sm { font-size: 0.62rem; }
     .post-meta { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-tertiary); }
     .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-tertiary); display: inline-block; }

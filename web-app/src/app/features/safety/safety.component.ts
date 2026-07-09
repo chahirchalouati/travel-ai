@@ -126,11 +126,11 @@ import { SiteContentService, SiteContentItem } from '../../core/services/site-co
     .emergency-body { font-size: 1rem; color: var(--text-secondary); margin: 0 0 1.5rem; line-height: 1.7; }
     .emergency-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
     .emergency-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 3px; padding: 1.5rem; }
-    .em-icon { font-size: 1.8rem; color: var(--brand); display: block; margin-bottom: 0.75rem; }
+    .em-icon { font-size: 1.8rem; color: var(--color-red-ink); display: block; margin-bottom: 0.75rem; }
     .emergency-card h3 { font-size: 0.95rem; font-weight: 700; margin: 0 0 0.4rem; }
     .emergency-card p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin: 0; }
 
-    .report-band { display: flex; align-items: center; gap: 1.25rem; background: var(--brand-light); border: 1px solid var(--brand); border-radius: 3px; padding: 1.5rem 1.75rem; .ms { font-size: 2rem; color: var(--brand); flex-shrink: 0; } h3 { font-size: 1rem; font-weight: 700; margin: 0 0 4px; } p { font-size: 0.88rem; color: var(--text-secondary); margin: 0; } }
+    .report-band { display: flex; align-items: center; gap: 1.25rem; background: var(--brand-light); border: 1px solid var(--brand); border-radius: 3px; padding: 1.5rem 1.75rem; .ms { font-size: 2rem; color: var(--color-red-ink); flex-shrink: 0; } h3 { font-size: 1rem; font-weight: 700; margin: 0 0 4px; } p { font-size: 0.88rem; color: var(--text-secondary); margin: 0; } }
     .report-btn { margin-left: auto; flex-shrink: 0; background: var(--brand); color: #fff; text-decoration: none; font-weight: 700; font-size: 0.88rem; padding: 10px 20px; border-radius: 2px; white-space: nowrap; transition: background 140ms ease; &:hover { background: var(--brand-hover); } }
 
     @media (max-width: 640px) { .platform-card { grid-template-columns: 1fr; } .platform-vis { display: none; } .report-band { flex-wrap: wrap; .ms { display: none; } .report-btn { margin-left: 0; } } }

@@ -43,10 +43,10 @@ import type { SegmentVotesResponse, VoteValue } from '../../core/models/api.mode
   styles: [`
     .sv { display: inline-flex; align-items: center; gap: 0.35rem; }
     .sv-btn { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border: 1px solid var(--border); background: var(--surface); border-radius: 8px; cursor: pointer; color: var(--text-tertiary); transition: background 120ms, color 120ms, border-color 120ms; }
-    .sv-btn:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); }
+    .sv-btn:hover:not(:disabled) { border-color: var(--color-red-ink); color: var(--color-red-ink); }
     .sv-btn:disabled { opacity: 0.55; cursor: not-allowed; }
     .sv-btn .ms { font-size: 17px; }
-    .sv-btn.is-active { background: var(--brand); border-color: var(--brand); color: #fff; }
+    .sv-btn.is-active { background: var(--brand); border-color: var(--color-red-ink); color: #fff; }
     .sv-score { min-width: 1.6rem; text-align: center; font-weight: 800; font-size: 0.9rem; color: var(--text-tertiary); }
     .sv-score.is-pos { color: #15803d; }
     .sv-score.is-neg { color: #b91c1c; }

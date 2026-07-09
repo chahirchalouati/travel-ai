@@ -59,7 +59,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       }
 
       .ui-date--focus {
-        border-color: var(--brand) !important;
+        border-color: var(--color-red-ink) !important;
         box-shadow: 0 0 0 3px rgba(224, 74, 47, 0.15);
       }
 
@@ -70,7 +70,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
       .ui-date__icon {
         font-size: 18px;
-        color: var(--brand);
+        color: var(--color-red-ink);
         flex: 0 0 auto;
         pointer-events: none;
       }
@@ -118,7 +118,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
       .ui-date__clear:hover {
         background: var(--brand-light);
-        color: var(--brand);
+        color: var(--color-red-ink);
       }
 
       .ui-date__clear .ms {

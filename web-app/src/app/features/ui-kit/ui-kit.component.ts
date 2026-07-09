@@ -177,7 +177,7 @@ interface Swatch {
       .kit-hero { padding-bottom: 28px; margin-bottom: 8px; }
       .kit-title { margin: 16px 0 10px; font-size: clamp(2.2rem, 1.4rem + 3vw, 3.4rem); color: var(--text-primary); }
       .kit-sub { max-width: 52ch; font-size: 1.02rem; line-height: 1.6; color: var(--text-secondary); }
-      .kit-sub code { font-family: var(--font-mono); font-size: 0.85em; color: var(--color-red); }
+      .kit-sub code { font-family: var(--font-mono); font-size: 0.85em; color: var(--color-red-ink); }
 
       .kit-sec { padding: 28px 0; border-top: 1px solid var(--border); }
       .kit-sec > app-ui-kicker { margin-bottom: 20px; }

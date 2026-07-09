@@ -37,7 +37,7 @@ footer {
 }
 
 .footer-logo-accent {
-  color: var(--brand);
+  color: var(--color-red-ink);
 }
 
 .footer-logo-dot {
@@ -81,8 +81,8 @@ footer {
     background var(--duration-normal) var(--ease-out-expo);
 
   &:hover {
-    color: var(--brand);
-    border-color: var(--brand);
+    color: var(--color-red-ink);
+    border-color: var(--color-red-ink);
     background: var(--brand-light);
   }
 }
@@ -111,7 +111,7 @@ footer {
     transition: color var(--duration-normal) var(--ease-out-expo);
 
     &:hover {
-      color: var(--brand);
+      color: var(--color-red-ink);
     }
   }
 }
@@ -144,7 +144,7 @@ footer {
     transition: color var(--duration-normal) var(--ease-out-expo);
 
     &:hover {
-      color: var(--brand);
+      color: var(--color-red-ink);
     }
   }
 }

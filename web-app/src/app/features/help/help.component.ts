@@ -107,7 +107,7 @@ import { HelpService, HelpFaq } from '../../core/services/help.service';
 
     .still-help { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 3px; padding: clamp(2.5rem, 5vw, 4rem) 2rem; }
     .still-inner { text-align: center; max-width: 480px; margin: 0 auto; }
-    .still-icon { font-size: 2.8rem; color: var(--brand); display: block; margin-bottom: 1rem; }
+    .still-icon { font-size: 2.8rem; color: var(--color-red-ink); display: block; margin-bottom: 1rem; }
     .still-inner h2 { font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; margin: 0 0 0.75rem; letter-spacing: -0.02em; }
     .still-inner p { color: var(--text-secondary); margin: 0 0 1.75rem; line-height: 1.65; font-size: 1rem; }
     .still-btns { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }

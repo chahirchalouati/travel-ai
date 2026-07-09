@@ -91,10 +91,10 @@ import type { NotificationView } from '../../core/models/api.models';
   `,
   styles: [`
     .dash-actions { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
-    .mark-all-btn { border-color: var(--accent) !important; color: var(--accent) !important; }
+    .mark-all-btn { border-color: var(--color-red-ink) !important; color: var(--color-red-ink) !important; }
     .unread-banner {
       display: flex; align-items: center; gap: 0.6rem;
-      background: var(--accent-soft); color: var(--accent);
+      background: var(--accent-soft); color: var(--color-red-ink);
       border-radius: 3px; padding: 0.7rem 1.1rem;
       font-size: 0.9rem; font-weight: 700; margin-bottom: 1.25rem;
     }
@@ -102,7 +102,7 @@ import type { NotificationView } from '../../core/models/api.models';
     .row { display: flex; align-items: center; gap: 1.1rem; padding: 1.1rem 1.3rem; cursor: pointer; transition: box-shadow 200ms; }
     .row:hover { box-shadow: var(--shadow-md); }
     .row--unread { border-left: 3px solid var(--accent); }
-    .row-icon { width: 48px; height: 48px; flex: none; border-radius: 3px; background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; }
+    .row-icon { width: 48px; height: 48px; flex: none; border-radius: 3px; background: var(--accent-soft); color: var(--color-red-ink); display: flex; align-items: center; justify-content: center; }
     .row-icon .ms { font-size: 24px; }
     .row-icon.failed { background: #fdecec; color: #c0392b; }
     .row-main { flex: 1; min-width: 0; }
@@ -121,7 +121,7 @@ import type { NotificationView } from '../../core/models/api.models';
       width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
       color: var(--muted); cursor: pointer; transition: border-color 200ms, color 200ms;
     }
-    .mark-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+    .mark-btn:hover:not(:disabled) { border-color: var(--color-red-ink); color: var(--color-red-ink); }
     .mark-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .mark-btn .ms { font-size: 20px; }
     @media (max-width: 560px) { .row { flex-wrap: wrap; } .dash-actions { flex-direction: column; align-items: flex-start; } }
