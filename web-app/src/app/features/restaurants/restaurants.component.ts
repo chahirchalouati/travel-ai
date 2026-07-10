@@ -143,7 +143,7 @@ const HEADER_IMG =
                   @if (tripFit(r); as place) { <span class="tag-pill tag-pill--ai"><span class="ms" style="font-size:13px;vertical-align:middle">auto_awesome</span> {{ 'common.fitsTrip' | transloco:{ place: place } }}</span> }
                 </div>
                 <div class="card__foot">
-                  <span class="card__sub" style="font-weight:600;color:var(--teal)">{{ r.cuisineType }}</span>
+                  <span class="card__sub" style="font-weight:600;color:var(--text-secondary)">{{ r.cuisineType }}</span>
                   <span class="card__cta">{{ 'catalog.view' | transloco }} <span class="ms" style="font-size:16px">arrow_forward</span></span>
                 </div>
               </div>

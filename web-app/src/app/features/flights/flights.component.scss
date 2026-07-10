@@ -221,8 +221,8 @@
 }
 .fare-cal__date { font-size: 0.72rem; color: var(--text-tertiary); text-transform: capitalize; }
 .fare-cal__price { font-size: 0.95rem; font-weight: 800; }
-.fare-cal__day--cheap { border-color: var(--teal); }
-.fare-cal__day--cheap .fare-cal__price { color: var(--teal); }
+.fare-cal__day--cheap { border-color: var(--color-red); }
+.fare-cal__day--cheap .fare-cal__price { color: var(--color-red-ink); }
 .fare-cal__day--on { background: var(--brand); border-color: var(--color-red-ink); }
 .fare-cal__day--on .fare-cal__date,
 .fare-cal__day--on .fare-cal__price { color: #fff; }

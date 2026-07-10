@@ -117,7 +117,7 @@
 }
 .tb-btn:hover:not(:disabled) { transform: translateY(-1px); }
 .tb-btn:disabled { opacity: 0.55; cursor: not-allowed; }
-.tb-btn--accent { background: var(--teal); border-color: var(--teal); color: #fff; }
+.tb-btn--accent { background: var(--color-red); border-color: var(--color-red); color: #fff; }
 .tb-btn--accent:hover:not(:disabled) { filter: brightness(1.08); }
 .tb-btn--full { width: 100%; margin-top: 0.4rem; }
 .tb-btn .ms { font-size: 18px; }
