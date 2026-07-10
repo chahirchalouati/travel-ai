@@ -372,8 +372,8 @@
   cursor: pointer;
   transition: all 150ms ease;
   .ms { font-size: 15px; }
-  &:hover { border-color: var(--teal); color: var(--teal); }
-  &.is-on { background: rgba(15, 118, 110, 0.1); border-color: var(--teal); color: var(--teal); }
+  &:hover { border-color: var(--color-ink); color: var(--color-ink); }
+  &.is-on { background: var(--color-red-tint); border-color: var(--color-red); color: var(--color-red-ink); }
 }
 
 .ad-no-reviews {

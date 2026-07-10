@@ -73,7 +73,7 @@ import type { TripMemberResponse, TripRole } from '../../core/models/api.models'
   `,
   styles: [`
     .tc-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1.25rem 1.4rem; margin-top: 1.5rem; }
-    .tc-eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--teal); }
+    .tc-eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-ink); }
     .tc-eyebrow .ms { font-size: 16px; }
     .tc-panel__title { margin: 0.35rem 0 1rem; font-size: 1.15rem; font-weight: 800; letter-spacing: -0.01em; }
     .tc-skeleton { height: 64px; border-radius: 3px; background: linear-gradient(90deg, var(--bg-secondary), var(--bg-tertiary), var(--bg-secondary)); background-size: 200% 100%; animation: tc-sh 1.2s infinite; }
