@@ -1,5 +1,24 @@
 {
   "catalog": {
+    "compare": {
+      "add": "Comparar",
+      "title": "Comparar hoteles",
+      "subtitle": "Lado a lado, en los detalles que importan.",
+      "cta": "Comparar",
+      "empty": "Elige 2 o 3 hoteles para comparar.",
+      "back": "Volver a hoteles",
+      "yes": "Sí",
+      "no": "No",
+      "rows": {
+        "price": "Precio / noche",
+        "stars": "Estrellas",
+        "city": "Ciudad",
+        "sea": "Cercanía al mar",
+        "family": "Familiar",
+        "pet": "Admite mascotas",
+        "accessible": "Accesible"
+      }
+    },
     "search": "Buscar",
     "activeFilters": "Filtros",
     "clearAll": "Borrar todo",

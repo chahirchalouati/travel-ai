@@ -1,5 +1,24 @@
 {
   "catalog": {
+    "compare": {
+      "add": "Confronta",
+      "title": "Confronta hotel",
+      "subtitle": "Fianco a fianco, sui dettagli che contano.",
+      "cta": "Confronta",
+      "empty": "Scegli 2 o 3 hotel da confrontare.",
+      "back": "Torna agli hotel",
+      "yes": "Sì",
+      "no": "No",
+      "rows": {
+        "price": "Prezzo / notte",
+        "stars": "Stelle",
+        "city": "Città",
+        "sea": "Vicino al mare",
+        "family": "Adatto famiglie",
+        "pet": "Animali ammessi",
+        "accessible": "Accessibile"
+      }
+    },
     "search": "Cerca",
     "activeFilters": "Filtri",
     "clearAll": "Cancella tutto",

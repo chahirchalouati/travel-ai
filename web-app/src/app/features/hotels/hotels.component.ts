@@ -12,6 +12,7 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
 import { UiSelectComponent, UiCheckboxComponent, UiAutocompleteComponent, UiDatepickerComponent } from '../../shared/ui';
 import { SuggestService } from '../../core/services/suggest.service';
 import { GUEST_COUNT_OPTIONS } from '../catalog/catalog-options';
+import { CompareService } from '../compare/compare.service';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920&q=80';
@@ -157,6 +158,15 @@ const HEADER_IMG =
                 <img class="card__img" [src]="h.imageUrl" [alt]="h.name" loading="lazy" />
                 @if (h.stars) { <span class="card__badge"><span class="stars">{{ starString(h.stars) }}</span></span> }
                 @if (!h.available) { <span class="card__badge card__badge--teal" style="left:auto;right:10px;background:#888">{{ 'catalog.soldOut' | transloco }}</span> }
+                <button type="button" class="card__compare"
+                        [class.card__compare--on]="compare.has(h.id)"
+                        [disabled]="!compare.has(h.id) && compare.isFull()"
+                        (click)="$event.stopPropagation(); compare.toggle(h)"
+                        [attr.aria-pressed]="compare.has(h.id)"
+                        [attr.aria-label]="'catalog.compare.add' | transloco">
+                  <span class="ms" style="font-size:15px">{{ compare.has(h.id) ? 'check' : 'balance' }}</span>
+                  <span class="card__compare-txt">{{ 'catalog.compare.add' | transloco }}</span>
+                </button>
               </div>
               <div class="card__body">
                 <h3 class="card__title">{{ h.name }}</h3>
@@ -185,6 +195,26 @@ const HEADER_IMG =
         }
       }
     </section>
+
+    @if (compare.count() > 0) {
+      <div class="compare-tray" role="region" [attr.aria-label]="'catalog.compare.title' | transloco">
+        <div class="compare-tray__items">
+          @for (h of compare.items(); track h.id) {
+            <span class="compare-tray__chip">
+              {{ h.name }}
+              <button type="button" (click)="compare.remove(h.id)" [attr.aria-label]="'catalog.clearAll' | transloco"><span class="ms" style="font-size:14px">close</span></button>
+            </span>
+          }
+        </div>
+        <div class="compare-tray__actions">
+          <button type="button" class="compare-tray__clear" (click)="compare.clear()">{{ 'catalog.clearAll' | transloco }}</button>
+          <button type="button" class="compare-tray__go" [disabled]="compare.count() < 2" (click)="goCompare()">
+            {{ 'catalog.compare.cta' | transloco }} ({{ compare.count() }})
+            <span class="ms" style="font-size:18px">arrow_forward</span>
+          </button>
+        </div>
+      </div>
+    }
   `,
   styleUrl: '../catalog/catalog-shared.scss',
 })
@@ -193,6 +223,11 @@ export class HotelsComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly suggest = inject(SuggestService);
+  readonly compare = inject(CompareService);
+
+  goCompare(): void {
+    if (this.compare.count() >= 2) this.router.navigateByUrl('/compare');
+  }
 
   /** Live city suggestions for the destination field. */
   readonly citySuggest = (q: string) => this.suggest.hotelCities(q);

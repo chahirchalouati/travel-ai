@@ -1,5 +1,24 @@
 {
   "catalog": {
+    "compare": {
+      "add": "Compare",
+      "title": "Compare hotels",
+      "subtitle": "Side by side, on the details that matter.",
+      "cta": "Compare",
+      "empty": "Pick 2 or 3 hotels to compare.",
+      "back": "Back to hotels",
+      "yes": "Yes",
+      "no": "No",
+      "rows": {
+        "price": "Price / night",
+        "stars": "Stars",
+        "city": "City",
+        "sea": "Sea proximity",
+        "family": "Family friendly",
+        "pet": "Pet friendly",
+        "accessible": "Accessible"
+      }
+    },
     "search": "Search",
     "activeFilters": "Filters",
     "clearAll": "Clear all",

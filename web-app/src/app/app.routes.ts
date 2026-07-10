@@ -325,6 +325,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/ui-kit/ui-kit.component').then(m => m.UiKitComponent),
   },
   {
+    path: 'compare',
+    data: { seo: { title: 'Compare hotels', description: 'Compare hotels side by side on price, rating and amenities.' } },
+    loadComponent: () => import('./features/compare/compare.component').then(m => m.CompareComponent),
+  },
+  {
     path: 'blog',
     data: { seo: { title: 'TravelAI Journal', description: 'Travel inspiration, tips, and stories from the TravelAI team.' } },
     loadComponent: () => import('./features/blog/blog.component').then(m => m.BlogComponent),
