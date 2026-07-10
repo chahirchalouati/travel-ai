@@ -124,10 +124,15 @@
 
   <!-- ── Empty hint ─────────────────────────────────────────────────────────── -->
   @if (stage() === 'empty') {
-    <div class="hint glass">
-      <div class="hint-orb"><span class="ms">map</span></div>
+    <div class="hint hint--brief glass">
       <h2>{{ t().e_title }}</h2>
-      <p>{{ t().e_sub }}</p>
+      <app-ui-sentence-brief
+        [placeOptions]="briefPlaces"
+        [budgetMin]="400"
+        [budgetMax]="4000"
+        (briefChange)="applyBrief($event)"
+        (compose)="composeBrief($event)"
+      />
     </div>
   }
 

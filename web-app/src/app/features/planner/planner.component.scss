@@ -230,6 +230,11 @@
   h2 { font-size: 24px; font-weight: 900; letter-spacing: -0.03em; margin: 0 0 10px; }
   p { font-size: 13.5px; line-height: 1.6; color: var(--ink-2); margin: 0; }
 }
+.hint--brief {
+  width: min(600px, 52vw); text-align: left; padding: 22px 22px 24px;
+  h2 { font-size: 18px; font-weight: 800; margin: 0 0 14px; }
+  app-ui-sentence-brief { display: block; }
+}
 .hint-orb {
   width: 70px; height: 70px; margin: 0 auto 18px; border-radius: 3px;
   background: linear-gradient(150deg, rgba(229,53,43,0.16), rgba(229,53,43,0.08));

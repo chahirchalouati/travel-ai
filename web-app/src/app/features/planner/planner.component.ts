@@ -10,6 +10,7 @@ import { CatalogService } from '../../core/services/catalog.service';
 import { BookingService } from '../../core/services/booking.service';
 import { PaymentService } from '../../core/services/payment.service';
 import { PlannerMapComponent, PlannerPin } from './planner-map.component';
+import { UiSentenceBriefComponent, type TripBrief } from '../../shared/ui';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -257,7 +258,7 @@ const PLANNER_GENERATION_TIMEOUT_MS =
 @Component({
   selector: 'app-planner',
   standalone: true,
-  imports: [CommonModule, FormsModule, PlannerMapComponent],
+  imports: [CommonModule, FormsModule, PlannerMapComponent, UiSentenceBriefComponent],
   templateUrl: './planner.component.html',
   styleUrl: './planner.component.scss'
 })
@@ -741,6 +742,25 @@ export class PlannerComponent implements OnDestroy {
   closeAuthModal(): void {
     this.showAuthModal.set(false);
     this.authErrorMsg = '';
+  }
+
+  /** Destinations offered by the sentence brief. */
+  readonly briefPlaces = ['Kyoto', 'Lisbon', 'Amalfi', 'Reykjavík', 'Marrakech', 'Bali'];
+
+  /** Sync a sentence brief into the planner's parameter signals. */
+  applyBrief(b: TripBrief): void {
+    this.nights.set(Math.max(1, Math.min(30, Math.round(b.nights))));
+    this.adults.set(Math.max(1, Math.round(b.travellers)));
+    this.children.set(0);
+    this.budget.set(Math.max(400, Math.min(4000, Math.round(b.budget))));
+    this.priority.set(b.focus.includes('food') ? 'food' : 'bal');
+    this.destOpen.set(false);
+  }
+
+  /** Apply the brief, then kick off generation. */
+  composeBrief(b: TripBrief): void {
+    this.applyBrief(b);
+    this.generate();
   }
 
   generate(): void {
