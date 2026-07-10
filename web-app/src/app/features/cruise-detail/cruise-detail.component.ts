@@ -11,11 +11,12 @@ import { RevealDirective } from '../../shared/reveal/reveal.directive';
 import { BookingDraftService } from '../booking-flow/booking-draft.service';
 import { TripContextService } from '../../core/services/trip-context.service';
 import { FavoritesService } from '../../core/services/favorites.service';
+import { UiFareGridComponent, type FareDay } from '../../shared/ui';
 
 @Component({
   selector: 'app-cruise-detail',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, DatePipe, TranslocoModule, RevealDirective],
+  imports: [CommonModule, CurrencyPipe, DatePipe, TranslocoModule, RevealDirective, UiFareGridComponent],
   template: `
     @if (cruise(); as c) {
       <nav style="padding: 16px 32px; max-width: 1100px; margin: 0 auto; display:flex; align-items:center; justify-content:space-between;">
@@ -213,6 +214,13 @@ import { FavoritesService } from '../../core/services/favorites.service';
                 <span class="price-value">{{ c.pricePerPerson | currency:'USD':'symbol':'1.0-0' }}</span>
                 <span class="price-note">{{ c.durationNights }}{{ 'cruise.booking.nightCruise' | transloco }}</span>
               </div>
+
+              @if (fareDays().length) {
+                <div class="fare-strip">
+                  <span class="fare-strip__label">{{ 'cruise.booking.nearbyDates' | transloco }}</span>
+                  <app-ui-fare-grid [days]="fareDays()" currency="USD" [(selected)]="fareSelected" />
+                </div>
+              }
 
               <div style="height:1px; background:var(--border-light); margin:16px 0;"></div>
 
@@ -446,6 +454,12 @@ import { FavoritesService } from '../../core/services/favorites.service';
 
     .price-note { font-size: 13px; color: var(--text-tertiary); }
 
+    .fare-strip { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+    .fare-strip__label {
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-secondary);
+    }
+
     .meta-list { display: flex; flex-direction: column; gap: 14px; }
     .meta-item { display: flex; align-items: center; gap: 12px; }
     .meta-label {
@@ -536,6 +550,20 @@ export class CruiseDetailComponent implements OnInit {
 
   readonly watchId = signal<string | null>(null);
   readonly cruise = signal<CruiseSearchResult | null>(null);
+
+  /** Illustrative fare strip of weekly departures around this sailing. */
+  private readonly fareMultipliers = [1.12, 0.88, 1.0, 1.22, 1.4];
+  readonly fareSelected = signal(2);
+  readonly fareDays = computed<FareDay[]>(() => {
+    const c = this.cruise();
+    if (!c) return [];
+    const base = new Date(c.departureDate);
+    return this.fareMultipliers.map((m, i) => {
+      const d = new Date(base);
+      d.setDate(base.getDate() + (i - 2) * 7);
+      return { date: d.toISOString().slice(0, 10), price: Math.round(c.pricePerPerson * m) };
+    });
+  });
 
   toggleWatch(c: CruiseSearchResult): void {
     const existing = this.watchId();

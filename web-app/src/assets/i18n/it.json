@@ -342,6 +342,7 @@
     "booking": {
       "fromPerPerson": "A partire da per persona",
       "nightCruise": " notti di crociera",
+      "nearbyDates": "Partenze vicine",
       "ship": "Nave",
       "operator": "Operatore",
       "cabinsAvailable": "Cabine disponibili",

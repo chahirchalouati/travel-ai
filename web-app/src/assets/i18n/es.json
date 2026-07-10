@@ -342,6 +342,7 @@
     "booking": {
       "fromPerPerson": "Desde por persona",
       "nightCruise": " noches de crucero",
+      "nearbyDates": "Salidas cercanas",
       "ship": "Barco",
       "operator": "Operador",
       "cabinsAvailable": "Camarotes disponibles",

@@ -342,6 +342,7 @@
     "booking": {
       "fromPerPerson": "From per person",
       "nightCruise": "-night cruise",
+      "nearbyDates": "Nearby departures",
       "ship": "Ship",
       "operator": "Operator",
       "cabinsAvailable": "Cabins available",
