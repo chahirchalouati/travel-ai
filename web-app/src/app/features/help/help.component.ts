@@ -75,7 +75,7 @@ import { HelpService, HelpFaq } from '../../core/services/help.service';
     :host { display: block; background: var(--bg-primary); font-family: var(--font-body); color: var(--text-primary); }
 
     .help-hero {
-      background: linear-gradient(155deg, var(--bg-secondary) 0%, var(--teal-light) 100%);
+      background: linear-gradient(155deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
       padding: clamp(4.5rem, 10vw, 8rem) 1.5rem clamp(3rem, 7vw, 5.5rem);
       text-align: center;
     }
@@ -83,7 +83,7 @@ import { HelpService, HelpFaq } from '../../core/services/help.service';
     .help-hero h1 { font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.06; margin: 0 0 1rem; }
     .hero-sub { font-size: 1.05rem; color: var(--text-secondary); margin: 0 0 2rem; line-height: 1.7; }
 
-    .search-bar { display: flex; align-items: center; background: var(--surface); border: 1.5px solid var(--border); border-radius: 2px; padding: 14px 20px; gap: 12px; max-width: 520px; margin: 0 auto; box-shadow: 0 4px 20px rgba(33,27,20,0.07); transition: border-color 140ms ease; &:focus-within { border-color: var(--teal); } }
+    .search-bar { display: flex; align-items: center; background: var(--surface); border: 1.5px solid var(--border); border-radius: 2px; padding: 14px 20px; gap: 12px; max-width: 520px; margin: 0 auto; box-shadow: 0 4px 20px rgba(33,27,20,0.07); transition: border-color 140ms ease; &:focus-within { border-color: var(--color-red); } }
     .search-icon { font-size: 22px; color: var(--text-tertiary); }
     .search-input { flex: 1; border: none; background: none; font-family: inherit; font-size: 1rem; color: var(--text-primary); &:focus { outline: none; } &::placeholder { color: var(--text-tertiary); } }
 
@@ -95,7 +95,7 @@ import { HelpService, HelpFaq } from '../../core/services/help.service';
 
     .topics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1rem; }
     .topic-card { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1.5rem; cursor: default; transition: box-shadow 150ms ease, transform 150ms ease; &:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(33,27,20,0.08); } }
-    .topic-icon-wrap { width: 44px; height: 44px; border-radius: 3px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; margin-bottom: 0.85rem; .ms { font-size: 1.4rem; color: var(--teal); } }
+    .topic-icon-wrap { width: 44px; height: 44px; border-radius: 3px; background: var(--color-red-tint); display: flex; align-items: center; justify-content: center; margin-bottom: 0.85rem; .ms { font-size: 1.4rem; color: var(--color-red-ink); } }
     .topic-card h3 { font-size: 0.95rem; font-weight: 700; margin: 0 0 0.35rem; }
     .topic-card p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin: 0; }
 

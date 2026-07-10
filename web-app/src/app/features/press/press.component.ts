@@ -95,7 +95,7 @@ import { PressService, PressCoverage } from '../../core/services/press.service';
       text-align: center;
     }
     .press-hero__inner { max-width: 680px; margin: 0 auto; }
-    .eyebrow { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-tertiary); margin: 0 0 1rem; }
+    .eyebrow { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-red-ink); margin: 0 0 1rem; }
     .press-hero h1 { font-family: var(--font-display); font-size: clamp(2.6rem, 5vw, 4.5rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.06; margin: 0 0 1.2rem; }
     .hero-sub { font-size: 1.05rem; color: var(--text-secondary); margin: 0; line-height: 1.7; }
 

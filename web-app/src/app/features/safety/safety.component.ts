@@ -93,12 +93,12 @@ import { SiteContentService, SiteContentItem } from '../../core/services/site-co
     :host { display: block; background: var(--bg-primary); font-family: var(--font-body); color: var(--text-primary); }
 
     .safety-hero {
-      background: linear-gradient(155deg, var(--teal-light) 0%, var(--bg-secondary) 100%);
+      background: linear-gradient(155deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
       padding: clamp(4.5rem, 10vw, 8rem) 1.5rem clamp(3rem, 7vw, 5.5rem);
       text-align: center;
     }
     .safety-hero__inner { max-width: 660px; margin: 0 auto; }
-    .hero-icon { font-size: 3rem; color: var(--teal); display: block; margin-bottom: 1rem; }
+    .hero-icon { font-size: 3rem; color: var(--color-ink); display: block; margin-bottom: 1rem; }
     .safety-hero h1 { font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.06; margin: 0 0 1.2rem; }
     .hero-sub { font-size: 1.05rem; color: var(--text-secondary); margin: 0; line-height: 1.7; }
 
@@ -108,18 +108,18 @@ import { SiteContentService, SiteContentItem } from '../../core/services/site-co
     .tips-section h2,
     .platform-content h2,
     .emergency-section h2 { font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; letter-spacing: -0.02em; margin: 0 0 1.5rem; }
-    .section-eye { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal); margin: 0 0 0.6rem; }
+    .section-eye { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-red-ink); margin: 0 0 0.6rem; }
 
     .tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
     .tip-card { display: flex; gap: 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1.4rem; }
-    .tip-icon-wrap { width: 44px; height: 44px; flex-shrink: 0; border-radius: 3px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; .ms { font-size: 1.4rem; color: var(--teal); } }
+    .tip-icon-wrap { width: 44px; height: 44px; flex-shrink: 0; border-radius: 3px; background: var(--color-red-tint); display: flex; align-items: center; justify-content: center; .ms { font-size: 1.4rem; color: var(--color-red-ink); } }
     .tip-body h3 { font-size: 0.95rem; font-weight: 700; margin: 0 0 0.35rem; }
     .tip-body p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.65; margin: 0; }
 
     .platform-card { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: clamp(2rem, 4vw, 3rem); display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
     .platform-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.5; .ms { font-size: 18px; color: var(--teal); flex-shrink: 0; margin-top: 1px; } } }
     .platform-vis { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
-    .shield-icon { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, var(--teal-light), var(--teal)); display: flex; align-items: center; justify-content: center; .ms { font-size: 3rem; color: #fff; } }
+    .shield-icon { width: 100px; height: 100px; border-radius: var(--radius-md); background: var(--color-ink); display: flex; align-items: center; justify-content: center; .ms { font-size: 3rem; color: #fff; } }
     .trust-badges { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
     .trust-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 2px; background: var(--bg-secondary); border: 1px solid var(--border-light); font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); .ms { font-size: 15px; color: var(--teal); } }
 
