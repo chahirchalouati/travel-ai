@@ -83,7 +83,7 @@ export interface SpecRow {
       .ss__col-sub { display: block; font-size: 9.5px; color: var(--text-subtle, var(--text-tertiary)); }
 
       .ss__cell { padding: 11px 12px; display: flex; align-items: center; gap: 6px; }
-      .ss__val { font-weight: 800; font-size: 15px; color: var(--color-ink); font-variant-numeric: tabular-nums; }
+      .ss__val { font-weight: 800; font-size: 15px; color: var(--color-ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
       .ss__val--mono { font-family: var(--font-mono); font-weight: 500; font-size: 13px; }
       .ss__cell--muted .ss__val { color: var(--text-subtle, var(--text-tertiary)); font-weight: 500; }
       .ss__cell--best .ss__val { color: var(--color-red-ink, #C42A22); }
