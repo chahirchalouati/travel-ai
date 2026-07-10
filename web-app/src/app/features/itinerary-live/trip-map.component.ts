@@ -122,7 +122,7 @@ const MATERIAL_ICONS: Record<string, string> = {
         color: var(--text-primary);
         .ms {
           font-size: 20px;
-          color: var(--teal);
+          color: var(--color-red-ink);
         }
       }
       .tm-chips {
@@ -131,7 +131,7 @@ const MATERIAL_ICONS: Record<string, string> = {
         gap: 6px;
       }
       .tm-chip {
-        --chip-color: var(--teal);
+        --chip-color: var(--color-red);
         display: inline-flex;
         align-items: center;
         gap: 6px;
@@ -174,7 +174,7 @@ const MATERIAL_ICONS: Record<string, string> = {
       .tm-map {
         width: 100%;
         height: 420px;
-        background: var(--teal-light);
+        background: var(--bg-tertiary);
       }
       @media (max-width: 640px) {
         .tm-map {

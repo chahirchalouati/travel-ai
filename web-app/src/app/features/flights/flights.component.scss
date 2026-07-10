@@ -212,12 +212,12 @@
   min-width: 76px;
   padding: 9px 12px;
   border: 1px solid var(--border);
-  border-radius: 3px;
+  border-radius: var(--radius-md);
   background: var(--bg-primary);
   cursor: pointer;
-  transition: border-color 150ms ease, transform 150ms ease;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
 
-  &:hover { border-color: var(--color-red-ink); transform: translateY(-2px); }
+  &:hover { border-color: var(--color-red-ink); box-shadow: var(--shadow-md); }
 }
 .fare-cal__date { font-size: 0.72rem; color: var(--text-tertiary); text-transform: capitalize; }
 .fare-cal__price { font-size: 0.95rem; font-weight: 800; }

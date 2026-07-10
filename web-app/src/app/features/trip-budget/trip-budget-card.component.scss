@@ -1,8 +1,8 @@
 :host {
   --tb-ok: var(--teal);
   --tb-ok-soft: var(--teal-light);
-  --tb-warn: var(--gold);
-  --tb-warn-soft: var(--gold-light);
+  --tb-warn: var(--color-warning);
+  --tb-warn-soft: var(--color-warning-tint);
   --tb-over: var(--brand);
   --tb-over-soft: var(--brand-light);
   display: block;
@@ -29,11 +29,12 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-weight: 800;
-  font-size: 0.72rem;
-  letter-spacing: 0.09em;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--teal);
+  color: var(--color-ink);
 }
 .tb-eyebrow .ms { font-size: 18px; }
 
@@ -95,8 +96,8 @@
 }
 .tb-input:focus {
   outline: none;
-  border-color: var(--teal);
-  box-shadow: 0 0 0 3px var(--tb-ok-soft);
+  border-color: var(--color-red);
+  box-shadow: var(--ring-focus);
 }
 
 .tb-btn {
@@ -188,8 +189,8 @@
   width: 34px;
   height: 34px;
   border-radius: var(--radius-sm, 10px);
-  background: var(--tb-ok-soft);
-  color: var(--teal);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
   flex-shrink: 0;
 }
 .tb-cat__icon .ms { font-size: 19px; }

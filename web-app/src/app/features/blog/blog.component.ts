@@ -85,7 +85,7 @@ import { BlogService, BlogPost } from '../../core/services/blog.service';
     :host { display: block; background: var(--bg-primary); font-family: var(--font-body); color: var(--text-primary); }
 
     .blog-hero {
-      background: linear-gradient(155deg, var(--bg-secondary) 0%, var(--gold-light) 100%);
+      background: linear-gradient(155deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
       padding: clamp(4rem, 9vw, 8rem) 1.5rem clamp(3rem, 6vw, 5rem);
       text-align: center;
     }
@@ -101,7 +101,7 @@ import { BlogService, BlogPost } from '../../core/services/blog.service';
 
     /* Featured */
     .featured-section { margin-bottom: 3.5rem; }
-    .featured-card { display: grid; grid-template-columns: 400px 1fr; border-radius: 3px; overflow: hidden; background: var(--surface); border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(33,27,20,0.08); }
+    .featured-card { display: grid; grid-template-columns: 400px 1fr; border-radius: var(--radius-md); overflow: hidden; background: var(--surface); border: 1px solid var(--border); }
     .featured-vis { min-height: 280px; display: flex; align-items: center; justify-content: center; }
     .featured-icon { font-size: 5rem; color: rgba(255,255,255,0.85); }
     .featured-body { padding: 2.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
@@ -111,7 +111,7 @@ import { BlogService, BlogPost } from '../../core/services/blog.service';
 
     /* Grid */
     .posts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
-    .post-card { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; overflow: hidden; transition: transform 150ms ease, box-shadow 150ms ease; &:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(33,27,20,0.1); } }
+    .post-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; transition: border-color 150ms ease, box-shadow 150ms ease; &:hover { border-color: var(--color-ink); box-shadow: var(--shadow-lg); } }
     .post-vis { height: 140px; display: flex; align-items: center; justify-content: center; }
     .post-icon { font-size: 3.5rem; color: rgba(255,255,255,0.82); }
     .post-body { padding: 1.4rem; display: flex; flex-direction: column; gap: 0.6rem; }

@@ -1,12 +1,12 @@
 <nav [class.scrolled]="scrolled()">
-  <div class="container nav-inner">
-    <a routerLink="/" class="nav-logo" aria-label="TravelAI home">
+  <div class="container nav-inner" #navInner>
+    <a routerLink="/" class="nav-logo" aria-label="TravelAI home" #navLogo>
       <span class="nav-logo-text">Travel<span class="nav-logo-accent">AI</span></span>
       <span class="nav-logo-dot" aria-hidden="true"></span>
     </a>
 
     <ul class="nav-tabs" role="list">
-      @for (tab of tabs; track tab.key) {
+      @for (tab of visibleTabs(); track tab.key) {
         <li>
           <a [routerLink]="tab.route"
              routerLinkActive="active"
@@ -15,9 +15,48 @@
           </a>
         </li>
       }
+      @if (overflowTabs().length) {
+        <li class="nav-more" #moreHost>
+          <button type="button"
+                  class="nav-more-btn"
+                  [class.active]="moreActive()"
+                  [class.open]="moreOpen()"
+                  (click)="toggleMore()"
+                  aria-haspopup="true"
+                  [attr.aria-expanded]="moreOpen()">
+            {{ 'nav.more' | transloco }}
+            <span class="nav-more-caret" aria-hidden="true">▾</span>
+          </button>
+          @if (moreOpen()) {
+            <div class="nav-more-menu" role="menu">
+              @for (tab of overflowTabs(); track tab.key) {
+                <a role="menuitem"
+                   [routerLink]="tab.route"
+                   routerLinkActive="active"
+                   [routerLinkActiveOptions]="{ exact: tab.route === '/' }"
+                   (click)="closeMore()">
+                  {{ tab.key | transloco }}
+                </a>
+              }
+            </div>
+          }
+        </li>
+      }
     </ul>
 
-    <div class="nav-actions">
+    <!-- Hidden measurement row: intrinsic widths used to decide how many tabs fit. -->
+    <ul class="nav-tabs-measure" aria-hidden="true" #measureList>
+      @for (tab of tabs; track tab.key) {
+        <li><span class="nav-measure-item" #measureTab>{{ tab.key | transloco }}</span></li>
+      }
+      <li>
+        <span class="nav-measure-item nav-measure-more" #measureMore>
+          {{ 'nav.more' | transloco }}<span class="nav-more-caret">▾</span>
+        </span>
+      </li>
+    </ul>
+
+    <div class="nav-actions" #navActions>
       <app-language-switcher />
       @if (auth.isAuthenticated()) {
         <a routerLink="/notifications"

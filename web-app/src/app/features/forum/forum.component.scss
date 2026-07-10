@@ -164,14 +164,13 @@
   padding: 18px 20px;
   background: var(--bg-secondary);
   border: 1px solid var(--border-light);
-  border-radius: 3px;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+  transition: box-shadow 150ms ease, border-color 150ms ease;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
-    border-color: rgba(17, 102, 76, 0.4);
+    border-color: var(--color-ink);
+    box-shadow: var(--shadow-lg);
   }
   &:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 }

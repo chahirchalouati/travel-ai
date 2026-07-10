@@ -376,7 +376,7 @@ interface ChatMsg {
                   box-shadow var(--duration-normal) var(--ease-out-expo),
                   border-color var(--duration-normal);
     }
-    .suggest:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--brand-light); }
+    .suggest:hover { border-color: var(--color-ink); box-shadow: var(--shadow-lg); }
     .suggest-icon {
       width: 42px; height: 42px; flex-shrink: 0; border-radius: var(--radius-sm);
       background: var(--brand-light); display: grid; place-items: center;

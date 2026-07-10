@@ -108,27 +108,27 @@ import { PressService, PressCoverage } from '../../core/services/press.service';
     .brand-strip h2 { font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; letter-spacing: -0.02em; margin: 0 0 1.5rem; }
 
     .coverage-grid { display: flex; flex-direction: column; gap: 0.75rem; }
-    .coverage-card { display: grid; grid-template-columns: 64px 1fr auto; align-items: center; gap: 1.25rem; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1.25rem 1.5rem; text-decoration: none; color: inherit; transition: box-shadow 150ms ease, transform 150ms ease; &:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(33,27,20,0.08); } }
-    .coverage-vis { width: 56px; height: 56px; border-radius: 3px; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; .ms { font-size: 1.8rem; color: var(--text-tertiary); } }
+    .coverage-card { display: grid; grid-template-columns: 64px 1fr auto; align-items: center; gap: 1.25rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem 1.5rem; text-decoration: none; color: inherit; transition: border-color var(--duration-normal) var(--ease), box-shadow var(--duration-normal) var(--ease); &:hover { border-color: var(--color-ink); box-shadow: var(--shadow-lg); } }
+    .coverage-vis { width: 56px; height: 56px; border-radius: var(--radius-md); background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; .ms { font-size: 1.8rem; color: var(--text-tertiary); } }
     .outlet { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin-bottom: 4px; }
     .coverage-body h3 { font-size: 0.98rem; font-weight: 700; margin: 0 0 4px; }
     .coverage-date { font-size: 0.8rem; color: var(--text-tertiary); }
     .coverage-arrow { font-size: 18px; color: var(--text-tertiary); flex-shrink: 0; }
 
     .press-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-    .kit-card, .contact-card { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 2rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .kit-card, .contact-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 2rem; display: flex; flex-direction: column; gap: 0.75rem; }
     .kit-icon, .contact-icon { font-size: 2.2rem; color: var(--color-red-ink); }
 
     .kit-card p, .contact-card p { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; margin: 0; }
     .kit-list { list-style: none; margin: 0.25rem 0; padding: 0; display: flex; flex-direction: column; gap: 6px; li { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--text-secondary); .ms { font-size: 17px; color: var(--teal); } } }
-    .kit-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: 0.5rem; background: var(--brand); color: #fff; text-decoration: none; font-weight: 700; font-size: 0.9rem; padding: 11px 22px; border-radius: 2px; transition: background 140ms ease; .ms { font-size: 18px; } &:hover { background: var(--brand-hover); } }
+    .kit-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: 0.5rem; background: var(--brand); color: #fff; text-decoration: none; font-weight: 700; font-size: 0.9rem; padding: 11px 22px; border-radius: var(--radius-sm); transition: background 140ms ease; .ms { font-size: 18px; } &:hover { background: var(--brand-hover); } }
 
     .contact-email { color: var(--color-red-ink); font-weight: 700; font-size: 1rem; text-decoration: none; &:hover { text-decoration: underline; } }
     .response-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--text-tertiary); margin-top: 0.25rem; .ms { font-size: 16px; } }
 
     .brand-assets { display: flex; gap: 1rem; flex-wrap: wrap; }
     .brand-asset { display: flex; flex-direction: column; gap: 0.6rem; align-items: center; }
-    .brand-preview { width: 160px; height: 80px; border-radius: 3px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); }
+    .brand-preview { width: 160px; height: 80px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); }
     .brand-preview--light { background: var(--surface); }
     .brand-preview--dark { background: var(--text-primary); }
     .brand-preview--brand { background: var(--brand); }

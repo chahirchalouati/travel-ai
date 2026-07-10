@@ -174,7 +174,8 @@
     },
     "signIn": "Se connecter",
     "startPlanning": "Commencer à planifier",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "more": "Plus"
   },
   "explore": {
     "hero": {
@@ -1694,6 +1695,7 @@
     }
   },
   "help": {
+    "eyebrow": "Assistance",
     "headline": "Comment pouvons-nous vous aider ?",
     "sub": "Parcourez les sujets ci-dessous ou recherchez ce dont vous avez besoin.",
     "search": "Rechercher des articles d'aide…",
@@ -1735,6 +1737,7 @@
     }
   },
   "safety": {
+    "eyebrow": "Confiance et sécurité",
     "headline": "Voyagez en toute sécurité avec TravelAI",
     "sub": "Votre sécurité est notre priorité — sur la plateforme et sur la route.",
     "tips": {

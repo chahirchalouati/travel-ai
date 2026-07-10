@@ -1161,14 +1161,14 @@
 .trip-card {
   background: var(--bg-primary);
   border: 1px solid var(--border-light);
-  border-radius: 3px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   cursor: pointer;
-  transition: transform var(--duration-fast), box-shadow var(--duration-fast);
+  transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
 
   &:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
+    border-color: var(--color-ink);
+    box-shadow: var(--shadow-lg);
   }
 }
 

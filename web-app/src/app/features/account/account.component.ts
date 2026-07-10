@@ -250,7 +250,7 @@ type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
     .identity-avatar { width: 60px; height: 60px; flex: none; border-radius: 50%; background: var(--color-red); color: #fff; font-weight: 800; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; }
     .identity-name { margin: 0; font-size: 1.3rem; font-weight: 800; }
     .identity-email { color: var(--muted); font-size: 0.9rem; }
-    .role-badge { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; background: var(--teal-light); color: var(--teal); font-weight: 800; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 5px 11px; border-radius: 2px; }
+    .role-badge { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; background: var(--color-ink); color: #fff; font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 5px 11px; border-radius: 2px; }
     .role-badge .ms { font-size: 15px; }
     .role-badge.admin { background: var(--brand-light); color: var(--color-red-ink); }
     .form { display: flex; flex-direction: column; gap: 1rem; }
@@ -290,7 +290,7 @@ type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
     .loyalty-progress__labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary); font-weight: 600; margin-bottom: 6px; }
     .loyalty-bar { height: 8px; border-radius: 2px; background: var(--bg-tertiary); overflow: hidden; }
     .loyalty-bar__fill { display: block; height: 100%; border-radius: 2px; background: var(--color-red); transition: width var(--duration-normal) var(--ease-out-expo); }
-    .loyalty-top { margin: 0 0 1rem; font-weight: 700; color: var(--gold); font-size: 0.9rem; }
+    .loyalty-top { margin: 0 0 1rem; font-weight: 700; color: var(--color-ink); font-size: 0.9rem; }
     .loyalty-meta { display: flex; justify-content: space-between; gap: 1rem; font-size: 0.82rem; color: var(--muted); font-weight: 600; padding-bottom: 1rem; margin-bottom: 0.6rem; border-bottom: 1px solid var(--line); }
     .loyalty-h { margin: 0 0 0.6rem; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
     .loyalty-tx { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
@@ -320,7 +320,7 @@ type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
     .security-code-field { margin-bottom: 0.5rem; }
     .security-err { color: var(--color-red-ink); font-size: 0.85rem; font-weight: 600; margin: 0.2rem 0 0.6rem; }
     .security-danger { color: var(--color-red-ink); border-color: var(--color-red-ink); }
-    .security-recovery-head { display: flex; align-items: center; gap: 8px; font-size: 1rem; color: var(--teal); margin-bottom: 0.6rem; }
+    .security-recovery-head { display: flex; align-items: center; gap: 8px; font-size: 1rem; color: var(--color-ink); margin-bottom: 0.6rem; }
     .security-recovery-head .ms { font-size: 20px; }
     .security-recovery { list-style: none; margin: 0 0 1rem; padding: 0.9rem 1rem; background: var(--bg-secondary); border: 1px dashed var(--border); border-radius: var(--radius-sm); display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1.2rem; }
     .security-recovery li { font-family: 'SF Mono', ui-monospace, monospace; font-size: 0.95rem; letter-spacing: 0.06em; color: var(--ink); }

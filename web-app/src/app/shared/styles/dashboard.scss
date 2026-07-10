@@ -80,7 +80,7 @@
   overflow: hidden;
   transition: box-shadow var(--duration-normal) ease, transform var(--duration-normal) ease, border-color var(--duration-normal) ease;
 }
-.card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.card:hover { border-color: var(--color-ink); box-shadow: var(--shadow-lg); }
 
 .grid {
   display: grid;

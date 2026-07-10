@@ -24,6 +24,12 @@
       "runtimeExecutable": "bash",
       "runtimeArgs": ["-c", "cd web-app && npx ng serve --port 4315"],
       "port": 4315
+    },
+    {
+      "name": "web-verify",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd web-app && npx ng serve --port 4400"],
+      "port": 4400
     }
   ]
 }

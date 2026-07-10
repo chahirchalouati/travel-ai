@@ -152,7 +152,7 @@ import type { TravelStory } from '../../core/services/story.service';
     .story-card {
       position: relative;
       grid-column: span 2;
-      border-radius: 3px;
+      border-radius: var(--radius-md);
       overflow: hidden;
       cursor: pointer;
       background: #111;
@@ -166,7 +166,6 @@ import type { TravelStory } from '../../core/services/story.service';
     }
 
     .story-card:hover {
-      transform: translateY(-2px);
       box-shadow: var(--shadow-lg);
     }
 

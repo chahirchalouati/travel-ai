@@ -45,19 +45,19 @@ section {
   gap: 0.4rem;
   padding: 0.45rem 1rem;
   border-radius: 2px;
-  background: var(--teal-light);
-  border: 1px solid rgba(0, 133, 106, 0.15);
+  background: var(--color-red-tint);
+  border: 1px solid rgba(229, 53, 43, 0.15);
 }
 
 .highlight-pill-icon {
   font-size: 1rem;
-  color: var(--teal);
+  color: var(--color-red-ink);
 }
 
 .highlight-pill-text {
   font-size: 0.82rem;
   font-weight: 600;
-  color: var(--teal);
+  color: var(--color-red-ink);
 }
 
 /* ---- Itinerary card ---- */
@@ -97,10 +97,10 @@ section {
   gap: 0.3rem;
   padding: 0.3rem 0.7rem;
   border-radius: 2px;
-  background: var(--teal-light);
+  background: var(--color-red-tint);
   font-size: 0.72rem;
   font-weight: 600;
-  color: var(--teal);
+  color: var(--color-red-ink);
 }
 
 /* ---- Timeline ---- */
@@ -140,7 +140,7 @@ section {
   height: 14px;
   border-radius: 50%;
   background: #fff;
-  border: 3px solid var(--teal);
+  border: 3px solid var(--color-red-ink);
 }
 
 .timeline-day-label {
@@ -148,7 +148,7 @@ section {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--teal);
+  color: var(--color-red-ink);
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
@@ -214,8 +214,8 @@ section {
   color: var(--color-red-ink);
 
   &.alt {
-    background: var(--teal-light);
-    color: var(--teal);
+    background: var(--color-red-tint);
+    color: var(--color-red-ink);
   }
 }
 

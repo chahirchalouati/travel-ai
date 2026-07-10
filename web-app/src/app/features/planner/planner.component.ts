@@ -2,6 +2,7 @@ import { Component, computed, signal, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslocoService } from '@jsverse/transloco';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { switchMap, forkJoin, of, catchError, timer, take, first } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
@@ -293,6 +294,7 @@ export class PlannerComponent implements OnDestroy {
   private readonly bookingService = inject(BookingService);
   private readonly paymentService = inject(PaymentService);
   private readonly transloco = inject(TranslocoService);
+  private readonly route = inject(ActivatedRoute);
   private langSub?: Subscription;
 
   constructor() {
@@ -301,6 +303,27 @@ export class PlannerComponent implements OnDestroy {
     };
     apply(this.transloco.getActiveLang());
     this.langSub = this.transloco.langChanges$.subscribe(apply);
+
+    // Seed the plan from a sentence handed over by the hero search / quick-picks
+    // (e.g. "10 quiet days in Japan with great food" → 10 nights, food priority).
+    const q = this.route.snapshot.queryParamMap.get('q');
+    if (q) this.seedFromQuery(q);
+  }
+
+  /** Best-effort mapping of a free-text trip brief onto the planner's own fields. */
+  private seedFromQuery(raw: string): void {
+    const q = raw.toLowerCase();
+    // Take the number closest to a duration word ("10 quiet days" → 10), so an
+    // adjective between the count and the unit doesn't defeat the match.
+    const unit = q.match(/\b(?:nights?|days?|giorni|notti|nuits?|noches|d[ií]as?)\b/);
+    if (unit) {
+      const near = q.slice(0, unit.index).match(/(\d{1,2})(?!.*\d)/);
+      const n = near ? parseInt(near[1], 10) : NaN;
+      if (n >= 1 && n <= 30) this.nights.set(n);
+    }
+    if (/\b(food|eat|cuisine|dining|restaurant|foodie|cibo|mangiare|gastronom|comida|gastronomie)\b/.test(q)) {
+      this.priority.set('food');
+    }
   }
 
   // ── Auth modal state ──────────────────────────────────────────────────────

@@ -333,10 +333,9 @@ export class HeroComponent implements OnInit, OnDestroy {
 
   selectPick(pick: QuickPick): void {
     const sample = this.samples.find((s) => s.key === pick.key) ?? this.samples[0];
-    this.cycleIndex = this.samples.indexOf(sample);
-    this.stopAutoplay();
-    this.searchQuery.set(this.transloco.translate(sample.briefKey));
-    this.runBuild(sample);
+    this.router.navigate(['/planner'], {
+      queryParams: { q: this.transloco.translate(sample.briefKey) },
+    });
   }
 
   /** Stop the carousel as soon as the user engages the search field. */
@@ -344,31 +343,10 @@ export class HeroComponent implements OnInit, OnDestroy {
     this.stopAutoplay();
   }
 
-  /** Match a free-text query to the closest sample for the live preview. */
-  private matchSample(query: string): TripSample {
-    const q = query.toLowerCase();
-    return (
-      this.samples.find((s) => {
-        const haystack = [
-          s.key,
-          this.transloco.translate(s.summaryKey),
-          this.transloco.translate(s.briefKey),
-        ];
-        return haystack.some((t) => t.toLowerCase().includes(q) || q.includes(s.key));
-      }) ?? this.samples[0]
-    );
-  }
-
+  /** Submit the typed brief to the planner, carrying the sentence as a query. */
   planTrip(): void {
     const q = this.searchQuery().trim();
-    if (!q) return;
-    this.stopAutoplay();
-    this.runBuild(this.matchSample(q));
-  }
-
-  askAI(): void {
-    const query = this.searchQuery().trim();
-    this.router.navigate(['/chat'], query ? { queryParams: { q: query } } : {});
+    this.router.navigate(['/planner'], q ? { queryParams: { q } } : {});
   }
 
   openFullPlan(): void {

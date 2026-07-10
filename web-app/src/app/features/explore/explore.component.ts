@@ -366,8 +366,8 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     }
 
     .dest-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+      border-color: var(--color-ink);
+      box-shadow: var(--shadow-lg);
     }
 
     .dest-card:focus-visible {
@@ -510,8 +510,8 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     }
 
     .trending-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+      border-color: var(--color-ink);
+      box-shadow: var(--shadow-lg);
     }
 
     .trending-card:focus-visible {
@@ -595,8 +595,8 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     }
 
     .interest-tile:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+      border-color: var(--color-ink);
+      box-shadow: var(--shadow-lg);
     }
 
     .interest-tile:hover .interest-tile__img {
@@ -738,8 +738,8 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     }
 
     .continent-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+      border-color: var(--color-ink);
+      box-shadow: var(--shadow-lg);
     }
 
     .continent-card:focus-visible {

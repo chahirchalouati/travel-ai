@@ -111,7 +111,7 @@ import type { NotificationView } from '../../core/models/api.models';
     .unread-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
     .row-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; color: var(--muted); font-size: 0.86rem; margin: 0.35rem 0 0; text-transform: capitalize; }
     .row-meta .ms { font-size: 15px; }
-    .read-icon { color: var(--teal); }
+    .read-icon { color: var(--text-tertiary); }
     .dot { margin: 0 3px; }
     .pill--sent { background: var(--teal-light); color: var(--teal); }
     .pill--pending { background: var(--bg-secondary); color: var(--muted); }
