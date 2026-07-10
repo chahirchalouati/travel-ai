@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TranslocoTestingModule } from '@jsverse/transloco';
 import { of } from 'rxjs';
 
@@ -58,6 +60,8 @@ describe('ItineraryLiveComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ItineraryLiveComponent, translocoStub()],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         { provide: ItineraryService, useValue: service },
         { provide: AuthService, useValue: { getToken: () => null } },
         { provide: TripBudgetService, useValue: { resolveTripForBooking: () => of(null) } },
