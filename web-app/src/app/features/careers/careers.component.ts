@@ -90,7 +90,7 @@ import { CareersService, JobPosition } from '../../core/services/careers.service
       text-align: center;
     }
     .careers-hero__inner { max-width: 700px; margin: 0 auto; }
-    .eyebrow { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal); margin: 0 0 1.1rem; }
+    .eyebrow { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-red-ink); margin: 0 0 1.1rem; }
     .careers-hero h1 { font-family: var(--font-display); font-size: clamp(2.6rem, 5.5vw, 5rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; margin: 0 0 1.4rem; }
     .hero-sub { font-size: 1.1rem; color: var(--text-secondary); max-width: 560px; margin: 0 auto; line-height: 1.75; }
 
@@ -115,8 +115,8 @@ import { CareersService, JobPosition } from '../../core/services/careers.service
     .position-row h3 { font-size: 1rem; font-weight: 700; margin: 0 0 0.5rem; }
     .position-meta { display: flex; flex-wrap: wrap; gap: 6px; }
     .pos-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 2px; background: var(--bg-secondary); color: var(--text-secondary); .ms { font-size: 13px; } }
-    .pos-tag--location { background: var(--teal-light); color: var(--teal); }
-    .pos-tag--type { background: var(--gold-light); color: var(--gold); }
+    .pos-tag--location { background: var(--bg-secondary); color: var(--text-secondary); }
+    .pos-tag--type { background: var(--color-red-tint); color: var(--color-red-ink); }
     .apply-btn { flex-shrink: 0; background: var(--brand); color: #fff; text-decoration: none; font-weight: 700; font-size: 0.88rem; padding: 10px 20px; border-radius: 2px; white-space: nowrap; transition: background 140ms ease; &:hover { background: var(--brand-hover); } }
 
     .empty-positions { display: flex; flex-direction: column; align-items: center; gap: 1rem; padding: 4rem 1rem; text-align: center; color: var(--text-secondary); .ms { font-size: 40px; opacity: 0.4; } p { margin: 0; font-size: 1rem; } }
