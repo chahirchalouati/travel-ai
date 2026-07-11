@@ -12,6 +12,7 @@ import com.travelai.partner.PartnerRepository;
 import com.travelai.partner.PartnerStatus;
 import com.travelai.review.Review;
 import com.travelai.review.ReviewRepository;
+import com.travelai.shared.config.JwtService;
 import com.travelai.shared.exception.ErrorCode;
 import com.travelai.shared.exception.TravelAiException;
 import jakarta.persistence.EntityManager;
@@ -40,6 +41,7 @@ public class AdminService {
     private final BookingRepository bookingRepository;
     private final PasswordEncoder passwordEncoder;
     private final EntityManager entityManager;
+    private final JwtService jwtService;
 
     /** Returns aggregate dashboard statistics. */
     public AdminDashboardResponse getDashboard() {
@@ -257,6 +259,84 @@ public class AdminService {
         return toAdminUser(saved);
     }
 
+    // ── GDPR (data portability + right to erasure) ─────────────────────────
+
+    /** Assembles the personal data held directly on the user record for a GDPR export. */
+    @Transactional(readOnly = true)
+    public java.util.Map<String, Object> exportUserData(UUID userId) {
+        User u = userRepository.findById(userId)
+            .orElseThrow(() -> TravelAiException.notFound(ErrorCode.USER_NOT_FOUND));
+        java.util.Map<String, Object> data = new java.util.LinkedHashMap<>();
+        data.put("id", u.getId());
+        data.put("email", u.getEmail());
+        data.put("firstName", u.getFirstName());
+        data.put("lastName", u.getLastName());
+        data.put("phone", u.getPhone());
+        data.put("bio", u.getBio());
+        data.put("location", u.getLocation());
+        data.put("handle", u.getHandle());
+        data.put("avatarUrl", u.getAvatarUrl());
+        data.put("coverUrl", u.getCoverUrl());
+        data.put("role", u.getRole());
+        data.put("emailVerified", u.isEmailVerified());
+        data.put("active", u.isActive());
+        data.put("mfaEnabled", u.isMfaEnabled());
+        data.put("createdAt", u.getCreatedAt());
+        data.put("exportedAt", java.time.Instant.now());
+        return data;
+    }
+
+    /**
+     * GDPR right-to-erasure: scrubs personal data and deactivates the account, keeping the
+     * row so financial/booking records stay referentially intact. Not a hard delete.
+     */
+    @Transactional
+    public void anonymizeUser(UUID userId) {
+        User u = userRepository.findById(userId)
+            .orElseThrow(() -> TravelAiException.notFound(ErrorCode.USER_NOT_FOUND));
+        String anon = "anonymized+" + u.getId() + "@deleted.travelai";
+        u.setEmail(anon);
+        u.setFirstName("Deleted");
+        u.setLastName("User");
+        u.setPhone(null);
+        u.setBio(null);
+        u.setLocation(null);
+        u.setHandle(null);
+        u.setAvatarUrl(null);
+        u.setCoverUrl(null);
+        u.setActive(false);
+        u.setEmailVerified(false);
+        u.setEmailVerificationToken(null);
+        u.setMfaEnabled(false);
+        u.setMfaSecret(null);
+        userRepository.save(u);
+        log.info("Admin anonymized (GDPR erasure) user {}", userId);
+    }
+
+    // ── Support impersonation (login-as) ───────────────────────────────────
+
+    /**
+     * Mints an access token for the target user so support can reproduce their view.
+     * Refuses to impersonate another ADMIN (no lateral privilege moves). Audited via the
+     * admin request interceptor.
+     */
+    @Transactional(readOnly = true)
+    public com.travelai.admin.dto.ImpersonationResponse impersonate(UUID userId) {
+        User target = userRepository.findById(userId)
+            .orElseThrow(() -> TravelAiException.notFound(ErrorCode.USER_NOT_FOUND));
+        if (target.getRole() == UserRole.ADMIN) {
+            throw TravelAiException.forbidden(ErrorCode.ACCESS_DENIED);
+        }
+        if (!target.isActive()) {
+            throw TravelAiException.badRequest(ErrorCode.VALIDATION_ERROR);
+        }
+        String accessToken = jwtService.generateAccessToken(target);
+        log.warn("Admin impersonation token issued for user {} ({})", target.getId(), target.getEmail());
+        return new com.travelai.admin.dto.ImpersonationResponse(
+            accessToken, target.getEmail(),
+            target.getFirstName(), target.getLastName(), target.getRole().name());
+    }
+
     // ── Review moderation ─────────────────────────────────────────────────
 
     /** Returns paginated reviews for moderation. */
@@ -300,5 +380,49 @@ public class AdminService {
             log.warn("Cannot count table {}: {}", table, ex.getMessage());
             return 0L;
         }
+    }
+
+    /** Count rows matching a fixed WHERE clause. The clause is never user-supplied. */
+    private long safeCountWhere(String table, String whereClause) {
+        try {
+            var result = entityManager
+                    .createNativeQuery("SELECT COUNT(*) FROM " + table + " WHERE " + whereClause)
+                    .getSingleResult();
+            return ((Number) result).longValue();
+        } catch (Exception ex) {
+            log.warn("Cannot count table {} where {}: {}", table, whereClause, ex.getMessage());
+            return 0L;
+        }
+    }
+
+    /**
+     * Operational alerts for the dashboard: each entry is {code, severity, count}. Severity is
+     * "warning" or "info". Only conditions that need attention are returned.
+     */
+    public List<com.travelai.admin.dto.AdminAlertResponse> getAlerts() {
+        List<com.travelai.admin.dto.AdminAlertResponse> alerts = new java.util.ArrayList<>();
+
+        long failedPayments = safeCountWhere("payments", "status = 'FAILED'");
+        if (failedPayments > 0) {
+            alerts.add(new com.travelai.admin.dto.AdminAlertResponse("failedPayments", "warning", failedPayments));
+        }
+
+        long pendingPartners = partnerRepository.countByStatusIn(
+                List.of(PartnerStatus.REGISTERED, PartnerStatus.CONFIGURED, PartnerStatus.VALIDATED));
+        if (pendingPartners > 0) {
+            alerts.add(new com.travelai.admin.dto.AdminAlertResponse("pendingPartners", "info", pendingPartners));
+        }
+
+        long ragDocs = safeCountTable("vector_store");
+        if (ragDocs == 0) {
+            alerts.add(new com.travelai.admin.dto.AdminAlertResponse("ragEmpty", "warning", 0));
+        }
+
+        long inactiveUsers = safeCountWhere("users", "active = false");
+        if (inactiveUsers > 0) {
+            alerts.add(new com.travelai.admin.dto.AdminAlertResponse("inactiveUsers", "info", inactiveUsers));
+        }
+
+        return alerts;
     }
 }

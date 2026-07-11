@@ -25,6 +25,11 @@ public class AdminController {
         return ResponseEntity.ok(ApiResponse.ok(adminService.getDashboard()));
     }
 
+    @GetMapping("/alerts")
+    public ResponseEntity<ApiResponse<java.util.List<AdminAlertResponse>>> getAlerts() {
+        return ResponseEntity.ok(ApiResponse.ok(adminService.getAlerts()));
+    }
+
     @GetMapping("/users")
     public ResponseEntity<ApiResponse<Page<AdminUserResponse>>> listUsers(Pageable pageable) {
         Page<AdminUserResponse> page = adminService.listUsers(pageable);
@@ -107,6 +112,24 @@ public class AdminController {
     public ResponseEntity<ApiResponse<AdminUserResponse>> updateUserStatus(
             @PathVariable UUID id, @RequestBody UpdateUserStatusRequest request) {
         return ResponseEntity.ok(ApiResponse.ok(adminService.setUserActive(id, request.active())));
+    }
+
+    // ── GDPR ──────────────────────────────────────────────────────────────
+
+    @GetMapping("/users/{id}/export")
+    public ResponseEntity<ApiResponse<java.util.Map<String, Object>>> exportUser(@PathVariable UUID id) {
+        return ResponseEntity.ok(ApiResponse.ok(adminService.exportUserData(id)));
+    }
+
+    @PostMapping("/users/{id}/anonymize")
+    public ResponseEntity<Void> anonymizeUser(@PathVariable UUID id) {
+        adminService.anonymizeUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/users/{id}/impersonate")
+    public ResponseEntity<ApiResponse<ImpersonationResponse>> impersonate(@PathVariable UUID id) {
+        return ResponseEntity.ok(ApiResponse.ok(adminService.impersonate(id)));
     }
 
     // ── Review moderation ─────────────────────────────────────────────────

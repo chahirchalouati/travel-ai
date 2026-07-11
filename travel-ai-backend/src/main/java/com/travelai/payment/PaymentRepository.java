@@ -10,6 +10,7 @@ import java.util.UUID;
 
 public interface PaymentRepository extends JpaRepository<Payment, UUID> {
     Page<Payment> findByUserEmail(String email, Pageable pageable);
+    Page<Payment> findByStatus(PaymentStatus status, Pageable pageable);
     List<Payment> findByBookingId(UUID bookingId);
     Optional<Payment> findByGatewayReference(String reference);
 }

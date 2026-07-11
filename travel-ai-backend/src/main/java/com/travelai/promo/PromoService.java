@@ -1,9 +1,13 @@
 package com.travelai.promo;
 
+import com.travelai.promo.dto.AdminPromoResponse;
+import com.travelai.promo.dto.AdminPromoUpsertRequest;
 import com.travelai.promo.dto.PromoValidationResponse;
 import com.travelai.shared.exception.ErrorCode;
 import com.travelai.shared.exception.TravelAiException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +15,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -55,6 +60,67 @@ public class PromoService {
         BigDecimal finalAmount = amount.subtract(discount).max(BigDecimal.ZERO);
         return new PromoValidationResponse(true, promo.getCode(), scale(discount), scale(finalAmount),
                 "Promo code applied.");
+    }
+
+    // ── Admin CRUD ─────────────────────────────────────────────────────────
+
+    @Transactional(readOnly = true)
+    public Page<AdminPromoResponse> list(Pageable pageable) {
+        return promoCodeRepository.findAll(pageable).map(AdminPromoResponse::from);
+    }
+
+    @Transactional
+    public AdminPromoResponse create(AdminPromoUpsertRequest req) {
+        String code = req.code().trim();
+        promoCodeRepository.findByCodeIgnoreCase(code).ifPresent(p -> {
+            throw TravelAiException.conflict(ErrorCode.PROMO_CODE_DUPLICATE);
+        });
+        PromoCode promo = PromoCode.builder()
+                .code(code)
+                .discountType(parseType(req.discountType()))
+                .value(req.value())
+                .active(req.active() == null || req.active())
+                .expiresAt(req.expiresAt())
+                .maxRedemptions(req.maxRedemptions())
+                .build();
+        return AdminPromoResponse.from(promoCodeRepository.save(promo));
+    }
+
+    @Transactional
+    public AdminPromoResponse update(UUID id, AdminPromoUpsertRequest req) {
+        PromoCode promo = promoCodeRepository.findById(id)
+                .orElseThrow(() -> TravelAiException.notFound(ErrorCode.PROMO_CODE_NOT_FOUND));
+        String code = req.code().trim();
+        promoCodeRepository.findByCodeIgnoreCase(code)
+                .filter(other -> !other.getId().equals(id))
+                .ifPresent(other -> {
+                    throw TravelAiException.conflict(ErrorCode.PROMO_CODE_DUPLICATE);
+                });
+        promo.setCode(code);
+        promo.setDiscountType(parseType(req.discountType()));
+        promo.setValue(req.value());
+        if (req.active() != null) {
+            promo.setActive(req.active());
+        }
+        promo.setExpiresAt(req.expiresAt());
+        promo.setMaxRedemptions(req.maxRedemptions());
+        return AdminPromoResponse.from(promoCodeRepository.save(promo));
+    }
+
+    @Transactional
+    public void delete(UUID id) {
+        if (!promoCodeRepository.existsById(id)) {
+            throw TravelAiException.notFound(ErrorCode.PROMO_CODE_NOT_FOUND);
+        }
+        promoCodeRepository.deleteById(id);
+    }
+
+    private DiscountType parseType(String raw) {
+        try {
+            return DiscountType.valueOf(raw.trim().toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            throw TravelAiException.badRequest(ErrorCode.VALIDATION_ERROR);
+        }
     }
 
     private BigDecimal computeDiscount(PromoCode promo, BigDecimal amount) {

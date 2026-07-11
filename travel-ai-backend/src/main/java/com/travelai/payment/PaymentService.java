@@ -91,6 +91,28 @@ public class PaymentService {
         return paymentRepository.findByUserEmail(email, pageable).map(this::toResponse);
     }
 
+    // ── Admin operations (no ownership check; caller must be ADMIN) ──────────
+
+    @Transactional(readOnly = true)
+    public Page<com.travelai.payment.dto.AdminPaymentResponse> adminList(PaymentStatus status, Pageable pageable) {
+        Page<Payment> page = (status != null)
+                ? paymentRepository.findByStatus(status, pageable)
+                : paymentRepository.findAll(pageable);
+        return page.map(com.travelai.payment.dto.AdminPaymentResponse::from);
+    }
+
+    public com.travelai.payment.dto.AdminPaymentResponse adminRefund(UUID paymentId) {
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> TravelAiException.notFound(ErrorCode.PAYMENT_NOT_FOUND));
+        if (payment.getStatus() != PaymentStatus.COMPLETED) {
+            throw TravelAiException.badRequest(ErrorCode.PAYMENT_FAILED);
+        }
+        payment.setStatus(PaymentStatus.REFUNDED);
+        payment.setRefundedAt(LocalDateTime.now());
+        log.info("Admin refunded payment {} for booking {}", payment.getId(), payment.getBookingId());
+        return com.travelai.payment.dto.AdminPaymentResponse.from(paymentRepository.save(payment));
+    }
+
     public void handleWebhook(PaymentGateway gateway, String rawBody, String eventType, String gatewayRef) {
         log.info("Webhook received: gateway={} eventType={} ref={}", gateway, eventType, gatewayRef);
         paymentRepository.findByGatewayReference(gatewayRef).ifPresent(payment -> {
