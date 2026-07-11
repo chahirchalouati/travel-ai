@@ -10,6 +10,7 @@ import { TravelService } from '../../core/services/travel.service';
 import { CatalogService } from '../../core/services/catalog.service';
 import { BookingService } from '../../core/services/booking.service';
 import { PaymentService } from '../../core/services/payment.service';
+import { ChatService } from '../../core/services/chat.service';
 import { PlannerMapComponent, PlannerPin } from './planner-map.component';
 import { UiSentenceBriefComponent, type TripBrief } from '../../shared/ui';
 
@@ -49,9 +50,7 @@ interface Strings {
   c_title: string; c_sub: string; c_concierge: string; c_concierge_sub: string;
   c_open: string; c_restart: string; concept: string;
   cc_title: string; cc_context: string; cc_suggestion: string; cc_placeholder: string;
-  cc_greet: string; cc_user: string; cc_reply: string;
-  cc_offer_badge: string; cc_offer_title: string; cc_offer_sub: string; cc_offer_cta: string;
-  cc_booked: string;
+  cc_error: string;
   st_plan: string; st_proposals: string; st_detail: string; st_book: string;
   sign_out: string; sign_in: string;
   pill_hotel: string; pill_restaurants: string; pill_flight: string;
@@ -90,9 +89,7 @@ const STR: Record<Lang, Strings> = {
     p_title:'Pagamento', p_paying:'Stai pagando', p_how:'Come vuoi pagare', p_full:'Saldo unico', p_full_sub:'Paga tutto adesso', p_install:'Pagamento rateale', p_plan:'Piano in 3 rate', p_now:'Oggi', p_platform:'La piattaforma incassa l\u2019intero importo subito, anche con rate: il rischio insoluto resta al gateway, mai alle strutture.', p_pay_full:'Paga \u20ac', p_pay_install:'Attiva Klarna \xb7 \u20ac',
     c_title:'Viaggio confermato!', c_sub:'Prenotazioni inviate, conferme in arrivo via email.', c_concierge:'Travel Concierge', c_concierge_sub:'La tua assistente AI durante il soggiorno. Si attiva 3 giorni prima della partenza.', c_open:'Apri il Concierge (demo)', c_restart:'Ricomincia il flusso', concept:'CONCEPT',
     cc_title:'Concierge AI', cc_context:'Conosco gi\xe0 il tuo viaggio: hotel, date e gruppo. Chiedimi pure in linguaggio naturale.', cc_suggestion:'Trovami un tavolo per stasera vicino all\u2019hotel', cc_placeholder:'Scrivi una richiesta\u2026',
-    cc_greet:'Ciao Marco! Sono il tuo Concierge per Amalfi. Posso aiutarti con tavoli, transfer o attivit\xe0 last-minute durante il soggiorno.',
-    cc_user:'Trovami un tavolo per stasera vicino all\u2019hotel', cc_reply:'Ho trovato un ristorante partner a 4 minuti a piedi dal tuo hotel, con disponibilit\xe0 per 2 stasera alle 20:30.',
-    cc_offer_badge:'Partner diretto', cc_offer_title:'Trattoria del Mare', cc_offer_sub:'2 persone \xb7 20:30 \xb7 4 min a piedi \xb7 prenotabile in app', cc_offer_cta:'Prenota il tavolo', cc_booked:'Fatto! Tavolo prenotato per stasera alle 20:30. Conferma inviata.',
+    cc_error:'Il concierge non \xe8 al momento raggiungibile. Riprova tra poco.',
     st_plan:'Pianifica', st_proposals:'Proposte', st_detail:'Dettaglio', st_book:'Checkout',
     sign_out:'Esci', sign_in:'Accedi',
     pill_hotel:'Hotel', pill_restaurants:'Ristoranti', pill_flight:'Volo',
@@ -129,9 +126,7 @@ const STR: Record<Lang, Strings> = {
     p_title:'Payment', p_paying:'You\u2019re paying', p_how:'How would you like to pay', p_full:'Pay in full', p_full_sub:'Pay everything now', p_install:'Pay in instalments', p_plan:'3-instalment plan', p_now:'Today', p_platform:'The platform collects the full amount immediately, even on instalments: default risk stays with the gateway, never the partners.', p_pay_full:'Pay \u20ac', p_pay_install:'Start Klarna \xb7 \u20ac',
     c_title:'Trip confirmed!', c_sub:'Bookings sent, confirmations on their way by email.', c_concierge:'Travel Concierge', c_concierge_sub:'Your in-stay AI assistant. It unlocks 3 days before departure.', c_open:'Open Concierge (demo)', c_restart:'Restart the flow', concept:'CONCEPT',
     cc_title:'Concierge AI', cc_context:'I already know your trip: hotel, dates and group. Just ask in plain language.', cc_suggestion:'Find me a table tonight near the hotel', cc_placeholder:'Type a request\u2026',
-    cc_greet:'Hi Marco! I\u2019m your Concierge for Amalfi. I can help with tables, transfers or last-minute activities during your stay.',
-    cc_user:'Find me a table tonight near the hotel', cc_reply:'I found a partner restaurant a 4-minute walk from your hotel, with availability for 2 tonight at 8:30 pm.',
-    cc_offer_badge:'Direct partner', cc_offer_title:'Trattoria del Mare', cc_offer_sub:'2 people \xb7 8:30 pm \xb7 4 min walk \xb7 bookable in app', cc_offer_cta:'Book the table', cc_booked:'Done! Table booked for tonight at 8:30 pm. Confirmation sent.',
+    cc_error:'The concierge is unavailable right now. Please try again shortly.',
     st_plan:'Plan', st_proposals:'Proposals', st_detail:'Detail', st_book:'Checkout',
     sign_out:'Sign out', sign_in:'Sign in',
     pill_hotel:'Hotel', pill_restaurants:'Restaurants', pill_flight:'Flight',
@@ -168,9 +163,7 @@ const STR: Record<Lang, Strings> = {
     p_title:'Paiement', p_paying:'Vous payez', p_how:'Comment souhaitez-vous payer', p_full:'Paiement intégral', p_full_sub:'Payez tout maintenant', p_install:'Paiement échelonné', p_plan:'Plan en 3 versements', p_now:'Aujourd\u2019hui', p_platform:'La plateforme encaisse la totalité immédiatement, même en versements : le risque d\u2019impayé reste au gateway, jamais aux partenaires.', p_pay_full:'Payer \u20ac', p_pay_install:'Activer Klarna \xb7 \u20ac',
     c_title:'Voyage confirmé !', c_sub:'Réservations envoyées, confirmations en route par email.', c_concierge:'Travel Concierge', c_concierge_sub:'Votre assistant IA pendant le séjour. Il s\u2019active 3 jours avant le départ.', c_open:'Ouvrir le Concierge (démo)', c_restart:'Recommencer le flux', concept:'CONCEPT',
     cc_title:'Concierge IA', cc_context:'Je connais déjà votre voyage : hôtel, dates et groupe. Demandez-moi en langage naturel.', cc_suggestion:'Trouvez-moi une table ce soir près de l\u2019hôtel', cc_placeholder:'Écrivez une demande\u2026',
-    cc_greet:'Bonjour Marco ! Je suis votre Concierge pour Amalfi. Je peux vous aider avec les tables, transferts ou activités de dernière minute pendant votre séjour.',
-    cc_user:'Trouvez-moi une table ce soir près de l\u2019hôtel', cc_reply:'J\u2019ai trouvé un restaurant partenaire à 4 minutes à pied de votre hôtel, avec disponibilité pour 2 ce soir à 20h30.',
-    cc_offer_badge:'Partenaire direct', cc_offer_title:'Trattoria del Mare', cc_offer_sub:'2 personnes \xb7 20h30 \xb7 4 min à pied \xb7 réservable dans l\u2019app', cc_offer_cta:'Réserver la table', cc_booked:'C\u2019est fait ! Table réservée pour ce soir à 20h30. Confirmation envoyée.',
+    cc_error:'Le concierge est indisponible pour le moment. R\xe9essayez dans un instant.',
     st_plan:'Planifier', st_proposals:'Propositions', st_detail:'Détail', st_book:'Paiement',
     sign_out:'Déconnexion', sign_in:'Se connecter',
     pill_hotel:'Hôtel', pill_restaurants:'Restaurants', pill_flight:'Vol',
@@ -207,9 +200,7 @@ const STR: Record<Lang, Strings> = {
     p_title:'Pago', p_paying:'Estás pagando', p_how:'¿Cómo quieres pagar?', p_full:'Pago único', p_full_sub:'Paga todo ahora', p_install:'Pago a plazos', p_plan:'Plan en 3 cuotas', p_now:'Hoy', p_platform:'La plataforma cobra el importe total de inmediato, incluso a plazos: el riesgo de impago queda en el gateway, nunca en los socios.', p_pay_full:'Pagar \u20ac', p_pay_install:'Activar Klarna \xb7 \u20ac',
     c_title:'¡Viaje confirmado!', c_sub:'Reservas enviadas, confirmaciones en camino por email.', c_concierge:'Travel Concierge', c_concierge_sub:'Tu asistente IA durante la estancia. Se activa 3 días antes de la salida.', c_open:'Abrir Concierge (demo)', c_restart:'Reiniciar el flujo', concept:'CONCEPT',
     cc_title:'Concierge IA', cc_context:'Ya conozco tu viaje: hotel, fechas y grupo. Pregúntame en lenguaje natural.', cc_suggestion:'Encuéntrame una mesa esta noche cerca del hotel', cc_placeholder:'Escribe una solicitud\u2026',
-    cc_greet:'¡Hola Marco! Soy tu Concierge para Amalfi. Puedo ayudarte con mesas, traslados o actividades de último momento durante tu estancia.',
-    cc_user:'Encuéntrame una mesa esta noche cerca del hotel', cc_reply:'He encontrado un restaurante socio a 4 minutos a pie de tu hotel, con disponibilidad para 2 esta noche a las 20:30.',
-    cc_offer_badge:'Socio directo', cc_offer_title:'Trattoria del Mare', cc_offer_sub:'2 personas \xb7 20:30 \xb7 4 min a pie \xb7 reservable en la app', cc_offer_cta:'Reservar la mesa', cc_booked:'¡Hecho! Mesa reservada para esta noche a las 20:30. Confirmación enviada.',
+    cc_error:'El conserje no está disponible ahora mismo. Inténtalo de nuevo en un momento.',
     st_plan:'Planificar', st_proposals:'Propuestas', st_detail:'Detalle', st_book:'Pago',
     sign_out:'Cerrar sesión', sign_in:'Iniciar sesión',
     pill_hotel:'Hotel', pill_restaurants:'Restaurantes', pill_flight:'Vuelo',
@@ -277,9 +268,11 @@ export class PlannerComponent implements OnDestroy {
   messages    = signal<{ kind: string; from?: string; text?: string }[]>([]);
   conciergeTyping = signal(false);
   suggestionUsed  = signal(false);
-  tableBooked     = signal(false);
   // Why the results are demo data instead of live AI output (null = live/real).
   plannerNotice   = signal<'offline' | 'slow' | null>(null);
+  // Real AI concierge (backend /api/chat) state
+  conciergeConvId = signal<string | null>(null);
+  conciergeInput  = '';
 
   private _timers: ReturnType<typeof setTimeout>[] = [];
 
@@ -289,6 +282,7 @@ export class PlannerComponent implements OnDestroy {
   private readonly catalogService = inject(CatalogService);
   private readonly bookingService = inject(BookingService);
   private readonly paymentService = inject(PaymentService);
+  private readonly chatService = inject(ChatService);
   private readonly transloco = inject(TranslocoService);
   private readonly route = inject(ActivatedRoute);
   private langSub?: Subscription;
@@ -337,6 +331,7 @@ export class PlannerComponent implements OnDestroy {
   useBackendProposals = signal(false);
   currentRequestId = signal<string | null>(null);
   currentBookingId = signal<string | null>(null);
+  currentBookingRef = signal<string | null>(null);
   private departureDateStr = '';
   private returnDateStr = '';
 
@@ -527,16 +522,9 @@ export class PlannerComponent implements OnDestroy {
   });
 
   chatMessages = computed(() => {
-    const t = this.t();
     return this.messages().map(m => {
-      if (m.kind === 'offer') {
-        return { isOffer: true, isText: false, justify: 'flex-start',
-          img: PLACEHOLDER_IMG, caption: 'PHOTO · table setting',
-          badge: t.cc_offer_badge, title: t.cc_offer_title,
-          sub: t.cc_offer_sub, cta: t.cc_offer_cta };
-      }
       const me = m.from === 'user';
-      return { isText: true, isOffer: false, justify: me ? 'flex-end' : 'flex-start',
+      return { justify: me ? 'flex-end' : 'flex-start',
         text: m.text, bg: me ? '#E5352B' : '#fff', fg: me ? '#fff' : '#0F172A',
         radius: me ? '18px 18px 4px 18px' : '18px 18px 18px 4px' };
     });
@@ -586,10 +574,14 @@ export class PlannerComponent implements OnDestroy {
 
   confirmItems = computed(() => {
     const t = this.t();
+    // Real booking reference from the backend booking (one booking covers the
+    // hotel, restaurants and flight); '—' only if the booking call did not run.
+    const ref = this.currentBookingRef();
+    const display = ref ? `#${ref}` : '—';
     return [
-      { label: t.conf_hotel, ref: '#HT-4821' },
-      { label: t.conf_restaurants, ref: '#RS-2207' },
-      { label: t.conf_flight, ref: '#FL-9034' },
+      { label: t.conf_hotel, ref: display },
+      { label: t.conf_restaurants, ref: display },
+      { label: t.conf_flight, ref: display },
     ];
   });
 
@@ -608,11 +600,14 @@ export class PlannerComponent implements OnDestroy {
     this.priority.set('food'); this.constraints.set(['sea']); this.selId.set('');
     this.agentStep.set(0); this.checkStep.set(0); this.payMode.set('full');
     this.messages.set([]); this.conciergeTyping.set(false);
-    this.suggestionUsed.set(false); this.tableBooked.set(false);
+    this.suggestionUsed.set(false);
     this.useBackendProposals.set(false);
     this.rawBackendData.set([]);
     this.currentRequestId.set(null);
     this.currentBookingId.set(null);
+    this.currentBookingRef.set(null);
+    this.conciergeConvId.set(null);
+    this.conciergeInput = '';
     this.plannerNotice.set(null);
   }
 
@@ -882,8 +877,11 @@ export class PlannerComponent implements OnDestroy {
           primary: true,
         }],
       }).subscribe({
-        next: booking => this.currentBookingId.set(booking.id),
-        error: () => { /* continue with demo flow */ }
+        next: booking => {
+          this.currentBookingId.set(booking.id);
+          this.currentBookingRef.set(booking.bookingReference);
+        },
+        error: () => { /* booking failed; confirmation will show no reference */ }
       });
     }
   }
@@ -914,29 +912,53 @@ export class PlannerComponent implements OnDestroy {
   closeOverlay(): void { this.overlay.set(null); }
 
   openConcierge(): void {
-    const t = this.t();
     this.overlay.set('concierge');
-    this.messages.set([{ kind: 'text', from: 'ai', text: t.cc_greet }]);
-    this.suggestionUsed.set(false); this.tableBooked.set(false); this.conciergeTyping.set(false);
+    this.conciergeConvId.set(null);
+    this.conciergeInput = '';
+    this.suggestionUsed.set(false);
+    this.messages.set([]);
+    // Ask the real AI concierge (backend /api/chat) for a welcome grounded in
+    // the just-booked trip. The prompt is hidden; only the AI reply is shown.
+    const dest = (this.selectedProposal() as { dest?: string } | undefined)?.dest;
+    const intro = dest
+      ? `I just booked a trip to ${dest}. Welcome me briefly as my travel concierge and offer help with restaurant tables, transfers and local activities during my stay.`
+      : 'Welcome me briefly as my travel concierge and offer help during my stay.';
+    this.postConcierge(intro, true);
   }
 
+  /** Send the built-in quick suggestion as a real message to the AI concierge. */
   sendSuggestion(): void {
-    if (this.suggestionUsed()) return;
-    const t = this.t();
+    if (this.conciergeTyping()) return;
     this.suggestionUsed.set(true);
-    this.messages.update(ms => [...ms, { kind: 'text', from: 'user', text: t.cc_user }]);
-    this.conciergeTyping.set(true);
-    this._timers.push(setTimeout(() => {
-      this.conciergeTyping.set(false);
-      this.messages.update(ms => [...ms, { kind: 'text', from: 'ai', text: t.cc_reply }, { kind: 'offer' }]);
-    }, 1500));
+    this.postConcierge(this.t().cc_suggestion);
   }
 
-  bookTable(): void {
-    if (this.tableBooked()) return;
-    const t = this.t();
-    this.tableBooked.set(true);
-    this.messages.update(ms => [...ms, { kind: 'text', from: 'ai', text: t.cc_booked }]);
+  /** Send whatever the traveller typed to the AI concierge. */
+  sendConcierge(): void {
+    const text = this.conciergeInput.trim();
+    if (!text || this.conciergeTyping()) return;
+    this.conciergeInput = '';
+    this.suggestionUsed.set(true);
+    this.postConcierge(text);
+  }
+
+  /** POST a message to the backend AI chat and append the grounded reply. */
+  private postConcierge(message: string, hideUserMessage = false): void {
+    if (!hideUserMessage) {
+      this.messages.update(ms => [...ms, { kind: 'text', from: 'user', text: message }]);
+    }
+    this.conciergeTyping.set(true);
+    this.chatService.chat({ conversationId: this.conciergeConvId(), message })
+      .pipe(catchError(() => of(null)))
+      .subscribe(res => {
+        this.conciergeTyping.set(false);
+        if (!res) {
+          this.messages.update(ms => [...ms, { kind: 'text', from: 'ai', text: this.t().cc_error }]);
+          return;
+        }
+        this.conciergeConvId.set(res.conversationId);
+        this.messages.update(ms => [...ms, { kind: 'text', from: 'ai', text: res.reply }]);
+      });
   }
 
   changeToast = signal<string | null>(null);

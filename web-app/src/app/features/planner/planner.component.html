@@ -434,21 +434,9 @@
 
       <div class="conc-thread">
         @for (m of chatMessages(); track $index) {
-          @if (m.isOffer) {
-            <div class="conc-offer">
-              <div class="conc-offer-img" [style.background]="m.img"></div>
-              <div class="conc-offer-body">
-                <span class="conc-offer-badge">{{ m.badge }}</span>
-                <strong>{{ m.title }}</strong>
-                <span class="conc-offer-sub">{{ m.sub }}</span>
-                <button class="conc-offer-cta" (click)="bookTable()" [disabled]="tableBooked()">{{ m.cta }}</button>
-              </div>
-            </div>
-          } @else {
-            <div class="conc-msg" [style.justify-content]="m.justify">
-              <span class="conc-bubble" [style.background]="m.bg" [style.color]="m.fg" [style.border-radius]="m.radius">{{ m.text }}</span>
-            </div>
-          }
+          <div class="conc-msg" [style.justify-content]="m.justify">
+            <span class="conc-bubble" [style.background]="m.bg" [style.color]="m.fg" [style.border-radius]="m.radius">{{ m.text }}</span>
+          </div>
         }
         @if (conciergeTyping()) {
           <div class="conc-msg"><span class="conc-bubble conc-typing"><i></i><i></i><i></i></span></div>
@@ -456,11 +444,12 @@
       </div>
 
       @if (!suggestionUsed()) {
-        <button class="conc-suggest" (click)="sendSuggestion()"><span class="ms">bolt</span>{{ t().cc_suggestion }}</button>
+        <button class="conc-suggest" (click)="sendSuggestion()" [disabled]="conciergeTyping()"><span class="ms">bolt</span>{{ t().cc_suggestion }}</button>
       }
       <div class="conc-input">
-        <input [placeholder]="t().cc_placeholder" readonly (click)="sendSuggestion()" />
-        <button (click)="sendSuggestion()"><span class="ms">arrow_upward</span></button>
+        <input [(ngModel)]="conciergeInput" [placeholder]="t().cc_placeholder"
+               (keydown.enter)="sendConcierge()" [disabled]="conciergeTyping()" />
+        <button (click)="sendConcierge()" [disabled]="conciergeTyping() || !conciergeInput.trim()"><span class="ms">arrow_upward</span></button>
       </div>
     </div>
   }
