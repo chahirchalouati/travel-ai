@@ -118,10 +118,10 @@ class TripMapServiceTest {
         stubOwnedTrip(booking("Roma", checkIn), List.of(
                 segment(SegmentType.HOTEL, hotelId, "Hotel stay", day1),
                 segment(SegmentType.RESTAURANT, restaurantId, "Dinner", day1)));
-        when(hotelRepository.findById(hotelId))
-                .thenReturn(Optional.of(hotelAt(hotelId, "41.9028", "12.4964")));
-        when(restaurantRepository.findById(restaurantId))
-                .thenReturn(Optional.of(restaurantAt(restaurantId, "41.8902", "12.4922")));
+        when(hotelRepository.findAllById(List.of(hotelId)))
+                .thenReturn(List.of(hotelAt(hotelId, "41.9028", "12.4964")));
+        when(restaurantRepository.findAllById(List.of(restaurantId)))
+                .thenReturn(List.of(restaurantAt(restaurantId, "41.8902", "12.4922")));
 
         TripMapResponse response = service.getTripMap(USER, bookingId);
 
@@ -165,8 +165,8 @@ class TripMapServiceTest {
         UUID hotelId = UUID.randomUUID();
         stubOwnedTrip(booking("Napoli", null),
                 List.of(segment(SegmentType.HOTEL, hotelId, "Hotel stay", null)));
-        when(hotelRepository.findById(hotelId))
-                .thenReturn(Optional.of(hotelAt(hotelId, null, null)));
+        when(hotelRepository.findAllById(List.of(hotelId)))
+                .thenReturn(List.of(hotelAt(hotelId, null, null)));
         when(destinationRepository.findFirstByNameIgnoreCaseAndActiveTrue("Napoli"))
                 .thenReturn(Optional.of(Destination.builder()
                         .name("Napoli").country("Italy")
@@ -189,8 +189,8 @@ class TripMapServiceTest {
         stubOwnedTrip(booking("Atlantis", null), List.of(
                 segment(SegmentType.HOTEL, hotelId, "Hotel stay", null),
                 segment(SegmentType.FLIGHT, flightId, "Flight", null)));
-        when(hotelRepository.findById(hotelId))
-                .thenReturn(Optional.of(hotelAt(hotelId, "45.438", "12.327")));
+        when(hotelRepository.findAllById(List.of(hotelId)))
+                .thenReturn(List.of(hotelAt(hotelId, "45.438", "12.327")));
         // Unknown destination: no fallback coordinates.
         when(destinationRepository.findFirstByNameIgnoreCaseAndActiveTrue("Atlantis"))
                 .thenReturn(Optional.empty());
@@ -216,10 +216,10 @@ class TripMapServiceTest {
         stubOwnedTrip(booking("Roma", checkIn), List.of(
                 segment(SegmentType.RESTAURANT, restaurantId, "Dinner", day3),
                 segment(SegmentType.HOTEL, hotelId, "Hotel stay", day1)));
-        when(hotelRepository.findById(hotelId))
-                .thenReturn(Optional.of(hotelAt(hotelId, "41.9", "12.5")));
-        when(restaurantRepository.findById(restaurantId))
-                .thenReturn(Optional.of(restaurantAt(restaurantId, "41.89", "12.49")));
+        when(hotelRepository.findAllById(List.of(hotelId)))
+                .thenReturn(List.of(hotelAt(hotelId, "41.9", "12.5")));
+        when(restaurantRepository.findAllById(List.of(restaurantId)))
+                .thenReturn(List.of(restaurantAt(restaurantId, "41.89", "12.49")));
 
         TripMapResponse response = service.getTripMap(USER, bookingId);
 

@@ -1,7 +1,7 @@
 package com.travelai.auth;
 
-import com.travelai.notification.events.EmailVerificationRequestedEvent;
-import com.travelai.notification.events.PasswordResetRequestedEvent;
+import com.travelai.event.EmailVerificationRequestedEvent;
+import com.travelai.event.PasswordResetRequestedEvent;
 import com.travelai.shared.exception.ErrorCode;
 import com.travelai.shared.exception.TravelAiException;
 import org.junit.jupiter.api.BeforeEach;

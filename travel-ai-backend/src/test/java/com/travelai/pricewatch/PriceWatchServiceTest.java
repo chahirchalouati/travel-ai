@@ -4,8 +4,7 @@ import com.travelai.auth.User;
 import com.travelai.auth.UserRepository;
 import com.travelai.catalog.cruise.CruiseService;
 import com.travelai.catalog.flight.FlightService;
-import com.travelai.catalog.flight.dto.FlightSearchResult;
-import com.travelai.notification.events.PriceDropEvent;
+import com.travelai.event.PriceDropEvent;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,8 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,13 +33,6 @@ class PriceWatchServiceTest {
     @Mock private ApplicationEventPublisher eventPublisher;
 
     @InjectMocks private PriceWatchService service;
-
-    private static FlightSearchResult flightAt(UUID id, String price) {
-        return new FlightSearchResult(id, "AZ", "AZ100", "FCO", "MXP",
-                Instant.now(), Instant.now().plusSeconds(3600),
-                new BigDecimal(price), (short) 20, true,
-                "Rome", "Italy", "Milan", "Italy", "IT");
-    }
 
     private PriceWatch watchAt(String baseline, UUID flightId) {
         User user = mock(User.class);
@@ -61,7 +53,7 @@ class PriceWatchServiceTest {
         UUID flightId = UUID.randomUUID();
         PriceWatch w = watchAt("89.00", flightId);
         when(repository.findByActiveTrue()).thenReturn(List.of(w));
-        when(flightService.getById(flightId)).thenReturn(flightAt(flightId, "59.00"));
+        when(flightService.pricesByIds(anySet())).thenReturn(Map.of(flightId, new BigDecimal("59.00")));
 
         service.checkAll();
 
@@ -80,7 +72,7 @@ class PriceWatchServiceTest {
         UUID flightId = UUID.randomUUID();
         PriceWatch w = watchAt("89.00", flightId);
         when(repository.findByActiveTrue()).thenReturn(List.of(w));
-        when(flightService.getById(flightId)).thenReturn(flightAt(flightId, "89.00"));
+        when(flightService.pricesByIds(anySet())).thenReturn(Map.of(flightId, new BigDecimal("89.00")));
 
         service.checkAll();
 
@@ -94,7 +86,7 @@ class PriceWatchServiceTest {
         PriceWatch w = watchAt("89.00", flightId);
         w.setTargetPrice(new BigDecimal("50.00"));
         when(repository.findByActiveTrue()).thenReturn(List.of(w));
-        when(flightService.getById(flightId)).thenReturn(flightAt(flightId, "59.00"));
+        when(flightService.pricesByIds(anySet())).thenReturn(Map.of(flightId, new BigDecimal("59.00")));
 
         service.checkAll();
 
