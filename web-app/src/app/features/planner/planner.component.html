@@ -305,11 +305,6 @@
     </aside>
   }
 
-  <!-- ── Change toast ───────────────────────────────────────────────────────── -->
-  @if (changeToast()) {
-    <div class="toast glass-dark"><span class="spin ms">progress_activity</span>{{ changeToast() }}</div>
-  }
-
   <!-- ── Overlays ───────────────────────────────────────────────────────────── -->
   @if (overlay()) {
     <div class="modal-scrim" (click)="closeOverlay()"></div>
