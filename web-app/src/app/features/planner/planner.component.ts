@@ -11,6 +11,7 @@ import { CatalogService } from '../../core/services/catalog.service';
 import { BookingService } from '../../core/services/booking.service';
 import { PaymentService } from '../../core/services/payment.service';
 import { ChatService } from '../../core/services/chat.service';
+import { DestinationService } from '../../core/services/destination.service';
 import { PlannerMapComponent, PlannerPin } from './planner-map.component';
 import { UiSentenceBriefComponent, type TripBrief } from '../../shared/ui';
 
@@ -283,6 +284,7 @@ export class PlannerComponent implements OnDestroy {
   private readonly bookingService = inject(BookingService);
   private readonly paymentService = inject(PaymentService);
   private readonly chatService = inject(ChatService);
+  private readonly destinationService = inject(DestinationService);
   private readonly transloco = inject(TranslocoService);
   private readonly route = inject(ActivatedRoute);
   private langSub?: Subscription;
@@ -298,6 +300,11 @@ export class PlannerComponent implements OnDestroy {
     // (e.g. "10 quiet days in Japan with great food" → 10 nights, food priority).
     const q = this.route.snapshot.queryParamMap.get('q');
     if (q) this.seedFromQuery(q);
+
+    // Populate the brief's destination quick-picks from real trending destinations.
+    this.destinationService.getTrending(6)
+      .pipe(catchError(() => of([])))
+      .subscribe(dests => this.briefPlaces.set(dests.map(d => d.name)));
   }
 
   /** Best-effort mapping of a free-text trip brief onto the planner's own fields. */
@@ -676,8 +683,9 @@ export class PlannerComponent implements OnDestroy {
     this.authErrorMsg = '';
   }
 
-  /** Destinations offered by the sentence brief. */
-  readonly briefPlaces = ['Kyoto', 'Lisbon', 'Amalfi', 'Reykjavík', 'Marrakech', 'Bali'];
+  /** Destination quick-picks for the sentence brief — real trending destinations
+   *  from the backend catalogue (empty until loaded / if the call fails). */
+  readonly briefPlaces = signal<string[]>([]);
 
   /** Sync a sentence brief into the planner's parameter signals. */
   applyBrief(b: TripBrief): void {

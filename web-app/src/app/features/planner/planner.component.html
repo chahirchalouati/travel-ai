@@ -127,7 +127,7 @@
     <div class="hint hint--brief glass">
       <h2>{{ t().e_title }}</h2>
       <app-ui-sentence-brief
-        [placeOptions]="briefPlaces"
+        [placeOptions]="briefPlaces()"
         [budgetMin]="400"
         [budgetMax]="4000"
         (briefChange)="applyBrief($event)"
