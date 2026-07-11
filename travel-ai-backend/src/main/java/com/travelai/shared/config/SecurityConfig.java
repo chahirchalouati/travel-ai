@@ -1,6 +1,6 @@
 package com.travelai.shared.config;
 
-import com.travelai.auth.JwtAuthFilter;
+import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -28,8 +28,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthFilter jwtAuthFilter;
-    private final RateLimitFilter rateLimitFilter;
+    // Injected by the {@code Filter} interface rather than the concrete filter types. On a
+    // spring-boot-devtools restart these filters can be instantiated early enough to be wrapped
+    // in a JDK dynamic proxy (which exposes only interfaces), so concrete-type injection fails.
+    // The {@code Filter} interface is exposed whether the bean is proxied or not; parameter names
+    // match the bean names, so resolution stays unambiguous despite multiple Filter beans.
+    private final Filter jwtAuthFilter;
+    private final Filter rateLimitFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
