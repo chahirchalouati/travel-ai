@@ -241,6 +241,20 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'rewards',
+    data: {
+      seo: {
+        title: 'Travel AI Rewards',
+        description:
+          'Earn loyalty points and unlock rewards — vouchers, perks and gifts — as you travel.',
+      },
+    },
+    loadComponent: () =>
+      import('./features/rewards/rewards.component').then(
+        m => m.RewardsComponent
+      ),
+  },
+  {
     path: 'trip-cart',
     data: { seo: { noindex: true } },
     loadComponent: () =>

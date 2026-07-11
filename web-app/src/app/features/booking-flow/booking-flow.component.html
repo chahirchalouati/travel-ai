@@ -207,6 +207,29 @@
               </div>
             }
 
+            @if (availableVouchers().length > 0) {
+              <div class="bf-field bf-vouchers">
+                <label class="bf-label">{{ 'rewards.checkout.title' | transloco }}</label>
+                <div class="bf-chips">
+                  <button type="button" class="bf-chip"
+                          [class.bf-chip--on]="!selectedReward()"
+                          (click)="applyVoucher(null)">{{ 'rewards.checkout.none' | transloco }}</button>
+                  @for (v of availableVouchers(); track v.id) {
+                    <button type="button" class="bf-chip"
+                            [class.bf-chip--on]="selectedReward()?.id === v.id"
+                            (click)="applyVoucher(v)">
+                      @if (v.discountAmount) {
+                        −{{ v.discountAmount | currency:'EUR':'symbol':'1.0-0' }}
+                      } @else if (v.discountPct) {
+                        −{{ v.discountPct }}%
+                      }
+                      {{ 'rewards.checkout.voucher' | transloco }}
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+
             <div class="bf-field">
               <label class="bf-label">{{ 'booking.flow.payVia' | transloco }}</label>
               <div class="bf-chips">
@@ -297,6 +320,12 @@
           <div class="bf-summary__line" style="color:var(--color-success-strong);font-weight:700;">
             <span>{{ 'loyalty.checkout.discountLine' | transloco: { points: store.redeemedPoints() } }}</span>
             <span>−{{ store.loyaltyDiscount() | currency:d.currency:'symbol':'1.2-2' }}</span>
+          </div>
+        }
+        @if (store.rewardDiscount() > 0) {
+          <div class="bf-summary__line" style="color:var(--color-success-strong);font-weight:700;">
+            <span>{{ 'rewards.checkout.discountLine' | transloco }}</span>
+            <span>−{{ store.rewardDiscount() | currency:d.currency:'symbol':'1.2-2' }}</span>
           </div>
         }
         <div class="bf-summary__total">

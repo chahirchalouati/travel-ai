@@ -1,5 +1,5 @@
 import { Injectable, computed, signal } from '@angular/core';
-import type { AncillaryOption, AncillarySelection, CreateBookingRequest, TravelerRequest } from '../../core/models/api.models';
+import type { AncillaryOption, AncillarySelection, CreateBookingRequest, MemberRewardResponse, TravelerRequest } from '../../core/models/api.models';
 
 /** Which catalog vertical a booking draft was started from. */
 export type BookingVertical = 'flight' | 'restaurant' | 'cruise';
@@ -74,6 +74,8 @@ export class BookingDraftService {
   /** Travel AI Prime benefits, set from the membership when the funnel loads. */
   readonly primeActive = signal(false);
   readonly memberDiscountPct = signal(0);
+  /** A loyalty voucher reward the traveller chose to apply, or null. */
+  readonly selectedReward = signal<MemberRewardResponse | null>(null);
 
   /** Currently selected configuration option, or null when the draft has none. */
   readonly selectedOption = computed<BookingOption | null>(() => {
@@ -116,10 +118,30 @@ export class BookingDraftService {
     return Math.round(sum * 100) / 100;
   });
 
-  readonly total = computed(() =>
+  /** The total before any loyalty voucher is applied. */
+  readonly preVoucherTotal = computed(() =>
     Math.max(0, Math.round(
       (this.subtotal() + this.serviceFee() + this.ancillaryTotal()
         - this.memberDiscount() - this.discount() - this.loyaltyDiscount()) * 100) / 100));
+
+  /**
+   * EUR discount from the chosen voucher: its fixed amount, else a percentage of
+   * the subtotal, capped at the remaining total so it never overshoots. The server
+   * re-derives and validates this value against the reward.
+   */
+  readonly rewardDiscount = computed(() => {
+    const reward = this.selectedReward();
+    if (!reward) {
+      return 0;
+    }
+    const raw = reward.discountAmount ?? (reward.discountPct
+      ? Math.round(this.subtotal() * (reward.discountPct / 100) * 100) / 100
+      : 0);
+    return Math.min(raw, this.preVoucherTotal());
+  });
+
+  readonly total = computed(() =>
+    Math.max(0, Math.round((this.preVoucherTotal() - this.rewardDiscount()) * 100) / 100));
 
   /** Seeds a fresh draft and resets all funnel selections. */
   start(draft: BookingDraft, party = 2): void {
@@ -130,6 +152,7 @@ export class BookingDraftService {
     this.appliedPromo.set(null);
     this.redeemedPoints.set(0);
     this.loyaltyDiscount.set(0);
+    this.selectedReward.set(null);
     this.ancillaryOptions.set([]);
     this.selectedAncillaries.set([]);
     this.setPartySize(party);
@@ -168,6 +191,7 @@ export class BookingDraftService {
     this.appliedPromo.set(null);
     this.redeemedPoints.set(0);
     this.loyaltyDiscount.set(0);
+    this.selectedReward.set(null);
     this.ancillaryOptions.set([]);
     this.selectedAncillaries.set([]);
   }
@@ -187,6 +211,10 @@ export class BookingDraftService {
       ancillaries: ancillaries.length > 0 ? ancillaries : undefined,
       destination: d.destination,
       totalAmount: total,
+      subtotal: this.subtotal(),
+      memberDiscountAmount: this.memberDiscount() > 0 ? this.memberDiscount() : undefined,
+      rewardId: this.selectedReward()?.id,
+      rewardDiscountAmount: this.rewardDiscount() > 0 ? this.rewardDiscount() : undefined,
       partySize: this.partySize(),
       checkIn: d.checkIn,
       checkOut: d.checkOut,

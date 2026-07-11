@@ -10,7 +10,7 @@ import { PromoService } from '../../core/services/promo.service';
 import { LoyaltyService } from '../../core/services/loyalty.service';
 import { AncillaryService } from '../../core/services/ancillary.service';
 import { SubscriptionService } from '../../core/services/subscription.service';
-import type { BookingResponse, PaymentGateway } from '../../core/models/api.models';
+import type { BookingResponse, MemberRewardResponse, PaymentGateway } from '../../core/models/api.models';
 import { BookingDraftService } from './booking-draft.service';
 import { TripCartService } from './trip-cart.service';
 
@@ -61,6 +61,10 @@ export class BookingFlowComponent {
   /** Whether the member has enough points to redeem (500 minimum). */
   protected readonly canRedeem = computed(() => this.pointsBalance() >= 500);
 
+  /** Usable loyalty voucher rewards the member owns (for the review step). */
+  protected readonly availableVouchers = signal<MemberRewardResponse[]>([]);
+  protected readonly selectedReward = this.store.selectedReward;
+
   constructor() {
     // Load the balance once so the review step can offer redemption.
     this.loyalty.summary().pipe(catchError(() => of(null))).subscribe(res => {
@@ -82,6 +86,17 @@ export class BookingFlowComponent {
       this.store.primeActive.set(m?.active === true && m.serviceFeeWaived);
       this.store.memberDiscountPct.set(m?.active ? m.memberDiscountPct : 0);
     });
+
+    // Offer usable loyalty vouchers the member owns at the review step.
+    this.loyalty.myRewards().pipe(catchError(() => of([]))).subscribe(rewards => {
+      this.availableVouchers.set(
+        rewards.filter(r => r.type === 'VOUCHER' && r.status === 'UNLOCKED'));
+    });
+  }
+
+  /** Applies (or clears) a loyalty voucher against this booking. */
+  protected applyVoucher(reward: MemberRewardResponse | null): void {
+    this.store.selectedReward.set(reward);
   }
 
   /**

@@ -92,6 +92,6 @@ class FlightServiceTest {
     }
 
     private static Airport airport(String iata, String city, String country, String code) {
-        return new Airport(iata, city, country, code);
+        return new Airport(iata, city, null, country, code);
     }
 }

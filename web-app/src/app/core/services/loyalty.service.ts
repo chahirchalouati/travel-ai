@@ -5,8 +5,10 @@ import { environment } from '../../../environments/environment';
 import type {
   ApiWrapper,
   LoyaltySummaryResponse,
+  MemberRewardResponse,
   RedeemPreviewRequest,
   RedeemPreviewResponse,
+  RewardResponse,
 } from '../models/api.models';
 
 /** Loyalty program: the member's standing and checkout redemption previews (authenticated). */
@@ -31,6 +33,27 @@ export class LoyaltyService {
     const body: RedeemPreviewRequest = { amount, points };
     return this.http
       .post<ApiWrapper<RedeemPreviewResponse>>(`${this.base}/redeem-preview`, body)
+      .pipe(map(res => res.data));
+  }
+
+  /** The rewards catalogue, annotated with what the caller has unlocked / can redeem. */
+  rewards(): Observable<RewardResponse[]> {
+    return this.http
+      .get<ApiWrapper<RewardResponse[]>>(`${this.base}/rewards`)
+      .pipe(map(res => res.data));
+  }
+
+  /** The rewards the caller owns. */
+  myRewards(): Observable<MemberRewardResponse[]> {
+    return this.http
+      .get<ApiWrapper<MemberRewardResponse[]>>(`${this.base}/rewards/me`)
+      .pipe(map(res => res.data));
+  }
+
+  /** Claims a redeemable reward by spending points; returns the granted reward. */
+  redeemReward(code: string): Observable<MemberRewardResponse> {
+    return this.http
+      .post<ApiWrapper<MemberRewardResponse>>(`${this.base}/rewards/${code}/redeem`, {})
       .pipe(map(res => res.data));
   }
 }

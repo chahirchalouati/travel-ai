@@ -25,6 +25,7 @@ public class LoyaltyService {
     private final LoyaltyAccountRepository accountRepository;
     private final LoyaltyTransactionRepository transactionRepository;
     private final UserRepository userRepository;
+    private final LoyaltyRewardService rewardService;
 
     /**
      * Awards points for a completed payment: floor(amount × tier multiplier),
@@ -49,6 +50,9 @@ public class LoyaltyService {
         recordTransaction(account, LoyaltyTransactionType.EARN, earned, bookingId,
                 "Points earned on payment of EUR " + amountPaid);
         log.info("Loyalty: user {} earned {} pts (tier {})", userId, earned, account.getTier());
+
+        // Crossing a lifetime-points threshold auto-unlocks its milestone reward.
+        rewardService.unlockMilestones(user, account.getLifetimePoints());
     }
 
     /**

@@ -298,6 +298,10 @@ export interface CreateBookingRequest {
   subtotal?: number;
   /** Prime member discount applied and already subtracted from totalAmount; validated server-side. */
   memberDiscountAmount?: number;
+  /** Loyalty voucher (member reward id) applied to this booking; validated server-side. */
+  rewardId?: string;
+  /** Voucher discount applied and already subtracted from totalAmount; validated server-side. */
+  rewardDiscountAmount?: number;
   /** Loyalty points to spend on this booking (discount already reflected in totalAmount). */
   redeemPoints?: number;
   /** Chosen paid add-ons (priced server-side; sum already reflected in totalAmount). */
@@ -386,6 +390,42 @@ export interface LoyaltySummaryResponse {
   pointsToNextTier: number | null;
   earnRate: number;
   recentTransactions: LoyaltyTransactionResponse[];
+}
+
+export type RewardType = 'VOUCHER' | 'PERK' | 'GIFT';
+export type RewardUnlockKind = 'MILESTONE' | 'REDEEMABLE';
+export type MemberRewardStatus = 'UNLOCKED' | 'USED' | 'EXPIRED';
+
+/** A catalogue reward, annotated with what the caller has unlocked / can redeem. */
+export interface RewardResponse {
+  code: string;
+  name: string;
+  description: string | null;
+  type: RewardType;
+  unlockKind: RewardUnlockKind;
+  thresholdPoints: number | null;
+  costPoints: number | null;
+  discountAmount: number | null;
+  discountPct: number | null;
+  perkCode: string | null;
+  validDays: number | null;
+  unlocked: boolean;
+  redeemable: boolean;
+}
+
+/** A reward a member owns, with its lifecycle and snapshotted value. */
+export interface MemberRewardResponse {
+  id: string;
+  rewardCode: string;
+  source: 'MILESTONE' | 'REDEMPTION';
+  status: MemberRewardStatus;
+  type: RewardType;
+  discountAmount: number | null;
+  discountPct: number | null;
+  perkCode: string | null;
+  unlockedAt: string;
+  expiresAt: string | null;
+  usedAt: string | null;
 }
 
 export interface RedeemPreviewRequest {

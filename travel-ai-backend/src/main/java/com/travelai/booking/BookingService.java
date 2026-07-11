@@ -10,7 +10,9 @@ import com.travelai.catalog.flight.FlightRepository;
 import com.travelai.catalog.hotel.HotelRepository;
 import com.travelai.catalog.restaurant.RestaurantAvailabilityRepository;
 import com.travelai.loyalty.LoyaltyService;
+import com.travelai.loyalty.LoyaltyRewardService;
 import com.travelai.subscription.SubscriptionService;
+import com.travelai.subscription.dto.MembershipResponse;
 import com.travelai.notification.events.BookingConfirmedEvent;
 import com.travelai.shared.exception.ErrorCode;
 import com.travelai.shared.exception.TravelAiException;
@@ -46,16 +48,26 @@ public class BookingService {
     private final HotelRepository hotelRepository;
     private final RestaurantAvailabilityRepository restaurantAvailabilityRepository;
     private final LoyaltyService loyaltyService;
+    private final LoyaltyRewardService loyaltyRewardService;
     private final AncillaryService ancillaryService;
     private final SubscriptionService subscriptionService;
     private final RefundRepository refundRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     private static final java.math.BigDecimal SERVICE_FEE_RATE = new java.math.BigDecimal("0.06");
+    private static final java.math.BigDecimal HUNDRED = new java.math.BigDecimal("100");
+    /** Rounding slack (in currency units) tolerated between the client- and server-computed member discount. */
+    private static final java.math.BigDecimal MEMBER_DISCOUNT_TOLERANCE = new java.math.BigDecimal("0.01");
 
     public BookingResponse createBooking(String userEmail, CreateBookingRequest req) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.USER_NOT_FOUND));
+
+        // Pricing is server-authoritative: a Prime member discount claimed by the
+        // client is only honoured if the caller actually holds an active membership
+        // and the amount matches what the plan grants (throws 400, before anything
+        // is persisted, otherwise).
+        validateMemberDiscount(user, req);
 
         Booking booking = new Booking();
         booking.setUser(user);
@@ -89,6 +101,14 @@ public class BookingService {
         // deduct the points (throws 400, rolling the booking back, when invalid).
         if (req.redeemPoints() != null && req.redeemPoints() > 0) {
             loyaltyService.redeemForBooking(user, req.redeemPoints(), req.totalAmount(), saved.getId());
+        }
+
+        // Loyalty voucher: server re-derives the voucher's value and marks the reward
+        // used (throws 400, rolling the booking back, when it isn't the caller's, is
+        // already used/expired, or the claimed discount exceeds the entitled value).
+        if (req.rewardId() != null) {
+            loyaltyRewardService.redeemVoucherForBooking(
+                    user, req.rewardId(), req.rewardDiscountAmount(), req.subtotal(), saved.getId());
         }
 
         if (req.travelers() != null) {
@@ -234,6 +254,35 @@ public class BookingService {
 
         b.setCommissionAmount(commission.setScale(2, java.math.RoundingMode.HALF_UP));
         b.setServiceFeeAmount(serviceFee.setScale(2, java.math.RoundingMode.HALF_UP));
+    }
+
+    /**
+     * Re-derives the Prime member discount the caller is entitled to and rejects a
+     * client-supplied amount that exceeds it. Under-claiming (or claiming nothing) is
+     * always fine; over-claiming — including any discount from a non-member — is a 400.
+     * The discount itself is already subtracted from {@code totalAmount} by the client;
+     * this guard is what makes that subtraction trustworthy.
+     */
+    void validateMemberDiscount(User user, CreateBookingRequest req) {
+        java.math.BigDecimal claimed = req.memberDiscountAmount() == null
+                ? java.math.BigDecimal.ZERO
+                : req.memberDiscountAmount();
+        if (claimed.signum() <= 0) {
+            return;
+        }
+        MembershipResponse membership = subscriptionService.membership(user.getEmail());
+        java.math.BigDecimal subtotal = req.subtotal() == null
+                ? java.math.BigDecimal.ZERO
+                : req.subtotal();
+        java.math.BigDecimal entitled = membership.active() && subtotal.signum() > 0
+                ? subtotal.multiply(membership.memberDiscountPct())
+                        .divide(HUNDRED, 2, java.math.RoundingMode.HALF_UP)
+                : java.math.BigDecimal.ZERO;
+        if (claimed.subtract(entitled).compareTo(MEMBER_DISCOUNT_TOLERANCE) > 0) {
+            log.warn("Rejected Prime member discount for {}: claimed={} entitled={}",
+                    user.getEmail(), claimed, entitled);
+            throw TravelAiException.badRequest(ErrorCode.MEMBER_DISCOUNT_INVALID);
+        }
     }
 
     /** Margin as a fraction of the sell price: (sell − net) / sell, clamped at ≥ 0. */

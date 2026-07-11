@@ -33,6 +33,14 @@ public record CreateBookingRequest(
         String cabinCategory,
         Integer partySize,
         UUID tripGroupId,
+        /** Gross booking base (unit price × party) the Prime member discount is computed on; used server-side to re-derive the entitled discount. */
+        BigDecimal subtotal,
+        /** Prime member discount the client applied and already subtracted from totalAmount; validated server-side against the caller's active membership. */
+        BigDecimal memberDiscountAmount,
+        /** Loyalty reward (voucher) the caller is applying to this booking; its discount is validated server-side and the reward marked used. */
+        UUID rewardId,
+        /** Voucher discount the client applied and already subtracted from totalAmount; validated server-side against the reward's snapshotted value. */
+        BigDecimal rewardDiscountAmount,
         /** Loyalty points to spend on this booking; their discount is already reflected in totalAmount. */
         Integer redeemPoints,
         /** Optional paid add-ons; priced server-side and already reflected in totalAmount. */

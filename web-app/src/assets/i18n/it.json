@@ -1,4 +1,54 @@
 {
+  "rewards": {
+    "kicker": "Premi fedeltà",
+    "title": "Accumula punti, sblocca premi",
+    "lede": "Ogni prenotazione accumula punti. Supera una soglia per sbloccare un premio per sempre, oppure spendi il saldo nel negozio premi.",
+    "signInPrompt": "Accedi per vedere i tuoi punti e premi.",
+    "signIn": "Accedi",
+    "pointsBalance": "Saldo punti",
+    "lifetimePoints": "Punti totali",
+    "ownedActive": "Premi attivi",
+    "loading": "Caricamento dei tuoi premi…",
+    "pts": "pt",
+    "unlocked": "Sbloccato",
+    "expires": "Scade il",
+    "error": {
+      "redeem": "Impossibile riscattare questo premio. Riprova."
+    },
+    "type": {
+      "VOUCHER": "Buono",
+      "PERK": "Vantaggio",
+      "GIFT": "Regalo"
+    },
+    "status": {
+      "UNLOCKED": "Disponibile",
+      "USED": "Usato",
+      "EXPIRED": "Scaduto"
+    },
+    "milestones": {
+      "title": "Traguardi",
+      "note": "Sbloccati automaticamente quando i punti totali raggiungono la soglia. Tuoi per sempre.",
+      "done": "Sbloccato",
+      "remaining": "Mancano {{points}} pt — si sblocca a {{threshold}}"
+    },
+    "shop": {
+      "title": "Negozio premi",
+      "note": "Spendi il tuo saldo punti per riscattare questi premi.",
+      "redeem": "Riscatta",
+      "redeeming": "Riscatto…",
+      "needMore": "Mancano {{points}} pt"
+    },
+    "mine": {
+      "title": "I miei premi",
+      "empty": "Non hai ancora premi. Continua a prenotare per sbloccare il primo."
+    },
+    "checkout": {
+      "title": "Buono fedeltà",
+      "none": "Nessuno",
+      "voucher": "buono",
+      "discountLine": "Buono fedeltà"
+    }
+  },
   "catalog": {
     "compare": {
       "add": "Confronta",
@@ -365,7 +415,8 @@
     "messages": "Messaggi",
     "accountInfo": "Informazioni account",
     "signOut": "Esci",
-    "adminPanel": "Pannello admin"
+    "adminPanel": "Pannello admin",
+    "rewards": "Premi"
   },
   "common": {
     "back": "Indietro",

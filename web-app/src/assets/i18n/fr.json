@@ -1,4 +1,54 @@
 {
+  "rewards": {
+    "kicker": "Récompenses fidélité",
+    "title": "Cumulez des points, débloquez des récompenses",
+    "lede": "Chaque réservation rapporte des points. Franchissez un palier pour débloquer une récompense à vie, ou dépensez votre solde dans la boutique de récompenses.",
+    "signInPrompt": "Connectez-vous pour voir vos points et récompenses.",
+    "signIn": "Se connecter",
+    "pointsBalance": "Solde de points",
+    "lifetimePoints": "Points cumulés",
+    "ownedActive": "Récompenses actives",
+    "loading": "Chargement de vos récompenses…",
+    "pts": "pts",
+    "unlocked": "Débloquée",
+    "expires": "Expire le",
+    "error": {
+      "redeem": "Impossible d'échanger cette récompense. Veuillez réessayer."
+    },
+    "type": {
+      "VOUCHER": "Bon",
+      "PERK": "Avantage",
+      "GIFT": "Cadeau"
+    },
+    "status": {
+      "UNLOCKED": "Disponible",
+      "USED": "Utilisée",
+      "EXPIRED": "Expirée"
+    },
+    "milestones": {
+      "title": "Paliers",
+      "note": "Débloqués automatiquement lorsque vos points cumulés atteignent le seuil. À vous pour toujours.",
+      "done": "Débloquée",
+      "remaining": "Encore {{points}} pts — débloqué à {{threshold}}"
+    },
+    "shop": {
+      "title": "Boutique de récompenses",
+      "note": "Dépensez votre solde de points pour obtenir ces récompenses.",
+      "redeem": "Échanger",
+      "redeeming": "Échange…",
+      "needMore": "{{points}} pts manquants"
+    },
+    "mine": {
+      "title": "Mes récompenses",
+      "empty": "Vous n'avez pas encore de récompense. Continuez à réserver pour débloquer la première."
+    },
+    "checkout": {
+      "title": "Bon fidélité",
+      "none": "Aucun",
+      "voucher": "bon",
+      "discountLine": "Bon fidélité"
+    }
+  },
   "catalog": {
     "compare": {
       "add": "Comparer",
@@ -365,7 +415,8 @@
     "messages": "Messages",
     "accountInfo": "Informations du compte",
     "signOut": "Se déconnecter",
-    "adminPanel": "Panneau admin"
+    "adminPanel": "Panneau admin",
+    "rewards": "Récompenses"
   },
   "common": {
     "back": "Retour",

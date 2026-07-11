@@ -27,6 +27,7 @@ class LoyaltyServiceTest {
     @Mock private LoyaltyAccountRepository accountRepository;
     @Mock private LoyaltyTransactionRepository transactionRepository;
     @Mock private UserRepository userRepository;
+    @Mock private LoyaltyRewardService rewardService;
 
     @InjectMocks private LoyaltyService service;
 

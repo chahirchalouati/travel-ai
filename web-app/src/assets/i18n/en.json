@@ -1,4 +1,54 @@
 {
+  "rewards": {
+    "kicker": "Loyalty rewards",
+    "title": "Earn points, unlock rewards",
+    "lede": "Every booking earns points. Cross a threshold to unlock a reward for good, or spend your balance in the rewards shop.",
+    "signInPrompt": "Sign in to see your points and rewards.",
+    "signIn": "Sign in",
+    "pointsBalance": "Points balance",
+    "lifetimePoints": "Lifetime points",
+    "ownedActive": "Active rewards",
+    "loading": "Loading your rewards…",
+    "pts": "pts",
+    "unlocked": "Unlocked",
+    "expires": "Expires",
+    "error": {
+      "redeem": "Could not redeem this reward. Please try again."
+    },
+    "type": {
+      "VOUCHER": "Voucher",
+      "PERK": "Perk",
+      "GIFT": "Gift"
+    },
+    "status": {
+      "UNLOCKED": "Available",
+      "USED": "Used",
+      "EXPIRED": "Expired"
+    },
+    "milestones": {
+      "title": "Milestones",
+      "note": "Unlocked automatically when your lifetime points reach the threshold. Yours forever.",
+      "done": "Unlocked",
+      "remaining": "{{points}} pts to go — unlocks at {{threshold}}"
+    },
+    "shop": {
+      "title": "Rewards shop",
+      "note": "Spend your points balance to claim these rewards.",
+      "redeem": "Redeem",
+      "redeeming": "Redeeming…",
+      "needMore": "{{points}} pts short"
+    },
+    "mine": {
+      "title": "My rewards",
+      "empty": "You have no rewards yet. Keep booking to unlock your first one."
+    },
+    "checkout": {
+      "title": "Loyalty voucher",
+      "none": "None",
+      "voucher": "voucher",
+      "discountLine": "Loyalty voucher"
+    }
+  },
   "catalog": {
     "compare": {
       "add": "Compare",
@@ -365,7 +415,8 @@
     "messages": "Messages",
     "accountInfo": "Account info",
     "signOut": "Sign out",
-    "adminPanel": "Admin panel"
+    "adminPanel": "Admin panel",
+    "rewards": "Rewards"
   },
   "common": {
     "back": "Back",

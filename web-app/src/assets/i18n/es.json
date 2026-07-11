@@ -1,4 +1,54 @@
 {
+  "rewards": {
+    "kicker": "Recompensas de fidelidad",
+    "title": "Gana puntos, desbloquea recompensas",
+    "lede": "Cada reserva suma puntos. Supera un umbral para desbloquear una recompensa para siempre, o gasta tu saldo en la tienda de recompensas.",
+    "signInPrompt": "Inicia sesión para ver tus puntos y recompensas.",
+    "signIn": "Iniciar sesión",
+    "pointsBalance": "Saldo de puntos",
+    "lifetimePoints": "Puntos acumulados",
+    "ownedActive": "Recompensas activas",
+    "loading": "Cargando tus recompensas…",
+    "pts": "pts",
+    "unlocked": "Desbloqueada",
+    "expires": "Caduca",
+    "error": {
+      "redeem": "No se pudo canjear esta recompensa. Inténtalo de nuevo."
+    },
+    "type": {
+      "VOUCHER": "Vale",
+      "PERK": "Ventaja",
+      "GIFT": "Regalo"
+    },
+    "status": {
+      "UNLOCKED": "Disponible",
+      "USED": "Usada",
+      "EXPIRED": "Caducada"
+    },
+    "milestones": {
+      "title": "Hitos",
+      "note": "Se desbloquean automáticamente cuando tus puntos acumulados alcanzan el umbral. Tuyos para siempre.",
+      "done": "Desbloqueada",
+      "remaining": "Faltan {{points}} pts — se desbloquea en {{threshold}}"
+    },
+    "shop": {
+      "title": "Tienda de recompensas",
+      "note": "Gasta tu saldo de puntos para canjear estas recompensas.",
+      "redeem": "Canjear",
+      "redeeming": "Canjeando…",
+      "needMore": "Faltan {{points}} pts"
+    },
+    "mine": {
+      "title": "Mis recompensas",
+      "empty": "Aún no tienes recompensas. Sigue reservando para desbloquear la primera."
+    },
+    "checkout": {
+      "title": "Vale de fidelidad",
+      "none": "Ninguno",
+      "voucher": "vale",
+      "discountLine": "Vale de fidelidad"
+    }
+  },
   "catalog": {
     "compare": {
       "add": "Comparar",
@@ -365,7 +415,8 @@
     "messages": "Mensajes",
     "accountInfo": "Información de cuenta",
     "signOut": "Cerrar sesión",
-    "adminPanel": "Panel de administración"
+    "adminPanel": "Panel de administración",
+    "rewards": "Recompensas"
   },
   "common": {
     "back": "Volver",
