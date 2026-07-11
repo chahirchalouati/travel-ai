@@ -1,26 +1,44 @@
 import {
   Component, Input, Output, EventEmitter, OnChanges, SimpleChanges,
-  ElementRef, ViewChild, AfterViewInit, OnDestroy
+  ElementRef, ViewChild, AfterViewInit, OnDestroy, inject
 } from '@angular/core';
+import { forkJoin, of, Subscription } from 'rxjs';
 import * as L from 'leaflet';
+import { GeocodingService, LatLng } from '../../core/services/geocoding.service';
 
 export interface PlannerPin {
   id: string;
   dest: string;
   total: string;       // formatted total, e.g. "1.190"
   recommended: boolean;
+  lat?: number | null; // authoritative coords from the DB, when available
+  lng?: number | null;
+}
+
+/** HTML-escape untrusted text before injecting it into a Leaflet DivIcon. */
+function esc(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 /**
  * Full-bleed destination map for the trip planner.
- * Resolves coordinates from the destination name / id against a known table
- * (demo Italian destinations), falling back to spread points around Italy so
- * backend-generated proposals still render distinct, tappable pins.
+ *
+ * Coordinates are never hardcoded: a pin either carries authoritative lat/lng
+ * from the backend (the DB stores them on hotels/destinations), or its
+ * destination name is geocoded at runtime via the open Open-Meteo API (cached).
+ * A destination that cannot be resolved is simply omitted from the map rather
+ * than shown at a fabricated position.
  */
 @Component({
   selector: 'app-planner-map',
   standalone: true,
-  template: `<div class="pmap" #mapEl></div>`,
+  template: `<div class="pmap" #mapEl role="application"
+                  aria-label="Destination map showing trip proposals"></div>`,
   styles: [`
     :host { display: block; width: 100%; height: 100%; }
     .pmap { width: 100%; height: 100%; background: #aadaff; }
@@ -66,19 +84,17 @@ export class PlannerMapComponent implements AfterViewInit, OnChanges, OnDestroy 
 
   @ViewChild('mapEl') mapEl!: ElementRef<HTMLElement>;
 
+  private readonly geocoding = inject(GeocodingService);
+
   private map: L.Map | null = null;
   private markers = new Map<string, L.Marker>();
+  private renderSub?: Subscription;
 
-  // Known demo destinations → [lat, lng]
-  private readonly coords: Record<string, [number, number]> = {
-    amalfi: [40.634, 14.602], positano: [40.628, 14.485], cinque: [44.135, 9.684],
-    vernazza: [44.135, 9.684], venezia: [45.438, 12.327], venice: [45.438, 12.327],
-    firenze: [43.769, 11.256], florence: [43.769, 11.256], sardegna: [40.121, 9.012],
-    sardinia: [40.121, 9.012], capri: [40.551, 14.243], napoli: [40.852, 14.268],
-    naples: [40.852, 14.268], roma: [41.902, 12.496], rome: [41.902, 12.496],
-    sicilia: [37.600, 14.015], sicily: [37.600, 14.015], matera: [40.666, 16.604],
-    puglia: [40.793, 17.103], apulia: [40.793, 17.103],
-  };
+  /** Honour the user's reduced-motion preference for camera movement. */
+  private get reducedMotion(): boolean {
+    return typeof window !== 'undefined'
+      && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true;
+  }
 
   ngAfterViewInit(): void {
     this.map = L.map(this.mapEl.nativeElement, {
@@ -108,18 +124,9 @@ export class PlannerMapComponent implements AfterViewInit, OnChanges, OnDestroy 
   }
 
   ngOnDestroy(): void {
+    this.renderSub?.unsubscribe();
     this.map?.remove();
     this.map = null;
-  }
-
-  private resolve(pin: PlannerPin, index: number): [number, number] {
-    const key = Object.keys(this.coords).find(k =>
-      pin.id.toLowerCase().includes(k) || pin.dest.toLowerCase().includes(k)
-    );
-    if (key) return this.coords[key];
-    // Fallback: spread unknown points around central Italy
-    const angle = (index / Math.max(1, this.pins.length)) * Math.PI * 2;
-    return [42.2 + Math.sin(angle) * 2.4, 12.8 + Math.cos(angle) * 2.8];
   }
 
   private buildIcon(pin: PlannerPin): L.DivIcon {
@@ -132,35 +139,56 @@ export class PlannerMapComponent implements AfterViewInit, OnChanges, OnDestroy 
       className: cls.join(' '),
       html: `<div class="pmap-dot">
                <span class="pmap-dot__head">${head}</span>
-               <span class="pmap-dot__name">${pin.dest}</span>
-               <span class="pmap-dot__price">€${pin.total}</span>
+               <span class="pmap-dot__name">${esc(pin.dest)}</span>
+               <span class="pmap-dot__price">€${esc(pin.total)}</span>
              </div>`,
       iconSize: [0, 0],
       iconAnchor: [0, 0],
     });
   }
 
+  /** Coordinates for a pin: authoritative DB value if present, else geocoded. */
+  private resolve(pin: PlannerPin) {
+    return typeof pin.lat === 'number' && typeof pin.lng === 'number'
+      ? of<LatLng>([pin.lat, pin.lng])
+      : this.geocoding.geocode(pin.dest);
+  }
+
   private render(): void {
     if (!this.map) return;
+    this.renderSub?.unsubscribe();
     this.markers.forEach(m => m.remove());
     this.markers.clear();
-    if (!this.pins.length) return;
 
-    const latlngs: L.LatLngTuple[] = [];
-    this.pins.forEach((pin, i) => {
-      const ll = this.resolve(pin, i);
-      latlngs.push(ll);
-      const marker = L.marker(ll, { icon: this.buildIcon(pin), riseOnHover: true })
-        .addTo(this.map!)
-        .on('click', () => this.select.emit(pin.id));
-      this.markers.set(pin.id, marker);
+    const pins = this.pins;
+    if (!pins.length) return;
+
+    // Resolve every pin's coordinates (DB or geocoding) before drawing, so the
+    // camera can frame the real bounds of the resolved destinations.
+    this.renderSub = forkJoin(pins.map(pin => this.resolve(pin))).subscribe(coords => {
+      if (!this.map) return;
+      const latlngs: L.LatLngTuple[] = [];
+
+      pins.forEach((pin, i) => {
+        const ll = coords[i];
+        if (!ll) return; // unknown place → omit rather than fabricate a position
+        latlngs.push(ll);
+        const marker = L.marker(ll, { icon: this.buildIcon(pin), riseOnHover: true })
+          .addTo(this.map!)
+          .on('click', () => this.select.emit(pin.id));
+        this.markers.set(pin.id, marker);
+      });
+
+      if (!latlngs.length) return;
+      const animate = !this.reducedMotion;
+      if (latlngs.length === 1) {
+        this.map.flyTo(latlngs[0], 9, { animate, duration: 0.8 });
+      } else {
+        this.map.flyToBounds(L.latLngBounds(latlngs), {
+          padding: [90, 90], maxZoom: 8, animate, duration: 0.8,
+        });
+      }
     });
-
-    if (latlngs.length === 1) {
-      this.map.setView(latlngs[0], 9, { animate: true });
-    } else {
-      this.map.fitBounds(L.latLngBounds(latlngs), { padding: [90, 90], maxZoom: 8 });
-    }
   }
 
   private refreshSelection(): void {
@@ -170,7 +198,12 @@ export class PlannerMapComponent implements AfterViewInit, OnChanges, OnDestroy 
     });
     const sel = this.selectedId ? this.markers.get(this.selectedId) : null;
     if (sel && this.map) {
-      this.map.panTo(sel.getLatLng(), { animate: true });
+      // Zoom in toward the chosen destination for a "focus" feel, without
+      // ever zooming back out if the user is already closer.
+      const targetZoom = Math.max(this.map.getZoom(), 6);
+      this.map.flyTo(sel.getLatLng(), targetZoom, {
+        animate: !this.reducedMotion, duration: 0.6,
+      });
     }
   }
 }

@@ -38,6 +38,7 @@ interface Strings {
   ag_rank: string; ag_rank_t: string;
   r_title: string; r_recommended: string; r_view: string; r_regen: string;
   fit_in: string; fit_over: string;
+  notice_offline: string; notice_slow: string; notice_dismiss: string; r_empty: string;
   d_back: string; d_breakdown: string; d_vs_budget: string; d_ideal: string;
   d_elements: string; d_change: string; d_book: string;
   b_title: string; b_checking: string; b_traveler: string; b_summary: string;
@@ -83,6 +84,7 @@ const STR: Record<Lang, Strings> = {
     g_title:'Sto componendo il tuo viaggio', g_sub:'Gli agenti AI cercano in parallelo', g_foot:'agenti proprietari \xb7 rate-limited \xb7 budget-aware',
     ag_orch:'Agente Orchestratore', ag_orch_t:'Normalizza input e budget', ag_hotel:'Agente Hotel', ag_hotel_t:'Strutture compatibili nel DB', ag_rest:'Agente Ristoranti', ag_rest_t:'Partner diretti in zona', ag_flight:'Agente Voli', ag_flight_t:'Voli nel budget residuo', ag_rank:'Agente di Ranking', ag_rank_t:'Compone 2\u20133 pacchetti coerenti',
     r_title:'Le tue proposte', r_recommended:'Consigliata', r_view:'Dettaglio', r_regen:'Nuove proposte', fit_in:'in budget', fit_over:'oltre budget',
+    notice_offline:'Servizio AI non raggiungibile — nessuna proposta da mostrare. Riprova tra poco.', notice_slow:'L’AI sta impiegando pi\xf9 del previsto — nessuna proposta ancora. Riprova tra poco.', notice_dismiss:'Chiudi', r_empty:'Nessuna proposta disponibile al momento.',
     d_back:'Torna alle proposte', d_breakdown:'Ripartizione budget', d_vs_budget:'sul tuo budget', d_ideal:'Ripartizione ideale per le tue priorit\xe0', d_elements:'Componenti del viaggio', d_change:'Cambia', d_book:'Prenota',
     b_title:'Prenotazione', b_checking:'Disponibilit\xe0 in tempo reale', b_traveler:'Viaggiatore', b_summary:'Riepilogo costi', b_total:'Totale', b_continue:'Vai al pagamento', b_wait:'Verifica disponibilit\xe0\u2026',
     p_title:'Pagamento', p_paying:'Stai pagando', p_how:'Come vuoi pagare', p_full:'Saldo unico', p_full_sub:'Paga tutto adesso', p_install:'Pagamento rateale', p_plan:'Piano in 3 rate', p_now:'Oggi', p_platform:'La piattaforma incassa l\u2019intero importo subito, anche con rate: il rischio insoluto resta al gateway, mai alle strutture.', p_pay_full:'Paga \u20ac', p_pay_install:'Attiva Klarna \xb7 \u20ac',
@@ -121,6 +123,7 @@ const STR: Record<Lang, Strings> = {
     g_title:'Composing your trip', g_sub:'AI agents searching in parallel', g_foot:'proprietary agents \xb7 rate-limited \xb7 budget-aware',
     ag_orch:'Orchestrator Agent', ag_orch_t:'Normalising input & budget', ag_hotel:'Hotel Agent', ag_hotel_t:'Matching stays in the DB', ag_rest:'Restaurant Agent', ag_rest_t:'Direct partners in the area', ag_flight:'Flight Agent', ag_flight_t:'Flights within remaining budget', ag_rank:'Ranking Agent', ag_rank_t:'Builds 2\u20133 coherent packages',
     r_title:'Your proposals', r_recommended:'Recommended', r_view:'Detail', r_regen:'New proposals', fit_in:'in budget', fit_over:'over budget',
+    notice_offline:'AI service unreachable — no proposals to show. Please try again shortly.', notice_slow:'The AI is taking longer than usual — no proposals yet. Try again in a moment.', notice_dismiss:'Dismiss', r_empty:'No proposals available right now.',
     d_back:'Back to proposals', d_breakdown:'Budget breakdown', d_vs_budget:'of your budget', d_ideal:'Ideal split for your priorities', d_elements:'Trip components', d_change:'Change', d_book:'Book',
     b_title:'Booking', b_checking:'Real-time availability', b_traveler:'Traveller', b_summary:'Cost summary', b_total:'Total', b_continue:'Go to payment', b_wait:'Checking availability\u2026',
     p_title:'Payment', p_paying:'You\u2019re paying', p_how:'How would you like to pay', p_full:'Pay in full', p_full_sub:'Pay everything now', p_install:'Pay in instalments', p_plan:'3-instalment plan', p_now:'Today', p_platform:'The platform collects the full amount immediately, even on instalments: default risk stays with the gateway, never the partners.', p_pay_full:'Pay \u20ac', p_pay_install:'Start Klarna \xb7 \u20ac',
@@ -159,6 +162,7 @@ const STR: Record<Lang, Strings> = {
     g_title:'Je compose votre voyage', g_sub:'Les agents IA recherchent en parallèle', g_foot:'agents propriétaires \xb7 cadencés \xb7 budget-aware',
     ag_orch:'Agent Orchestrateur', ag_orch_t:'Normalise les entrées et le budget', ag_hotel:'Agent Hôtel', ag_hotel_t:'Hébergements compatibles en BDD', ag_rest:'Agent Restaurants', ag_rest_t:'Partenaires directs dans la zone', ag_flight:'Agent Vols', ag_flight_t:'Vols dans le budget restant', ag_rank:'Agent de Classement', ag_rank_t:'Compose 2\u20133 forfaits cohérents',
     r_title:'Vos propositions', r_recommended:'Recommandé', r_view:'Détail', r_regen:'Nouvelles propositions', fit_in:'dans le budget', fit_over:'hors budget',
+    notice_offline:'Service IA injoignable — aucune proposition à afficher. Réessayez dans un instant.', notice_slow:'L’IA prend plus de temps que d’habitude — aucune proposition pour le moment. Réessayez bient\xf4t.', notice_dismiss:'Fermer', r_empty:'Aucune proposition disponible pour le moment.',
     d_back:'Retour aux propositions', d_breakdown:'Répartition du budget', d_vs_budget:'de votre budget', d_ideal:'Répartition idéale selon vos priorités', d_elements:'Composants du voyage', d_change:'Changer', d_book:'Réserver',
     b_title:'Réservation', b_checking:'Disponibilité en temps réel', b_traveler:'Voyageur', b_summary:'Résumé des coûts', b_total:'Total', b_continue:'Passer au paiement', b_wait:'Vérification de la disponibilité\u2026',
     p_title:'Paiement', p_paying:'Vous payez', p_how:'Comment souhaitez-vous payer', p_full:'Paiement intégral', p_full_sub:'Payez tout maintenant', p_install:'Paiement échelonné', p_plan:'Plan en 3 versements', p_now:'Aujourd\u2019hui', p_platform:'La plateforme encaisse la totalité immédiatement, même en versements : le risque d\u2019impayé reste au gateway, jamais aux partenaires.', p_pay_full:'Payer \u20ac', p_pay_install:'Activer Klarna \xb7 \u20ac',
@@ -197,6 +201,7 @@ const STR: Record<Lang, Strings> = {
     g_title:'Componiendo tu viaje', g_sub:'Los agentes IA buscan en paralelo', g_foot:'agentes propietarios \xb7 con límites \xb7 budget-aware',
     ag_orch:'Agente Orquestador', ag_orch_t:'Normaliza entradas y presupuesto', ag_hotel:'Agente Hotel', ag_hotel_t:'Alojamientos compatibles en la BDD', ag_rest:'Agente Restaurantes', ag_rest_t:'Socios directos en la zona', ag_flight:'Agente Vuelos', ag_flight_t:'Vuelos en el presupuesto restante', ag_rank:'Agente de Ranking', ag_rank_t:'Compone 2\u20133 paquetes coherentes',
     r_title:'Tus propuestas', r_recommended:'Recomendada', r_view:'Detalle', r_regen:'Nuevas propuestas', fit_in:'dentro del presupuesto', fit_over:'fuera del presupuesto',
+    notice_slow:'La IA está tardando más de lo habitual — todavía no hay propuestas. Inténtalo de nuevo pronto.', notice_offline:'Servicio de IA no disponible — no hay propuestas para mostrar. Inténtalo de nuevo en un momento.', notice_dismiss:'Cerrar', r_empty:'No hay propuestas disponibles por ahora.',
     d_back:'Volver a propuestas', d_breakdown:'Desglose del presupuesto', d_vs_budget:'de tu presupuesto', d_ideal:'Desglose ideal según tus prioridades', d_elements:'Componentes del viaje', d_change:'Cambiar', d_book:'Reservar',
     b_title:'Reserva', b_checking:'Disponibilidad en tiempo real', b_traveler:'Viajero', b_summary:'Resumen de costes', b_total:'Total', b_continue:'Ir al pago', b_wait:'Verificando disponibilidad\u2026',
     p_title:'Pago', p_paying:'Estás pagando', p_how:'¿Cómo quieres pagar?', p_full:'Pago único', p_full_sub:'Paga todo ahora', p_install:'Pago a plazos', p_plan:'Plan en 3 cuotas', p_now:'Hoy', p_platform:'La plataforma cobra el importe total de inmediato, incluso a plazos: el riesgo de impago queda en el gateway, nunca en los socios.', p_pay_full:'Pagar \u20ac', p_pay_install:'Activar Klarna \xb7 \u20ac',
@@ -226,21 +231,10 @@ const STR: Record<Lang, Strings> = {
   }
 };
 
-const IMG = {
-  amalfi:  'url(https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?w=700&q=80) center/cover no-repeat',
-  cinque:  'url(https://images.unsplash.com/photo-1471922694854-ff1b63b20054?w=700&q=80) center/cover no-repeat',
-  sardegna:'url(https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80) center/cover no-repeat',
-  roma:    'url(https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=700&q=80) center/cover no-repeat',
-  sicilia: 'url(https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=700&q=80) center/cover no-repeat',
-  puglia:  'url(https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?w=700&q=80) center/cover no-repeat',
-  venezia: 'url(https://images.unsplash.com/photo-1514890547357-a9ee288728e0?w=700&q=80) center/cover no-repeat',
-  firenze: 'url(https://images.unsplash.com/photo-1476900164809-ff19b8ae5968?w=700&q=80) center/cover no-repeat',
-  napoli:  'url(https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?w=700&q=80) center/cover no-repeat',
-  capri:   'url(https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?w=700&q=80) center/cover no-repeat',
-  positano:'url(https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?w=700&q=80) center/cover no-repeat',
-  matera:  'url(https://images.unsplash.com/photo-1601379327928-bedfaf9da2d0?w=700&q=80) center/cover no-repeat',
-  table:   'url(https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=80) center/cover no-repeat',
-};
+// Neutral image placeholder (a CSS gradient — UI styling, not real-world data)
+// used only when a backend record has no image of its own.
+const PLACEHOLDER_IMG =
+  'linear-gradient(135deg, #e9edf0 0%, #d7dee3 100%) center/cover no-repeat';
 
 function fmt(n: number, lang: Lang): string {
   const sep = lang === 'en' ? ',' : '.';
@@ -276,7 +270,7 @@ export class PlannerComponent implements OnDestroy {
   destOpen = signal(true);
   priority = signal<Priority>('food');
   constraints = signal<string[]>(['sea']);
-  selId    = signal('amalfi');
+  selId    = signal('');
   agentStep   = signal(0);
   checkStep   = signal(0);
   payMode     = signal<'full' | 'install'>('full');
@@ -284,6 +278,8 @@ export class PlannerComponent implements OnDestroy {
   conciergeTyping = signal(false);
   suggestionUsed  = signal(false);
   tableBooked     = signal(false);
+  // Why the results are demo data instead of live AI output (null = live/real).
+  plannerNotice   = signal<'offline' | 'slow' | null>(null);
 
   private _timers: ReturnType<typeof setTimeout>[] = [];
 
@@ -375,7 +371,7 @@ export class PlannerComponent implements OnDestroy {
   });
 
   proposals = computed(() => {
-    const lang = this.lang(); const it = lang === 'it';
+    const lang = this.lang();
     const t = this.t();
     const n = this.nights(); const ppl = this.adults() + this.children();
     const nightsTxt = `${n} ${t.rs_nights}`;
@@ -410,109 +406,12 @@ export class PlannerComponent implements OnDestroy {
       };
     };
 
-    if (this.useBackendProposals() && this.rawBackendData().length) {
-      return this.rawBackendData().map(o => mk(o));
-    }
-
-    return [
-      mk({ id:'amalfi', dest:'Amalfi', title: it?'Costiera Gourmet':'Gourmet Coast', img: IMG.amalfi, caption:'Amalfi · Costiera Amalfitana', recommended:true, total:1190,
-           hotel:'Hotel Lidomare 3★', hp:560, rest: it?'2 ristoranti consigliati':'2 recommended restaurants', rp:330, flight: it?'Volo A/R · NAP':'Round-trip · NAP', fp:300,
-           why: it?'Questo hotel ti lascia più budget per i ristoranti, la tua priorità.':'This stay frees up more budget for restaurants, your priority.',
-           hotelMeta: it?'Centro · 4 notti · colazione':'Central · 4 nights · breakfast',
-           restMeta: it?'Cucina locale · fascia media':'Local cuisine · mid-range',
-           flightMeta: it?'Bagaglio a mano · diretto':'Carry-on · direct',
-           cancel: it?'Cancellazione gratuita fino a 7 giorni prima.':'Free cancellation up to 7 days before.',
-           splits:[['stay',560],['food',330],['transport',300]] }),
-      mk({ id:'positano', dest:'Positano', title: it?'Lusso sulla Scogliera':'Clifftop Luxury', img: IMG.positano, caption:'Positano · Case sul mare', recommended:false, total:1250,
-           hotel: it?'Le Sirenuse 4★':'Le Sirenuse 4★', hp:650, rest: it?'2 ristoranti con vista':'2 sea-view restaurants', rp:320, flight: it?'Volo A/R · NAP':'Round-trip · NAP', fp:280,
-           why: it?'Positano offre viste spettacolari e una scena gastronomica di alto livello.':'Positano delivers spectacular views and a top-tier restaurant scene.',
-           hotelMeta: it?'Vista mare · 4 notti · terrazza':'Sea view · 4 nights · terrace',
-           restMeta: it?'Alta cucina campana':'Fine Campanian cuisine',
-           flightMeta: it?'Diretto · bagaglio incluso':'Direct · bag included',
-           cancel: it?'Cancellazione gratuita fino a 5 giorni prima.':'Free cancellation up to 5 days before.',
-           splits:[['stay',650],['food',320],['transport',280]] }),
-      mk({ id:'cinque', dest:'Cinque Terre', title: it?'Borghi sul Mare':'Seaside Villages', img: IMG.cinque, caption:'Vernazza · Cinque Terre', recommended:false, total:1150,
-           hotel: it?'Affittacamere Marina 3★':'Marina Rooms 3★', hp:600, rest: it?'1 ristorante + degustazione':'1 restaurant + tasting', rp:280, flight: it?'Treno veloce A/R':'High-speed train r/t', fp:270,
-           why: it?'Più tempo a piedi tra i borghi, con una degustazione inclusa.':'More time exploring the villages on foot, with a tasting included.',
-           hotelMeta: it?'Vista mare · 4 notti':'Sea view · 4 nights',
-           restMeta: it?'Pesce locale · degustazione':'Local seafood · tasting',
-           flightMeta: it?'Alta velocità · diretto':'High-speed · direct',
-           cancel: it?'Cancellazione gratuita fino a 5 giorni prima.':'Free cancellation up to 5 days before.',
-           splits:[['stay',600],['food',280],['transport',270]] }),
-      mk({ id:'venezia', dest:'Venezia', title: it?'Laguna Romantica':'Romantic Lagoon', img: IMG.venezia, caption:'Venezia · Canal Grande', recommended:false, total:1380,
-           hotel: it?'Hotel Ca\' Sagredo 4★':'Hotel Ca\' Sagredo 4★', hp:720, rest: it?'2 bacari + osteria':'2 bacari + osteria', rp:360, flight: it?'Volo A/R · VCE':'Round-trip · VCE', fp:300,
-           why: it?'Venezia unica: bacari nascosti e cichetti autentici al di fuori dei circuiti turistici.':'Venice\'s hidden bacari and authentic cichetti off the tourist circuit.',
-           hotelMeta: it?'Canal Grande · 4 notti':'Canal Grande · 4 nights',
-           restMeta: it?'Cicchetti · cucina veneziana':'Cichetti · Venetian cuisine',
-           flightMeta: it?'Diretto · frequente':'Direct · frequent',
-           cancel: it?'Cancellazione gratuita fino a 7 giorni prima.':'Free cancellation up to 7 days before.',
-           splits:[['stay',720],['food',360],['transport',300]] }),
-      mk({ id:'firenze', dest:'Firenze', title: it?'Arte & Bistecca':'Art & Bistecca', img: IMG.firenze, caption:'Firenze · Vista dal Piazzale', recommended:false, total:1120,
-           hotel: it?'Residenza d\'Epoca 3★':'Residenza d\'Epoca 3★', hp:540, rest: it?'2 trattorie fiorentine':'2 Florentine trattorias', rp:310, flight: it?'Volo A/R · FLR':'Round-trip · FLR', fp:270,
-           why: it?'Firenze combina arte rinascimentale e gastronomia toscana a tariffe ragionevoli.':'Florence combines Renaissance art and Tuscan gastronomy at reasonable rates.',
-           hotelMeta: it?'Oltrarno · 4 notti · colazione':'Oltrarno · 4 nights · breakfast',
-           restMeta: it?'Bistecca · cucina toscana':'Bistecca · Tuscan cuisine',
-           flightMeta: it?'Diretto · bagaglio':'Direct · luggage',
-           cancel: it?'Cancellazione gratuita fino a 7 giorni prima.':'Free cancellation up to 7 days before.',
-           splits:[['stay',540],['food',310],['transport',270]] }),
-      mk({ id:'sardegna', dest:'Sardegna', title: it?'Mare Smart':'Smart Seaside', img: IMG.sardegna, caption:'Sardegna · Acque cristalline', recommended:false, total:980,
-           hotel:'B&B Maestrale 3★', hp:480, rest: it?'1 ristorante consigliato':'1 recommended restaurant', rp:200, flight: it?'Volo low-cost A/R':'Low-cost flight r/t', fp:300,
-           why: it?'L\'opzione più economica: sotto budget mantenendo la priorità sul cibo.':'The most affordable option: under budget while keeping food the focus.',
-           hotelMeta: it?'Vicino spiaggia · 4 notti':'Near beach · 4 nights',
-           restMeta: it?'Trattoria · fascia bassa':'Trattoria · budget',
-           flightMeta: it?'Low-cost · 1 scalo':'Low-cost · 1 stop',
-           cancel: it?'Cancellazione gratuita fino a 10 giorni prima.':'Free cancellation up to 10 days before.',
-           splits:[['stay',480],['food',200],['transport',300]] }),
-      mk({ id:'capri', dest:'Capri', title: it?'Isola del Lusso':'Island of Luxury', img: IMG.capri, caption:'Capri · Faraglioni', recommended:false, total:1490,
-           hotel: it?'Hotel Punta Tragara 4★':'Hotel Punta Tragara 4★', hp:800, rest: it?'2 ristoranti vista mare':'2 sea-view restaurants', rp:390, flight: it?'Volo + traghetto A/R':'Flight + ferry r/t', fp:300,
-           why: it?'Capri è fuori budget di poco: l\'esperienza unica giustifica lo scarto.':'Capri is slightly over budget — the unique experience justifies the gap.',
-           hotelMeta: it?'Vista Faraglioni · 4 notti':'Faraglioni view · 4 nights',
-           restMeta: it?'Cucina isolana · fascia alta':'Island cuisine · upscale',
-           flightMeta: it?'Napoli + aliscafo':'Naples + hydrofoil',
-           cancel: it?'Cancellazione gratuita fino a 10 giorni prima.':'Free cancellation up to 10 days before.',
-           splits:[['stay',800],['food',390],['transport',300]] }),
-      mk({ id:'napoli', dest:'Napoli', title: it?'Pizza & Cultura':'Pizza & Culture', img: IMG.napoli, caption:'Napoli · Lungomare', recommended:false, total:890,
-           hotel: it?'B&B Toledo 3★':'B&B Toledo 3★', hp:380, rest: it?'3 pizzerie + trattoria':'3 pizzerias + trattoria', rp:260, flight: it?'Volo A/R · NAP':'Round-trip · NAP', fp:250,
-           why: it?'Napoli è l\'opzione più economica con la scena gastronomica più autentica d\'Italia.':'Naples is the best-value pick with Italy\'s most authentic food scene.',
-           hotelMeta: it?'Quartieri Spagnoli · 4 notti':'Quartieri Spagnoli · 4 nights',
-           restMeta: it?'Pizza DOC · frittura napoletana':'DOC pizza · Neapolitan fry',
-           flightMeta: it?'Frequente · diretto':'Frequent · direct',
-           cancel: it?'Cancellazione gratuita fino a 5 giorni prima.':'Free cancellation up to 5 days before.',
-           splits:[['stay',380],['food',260],['transport',250]] }),
-      mk({ id:'roma', dest:'Roma', title: it?'Arte & Cucina':'Art & Cuisine', img: IMG.roma, caption:'Roma · Colosseo al tramonto', recommended:false, total:1310,
-           hotel: it?'Hotel Centrale 4★':'Hotel Centrale 4★', hp:680, rest: it?'3 trattorie storiche':'3 historic trattorias', rp:380, flight: it?'Volo A/R · FCO':'Round-trip · FCO', fp:250,
-           why: it?'Roma offre la massima densità di esperienze gastronomiche storiche nel raggio del budget.':'Rome delivers maximum historic gastronomy density within your budget.',
-           hotelMeta: it?'Centro storico · 4 notti':'Historic centre · 4 nights',
-           restMeta: it?'Cucina romana classica':'Classic Roman cuisine',
-           flightMeta: it?'Frequente · diretto':'Frequent · direct',
-           cancel: it?'Cancellazione gratuita fino a 7 giorni prima.':'Free cancellation up to 7 days before.',
-           splits:[['stay',680],['food',380],['transport',250]] }),
-      mk({ id:'sicilia', dest:'Sicilia', title: it?'Sapori del Sud':'Southern Flavours', img: IMG.sicilia, caption:'Sicilia · Paesaggio rurale', recommended:false, total:1040,
-           hotel: it?'Masseria Sole 3★':'Masseria Sole 3★', hp:490, rest: it?'2 ristoranti di mare':'2 seafood restaurants', rp:290, flight: it?'Volo A/R · CTA':'Round-trip · CTA', fp:260,
-           why: it?'La Sicilia combina spiagge e gastronomia eccezionale a un prezzo accessibile.':'Sicily pairs exceptional beaches and food at an accessible price point.',
-           hotelMeta: it?'Vista mare · 4 notti · piscina':'Sea view · 4 nights · pool',
-           restMeta: it?'Pesce fresco · cucina locale':'Fresh fish · local cuisine',
-           flightMeta: it?'Diretto · bagaglio incluso':'Direct · bag included',
-           cancel: it?'Cancellazione gratuita fino a 5 giorni prima.':'Free cancellation up to 5 days before.',
-           splits:[['stay',490],['food',290],['transport',260]] }),
-      mk({ id:'matera', dest:'Matera', title: it?'Sassi & Sapori':'Sassi & Flavours', img: IMG.matera, caption:'Matera · Sassi al tramonto', recommended:false, total:850,
-           hotel: it?'Sextantio Cave Hotel 4★':'Sextantio Cave Hotel 4★', hp:390, rest: it?'2 ristoranti nei Sassi':'2 Sassi restaurants', rp:220, flight: it?'Volo A/R · BRI + bus':'Round-trip · BRI + bus', fp:240,
-           why: it?'Matera è Capitale Europea della Cultura: hotel grotta unico al mondo, cucina lucana autentica.':'Matera is European Capital of Culture: world-unique cave hotel, authentic Lucanian cuisine.',
-           hotelMeta: it?'Grotta · 4 notti · colazione':'Cave room · 4 nights · breakfast',
-           restMeta: it?'Cucina lucana · fascia media':'Lucanian cuisine · mid-range',
-           flightMeta: it?'Bari + bus diretto':'Bari + direct bus',
-           cancel: it?'Cancellazione gratuita fino a 10 giorni prima.':'Free cancellation up to 10 days before.',
-           splits:[['stay',390],['food',220],['transport',240]] }),
-      mk({ id:'puglia', dest:'Puglia', title: it?'Masseria & Mare':'Masseria & Sea', img: IMG.puglia, caption:'Puglia · Trulli di Alberobello', recommended:false, total:1070,
-           hotel: it?'Masseria Trullo 4★':'Masseria Trullo 4★', hp:520, rest: it?'2 osterie tipiche':'2 typical osterias', rp:270, flight: it?'Volo A/R · BRI':'Round-trip · BRI', fp:280,
-           why: it?'Architettura unica, cucina autentica e mare cristallino, tutto nel budget.':'Unique architecture, authentic cuisine and crystal sea, all within budget.',
-           hotelMeta: it?'Campagna · 4 notti · piscina':'Countryside · 4 nights · pool',
-           restMeta: it?'Cucina pugliese autentica':'Authentic Puglian cuisine',
-           flightMeta: it?'Diretto · frequente':'Direct · frequent',
-           cancel: it?'Cancellazione gratuita fino a 7 giorni prima.':'Free cancellation up to 7 days before.',
-           splits:[['stay',520],['food',270],['transport',280]] }),
-    ];
+    // All proposals come from the backend. There is no demo/mock fallback: if
+    // the backend returned nothing, this list is empty and the UI shows an
+    // explicit error/empty state rather than fabricated trips.
+    return this.rawBackendData().map(o => mk(o));
   });
+
 
   selectedProposal = computed(() => {
     return this.proposals().find(p => p.id === this.selId()) ?? this.proposals()[0];
@@ -524,6 +423,10 @@ export class PlannerComponent implements OnDestroy {
       dest: p.dest,
       total: p.totalStr,
       recommended: p.recommended,
+      // Real coords from the DB when the proposal came from the backend; demo
+      // proposals carry none and are geocoded from `dest` by the map.
+      lat: (p as { lat?: number | null }).lat ?? null,
+      lng: (p as { lng?: number | null }).lng ?? null,
     }))
   );
 
@@ -628,7 +531,7 @@ export class PlannerComponent implements OnDestroy {
     return this.messages().map(m => {
       if (m.kind === 'offer') {
         return { isOffer: true, isText: false, justify: 'flex-start',
-          img: IMG.table, caption: 'PHOTO · table setting',
+          img: PLACEHOLDER_IMG, caption: 'PHOTO · table setting',
           badge: t.cc_offer_badge, title: t.cc_offer_title,
           sub: t.cc_offer_sub, cta: t.cc_offer_cta };
       }
@@ -651,6 +554,14 @@ export class PlannerComponent implements OnDestroy {
     const prioLabel = p === 'food' ? t.rs_prio_food : p === 'stay' ? t.rs_prio_stay : t.rs_prio_bal;
     return `€${this.budgetStr()} · ${this.nights()} ${t.rs_nights} · ${this.adults()+this.children()} ${t.rs_ppl} · ${prioLabel}`;
   });
+
+  noticeText = computed(() => {
+    const t = this.t();
+    const n = this.plannerNotice();
+    return n === 'offline' ? t.notice_offline : n === 'slow' ? t.notice_slow : '';
+  });
+
+  dismissNotice(): void { this.plannerNotice.set(null); }
 
   rateStr = computed(() => fmt(Math.round(this.selectedProposal().total / 3), this.lang()));
 
@@ -694,7 +605,7 @@ export class PlannerComponent implements OnDestroy {
     this.stage.set('empty'); this.overlay.set(null);
     this.budget.set(1200); this.dateMode.set('flex'); this.nights.set(4);
     this.adults.set(2); this.children.set(0); this.destOpen.set(true);
-    this.priority.set('food'); this.constraints.set(['sea']); this.selId.set('amalfi');
+    this.priority.set('food'); this.constraints.set(['sea']); this.selId.set('');
     this.agentStep.set(0); this.checkStep.set(0); this.payMode.set('full');
     this.messages.set([]); this.conciergeTyping.set(false);
     this.suggestionUsed.set(false); this.tableBooked.set(false);
@@ -702,6 +613,7 @@ export class PlannerComponent implements OnDestroy {
     this.rawBackendData.set([]);
     this.currentRequestId.set(null);
     this.currentBookingId.set(null);
+    this.plannerNotice.set(null);
   }
 
   // ── Auth methods ──────────────────────────────────────────────────────────
@@ -798,6 +710,7 @@ export class PlannerComponent implements OnDestroy {
     this.agentStep.set(0);
     this.useBackendProposals.set(false);
     this.rawBackendData.set([]);
+    this.plannerNotice.set(null);
 
     // Drive the orchestrator animation; the final "ranking" agent holds active
     // while we wait for the live backend result. We deliberately do NOT auto-jump
@@ -808,7 +721,10 @@ export class PlannerComponent implements OnDestroy {
     // Safety net: never leave the user stuck on the generating animation if the
     // request itself stalls. Falls back to demo proposals just past the poll window.
     this._timers.push(setTimeout(() => {
-      if (this.stage() === 'generating') this.stage.set('results');
+      if (this.stage() === 'generating') {
+        this.plannerNotice.set('slow');
+        this.stage.set('results');
+      }
     }, PLANNER_GENERATION_TIMEOUT_MS + 5000));
 
     // Compute trip dates
@@ -851,21 +767,16 @@ export class PlannerComponent implements OnDestroy {
     ).subscribe({
       next: results => {
         const t = this.t();
-        const destImgs: Record<string, string> = {
-          default0: IMG.amalfi, default1: IMG.cinque, default2: IMG.sardegna,
-          default3: IMG.roma,   default4: IMG.venezia, default5: IMG.firenze,
-        };
 
         this.rawBackendData.set(results.map((r, idx) => {
           const p = r.proposal;
           const hotel = r.hotel;
           const flight = r.flight;
-          const fallbackImg = destImgs[`default${idx % 6}`];
           return {
             id: p.id,
             dest: p.destination,
             title: p.destination,
-            img: hotel?.imageUrl ? `url(${hotel.imageUrl}) center/cover no-repeat` : fallbackImg,
+            img: hotel?.imageUrl ? `url(${hotel.imageUrl}) center/cover no-repeat` : PLACEHOLDER_IMG,
             caption: p.destination,
             recommended: idx === 0,
             total: Number(p.totalCost),
@@ -887,6 +798,9 @@ export class PlannerComponent implements OnDestroy {
               ['food', Number(p.restaurantCost)],
               ['transport', Number(p.flightCost)],
             ] as [string, number][],
+            // Authoritative map coordinates from the DB (never hardcoded)
+            lat: hotel?.latitude ?? null,
+            lng: hotel?.longitude ?? null,
             // Backend IDs needed for booking
             proposalId: p.id,
             hotelId: p.hotelId,
@@ -898,6 +812,10 @@ export class PlannerComponent implements OnDestroy {
         if (results.length) {
           this.useBackendProposals.set(true);
           this.selId.set(results[0].proposal.id);
+          this.plannerNotice.set(null); // live AI data — no fallback notice
+        } else {
+          // Poll window elapsed with no proposals → demo fallback, tell the user why.
+          this.plannerNotice.set('slow');
         }
         // Live data is ready (or the poll window elapsed → demo fallback): reveal results.
         this.stage.set('results');
@@ -908,7 +826,8 @@ export class PlannerComponent implements OnDestroy {
           this.showAuthModal.set(true);
           this.stage.set('empty');
         } else {
-          // Backend unreachable/failed → fall back to demo proposals.
+          // Backend unreachable/failed → fall back to demo proposals, surfaced as a notice.
+          this.plannerNotice.set('offline');
           this.stage.set('results');
         }
       }

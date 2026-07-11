@@ -140,6 +140,8 @@ export interface HotelSearchResult {
   seaProximity: boolean;
   available: boolean;
   partnerId: string;
+  latitude: number | null;
+  longitude: number | null;
 }
 
 export interface FlightSearchResult {

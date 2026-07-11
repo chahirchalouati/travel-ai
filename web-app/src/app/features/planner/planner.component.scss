@@ -294,6 +294,40 @@
   &:hover { color: var(--color-red-ink); border-color: rgba(229,53,43,0.4); }
 }
 
+// ── Fallback notice (why demo data is shown instead of live AI output) ────────
+.results-notice {
+  display: flex; align-items: flex-start; gap: 9px;
+  margin: 12px 14px 0; padding: 11px 12px;
+  border-radius: var(--r-md);
+  background: rgba(229,154,46,0.12);
+  border: 1px solid rgba(229,154,46,0.32);
+  color: #7a5312;
+  font-size: 12px; line-height: 1.4;
+  animation: fade var(--normal) var(--ease);
+  > .ms { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
+  &--offline {
+    background: rgba(229,53,43,0.10);
+    border-color: rgba(229,53,43,0.30);
+    color: var(--color-red-ink);
+  }
+}
+.results-notice-text { flex: 1; font-weight: 600; }
+.results-notice-x {
+  flex-shrink: 0; width: 22px; height: 22px; margin: -2px -2px 0 0;
+  display: grid; place-items: center; cursor: pointer;
+  border: none; background: transparent; color: inherit; opacity: 0.7;
+  border-radius: 6px; transition: opacity var(--fast), background var(--fast);
+  .ms { font-size: 16px; }
+  &:hover { opacity: 1; background: rgba(20,36,46,0.08); }
+}
+
+.prop-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; text-align: center; padding: 40px 20px; color: var(--ink-3);
+  .ms { font-size: 34px; opacity: 0.5; }
+  p { font-size: 13px; font-weight: 600; margin: 0; max-width: 26ch; }
+}
+
 .prop-list {
   flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px;
   scrollbar-width: thin; scrollbar-color: rgba(20,36,46,0.2) transparent;
@@ -639,4 +673,8 @@
   // When results/detail are open, the left dock would overlap; keep left dock hidden behind on small screens
   .planner[data-stage='results'] .dock--left,
   .planner[data-stage='detail'] .dock--left { display: none; }
+  // On mobile the structured dock already covers the whole screen in the empty
+  // stage, so the floating natural-language brief would sit hidden behind it —
+  // hide it and let the dock be the single, unambiguous entry point.
+  .planner[data-stage='empty'] .hint--brief { display: none; }
 }

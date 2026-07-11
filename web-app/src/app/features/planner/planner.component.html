@@ -41,9 +41,9 @@
       <!-- Dates -->
       <div class="field">
         <span class="field-label">{{ t().i_dates }}</span>
-        <div class="segmented">
-          <button [class.on]="dateMode() === 'fixed'" (click)="dateMode.set('fixed')">{{ t().i_fixed }}</button>
-          <button [class.on]="dateMode() === 'flex'" (click)="dateMode.set('flex')">{{ t().i_flex }}</button>
+        <div class="segmented" role="group" [attr.aria-label]="t().i_dates">
+          <button [class.on]="dateMode() === 'fixed'" [attr.aria-pressed]="dateMode() === 'fixed'" (click)="dateMode.set('fixed')">{{ t().i_fixed }}</button>
+          <button [class.on]="dateMode() === 'flex'" [attr.aria-pressed]="dateMode() === 'flex'" (click)="dateMode.set('flex')">{{ t().i_flex }}</button>
         </div>
       </div>
 
@@ -86,7 +86,7 @@
         <span class="field-hint">{{ t().i_priority_sub }}</span>
         <div class="prio-grid">
           @for (o of prioOptions(); track o.key) {
-            <button class="prio" [class.on]="o.on" (click)="setPriorityStr(o.key)">
+            <button class="prio" [class.on]="o.on" [attr.aria-pressed]="o.on" (click)="setPriorityStr(o.key)">
               <span class="ms">{{ o.icon }}</span>
               <span>{{ o.label }}</span>
             </button>
@@ -99,7 +99,7 @@
         <span class="field-label">{{ t().i_constraints }}</span>
         <div class="chip-wrap">
           @for (c of constraintChips(); track c.key) {
-            <button class="cchip" [class.on]="c.on" (click)="toggleConstraint(c.key)">
+            <button class="cchip" [class.on]="c.on" [attr.aria-pressed]="c.on" (click)="toggleConstraint(c.key)">
               <span class="ms">{{ c.icon }}</span>{{ c.label }}
             </button>
           }
@@ -176,7 +176,24 @@
         <button class="mini-btn" (click)="generate()"><span class="ms">refresh</span>{{ t().r_regen }}</button>
       </header>
 
+      @if (plannerNotice()) {
+        <div class="results-notice" [class.results-notice--offline]="plannerNotice() === 'offline'"
+             role="status" aria-live="polite">
+          <span class="ms">{{ plannerNotice() === 'offline' ? 'cloud_off' : 'hourglass_top' }}</span>
+          <span class="results-notice-text">{{ noticeText() }}</span>
+          <button class="results-notice-x" (click)="dismissNotice()" [attr.aria-label]="t().notice_dismiss">
+            <span class="ms">close</span>
+          </button>
+        </div>
+      }
+
       <div class="prop-list">
+        @if (!proposals().length) {
+          <div class="prop-empty">
+            <span class="ms">travel_explore</span>
+            <p>{{ t().r_empty }}</p>
+          </div>
+        }
         @for (p of proposals(); track p.id) {
           <article class="prop" [class.rec]="p.recommended" [class.sel]="p.id === selId()"
                    (click)="selId.set(p.id)">
@@ -348,12 +365,12 @@
 
       <span class="field-label">{{ t().p_how }}</span>
       <div class="pay-modes">
-        <button class="pay-mode" [class.on]="payMode() === 'full'" (click)="payMode.set('full')">
+        <button class="pay-mode" [class.on]="payMode() === 'full'" [attr.aria-pressed]="payMode() === 'full'" (click)="payMode.set('full')">
           <span class="ms">payments</span>
           <span class="pay-mode-t">{{ t().p_full }}</span>
           <span class="pay-mode-s">{{ t().p_full_sub }}</span>
         </button>
-        <button class="pay-mode" [class.on]="payMode() === 'install'" (click)="payMode.set('install')">
+        <button class="pay-mode" [class.on]="payMode() === 'install'" [attr.aria-pressed]="payMode() === 'install'" (click)="payMode.set('install')">
           <span class="ms">event_repeat</span>
           <span class="pay-mode-t">{{ t().p_install }}</span>
           <span class="pay-mode-s">{{ installSub() }}</span>
