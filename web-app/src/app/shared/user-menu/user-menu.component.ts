@@ -11,6 +11,7 @@ interface MenuItem {
 }
 
 const MENU_ITEMS: MenuItem[] = [
+  { key: 'userMenu.tripPlanner', icon: 'auto_awesome',        route: '/trip-planner' },
   { key: 'userMenu.myTrips',     icon: 'luggage',             route: '/trips' },
   { key: 'userMenu.profile',     icon: 'person',              route: '/profile' },
   { key: 'userMenu.bookings',    icon: 'confirmation_number', route: '/bookings' },

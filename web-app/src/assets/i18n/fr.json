@@ -416,7 +416,8 @@
     "accountInfo": "Informations du compte",
     "signOut": "Se déconnecter",
     "adminPanel": "Panneau admin",
-    "rewards": "Récompenses"
+    "rewards": "Récompenses",
+    "tripPlanner": "Planificateur"
   },
   "common": {
     "back": "Retour",
@@ -521,6 +522,9 @@
       "hotelsText": "Hôtels acceptant les animaux sur la côte amalfitaine à moins de 200 €/nuit",
       "budgetLabel": "Budget",
       "budgetText": "Destinations les moins chères en Asie du Sud-Est cet été"
+    },
+    "plan": {
+      "intro": "Voici un voyage que je vous ai préparé :"
     }
   },
   "cta": {
@@ -1855,5 +1859,30 @@
     "eyebrow": "Mentions légales",
     "lastUpdated": "Dernière mise à jour",
     "contactLine": "Des questions sur cette politique ? Écrivez-nous à"
+  },
+  "tripPlanner": {
+    "kicker": "Planificateur IA",
+    "title": "Planifiez tout un voyage en secondes",
+    "lede": "Dites-nous où et combien de temps. Notre IA construit un itinéraire jour par jour avec hôtels, vols, restaurants et attractions réels — réservez le tout en un geste.",
+    "generate": "Créer mon itinéraire",
+    "generating": "Planification…",
+    "error": "Impossible de créer l'itinéraire. Veuillez réessayer.",
+    "form": {
+      "destination": "Destination",
+      "destinationPlaceholder": "ex. Rome",
+      "days": "Jours",
+      "adults": "Adultes",
+      "children": "Enfants",
+      "budget": "Budget (€)",
+      "optional": "facultatif",
+      "interests": "Centres d'intérêt",
+      "interestsPlaceholder": "art, gastronomie, vie nocturne"
+    },
+    "result": {
+      "estimatedTotal": "Total estimé",
+      "addAll": "Ajouter le voyage au panier",
+      "addAllNote": "Ajoute l'hôtel, le vol et les restaurants à votre panier pour un seul paiement.",
+      "daysLabel": "jours"
+    }
   }
 }

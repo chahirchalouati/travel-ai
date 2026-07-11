@@ -416,7 +416,8 @@
     "accountInfo": "Informazioni account",
     "signOut": "Esci",
     "adminPanel": "Pannello admin",
-    "rewards": "Premi"
+    "rewards": "Premi",
+    "tripPlanner": "Planner viaggio"
   },
   "common": {
     "back": "Indietro",
@@ -521,6 +522,9 @@
       "hotelsText": "Hotel che accettano animali in Costiera Amalfitana sotto i 200 €/notte",
       "budgetLabel": "Budget",
       "budgetText": "Destinazioni più economiche nel Sud-est asiatico quest'estate"
+    },
+    "plan": {
+      "intro": "Ecco un viaggio che ho preparato per te:"
     }
   },
   "cta": {
@@ -1855,5 +1859,30 @@
     "eyebrow": "Note legali",
     "lastUpdated": "Ultimo aggiornamento",
     "contactLine": "Domande su questa politica? Scrivici a"
+  },
+  "tripPlanner": {
+    "kicker": "Planner con IA",
+    "title": "Pianifica un intero viaggio in pochi secondi",
+    "lede": "Dicci dove e per quanto. La nostra IA costruisce un itinerario giorno per giorno con hotel, voli, ristoranti e attrazioni reali — prenoti tutto con un tocco.",
+    "generate": "Crea il mio itinerario",
+    "generating": "Pianificazione…",
+    "error": "Impossibile creare l'itinerario. Riprova.",
+    "form": {
+      "destination": "Destinazione",
+      "destinationPlaceholder": "es. Roma",
+      "days": "Giorni",
+      "adults": "Adulti",
+      "children": "Bambini",
+      "budget": "Budget (€)",
+      "optional": "facoltativo",
+      "interests": "Interessi",
+      "interestsPlaceholder": "arte, cibo, vita notturna"
+    },
+    "result": {
+      "estimatedTotal": "Totale stimato",
+      "addAll": "Aggiungi il viaggio al carrello",
+      "addAllNote": "Aggiunge hotel, volo e ristoranti al carrello viaggio per un unico checkout.",
+      "daysLabel": "giorni"
+    }
   }
 }

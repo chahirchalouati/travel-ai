@@ -392,6 +392,73 @@ export interface LoyaltySummaryResponse {
   recentTransactions: LoyaltyTransactionResponse[];
 }
 
+/** Brief for the AI trip planner; only destination is required. */
+export interface ItineraryPlanRequest {
+  destination: string;
+  days?: number;
+  adults?: number;
+  children?: number;
+  budget?: number;
+  interests?: string[];
+}
+
+export interface PlannedHotel {
+  hotelId: string;
+  name: string;
+  city: string;
+  pricePerNight: number | null;
+  totalCost: number | null;
+  rating: number;
+}
+
+export interface PlannedFlight {
+  flightId: string;
+  airline: string;
+  origin: string;
+  destination: string;
+  departure: string | null;
+  arrival: string | null;
+  price: number | null;
+}
+
+export interface PlannedActivity {
+  attractionId: string;
+  name: string;
+  category: string;
+  price: number | null;
+  bookable: boolean;
+}
+
+export interface PlannedRestaurant {
+  restaurantId: string;
+  name: string;
+  cuisine: string | null;
+  costPerPerson: number | null;
+  rating: number;
+}
+
+export interface PlannedDay {
+  day: number;
+  title: string;
+  narrative: string;
+  activities: PlannedActivity[];
+  dinner: PlannedRestaurant | null;
+}
+
+/** A grounded, day-by-day itinerary; every item carries a real catalogue id + price. */
+export interface ItineraryPlanResponse {
+  destination: string;
+  days: number;
+  nights: number;
+  party: number;
+  hotel: PlannedHotel | null;
+  flight: PlannedFlight | null;
+  plan: PlannedDay[];
+  estimatedTotal: number;
+  currency: string;
+  summary: string;
+}
+
 export type RewardType = 'VOUCHER' | 'PERK' | 'GIFT';
 export type RewardUnlockKind = 'MILESTONE' | 'REDEEMABLE';
 export type MemberRewardStatus = 'UNLOCKED' | 'USED' | 'EXPIRED';

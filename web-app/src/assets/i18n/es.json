@@ -416,7 +416,8 @@
     "accountInfo": "Información de cuenta",
     "signOut": "Cerrar sesión",
     "adminPanel": "Panel de administración",
-    "rewards": "Recompensas"
+    "rewards": "Recompensas",
+    "tripPlanner": "Planificador"
   },
   "common": {
     "back": "Volver",
@@ -521,6 +522,9 @@
       "hotelsText": "Hoteles que admiten mascotas en la Costa de Amalfi por menos de 200 €/noche",
       "budgetLabel": "Presupuesto",
       "budgetText": "Destinos más baratos en el Sudeste Asiático este verano"
+    },
+    "plan": {
+      "intro": "Aquí tienes un viaje que preparé para ti:"
     }
   },
   "cta": {
@@ -1855,5 +1859,30 @@
     "eyebrow": "Legal",
     "lastUpdated": "Última actualización",
     "contactLine": "¿Preguntas sobre esta política? Escríbenos a"
+  },
+  "tripPlanner": {
+    "kicker": "Planificador con IA",
+    "title": "Planea un viaje entero en segundos",
+    "lede": "Dinos dónde y cuánto tiempo. Nuestra IA crea un itinerario día a día con hoteles, vuelos, restaurantes y atracciones reales — resérvalo todo con un toque.",
+    "generate": "Crear mi itinerario",
+    "generating": "Planificando…",
+    "error": "No se pudo crear el itinerario. Inténtalo de nuevo.",
+    "form": {
+      "destination": "Destino",
+      "destinationPlaceholder": "p. ej. Roma",
+      "days": "Días",
+      "adults": "Adultos",
+      "children": "Niños",
+      "budget": "Presupuesto (€)",
+      "optional": "opcional",
+      "interests": "Intereses",
+      "interestsPlaceholder": "arte, comida, vida nocturna"
+    },
+    "result": {
+      "estimatedTotal": "Total estimado",
+      "addAll": "Añadir viaje al carrito",
+      "addAllNote": "Añade el hotel, el vuelo y los restaurantes a tu carrito para un solo pago.",
+      "daysLabel": "días"
+    }
   }
 }

@@ -2,7 +2,7 @@ import { Injectable, computed, signal } from '@angular/core';
 import type { AncillaryOption, AncillarySelection, CreateBookingRequest, MemberRewardResponse, TravelerRequest } from '../../core/models/api.models';
 
 /** Which catalog vertical a booking draft was started from. */
-export type BookingVertical = 'flight' | 'restaurant' | 'cruise';
+export type BookingVertical = 'flight' | 'restaurant' | 'cruise' | 'hotel';
 
 /** A selectable configuration option with a price multiplier (e.g. a fare bundle). */
 export interface BookingOption {
@@ -238,6 +238,8 @@ export class BookingDraftService {
         };
       case 'cruise':
         return { ...base, cruiseId: d.itemId, cruiseAmount: total, cabinCategory: option?.label };
+      case 'hotel':
+        return { ...base, hotelId: d.itemId, hotelAmount: total };
     }
   }
 

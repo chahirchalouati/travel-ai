@@ -7,11 +7,16 @@ import { FormsModule } from '@angular/forms';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { ChatService } from '../../core/services/chat.service';
 import { AuthService } from '../../core/services/auth.service';
-import { ActivatedRoute } from '@angular/router';
+import { TripPlannerService } from '../../core/services/trip-planner.service';
+import { ItineraryCartService } from '../../core/services/itinerary-cart.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MarkdownPipe } from '../../shared/pipes/markdown.pipe';
 import { ChatMapComponent, MapPin } from './chat-map.component';
 import { EntityCardComponent, EntityAttachment } from './entity-card.component';
-import type { ConversationResponse, ChatEntityAttachment } from '../../core/models/api.models';
+import type {
+  ConversationResponse, ChatEntityAttachment,
+  ItineraryPlanRequest, ItineraryPlanResponse,
+} from '../../core/models/api.models';
 
 interface ChatMsg {
   role: string;
@@ -19,6 +24,7 @@ interface ChatMsg {
   followUps?: string[];
   attachments?: EntityAttachment[];
   mapPins?: MapPin[];
+  itinerary?: ItineraryPlanResponse;
   copied?: boolean;
 }
 
@@ -138,6 +144,23 @@ interface ChatMsg {
                       @for (att of msg.attachments; track att.id) {
                         <app-entity-card [entity]="att" />
                       }
+                    </div>
+                  }
+
+                  @if (msg.itinerary; as it) {
+                    <div class="itinerary-card glass">
+                      <div class="itinerary-card__head">
+                        <strong>{{ it.destination }} · {{ it.days }} {{ 'tripPlanner.result.daysLabel' | transloco }}</strong>
+                        <span class="itinerary-card__total">{{ it.estimatedTotal | currency:it.currency:'symbol':'1.0-0' }}</span>
+                      </div>
+                      <ul class="itinerary-card__lines">
+                        @if (it.hotel) { <li><span class="ms">hotel</span>{{ it.hotel.name }}</li> }
+                        @if (it.flight) { <li><span class="ms">flight</span>{{ it.flight.airline }} · {{ it.flight.origin }} → {{ it.flight.destination }}</li> }
+                        <li><span class="ms">event</span>{{ it.plan.length }} {{ 'tripPlanner.result.daysLabel' | transloco }}</li>
+                      </ul>
+                      <button class="itinerary-card__cta" (click)="addItinerary(it)">
+                        <span class="ms">add_shopping_cart</span>{{ 'tripPlanner.result.addAll' | transloco }}
+                      </button>
                     </div>
                   }
 
@@ -449,6 +472,22 @@ interface ChatMsg {
     .cards-rail { display: flex; gap: 12px; overflow-x: auto; padding: 2px 2px 8px; scrollbar-width: none; }
     .cards-rail::-webkit-scrollbar { display: none; }
 
+    .itinerary-card { margin-top: 12px; padding: 14px 16px; border-radius: 6px; }
+    .itinerary-card__head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+    .itinerary-card__head strong { font-size: 15px; }
+    .itinerary-card__total { font-weight: 700; color: var(--color-red); }
+    .itinerary-card__lines { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+    .itinerary-card__lines li { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-secondary); }
+    .itinerary-card__lines .ms { font-size: 16px; color: var(--color-red); }
+    .itinerary-card__cta {
+      display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+      background: var(--color-ink, #111); color: var(--color-text-on-dark);
+      border: none; padding: 9px 14px; border-radius: 4px;
+      font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .itinerary-card__cta:hover { background: #000; }
+    .itinerary-card__cta .ms { font-size: 16px; }
+
     .map-frame {
       padding: 6px; border-radius: var(--radius-md);
       background: var(--surface); border: 1px solid var(--border);
@@ -686,6 +725,9 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   readonly authService = inject(AuthService);
   private readonly transloco = inject(TranslocoService);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly tripPlanner = inject(TripPlannerService);
+  private readonly itineraryCart = inject(ItineraryCartService);
 
   conversations = signal<ConversationResponse[]>([]);
   currentConversationId = signal<string | null>(null);
@@ -784,6 +826,14 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     this.inputText.set('');
     this.isTyping.set(true);
 
+    // Conversational planning: if the message reads like "plan a trip to X",
+    // build a real itinerary inline instead of a plain chat reply.
+    const brief = this.detectPlanBrief(text);
+    if (brief) {
+      this.planTrip(brief);
+      return;
+    }
+
     this.chatService.chat({
       conversationId: this.currentConversationId(),
       message: text
@@ -814,6 +864,76 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   useSuggestion(text: string): void {
     this.inputText.set(text);
     this.send();
+  }
+
+  /**
+   * Detects a trip-planning intent and extracts a brief. Conservative: needs both
+   * a planning keyword and a plausible destination, so ordinary questions still go
+   * to normal chat.
+   */
+  private detectPlanBrief(text: string): ItineraryPlanRequest | null {
+    const lower = text.toLowerCase();
+    const isPlan = /\b(plan|itinerary|itinerar|pianific|itinerario|planea|planifi|organi[zs])/.test(lower)
+      || /(trip to|viaggio a|days in|giorni a|d[ií]as en|jours à)/.test(lower);
+    if (!isPlan) {
+      return null;
+    }
+    const destination = this.extractDestination(text);
+    if (!destination) {
+      return null;
+    }
+    return { destination, days: this.extractDays(lower) ?? undefined };
+  }
+
+  private extractDestination(text: string): string | null {
+    const after = text.match(/(?:\bto|\bin|\ba|\bà|\ben|\bfor)\s+([A-ZÀ-Ý][\p{L}'\- ]{1,28})/u);
+    const candidate = after?.[1] ?? text.match(/\b([A-ZÀ-Ý][\p{L}'\-]{2,})\b/u)?.[1];
+    if (!candidate) {
+      return null;
+    }
+    // Trim trailing connective words a greedy capture may pull in.
+    return candidate.trim()
+      .replace(/\s+(for|per|con|with|and|e|y|et|the|a|un|una)$/i, '')
+      .trim() || null;
+  }
+
+  private extractDays(lower: string): number | null {
+    const m = lower.match(/(\d{1,2})\s*(?:day|days|giorn|d[ií]as?|jours?)/);
+    if (!m) {
+      return null;
+    }
+    const n = parseInt(m[1], 10);
+    return n >= 1 && n <= 14 ? n : null;
+  }
+
+  /** Calls the planner and appends the itinerary as an assistant message. */
+  private planTrip(brief: ItineraryPlanRequest): void {
+    this.tripPlanner.plan(brief).subscribe({
+      next: itinerary => {
+        this.isTyping.set(false);
+        this.messages.update(msgs => [
+          ...msgs,
+          {
+            role: 'assistant',
+            content: itinerary.summary || this.transloco.translate('chat.plan.intro'),
+            itinerary,
+          },
+        ]);
+      },
+      error: () => {
+        this.isTyping.set(false);
+        this.messages.update(msgs => [
+          ...msgs,
+          { role: 'assistant', content: this.transloco.translate('tripPlanner.error') },
+        ]);
+      },
+    });
+  }
+
+  /** Adds the itinerary shown in a chat card to the trip cart and opens checkout. */
+  addItinerary(itinerary: ItineraryPlanResponse): void {
+    this.itineraryCart.addAll(itinerary);
+    this.router.navigate(['/trip-cart']);
   }
 
   useSuggestionKey(key: string): void {

@@ -416,7 +416,8 @@
     "accountInfo": "Account info",
     "signOut": "Sign out",
     "adminPanel": "Admin panel",
-    "rewards": "Rewards"
+    "rewards": "Rewards",
+    "tripPlanner": "Trip planner"
   },
   "common": {
     "back": "Back",
@@ -521,6 +522,9 @@
       "hotelsText": "Pet-friendly hotels in Amalfi Coast under €200/night",
       "budgetLabel": "Budget",
       "budgetText": "Cheapest destinations in Southeast Asia this summer"
+    },
+    "plan": {
+      "intro": "Here is a trip I put together for you:"
     }
   },
   "cta": {
@@ -1855,5 +1859,30 @@
     "eyebrow": "Legal",
     "lastUpdated": "Last updated",
     "contactLine": "Questions about this policy? Email us at"
+  },
+  "tripPlanner": {
+    "kicker": "AI Trip Planner",
+    "title": "Plan a whole trip in seconds",
+    "lede": "Tell us where and how long. Our AI builds a day-by-day itinerary from real hotels, flights, restaurants and attractions — book it all in one tap.",
+    "generate": "Build my itinerary",
+    "generating": "Planning…",
+    "error": "Could not build the itinerary. Please try again.",
+    "form": {
+      "destination": "Destination",
+      "destinationPlaceholder": "e.g. Rome",
+      "days": "Days",
+      "adults": "Adults",
+      "children": "Children",
+      "budget": "Budget (€)",
+      "optional": "optional",
+      "interests": "Interests",
+      "interestsPlaceholder": "art, food, nightlife"
+    },
+    "result": {
+      "estimatedTotal": "Estimated total",
+      "addAll": "Add whole trip to cart",
+      "addAllNote": "Adds the hotel, flight and restaurants to your trip cart for one checkout.",
+      "daysLabel": "days"
+    }
   }
 }

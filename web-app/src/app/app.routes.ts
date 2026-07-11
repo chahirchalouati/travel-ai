@@ -255,6 +255,20 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'trip-planner',
+    data: {
+      seo: {
+        title: 'AI Trip Planner',
+        description:
+          'Describe your trip and get a grounded, day-by-day itinerary you can book in one tap.',
+      },
+    },
+    loadComponent: () =>
+      import('./features/trip-planner/trip-planner.component').then(
+        m => m.TripPlannerComponent
+      ),
+  },
+  {
     path: 'trip-cart',
     data: { seo: { noindex: true } },
     loadComponent: () =>
