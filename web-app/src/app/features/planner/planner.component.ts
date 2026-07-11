@@ -43,7 +43,7 @@ interface Strings {
   d_back: string; d_breakdown: string; d_vs_budget: string; d_ideal: string;
   d_elements: string; d_change: string; d_book: string;
   b_title: string; b_checking: string; b_traveler: string; b_summary: string;
-  b_total: string; b_continue: string; b_wait: string;
+  b_total: string; b_continue: string; b_wait: string; b_error: string;
   p_title: string; p_paying: string; p_how: string; p_full: string; p_full_sub: string;
   p_install: string; p_plan: string; p_now: string; p_platform: string;
   p_pay_full: string; p_pay_install: string;
@@ -85,7 +85,7 @@ const STR: Record<Lang, Strings> = {
     r_title:'Le tue proposte', r_recommended:'Consigliata', r_view:'Dettaglio', r_regen:'Nuove proposte', fit_in:'in budget', fit_over:'oltre budget',
     notice_offline:'Servizio AI non raggiungibile — nessuna proposta da mostrare. Riprova tra poco.', notice_slow:'L’AI sta impiegando pi\xf9 del previsto — nessuna proposta ancora. Riprova tra poco.', notice_dismiss:'Chiudi', r_empty:'Nessuna proposta disponibile al momento.',
     d_back:'Torna alle proposte', d_breakdown:'Ripartizione budget', d_vs_budget:'sul tuo budget', d_ideal:'Ripartizione ideale per le tue priorit\xe0', d_elements:'Componenti del viaggio', d_change:'Cambia', d_book:'Prenota',
-    b_title:'Prenotazione', b_checking:'Disponibilit\xe0 in tempo reale', b_traveler:'Viaggiatore', b_summary:'Riepilogo costi', b_total:'Totale', b_continue:'Vai al pagamento', b_wait:'Verifica disponibilit\xe0\u2026',
+    b_title:'Prenotazione', b_checking:'Disponibilit\xe0 in tempo reale', b_traveler:'Viaggiatore', b_summary:'Riepilogo costi', b_total:'Totale', b_continue:'Vai al pagamento', b_wait:'Verifica disponibilit\xe0\u2026', b_error:'Impossibile confermare la prenotazione. Riprova.',
     p_title:'Pagamento', p_paying:'Stai pagando', p_how:'Come vuoi pagare', p_full:'Saldo unico', p_full_sub:'Paga tutto adesso', p_install:'Pagamento rateale', p_plan:'Piano in 3 rate', p_now:'Oggi', p_platform:'La piattaforma incassa l\u2019intero importo subito, anche con rate: il rischio insoluto resta al gateway, mai alle strutture.', p_pay_full:'Paga \u20ac', p_pay_install:'Attiva Klarna \xb7 \u20ac',
     c_title:'Viaggio confermato!', c_sub:'Prenotazioni inviate, conferme in arrivo via email.', c_concierge:'Travel Concierge', c_concierge_sub:'La tua assistente AI durante il soggiorno. Si attiva 3 giorni prima della partenza.', c_open:'Apri il Concierge (demo)', c_restart:'Ricomincia il flusso', concept:'CONCEPT',
     cc_title:'Concierge AI', cc_context:'Conosco gi\xe0 il tuo viaggio: hotel, date e gruppo. Chiedimi pure in linguaggio naturale.', cc_suggestion:'Trovami un tavolo per stasera vicino all\u2019hotel', cc_placeholder:'Scrivi una richiesta\u2026',
@@ -122,7 +122,7 @@ const STR: Record<Lang, Strings> = {
     r_title:'Your proposals', r_recommended:'Recommended', r_view:'Detail', r_regen:'New proposals', fit_in:'in budget', fit_over:'over budget',
     notice_offline:'AI service unreachable — no proposals to show. Please try again shortly.', notice_slow:'The AI is taking longer than usual — no proposals yet. Try again in a moment.', notice_dismiss:'Dismiss', r_empty:'No proposals available right now.',
     d_back:'Back to proposals', d_breakdown:'Budget breakdown', d_vs_budget:'of your budget', d_ideal:'Ideal split for your priorities', d_elements:'Trip components', d_change:'Change', d_book:'Book',
-    b_title:'Booking', b_checking:'Real-time availability', b_traveler:'Traveller', b_summary:'Cost summary', b_total:'Total', b_continue:'Go to payment', b_wait:'Checking availability\u2026',
+    b_title:'Booking', b_checking:'Real-time availability', b_traveler:'Traveller', b_summary:'Cost summary', b_total:'Total', b_continue:'Go to payment', b_wait:'Checking availability\u2026', b_error:'Could not confirm the booking. Please try again.',
     p_title:'Payment', p_paying:'You\u2019re paying', p_how:'How would you like to pay', p_full:'Pay in full', p_full_sub:'Pay everything now', p_install:'Pay in instalments', p_plan:'3-instalment plan', p_now:'Today', p_platform:'The platform collects the full amount immediately, even on instalments: default risk stays with the gateway, never the partners.', p_pay_full:'Pay \u20ac', p_pay_install:'Start Klarna \xb7 \u20ac',
     c_title:'Trip confirmed!', c_sub:'Bookings sent, confirmations on their way by email.', c_concierge:'Travel Concierge', c_concierge_sub:'Your in-stay AI assistant. It unlocks 3 days before departure.', c_open:'Open Concierge (demo)', c_restart:'Restart the flow', concept:'CONCEPT',
     cc_title:'Concierge AI', cc_context:'I already know your trip: hotel, dates and group. Just ask in plain language.', cc_suggestion:'Find me a table tonight near the hotel', cc_placeholder:'Type a request\u2026',
@@ -159,7 +159,7 @@ const STR: Record<Lang, Strings> = {
     r_title:'Vos propositions', r_recommended:'Recommandé', r_view:'Détail', r_regen:'Nouvelles propositions', fit_in:'dans le budget', fit_over:'hors budget',
     notice_offline:'Service IA injoignable — aucune proposition à afficher. Réessayez dans un instant.', notice_slow:'L’IA prend plus de temps que d’habitude — aucune proposition pour le moment. Réessayez bient\xf4t.', notice_dismiss:'Fermer', r_empty:'Aucune proposition disponible pour le moment.',
     d_back:'Retour aux propositions', d_breakdown:'Répartition du budget', d_vs_budget:'de votre budget', d_ideal:'Répartition idéale selon vos priorités', d_elements:'Composants du voyage', d_change:'Changer', d_book:'Réserver',
-    b_title:'Réservation', b_checking:'Disponibilité en temps réel', b_traveler:'Voyageur', b_summary:'Résumé des coûts', b_total:'Total', b_continue:'Passer au paiement', b_wait:'Vérification de la disponibilité\u2026',
+    b_title:'Réservation', b_checking:'Disponibilité en temps réel', b_traveler:'Voyageur', b_summary:'Résumé des coûts', b_total:'Total', b_continue:'Passer au paiement', b_wait:'Vérification de la disponibilité\u2026', b_error:'Impossible de confirmer la réservation. Réessayez.',
     p_title:'Paiement', p_paying:'Vous payez', p_how:'Comment souhaitez-vous payer', p_full:'Paiement intégral', p_full_sub:'Payez tout maintenant', p_install:'Paiement échelonné', p_plan:'Plan en 3 versements', p_now:'Aujourd\u2019hui', p_platform:'La plateforme encaisse la totalité immédiatement, même en versements : le risque d\u2019impayé reste au gateway, jamais aux partenaires.', p_pay_full:'Payer \u20ac', p_pay_install:'Activer Klarna \xb7 \u20ac',
     c_title:'Voyage confirmé !', c_sub:'Réservations envoyées, confirmations en route par email.', c_concierge:'Travel Concierge', c_concierge_sub:'Votre assistant IA pendant le séjour. Il s\u2019active 3 jours avant le départ.', c_open:'Ouvrir le Concierge (démo)', c_restart:'Recommencer le flux', concept:'CONCEPT',
     cc_title:'Concierge IA', cc_context:'Je connais déjà votre voyage : hôtel, dates et groupe. Demandez-moi en langage naturel.', cc_suggestion:'Trouvez-moi une table ce soir près de l\u2019hôtel', cc_placeholder:'Écrivez une demande\u2026',
@@ -196,7 +196,7 @@ const STR: Record<Lang, Strings> = {
     r_title:'Tus propuestas', r_recommended:'Recomendada', r_view:'Detalle', r_regen:'Nuevas propuestas', fit_in:'dentro del presupuesto', fit_over:'fuera del presupuesto',
     notice_slow:'La IA está tardando más de lo habitual — todavía no hay propuestas. Inténtalo de nuevo pronto.', notice_offline:'Servicio de IA no disponible — no hay propuestas para mostrar. Inténtalo de nuevo en un momento.', notice_dismiss:'Cerrar', r_empty:'No hay propuestas disponibles por ahora.',
     d_back:'Volver a propuestas', d_breakdown:'Desglose del presupuesto', d_vs_budget:'de tu presupuesto', d_ideal:'Desglose ideal según tus prioridades', d_elements:'Componentes del viaje', d_change:'Cambiar', d_book:'Reservar',
-    b_title:'Reserva', b_checking:'Disponibilidad en tiempo real', b_traveler:'Viajero', b_summary:'Resumen de costes', b_total:'Total', b_continue:'Ir al pago', b_wait:'Verificando disponibilidad\u2026',
+    b_title:'Reserva', b_checking:'Disponibilidad en tiempo real', b_traveler:'Viajero', b_summary:'Resumen de costes', b_total:'Total', b_continue:'Ir al pago', b_wait:'Verificando disponibilidad\u2026', b_error:'No se pudo confirmar la reserva. Int\u00e9ntalo de nuevo.',
     p_title:'Pago', p_paying:'Estás pagando', p_how:'¿Cómo quieres pagar?', p_full:'Pago único', p_full_sub:'Paga todo ahora', p_install:'Pago a plazos', p_plan:'Plan en 3 cuotas', p_now:'Hoy', p_platform:'La plataforma cobra el importe total de inmediato, incluso a plazos: el riesgo de impago queda en el gateway, nunca en los socios.', p_pay_full:'Pagar \u20ac', p_pay_install:'Activar Klarna \xb7 \u20ac',
     c_title:'¡Viaje confirmado!', c_sub:'Reservas enviadas, confirmaciones en camino por email.', c_concierge:'Travel Concierge', c_concierge_sub:'Tu asistente IA durante la estancia. Se activa 3 días antes de la salida.', c_open:'Abrir Concierge (demo)', c_restart:'Reiniciar el flujo', concept:'CONCEPT',
     cc_title:'Concierge IA', cc_context:'Ya conozco tu viaje: hotel, fechas y grupo. Pregúntame en lenguaje natural.', cc_suggestion:'Encuéntrame una mesa esta noche cerca del hotel', cc_placeholder:'Escribe una solicitud\u2026',
@@ -332,6 +332,7 @@ export class PlannerComponent implements OnDestroy {
   currentRequestId = signal<string | null>(null);
   currentBookingId = signal<string | null>(null);
   currentBookingRef = signal<string | null>(null);
+  bookingError = signal(false);
   private departureDateStr = '';
   private returnDateStr = '';
 
@@ -606,6 +607,7 @@ export class PlannerComponent implements OnDestroy {
     this.currentRequestId.set(null);
     this.currentBookingId.set(null);
     this.currentBookingRef.set(null);
+    this.bookingError.set(false);
     this.conciergeConvId.set(null);
     this.conciergeInput = '';
     this.plannerNotice.set(null);
@@ -853,37 +855,42 @@ export class PlannerComponent implements OnDestroy {
   goBooking(): void {
     this.overlay.set('booking');
     this.checkStep.set(0);
-    [700, 1400, 2100].forEach((ms, i) => {
-      this._timers.push(setTimeout(() => this.checkStep.set(i + 1), ms));
+    this.bookingError.set(false);
+    // Reveal the first check rows while the real booking is created; the final
+    // "all available" step only completes once the backend confirms it.
+    [600, 1200].forEach((ms, i) => {
+      this._timers.push(setTimeout(() => {
+        if (this.checkStep() < i + 1) this.checkStep.set(i + 1);
+      }, ms));
     });
 
-    if (this.useBackendProposals()) {
-      const sel = this.selectedProposal() as any;
-      this.bookingService.create({
-        proposalId: sel.proposalId ?? sel.id,
-        hotelId: sel.hotelId,
-        restaurantId: sel.restaurantId,
-        flightId: sel.flightId,
-        destination: sel.dest,
-        checkIn: this.departureDateStr,
-        checkOut: this.returnDateStr,
-        totalAmount: sel.total,
-        hotelAmount: sel.hp,
-        restaurantAmount: sel.rp,
-        flightAmount: sel.fp,
-        travelers: [{
-          firstName: this.authService.currentUser()?.firstName ?? 'Traveler',
-          lastName: this.authService.currentUser()?.lastName ?? '',
-          primary: true,
-        }],
-      }).subscribe({
-        next: booking => {
-          this.currentBookingId.set(booking.id);
-          this.currentBookingRef.set(booking.bookingReference);
-        },
-        error: () => { /* booking failed; confirmation will show no reference */ }
-      });
-    }
+    const sel = this.selectedProposal() as any;
+    if (!sel) { this.bookingError.set(true); return; }
+    this.bookingService.create({
+      proposalId: sel.proposalId ?? sel.id,
+      hotelId: sel.hotelId,
+      restaurantId: sel.restaurantId,
+      flightId: sel.flightId,
+      destination: sel.dest,
+      checkIn: this.departureDateStr,
+      checkOut: this.returnDateStr,
+      totalAmount: sel.total,
+      hotelAmount: sel.hp,
+      restaurantAmount: sel.rp,
+      flightAmount: sel.fp,
+      travelers: [{
+        firstName: this.authService.currentUser()?.firstName ?? 'Traveler',
+        lastName: this.authService.currentUser()?.lastName ?? '',
+        primary: true,
+      }],
+    }).subscribe({
+      next: booking => {
+        this.currentBookingId.set(booking.id);
+        this.currentBookingRef.set(booking.bookingReference);
+        this.checkStep.set(3); // real backend confirmation → unlock payment
+      },
+      error: () => { this.bookingError.set(true); } // payment stays locked
+    });
   }
 
   goPayment(): void { if (this.allChecked()) this.overlay.set('payment'); }

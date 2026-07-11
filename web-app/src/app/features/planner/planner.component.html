@@ -343,8 +343,14 @@
         <div class="msum-row msum-total"><span>{{ t().b_total }}</span><strong>€{{ selectedProposal().totalStr }}</strong></div>
       </div>
 
+      @if (bookingError()) {
+        <p class="modal-error" role="alert"><span class="ms">error</span>{{ t().b_error }}</p>
+      }
+
       <button class="generate" (click)="goPayment()" [disabled]="!allChecked()">
-        @if (allChecked()) { {{ t().b_continue }} } @else { {{ t().b_wait }} }
+        @if (allChecked()) { {{ t().b_continue }} }
+        @else if (bookingError()) { {{ t().b_error }} }
+        @else { {{ t().b_wait }} }
       </button>
     </div>
   }
