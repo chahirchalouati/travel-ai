@@ -80,6 +80,30 @@ public class RagIngestionService {
         return documents.size();
     }
 
+    /**
+     * Read-only snapshot of the vector store for the admin RAG console: total document
+     * count and a per-type breakdown. Never throws — returns zeros if the store is
+     * unavailable.
+     */
+    public java.util.Map<String, Object> status() {
+        long total = countDocuments();
+        java.util.Map<String, Long> byType = new java.util.LinkedHashMap<>();
+        try {
+            jdbcTemplate.query(
+                    "SELECT metadata->>'type' AS type, count(*) AS n FROM vector_store GROUP BY 1 ORDER BY 2 DESC",
+                    rs -> {
+                        String type = rs.getString("type");
+                        byType.put(type != null ? type : "unknown", rs.getLong("n"));
+                    });
+        } catch (Exception e) {
+            log.warn("Could not read vector_store breakdown: {}", e.getMessage());
+        }
+        return java.util.Map.of(
+                "totalDocuments", total,
+                "byType", byType,
+                "populated", total > 0);
+    }
+
     private long countDocuments() {
         try {
             Long count = jdbcTemplate.queryForObject("SELECT count(*) FROM vector_store", Long.class);
