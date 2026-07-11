@@ -6,7 +6,7 @@ import com.travelai.catalog.cruise.CruiseService;
 import com.travelai.catalog.cruise.dto.CruiseSearchResult;
 import com.travelai.catalog.flight.FlightService;
 import com.travelai.catalog.flight.dto.FlightSearchResult;
-import com.travelai.notification.events.PriceDropEvent;
+import com.travelai.event.PriceDropEvent;
 import com.travelai.pricewatch.dto.CreatePriceWatchRequest;
 import com.travelai.pricewatch.dto.PriceWatchResponse;
 import com.travelai.shared.exception.ErrorCode;

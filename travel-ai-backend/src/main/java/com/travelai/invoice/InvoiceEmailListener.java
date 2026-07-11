@@ -1,7 +1,7 @@
 package com.travelai.invoice;
 
 import com.travelai.notification.EmailService;
-import com.travelai.notification.events.BookingConfirmedEvent;
+import com.travelai.event.BookingConfirmedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.modulith.events.ApplicationModuleListener;

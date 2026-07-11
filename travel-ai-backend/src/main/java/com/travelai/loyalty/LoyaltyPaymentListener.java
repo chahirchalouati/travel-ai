@@ -1,6 +1,6 @@
 package com.travelai.loyalty;
 
-import com.travelai.notification.events.PaymentCompletedEvent;
+import com.travelai.event.PaymentCompletedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;

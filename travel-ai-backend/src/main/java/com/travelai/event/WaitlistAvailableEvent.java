@@ -1,4 +1,4 @@
-package com.travelai.notification.events;
+package com.travelai.event;
 
 import java.time.LocalDate;
 import java.util.UUID;

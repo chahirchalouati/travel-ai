@@ -6,7 +6,7 @@ import com.travelai.booking.dto.CancellationResultResponse;
 import com.travelai.catalog.cruise.CruiseRepository;
 import com.travelai.catalog.flight.FlightRepository;
 import com.travelai.catalog.restaurant.RestaurantAvailabilityRepository;
-import com.travelai.notification.events.BookingCancelledEvent;
+import com.travelai.event.BookingCancelledEvent;
 import com.travelai.payment.Payment;
 import com.travelai.payment.PaymentRepository;
 import com.travelai.payment.PaymentStatus;

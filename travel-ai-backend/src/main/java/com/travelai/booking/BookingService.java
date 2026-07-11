@@ -13,7 +13,7 @@ import com.travelai.loyalty.LoyaltyService;
 import com.travelai.loyalty.LoyaltyRewardService;
 import com.travelai.subscription.SubscriptionService;
 import com.travelai.subscription.dto.MembershipResponse;
-import com.travelai.notification.events.BookingConfirmedEvent;
+import com.travelai.event.BookingConfirmedEvent;
 import com.travelai.shared.exception.ErrorCode;
 import com.travelai.shared.exception.TravelAiException;
 import lombok.RequiredArgsConstructor;

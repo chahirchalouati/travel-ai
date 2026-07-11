@@ -4,5 +4,5 @@
  * server-authoritative; the booking funnel reads it and the chosen line items are
  * persisted per booking for revenue reporting.
  */
-@org.springframework.modulith.ApplicationModule
+@org.springframework.modulith.ApplicationModule(type = org.springframework.modulith.ApplicationModule.Type.OPEN)
 package com.travelai.ancillary;

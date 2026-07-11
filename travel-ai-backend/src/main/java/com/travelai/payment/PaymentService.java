@@ -2,7 +2,7 @@ package com.travelai.payment;
 
 import com.travelai.auth.User;
 import com.travelai.auth.UserRepository;
-import com.travelai.notification.events.PaymentCompletedEvent;
+import com.travelai.event.PaymentCompletedEvent;
 import com.travelai.payment.dto.InitiatePaymentRequest;
 import com.travelai.payment.dto.PaymentResponse;
 import com.travelai.shared.exception.ErrorCode;

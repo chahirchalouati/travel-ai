@@ -10,7 +10,7 @@ import com.travelai.itinerary.dto.ReportEventRequest;
 import com.travelai.itinerary.dto.SegmentResponse;
 import com.travelai.itinerary.events.ItineraryApprovedEvent;
 import com.travelai.itinerary.events.ItineraryEventDetectedEvent;
-import com.travelai.notification.events.BookingConfirmedEvent;
+import com.travelai.event.BookingConfirmedEvent;
 import com.travelai.shared.exception.ErrorCode;
 import com.travelai.shared.exception.TravelAiException;
 import lombok.RequiredArgsConstructor;

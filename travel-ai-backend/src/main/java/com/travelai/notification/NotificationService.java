@@ -1,13 +1,13 @@
 package com.travelai.notification;
 
-import com.travelai.notification.events.BookingCancelledEvent;
-import com.travelai.notification.events.BookingConfirmedEvent;
-import com.travelai.notification.events.EmailVerificationRequestedEvent;
-import com.travelai.notification.events.PartnerWelcomeEvent;
-import com.travelai.notification.events.PasswordResetRequestedEvent;
-import com.travelai.notification.events.PaymentCompletedEvent;
-import com.travelai.notification.events.PriceDropEvent;
-import com.travelai.notification.events.WaitlistAvailableEvent;
+import com.travelai.event.BookingCancelledEvent;
+import com.travelai.event.BookingConfirmedEvent;
+import com.travelai.event.EmailVerificationRequestedEvent;
+import com.travelai.event.PartnerWelcomeEvent;
+import com.travelai.event.PasswordResetRequestedEvent;
+import com.travelai.event.PaymentCompletedEvent;
+import com.travelai.event.PriceDropEvent;
+import com.travelai.event.WaitlistAvailableEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.modulith.events.ApplicationModuleListener;
