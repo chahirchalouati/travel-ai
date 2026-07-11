@@ -36,6 +36,7 @@ export interface AdminUser {
   email: string;
   firstName: string;
   lastName: string;
+  avatarUrl: string | null;
   role: string;
   active: boolean;
   emailVerified: boolean;
@@ -68,6 +69,7 @@ export interface AdminReview {
   id: string;
   authorName: string;
   authorEmail: string | null;
+  authorAvatarUrl: string | null;
   targetType: string;
   targetId: string;
   rating: number;

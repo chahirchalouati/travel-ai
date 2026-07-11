@@ -100,7 +100,7 @@ function emptyUserForm(): AdminUserUpsert {
               <tbody>
                 @for (u of users(); track u.id) {
                   <tr [class.row-banned]="!u.active">
-                    <td><div class="cell-user"><span class="cell-avatar">{{ initials(u) }}</span><span>{{ u.firstName }} {{ u.lastName }}</span></div></td>
+                    <td><div class="cell-user"><span class="cell-avatar">@if (u.avatarUrl) { <img #img class="cell-avatar__img" [src]="u.avatarUrl" [alt]="u.firstName" (error)="img.hidden = true; ini.hidden = false" /><span #ini hidden>{{ initials(u) }}</span> } @else { {{ initials(u) }} }</span><span>{{ u.firstName }} {{ u.lastName }}</span></div></td>
                     <td class="muted">{{ u.email }}</td>
                     <td>
                       <select class="role-select" [ngModel]="u.role" (ngModelChange)="changeRole(u, $event)">

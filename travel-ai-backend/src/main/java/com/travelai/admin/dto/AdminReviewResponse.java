@@ -9,6 +9,7 @@ public record AdminReviewResponse(
         UUID id,
         String authorName,
         String authorEmail,
+        String authorAvatarUrl,
         String targetType,
         UUID targetId,
         int rating,
@@ -22,8 +23,9 @@ public record AdminReviewResponse(
                 ? (safe(r.getUser().getFirstName()) + " " + safe(r.getUser().getLastName())).trim()
                 : "Unknown";
         String email = r.getUser() != null ? r.getUser().getEmail() : null;
+        String avatarUrl = r.getUser() != null ? r.getUser().getAvatarUrl() : null;
         return new AdminReviewResponse(
-                r.getId(), name.isBlank() ? "Unknown" : name, email,
+                r.getId(), name.isBlank() ? "Unknown" : name, email, avatarUrl,
                 r.getTargetType(), r.getTargetId(), r.getRating(),
                 r.getTitle(), r.getContent(), r.isVerified(), r.getCreatedAt());
     }

@@ -214,7 +214,9 @@
   color: #fff;
   font-size: 0.72rem;
   font-weight: 700;
+  overflow: hidden;
 }
+.fo-avatar__img { width: 100%; height: 100%; object-fit: cover; }
 
 .fo-dot { opacity: 0.5; }
 .fo-loc { display: inline-flex; align-items: center; gap: 2px; .ms { font-size: 14px; } }

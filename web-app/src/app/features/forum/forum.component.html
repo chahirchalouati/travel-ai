@@ -55,7 +55,15 @@
               <h3 class="fo-card__title">{{ q.title }}</h3>
               <p class="fo-card__body">{{ q.body }}</p>
               <div class="fo-card__meta">
-                <span class="fo-avatar">{{ q.authorName.charAt(0) }}</span>
+                <span class="fo-avatar">
+                  @if (q.authorAvatarUrl) {
+                    <img #img class="fo-avatar__img" [src]="q.authorAvatarUrl" [alt]="q.authorName"
+                         (error)="img.hidden = true; ini.hidden = false" />
+                    <span #ini hidden>{{ q.authorName.charAt(0) }}</span>
+                  } @else {
+                    {{ q.authorName.charAt(0) }}
+                  }
+                </span>
                 <span>{{ q.authorName }}</span>
                 <span class="fo-dot">·</span>
                 <span>{{ q.createdAt | date:'mediumDate' }}</span>

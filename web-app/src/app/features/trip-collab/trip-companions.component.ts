@@ -32,7 +32,15 @@ import type { TripMemberResponse, TripRole } from '../../core/models/api.models'
             <ul class="tc-list">
               @for (m of members(); track m.id) {
                 <li class="tc-member">
-                  <span class="tc-avatar" [attr.aria-hidden]="true">{{ initials(m) }}</span>
+                  <span class="tc-avatar" [attr.aria-hidden]="true">
+                    @if (m.avatarUrl) {
+                      <img #img class="tc-avatar__img" [src]="m.avatarUrl" alt=""
+                           (error)="img.hidden = true; ini.hidden = false" />
+                      <span #ini hidden>{{ initials(m) }}</span>
+                    } @else {
+                      {{ initials(m) }}
+                    }
+                  </span>
                   <div class="tc-member__main">
                     <span class="tc-member__name">{{ m.displayName || m.invitedEmail }}</span>
                     <span class="tc-member__email">{{ m.invitedEmail }}</span>
@@ -81,7 +89,8 @@ import type { TripMemberResponse, TripRole } from '../../core/models/api.models'
     .tc-empty { color: var(--text-tertiary); font-size: 0.9rem; margin: 0 0 1rem; }
     .tc-list { list-style: none; margin: 0 0 1rem; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; }
     .tc-member { display: flex; align-items: center; gap: 0.7rem; padding: 0.6rem 0.7rem; border: 1px solid var(--border); border-radius: 3px; }
-    .tc-avatar { flex: 0 0 34px; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 0.78rem; font-weight: 800; color: #fff; background: var(--brand); }
+    .tc-avatar { flex: 0 0 34px; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 0.78rem; font-weight: 800; color: #fff; background: var(--brand); overflow: hidden; }
+    .tc-avatar__img { width: 100%; height: 100%; object-fit: cover; }
     .tc-member__main { display: flex; flex-direction: column; min-width: 0; margin-right: auto; }
     .tc-member__name { font-weight: 700; font-size: 0.92rem; }
     .tc-member__email { font-size: 0.75rem; color: var(--text-tertiary); overflow: hidden; text-overflow: ellipsis; }

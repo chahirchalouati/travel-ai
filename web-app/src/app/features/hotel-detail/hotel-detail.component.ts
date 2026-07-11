@@ -236,7 +236,15 @@ const TARGET_TYPE = 'HOTEL';
                   @for (r of reviews(); track r.id) {
                     <li class="review-item">
                       <div class="review-head">
-                        <div class="review-avatar">{{ r.userFirstName.charAt(0) }}</div>
+                        <div class="review-avatar">
+                          @if (r.userAvatarUrl) {
+                            <img #img class="review-avatar__img" [src]="r.userAvatarUrl" [alt]="r.userFirstName"
+                                 (error)="img.hidden = true; ini.hidden = false" />
+                            <span #ini hidden>{{ r.userFirstName.charAt(0) }}</span>
+                          } @else {
+                            {{ r.userFirstName.charAt(0) }}
+                          }
+                        </div>
                         <div class="review-meta">
                           <span class="review-name">
                             {{ r.userFirstName }}
@@ -394,7 +402,8 @@ const TARGET_TYPE = 'HOTEL';
     .review-item { border-bottom: 1px solid var(--border-light); padding-bottom: 20px; }
     .review-item:last-child { border-bottom: none; padding-bottom: 0; }
     .review-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-    .review-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--color-red); color: #fff; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .review-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--color-red); color: #fff; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+    .review-avatar__img { width: 100%; height: 100%; object-fit: cover; }
     .review-meta { flex: 1; min-width: 0; }
     .review-name { display: block; font-size: 14px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 6px; }
     .review-date { display: block; font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }

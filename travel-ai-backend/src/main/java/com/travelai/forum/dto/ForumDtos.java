@@ -29,6 +29,7 @@ public final class ForumDtos {
     public record QuestionResponse(
             UUID id,
             String authorName,
+            String authorAvatarUrl,
             String title,
             String body,
             String targetType,
@@ -38,8 +39,12 @@ public final class ForumDtos {
             Instant createdAt
     ) {
         public static QuestionResponse from(ForumQuestion q) {
+            return from(q, null);
+        }
+
+        public static QuestionResponse from(ForumQuestion q, String authorAvatarUrl) {
             return new QuestionResponse(
-                    q.getId(), q.getAuthorName(), q.getTitle(), q.getBody(),
+                    q.getId(), q.getAuthorName(), authorAvatarUrl, q.getTitle(), q.getBody(),
                     q.getTargetType(), q.getTargetId(), q.getLocation(),
                     q.getAnswerCount(), q.getCreatedAt());
         }
@@ -48,14 +53,19 @@ public final class ForumDtos {
     public record AnswerResponse(
             UUID id,
             String authorName,
+            String authorAvatarUrl,
             String body,
             int helpfulCount,
             boolean accepted,
             Instant createdAt
     ) {
         public static AnswerResponse from(ForumAnswer a) {
+            return from(a, null);
+        }
+
+        public static AnswerResponse from(ForumAnswer a, String authorAvatarUrl) {
             return new AnswerResponse(
-                    a.getId(), a.getAuthorName(), a.getBody(),
+                    a.getId(), a.getAuthorName(), authorAvatarUrl, a.getBody(),
                     a.getHelpfulCount(), a.isAccepted(), a.getCreatedAt());
         }
     }

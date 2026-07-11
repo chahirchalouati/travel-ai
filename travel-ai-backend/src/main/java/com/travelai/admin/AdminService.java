@@ -61,10 +61,7 @@ public class AdminService {
     public Page<AdminUserResponse> listUsers(Pageable pageable) {
         Page<User> page = userRepository.findAll(pageable);
         List<AdminUserResponse> content = page.getContent().stream()
-            .map(u -> new AdminUserResponse(
-                u.getId(), u.getEmail(), u.getFirstName(), u.getLastName(),
-                u.getRole(), u.isActive(), u.isEmailVerified(), u.getCreatedAt()
-            ))
+            .map(this::toAdminUser)
             .toList();
         return new PageImpl<>(content, pageable, page.getTotalElements());
     }
@@ -281,7 +278,7 @@ public class AdminService {
 
     private AdminUserResponse toAdminUser(User u) {
         return new AdminUserResponse(
-            u.getId(), u.getEmail(), u.getFirstName(), u.getLastName(),
+            u.getId(), u.getEmail(), u.getFirstName(), u.getLastName(), u.getAvatarUrl(),
             u.getRole(), u.isActive(), u.isEmailVerified(), u.getCreatedAt());
     }
 

@@ -10,7 +10,15 @@
         <article class="fd-question" appReveal>
           <h1 class="fd-title">{{ d.question.title }}</h1>
           <div class="fd-meta">
-            <span class="fd-avatar">{{ d.question.authorName.charAt(0) }}</span>
+            <span class="fd-avatar">
+              @if (d.question.authorAvatarUrl) {
+                <img #img class="fd-avatar__img" [src]="d.question.authorAvatarUrl" [alt]="d.question.authorName"
+                     (error)="img.hidden = true; ini.hidden = false" />
+                <span #ini hidden>{{ d.question.authorName.charAt(0) }}</span>
+              } @else {
+                {{ d.question.authorName.charAt(0) }}
+              }
+            </span>
             <span>{{ d.question.authorName }}</span>
             <span class="fd-dot">·</span>
             <span>{{ d.question.createdAt | date:'mediumDate' }}</span>
@@ -36,7 +44,15 @@
               @for (a of answers(); track a.id) {
                 <li class="fd-answer" [class.is-accepted]="a.accepted">
                   <div class="fd-answer__head">
-                    <span class="fd-avatar">{{ a.authorName.charAt(0) }}</span>
+                    <span class="fd-avatar">
+                      @if (a.authorAvatarUrl) {
+                        <img #img class="fd-avatar__img" [src]="a.authorAvatarUrl" [alt]="a.authorName"
+                             (error)="img.hidden = true; ini.hidden = false" />
+                        <span #ini hidden>{{ a.authorName.charAt(0) }}</span>
+                      } @else {
+                        {{ a.authorName.charAt(0) }}
+                      }
+                    </span>
                     <span class="fd-answer__name">{{ a.authorName }}</span>
                     @if (a.accepted) {
                       <span class="fd-accepted"><span class="ms">verified</span>{{ t('forum.accepted') }}</span>

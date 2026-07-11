@@ -294,6 +294,10 @@ export interface CreateBookingRequest {
   cabinCategory?: string;
   partySize?: number;
   tripGroupId?: string;
+  /** Gross base (unit price × party) the Prime member discount is computed on; validated server-side. */
+  subtotal?: number;
+  /** Prime member discount applied and already subtracted from totalAmount; validated server-side. */
+  memberDiscountAmount?: number;
   /** Loyalty points to spend on this booking (discount already reflected in totalAmount). */
   redeemPoints?: number;
   /** Chosen paid add-ons (priced server-side; sum already reflected in totalAmount). */
@@ -517,6 +521,7 @@ export interface ReviewResponse {
   id: string;
   userId: string;
   userFirstName: string;
+  userAvatarUrl: string | null;
   targetType: string;
   targetId: string;
   rating: number;
@@ -732,6 +737,7 @@ export interface TripRefResponse {
 export interface ForumQuestionResponse {
   id: string;
   authorName: string;
+  authorAvatarUrl: string | null;
   title: string;
   body: string;
   targetType: string | null;
@@ -744,6 +750,7 @@ export interface ForumQuestionResponse {
 export interface ForumAnswerResponse {
   id: string;
   authorName: string;
+  authorAvatarUrl: string | null;
   body: string;
   helpfulCount: number;
   accepted: boolean;
@@ -794,6 +801,7 @@ export interface TripMemberResponse {
   role: TripRole;
   status: TripMemberStatus;
   displayName: string | null;
+  avatarUrl: string | null;
   createdAt: string;
   respondedAt: string | null;
 }

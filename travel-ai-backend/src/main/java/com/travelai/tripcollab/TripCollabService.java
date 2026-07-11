@@ -45,9 +45,14 @@ public class TripCollabService {
     public List<TripMemberResponse> listMembers(UUID tripId, String userEmail) {
         tripAccessService.requireView(tripId, userEmail);
         List<TripMember> members = memberRepository.findByTripIdOrderByCreatedAtAsc(tripId);
-        Map<UUID, String> namesById = displayNames(members);
+        Map<UUID, User> usersById = usersById(members);
         return members.stream()
-                .map(m -> TripMemberResponse.from(m, namesById.get(m.getUserId())))
+                .map(m -> {
+                    User u = usersById.get(m.getUserId());
+                    String name = u == null ? null : (u.getFirstName() + " " + u.getLastName()).trim();
+                    String avatar = u == null ? null : u.getAvatarUrl();
+                    return TripMemberResponse.from(m, name, avatar);
+                })
                 .toList();
     }
 
@@ -138,7 +143,7 @@ public class TripCollabService {
         }
     }
 
-    private Map<UUID, String> displayNames(List<TripMember> members) {
+    private Map<UUID, User> usersById(List<TripMember> members) {
         List<UUID> userIds = members.stream()
                 .map(TripMember::getUserId)
                 .filter(Objects::nonNull)
@@ -147,8 +152,6 @@ public class TripCollabService {
             return Map.of();
         }
         return userRepository.findAllById(userIds).stream()
-                .collect(Collectors.toMap(User::getId,
-                        u -> (u.getFirstName() + " " + u.getLastName()).trim(),
-                        (a, b) -> a));
+                .collect(Collectors.toMap(User::getId, u -> u, (a, b) -> a));
     }
 }

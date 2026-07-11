@@ -299,12 +299,21 @@ const MONTH_NAMES = [
                         <div
                           style="
                             width: 36px; height: 36px; border-radius: 50%;
-                            background: var(--bg-secondary);
+                            background: var(--bg-secondary); overflow: hidden;
                             display: flex; align-items: center; justify-content: center;
                             font-family: var(--font-body); font-size: 14px;
                             color: var(--color-red-ink); font-weight: 700;
                           "
-                        >{{ review.userFirstName.charAt(0) }}</div>
+                        >
+                          @if (review.userAvatarUrl) {
+                            <img #img [src]="review.userAvatarUrl" [alt]="review.userFirstName"
+                                 (error)="img.hidden = true; ini.hidden = false"
+                                 style="width: 100%; height: 100%; object-fit: cover;" />
+                            <span #ini hidden>{{ review.userFirstName.charAt(0) }}</span>
+                          } @else {
+                            {{ review.userFirstName.charAt(0) }}
+                          }
+                        </div>
                         <div>
                           <div
                             style="

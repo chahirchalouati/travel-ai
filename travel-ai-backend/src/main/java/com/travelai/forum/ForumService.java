@@ -16,6 +16,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -29,26 +35,33 @@ public class ForumService {
     private final UserRepository userRepository;
 
     public Page<QuestionResponse> listQuestions(String targetType, UUID targetId, String query, Pageable pageable) {
+        Page<ForumQuestion> page;
         if (query != null && !query.isBlank()) {
-            return questionRepository
-                    .findByTitleContainingIgnoreCaseOrBodyContainingIgnoreCaseOrderByCreatedAtDesc(query, query, pageable)
-                    .map(QuestionResponse::from);
+            page = questionRepository
+                    .findByTitleContainingIgnoreCaseOrBodyContainingIgnoreCaseOrderByCreatedAtDesc(query, query, pageable);
+        } else if (targetType != null && !targetType.isBlank() && targetId != null) {
+            page = questionRepository.findByTargetTypeAndTargetIdOrderByCreatedAtDesc(targetType, targetId, pageable);
+        } else {
+            page = questionRepository.findAllByOrderByCreatedAtDesc(pageable);
         }
-        if (targetType != null && !targetType.isBlank() && targetId != null) {
-            return questionRepository
-                    .findByTargetTypeAndTargetIdOrderByCreatedAtDesc(targetType, targetId, pageable)
-                    .map(QuestionResponse::from);
-        }
-        return questionRepository.findAllByOrderByCreatedAtDesc(pageable).map(QuestionResponse::from);
+        Map<UUID, String> avatars = avatarsFor(page.getContent().stream().map(ForumQuestion::getAuthorId).toList());
+        return page.map(q -> QuestionResponse.from(q, avatars.get(q.getAuthorId())));
     }
 
     public QuestionDetailResponse getQuestion(UUID id) {
         ForumQuestion question = questionRepository.findById(id)
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.FORUM_QUESTION_NOT_FOUND));
-        var answers = answerRepository
-                .findByQuestionIdOrderByAcceptedDescHelpfulCountDescCreatedAtAsc(id)
-                .stream().map(AnswerResponse::from).toList();
-        return new QuestionDetailResponse(QuestionResponse.from(question), answers);
+        var answerEntities = answerRepository
+                .findByQuestionIdOrderByAcceptedDescHelpfulCountDescCreatedAtAsc(id);
+        List<UUID> authorIds = new ArrayList<>();
+        authorIds.add(question.getAuthorId());
+        answerEntities.forEach(a -> authorIds.add(a.getAuthorId()));
+        Map<UUID, String> avatars = avatarsFor(authorIds);
+        var answers = answerEntities.stream()
+                .map(a -> AnswerResponse.from(a, avatars.get(a.getAuthorId())))
+                .toList();
+        return new QuestionDetailResponse(
+                QuestionResponse.from(question, avatars.get(question.getAuthorId())), answers);
     }
 
     @Transactional
@@ -64,7 +77,7 @@ public class ForumService {
         question.setLocation(blankToNull(req.location()));
         ForumQuestion saved = questionRepository.save(question);
         log.info("Forum question {} asked by {}", saved.getId(), author.getId());
-        return QuestionResponse.from(saved);
+        return QuestionResponse.from(saved, author.getAvatarUrl());
     }
 
     @Transactional
@@ -83,7 +96,7 @@ public class ForumService {
         question.setAnswerCount((int) answerRepository.countByQuestionId(questionId));
         questionRepository.save(question);
 
-        return AnswerResponse.from(saved);
+        return AnswerResponse.from(saved, author.getAvatarUrl());
     }
 
     @Transactional
@@ -91,7 +104,8 @@ public class ForumService {
         ForumAnswer answer = answerRepository.findById(answerId)
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.FORUM_ANSWER_NOT_FOUND));
         answer.setHelpfulCount(answer.getHelpfulCount() + 1);
-        return AnswerResponse.from(answerRepository.save(answer));
+        ForumAnswer saved = answerRepository.save(answer);
+        return AnswerResponse.from(saved, avatarsFor(List.of(saved.getAuthorId())).get(saved.getAuthorId()));
     }
 
     // --- helpers ---
@@ -99,6 +113,21 @@ public class ForumService {
     private User resolveUser(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.USER_NOT_FOUND));
+    }
+
+    /** Batch-loads avatar URLs for the given author ids, keyed by user id (null values omitted). */
+    private Map<UUID, String> avatarsFor(Collection<UUID> authorIds) {
+        List<UUID> distinct = authorIds.stream().filter(Objects::nonNull).distinct().toList();
+        if (distinct.isEmpty()) {
+            return Map.of();
+        }
+        Map<UUID, String> avatars = new HashMap<>();
+        for (User user : userRepository.findAllById(distinct)) {
+            if (user.getAvatarUrl() != null) {
+                avatars.put(user.getId(), user.getAvatarUrl());
+            }
+        }
+        return avatars;
     }
 
     private String displayName(User user) {

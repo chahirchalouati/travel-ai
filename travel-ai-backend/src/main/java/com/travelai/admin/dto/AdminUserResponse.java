@@ -10,6 +10,7 @@ public record AdminUserResponse(
     String email,
     String firstName,
     String lastName,
+    String avatarUrl,
     UserRole role,
     boolean active,
     boolean emailVerified,

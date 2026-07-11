@@ -44,7 +44,15 @@ type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
         <!-- Identity card -->
         <section class="card pad">
           <div class="identity">
-            <span class="identity-avatar">{{ initials() }}</span>
+            <span class="identity-avatar">
+              @if (user()?.avatarUrl) {
+                <img #img class="identity-avatar__img" [src]="user()!.avatarUrl" [alt]="fullName()"
+                     (error)="img.hidden = true; ini.hidden = false" />
+                <span #ini hidden>{{ initials() }}</span>
+              } @else {
+                {{ initials() }}
+              }
+            </span>
             <div>
               <h2 class="identity-name">{{ fullName() }}</h2>
               <span class="identity-email">{{ user()?.email }}</span>
@@ -247,7 +255,8 @@ type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
     .account-grid { display: grid; grid-template-columns: 1fr 320px; gap: 1.25rem; align-items: start; }
     .pad { padding: 1.6rem; }
     .identity { display: flex; align-items: center; gap: 1rem; padding-bottom: 1.4rem; margin-bottom: 1.4rem; border-bottom: 1px solid var(--line); }
-    .identity-avatar { width: 60px; height: 60px; flex: none; border-radius: 50%; background: var(--color-red); color: #fff; font-weight: 800; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; }
+    .identity-avatar { width: 60px; height: 60px; flex: none; border-radius: 50%; background: var(--color-red); color: #fff; font-weight: 800; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .identity-avatar__img { width: 100%; height: 100%; object-fit: cover; }
     .identity-name { margin: 0; font-size: 1.3rem; font-weight: 800; }
     .identity-email { color: var(--muted); font-size: 0.9rem; }
     .role-badge { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; background: var(--color-ink); color: #fff; font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 5px 11px; border-radius: 2px; }

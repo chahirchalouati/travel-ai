@@ -91,7 +91,8 @@
 .admin-table tr:last-child td { border-bottom: none; }
 .row-banned { background: #fffafa; }
 .cell-user { display: flex; align-items: center; gap: 10px; font-weight: 600; }
-.cell-avatar { width: 32px; height: 32px; flex: none; border-radius: 50%; background: var(--color-red); color: #fff; font-size: 0.78rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.cell-avatar { width: 32px; height: 32px; flex: none; border-radius: 50%; background: var(--color-red); color: #fff; font-size: 0.78rem; font-weight: 700; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.cell-avatar__img { width: 100%; height: 100%; object-fit: cover; }
 .muted { color: var(--muted); }
 .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.82rem; }
 .empty-row { text-align: center; color: var(--muted); padding: 2.5rem; }
