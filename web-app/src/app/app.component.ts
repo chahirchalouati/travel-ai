@@ -5,12 +5,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { NavComponent } from './shared/nav/nav.component';
 import { FooterComponent } from './shared/footer/footer.component';
+import { ImpersonationBannerComponent } from './shared/impersonation-banner/impersonation-banner.component';
 import { SeoService, SeoData } from './core/services/seo.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavComponent, FooterComponent],
+  imports: [RouterOutlet, NavComponent, FooterComponent, ImpersonationBannerComponent],
   animations: [
     trigger('routeFade', [
       transition('* => *', [
@@ -20,6 +21,7 @@ import { SeoService, SeoData } from './core/services/seo.service';
     ]),
   ],
   template: `
+    <app-impersonation-banner />
     <app-nav />
     <main [@routeFade]="routeKey" [@.disabled]="reduceMotion">
       <router-outlet (activate)="onActivate()" />

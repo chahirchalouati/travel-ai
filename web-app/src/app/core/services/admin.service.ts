@@ -20,6 +20,20 @@ export interface AdminDashboard {
   totalStories: number;
 }
 
+export interface ImpersonationResult {
+  accessToken: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+}
+
+export interface AdminAlert {
+  code: string;
+  severity: 'warning' | 'info';
+  count: number;
+}
+
 export interface AdminUserUpsert {
   email: string;
   password?: string;
@@ -90,6 +104,53 @@ export interface AdminAiLog {
   createdAt: string | null;
 }
 
+export interface AdminAuditLog {
+  id: string;
+  actor: string;
+  method: string;
+  path: string;
+  action: string;
+  targetId: string | null;
+  statusCode: number;
+  ip: string | null;
+  createdAt: string;
+}
+
+export interface AdminPayment {
+  id: string;
+  bookingId: string;
+  userEmail: string | null;
+  status: string;
+  type: string | null;
+  gateway: string | null;
+  amount: number;
+  currency: string;
+  gatewayReference: string | null;
+  paidAt: string | null;
+  refundedAt: string | null;
+  failureReason: string | null;
+  createdAt: string;
+}
+
+export interface FeatureFlag {
+  id: string;
+  key: string;
+  enabled: boolean;
+  description: string | null;
+  updatedAt: string;
+}
+
+export interface RagStatus {
+  totalDocuments: number;
+  byType: Record<string, number>;
+  populated: boolean;
+}
+
+export interface RagIngestResult {
+  documentsIngested: number;
+  status: string;
+}
+
 /** Admin platform-management API (all endpoints require the ADMIN role). */
 @Injectable({ providedIn: 'root' })
 export class AdminService {
@@ -98,6 +159,10 @@ export class AdminService {
 
   dashboard(): Observable<AdminDashboard> {
     return this.http.get<ApiWrapper<AdminDashboard>>(`${this.base}/dashboard`).pipe(map(r => r.data));
+  }
+
+  alerts(): Observable<AdminAlert[]> {
+    return this.http.get<ApiWrapper<AdminAlert[]>>(`${this.base}/alerts`).pipe(map(r => r.data));
   }
 
   users(page = 0, size = 20): Observable<PageWrapper<AdminUser>> {
@@ -148,6 +213,20 @@ export class AdminService {
     return this.http.post<ApiWrapper<AdminUser>>(`${this.base}/users`, body).pipe(map(r => r.data));
   }
 
+  exportUserData(id: string): Observable<Record<string, unknown>> {
+    return this.http.get<ApiWrapper<Record<string, unknown>>>(`${this.base}/users/${id}/export`).pipe(map(r => r.data));
+  }
+
+  anonymizeUser(id: string): Observable<unknown> {
+    return this.http.post<unknown>(`${this.base}/users/${id}/anonymize`, {});
+  }
+
+  impersonate(id: string): Observable<ImpersonationResult> {
+    return this.http
+      .post<ApiWrapper<ImpersonationResult>>(`${this.base}/users/${id}/impersonate`, {})
+      .pipe(map(r => r.data));
+  }
+
   updateUser(id: string, body: AdminUserUpsert): Observable<AdminUser> {
     return this.http.put<ApiWrapper<AdminUser>>(`${this.base}/users/${id}`, body).pipe(map(r => r.data));
   }
@@ -165,6 +244,63 @@ export class AdminService {
   aiLogs(page = 0, size = 20): Observable<PageWrapper<AdminAiLog>> {
     return this.http
       .get<ApiWrapper<PageWrapper<AdminAiLog>>>(`${this.base}/ai-logs?page=${page}&size=${size}`)
+      .pipe(map(r => r.data));
+  }
+
+  broadcast(subject: string, body: string, role = ''): Observable<{ recipients: number }> {
+    return this.http
+      .post<ApiWrapper<{ recipients: number }>>(`${this.base}/notifications/broadcast`, { subject, body, role: role || null })
+      .pipe(map(r => r.data));
+  }
+
+  payments(page = 0, size = 20, status = ''): Observable<PageWrapper<AdminPayment>> {
+    let params = `page=${page}&size=${size}`;
+    if (status) params += `&status=${encodeURIComponent(status)}`;
+    return this.http
+      .get<ApiWrapper<PageWrapper<AdminPayment>>>(`${this.base}/payments?${params}`)
+      .pipe(map(r => r.data));
+  }
+
+  refundPayment(id: string): Observable<AdminPayment> {
+    return this.http
+      .post<ApiWrapper<AdminPayment>>(`${this.base}/payments/${id}/refund`, {})
+      .pipe(map(r => r.data));
+  }
+
+  featureFlags(): Observable<FeatureFlag[]> {
+    return this.http.get<ApiWrapper<FeatureFlag[]>>(`${this.base}/feature-flags`).pipe(map(r => r.data));
+  }
+
+  upsertFlag(key: string, enabled: boolean, description: string): Observable<FeatureFlag> {
+    return this.http
+      .post<ApiWrapper<FeatureFlag>>(`${this.base}/feature-flags`, { key, enabled, description })
+      .pipe(map(r => r.data));
+  }
+
+  toggleFlag(id: string, enabled: boolean): Observable<FeatureFlag> {
+    return this.http
+      .patch<ApiWrapper<FeatureFlag>>(`${this.base}/feature-flags/${id}/toggle`, { enabled })
+      .pipe(map(r => r.data));
+  }
+
+  deleteFlag(id: string): Observable<unknown> {
+    return this.http.delete<ApiWrapper<unknown>>(`${this.base}/feature-flags/${id}`).pipe(map(r => r.data));
+  }
+
+  ragStatus(): Observable<RagStatus> {
+    return this.http.get<ApiWrapper<RagStatus>>(`${this.base}/rag/status`).pipe(map(r => r.data));
+  }
+
+  ragReingest(): Observable<RagIngestResult> {
+    return this.http.post<ApiWrapper<RagIngestResult>>(`${this.base}/rag/ingest`, {}).pipe(map(r => r.data));
+  }
+
+  auditLogs(page = 0, size = 20, actor = '', action = ''): Observable<PageWrapper<AdminAuditLog>> {
+    let params = `page=${page}&size=${size}`;
+    if (actor) params += `&actor=${encodeURIComponent(actor)}`;
+    if (action) params += `&action=${encodeURIComponent(action)}`;
+    return this.http
+      .get<ApiWrapper<PageWrapper<AdminAuditLog>>>(`${this.base}/audit?${params}`)
       .pipe(map(r => r.data));
   }
 }

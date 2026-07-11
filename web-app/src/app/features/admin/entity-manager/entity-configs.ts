@@ -250,6 +250,26 @@ export const ENTITY_CONFIGS: Record<string, EntityConfig> = {
     ],
   },
 
+  promos: {
+    resource: 'promos',
+    labelKey: 'admin.entPromo',
+    columns: [
+      { key: 'code', labelKey: 'admin.cCode' },
+      { key: 'discountType', labelKey: 'admin.cDiscountType', kind: 'badge' },
+      { key: 'value', labelKey: 'admin.cValue' },
+      { key: 'timesRedeemed', labelKey: 'admin.cRedeemed' },
+      { key: 'active', labelKey: 'admin.cActive', kind: 'bool' },
+    ],
+    fields: [
+      { key: 'code', labelKey: 'admin.fPromoCode', type: 'text', required: true },
+      { key: 'discountType', labelKey: 'admin.fDiscountType', type: 'select', required: true, options: ['PERCENT', 'FIXED'] },
+      { key: 'value', labelKey: 'admin.fValue', type: 'number', required: true },
+      { key: 'expiresAt', labelKey: 'admin.fExpiresAt', type: 'datetime' },
+      { key: 'maxRedemptions', labelKey: 'admin.fMaxRedemptions', type: 'number' },
+      ACTIVE,
+    ],
+  },
+
   partners: {
     resource: 'partners',
     labelKey: 'admin.entPartner',

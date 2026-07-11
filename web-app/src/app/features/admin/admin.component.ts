@@ -7,7 +7,8 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../core/services/auth.service';
 import { AdminService } from '../../core/services/admin.service';
 import type {
-  AdminDashboard, AdminUser, AdminBooking, AdminReview, AdminAiLog, AdminUserUpsert,
+  AdminDashboard, AdminUser, AdminBooking, AdminReview, AdminAiLog, AdminAuditLog, AdminUserUpsert,
+  AdminPayment, RagStatus, FeatureFlag, AdminAlert,
 } from '../../core/services/admin.service';
 import { AdminEntityManagerComponent } from './entity-manager/admin-entity-manager.component';
 import { ENTITY_CONFIGS, EntityConfig } from './entity-manager/entity-configs';
@@ -15,7 +16,7 @@ import { ENTITY_CONFIGS, EntityConfig } from './entity-manager/entity-configs';
 type Section =
   | 'overview' | 'users' | 'partners'
   | 'hotels' | 'flights' | 'cruises' | 'restaurants' | 'destinations' | 'attractions' | 'stories'
-  | 'bookings' | 'reviews' | 'logs';
+  | 'bookings' | 'reviews' | 'logs' | 'audit' | 'promos' | 'rag' | 'payments' | 'broadcast' | 'flags';
 
 const ROLES = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
 const BOOKING_STATUSES = ['PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED'];
@@ -61,6 +62,19 @@ function emptyUserForm(): AdminUserUpsert {
 
         <!-- OVERVIEW -->
         @if (section() === 'overview') {
+          @if (alerts().length) {
+            <div class="alert-stack">
+              @for (a of alerts(); track a.code) {
+                <div class="alert-row" [class.alert-warning]="a.severity === 'warning'" [class.alert-info]="a.severity === 'info'">
+                  <span class="ms">{{ a.severity === 'warning' ? 'warning' : 'info' }}</span>
+                  <span class="alert-text">{{ 'admin.alert_' + a.code | transloco:{ count: a.count } }}</span>
+                  @if (a.code === 'failedPayments') { <button class="alert-cta" (click)="filterPayments('FAILED'); go('payments')">{{ 'admin.alertView' | transloco }}</button> }
+                  @if (a.code === 'pendingPartners') { <button class="alert-cta" (click)="go('partners')">{{ 'admin.alertView' | transloco }}</button> }
+                  @if (a.code === 'ragEmpty') { <button class="alert-cta" (click)="go('rag')">{{ 'admin.alertView' | transloco }}</button> }
+                </div>
+              }
+            </div>
+          }
           @if (dashboard(); as d) {
             <div class="stat-grid">
               <div class="stat-card"><span class="ms stat-ic" style="color:#5b8def">group</span><div><span class="stat-num">{{ d.totalUsers }}</span><span class="stat-lbl">{{ 'admin.statUsers' | transloco }}</span></div></div>
@@ -115,6 +129,11 @@ function emptyUserForm(): AdminUserUpsert {
                       <button class="mini" [class.mini-danger]="u.active" (click)="toggleBan(u)">
                         {{ (u.active ? 'admin.ban' : 'admin.reinstate') | transloco }}
                       </button>
+                      @if (u.active && u.role !== 'ADMIN') {
+                        <button class="mini" (click)="impersonate(u)" [title]="'admin.impersonateHint' | transloco">{{ 'admin.impersonate' | transloco }}</button>
+                      }
+                      <button class="mini" (click)="exportUser(u)" [title]="'admin.gdprExportHint' | transloco">{{ 'admin.gdprExport' | transloco }}</button>
+                      <button class="mini mini-danger" (click)="anonymizeUser(u)" [title]="'admin.gdprEraseHint' | transloco">{{ 'admin.gdprErase' | transloco }}</button>
                     </td>
                   </tr>
                 } @empty { <tr><td colspan="5" class="empty-row">{{ 'admin.noUsers' | transloco }}</td></tr> }
@@ -213,6 +232,165 @@ function emptyUserForm(): AdminUserUpsert {
             <button [disabled]="!hasMore()" (click)="next()">{{ 'admin.next' | transloco }}</button>
           </div>
         }
+
+        <!-- AUDIT LOG -->
+        @if (section() === 'audit') {
+          <div class="user-bar">
+            <input class="audit-search" type="search" [ngModel]="auditActor()" (ngModelChange)="filterAudit($event)"
+                   [placeholder]="'admin.auditFilterActor' | transloco" />
+          </div>
+          <div class="table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>{{ 'admin.thWhen' | transloco }}</th><th>{{ 'admin.thActor' | transloco }}</th><th>{{ 'admin.thAction' | transloco }}</th><th>{{ 'admin.thMethod' | transloco }}</th><th>{{ 'admin.thTarget' | transloco }}</th><th>{{ 'admin.thResult' | transloco }}</th><th>{{ 'admin.thIp' | transloco }}</th></tr></thead>
+              <tbody>
+                @for (a of audit(); track a.id) {
+                  <tr>
+                    <td class="muted">{{ a.createdAt | date:'short' }}</td>
+                    <td><b>{{ a.actor }}</b></td>
+                    <td><span class="tag tag-neutral">{{ a.action }}</span></td>
+                    <td class="mono">{{ a.method }}</td>
+                    <td class="mono muted">{{ a.targetId ? a.targetId.slice(0, 8) : '—' }}</td>
+                    <td><span class="tag" [class.tag-ok]="a.statusCode < 400" [class.tag-off]="a.statusCode >= 400">{{ a.statusCode }}</span></td>
+                    <td class="muted">{{ a.ip || '—' }}</td>
+                  </tr>
+                } @empty { <tr><td colspan="7" class="empty-row">{{ 'admin.noAudit' | transloco }}</td></tr> }
+              </tbody>
+            </table>
+          </div>
+          <div class="pager">
+            <button [disabled]="page() === 0" (click)="prev()">{{ 'admin.prev' | transloco }}</button>
+            <span>{{ 'admin.page' | transloco }} {{ page() + 1 }}</span>
+            <button [disabled]="!hasMore()" (click)="next()">{{ 'admin.next' | transloco }}</button>
+          </div>
+        }
+
+        <!-- RAG CONSOLE -->
+        @if (section() === 'rag') {
+          @if (ragStatus(); as s) {
+            <div class="stat-grid">
+              <div class="stat-card"><span class="ms stat-ic" style="color:#5b8def">database</span><div><span class="stat-num">{{ s.totalDocuments }}</span><span class="stat-lbl">{{ 'admin.ragDocuments' | transloco }}</span></div></div>
+              <div class="stat-card"><span class="ms stat-ic" [style.color]="s.populated ? '#42b07a' : '#e0573a'">{{ s.populated ? 'check_circle' : 'error' }}</span><div><span class="stat-num">{{ (s.populated ? 'admin.ragReady' : 'admin.ragEmpty') | transloco }}</span><span class="stat-lbl">{{ 'admin.ragStatus' | transloco }}</span></div></div>
+            </div>
+            <h2 class="admin-sub">{{ 'admin.ragByType' | transloco }}</h2>
+            <div class="table-wrap">
+              <table class="admin-table">
+                <thead><tr><th>{{ 'admin.ragType' | transloco }}</th><th>{{ 'admin.ragCount' | transloco }}</th></tr></thead>
+                <tbody>
+                  @for (t of ragTypes(); track t.type) {
+                    <tr><td><span class="tag tag-neutral">{{ t.type }}</span></td><td>{{ t.count }}</td></tr>
+                  } @empty { <tr><td colspan="2" class="empty-row">{{ 'admin.ragEmpty' | transloco }}</td></tr> }
+                </tbody>
+              </table>
+            </div>
+            <div class="quick-actions">
+              <button (click)="rebuildRag()" [disabled]="ragBusy()">
+                <span class="ms">{{ ragBusy() ? 'hourglass_top' : 'refresh' }}</span>
+                {{ (ragBusy() ? 'admin.ragRebuilding' : 'admin.ragRebuild') | transloco }}
+              </button>
+            </div>
+            <p class="admin-crumb">{{ 'admin.ragHint' | transloco }}</p>
+          } @else {
+            <div class="admin-loading">{{ 'admin.loading' | transloco }}</div>
+          }
+        }
+
+        <!-- PAYMENTS / REFUNDS -->
+        @if (section() === 'payments') {
+          <div class="user-bar">
+            <select class="audit-search" [ngModel]="paymentStatus()" (ngModelChange)="filterPayments($event)">
+              @for (s of paymentStatuses; track s) { <option [value]="s">{{ s || ('admin.payAllStatuses' | transloco) }}</option> }
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>{{ 'admin.thCreated' | transloco }}</th><th>{{ 'admin.thUser' | transloco }}</th><th>{{ 'admin.thBookingRef' | transloco }}</th><th>{{ 'admin.thAmount' | transloco }}</th><th>{{ 'admin.payGateway' | transloco }}</th><th>{{ 'admin.thStatus' | transloco }}</th><th>{{ 'admin.thActions' | transloco }}</th></tr></thead>
+              <tbody>
+                @for (pm of payments(); track pm.id) {
+                  <tr>
+                    <td class="muted">{{ pm.createdAt | date:'short' }}</td>
+                    <td class="muted">{{ pm.userEmail || '—' }}</td>
+                    <td class="mono">{{ pm.bookingId.slice(0, 8) }}</td>
+                    <td>{{ pm.amount | currency:pm.currency }}</td>
+                    <td class="muted">{{ pm.gateway || '—' }}</td>
+                    <td>
+                      <span class="tag"
+                            [class.tag-ok]="pm.status === 'COMPLETED'"
+                            [class.tag-off]="pm.status === 'FAILED' || pm.status === 'REFUNDED'"
+                            [class.tag-neutral]="pm.status !== 'COMPLETED' && pm.status !== 'FAILED' && pm.status !== 'REFUNDED'">{{ pm.status }}</span>
+                    </td>
+                    <td>
+                      @if (pm.status === 'COMPLETED') {
+                        <button class="mini mini-danger" (click)="refundPayment(pm)"><span class="ms" style="font-size:15px">undo</span> {{ 'admin.refund' | transloco }}</button>
+                      } @else if (pm.status === 'REFUNDED') {
+                        <span class="muted">{{ 'admin.refunded' | transloco }} {{ pm.refundedAt ? (pm.refundedAt | date:'shortDate') : '' }}</span>
+                      } @else { <span class="muted">—</span> }
+                    </td>
+                  </tr>
+                } @empty { <tr><td colspan="7" class="empty-row">{{ 'admin.noPayments' | transloco }}</td></tr> }
+              </tbody>
+            </table>
+          </div>
+          <div class="pager">
+            <button [disabled]="page() === 0" (click)="prev()">{{ 'admin.prev' | transloco }}</button>
+            <span>{{ 'admin.page' | transloco }} {{ page() + 1 }}</span>
+            <button [disabled]="!hasMore()" (click)="next()">{{ 'admin.next' | transloco }}</button>
+          </div>
+        }
+
+        <!-- BROADCAST -->
+        @if (section() === 'broadcast') {
+          <div class="broadcast-card">
+            <p class="admin-crumb">{{ 'admin.broadcastHint' | transloco }}</p>
+            <label class="u-field u-full"><span class="u-lbl">{{ 'admin.broadcastAudience' | transloco }}</span>
+              <select [(ngModel)]="broadcastForm.role">
+                @for (r of broadcastRoles; track r) { <option [value]="r">{{ r || ('admin.broadcastEveryone' | transloco) }}</option> }
+              </select>
+            </label>
+            <label class="u-field u-full"><span class="u-lbl">{{ 'admin.broadcastSubject' | transloco }} <span class="req">*</span></span>
+              <input type="text" [(ngModel)]="broadcastForm.subject" maxlength="140" /></label>
+            <label class="u-field u-full"><span class="u-lbl">{{ 'admin.broadcastMessage' | transloco }} <span class="req">*</span></span>
+              <textarea rows="5" [(ngModel)]="broadcastForm.body"></textarea></label>
+            <div class="quick-actions">
+              <button (click)="sendBroadcast()" [disabled]="broadcastSending()">
+                <span class="ms">{{ broadcastSending() ? 'hourglass_top' : 'send' }}</span>
+                {{ (broadcastSending() ? 'admin.broadcastSending' : 'admin.broadcastSend') | transloco }}
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- FEATURE FLAGS -->
+        @if (section() === 'flags') {
+          <div class="broadcast-card">
+            <span class="u-lbl">{{ 'admin.flagNew' | transloco }}</span>
+            <div class="flag-new-row">
+              <input type="text" [(ngModel)]="flagForm.key" [placeholder]="'admin.flagKeyPlaceholder' | transloco" />
+              <input type="text" [(ngModel)]="flagForm.description" [placeholder]="'admin.fDescription' | transloco" />
+              <button class="em-new-btn" (click)="createFlag()"><span class="ms">add</span> {{ 'admin.flagAdd' | transloco }}</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>{{ 'admin.flagKey' | transloco }}</th><th>{{ 'admin.fDescription' | transloco }}</th><th>{{ 'admin.thStatus' | transloco }}</th><th>{{ 'admin.thWhen' | transloco }}</th><th>{{ 'admin.thActions' | transloco }}</th></tr></thead>
+              <tbody>
+                @for (flag of flags(); track flag.id) {
+                  <tr>
+                    <td class="mono"><b>{{ flag.key }}</b></td>
+                    <td class="muted">{{ flag.description || '—' }}</td>
+                    <td><span class="tag" [class.tag-ok]="flag.enabled" [class.tag-off]="!flag.enabled">{{ (flag.enabled ? 'admin.flagOn' : 'admin.flagOff') | transloco }}</span></td>
+                    <td class="muted">{{ flag.updatedAt | date:'short' }}</td>
+                    <td class="user-actions">
+                      <button class="mini" [class.mini-ok]="!flag.enabled" [class.mini-danger]="flag.enabled" (click)="toggleFlag(flag)">
+                        {{ (flag.enabled ? 'admin.flagTurnOff' : 'admin.flagTurnOn') | transloco }}
+                      </button>
+                      <button class="mini mini-danger" (click)="removeFlag(flag)">{{ 'admin.delete' | transloco }}</button>
+                    </td>
+                  </tr>
+                } @empty { <tr><td colspan="5" class="empty-row">{{ 'admin.noFlags' | transloco }}</td></tr> }
+              </tbody>
+            </table>
+          </div>
+        }
       </main>
 
       <!-- USER CREATE / EDIT MODAL -->
@@ -272,8 +450,14 @@ export class AdminComponent implements OnInit {
     { id: 'attractions', key: 'admin.navAttractions', icon: 'attractions' },
     { id: 'stories', key: 'admin.navStories', icon: 'movie' },
     { id: 'bookings', key: 'admin.navBookings', icon: 'confirmation_number' },
+    { id: 'payments', key: 'admin.navPayments', icon: 'payments' },
     { id: 'reviews', key: 'admin.navReviews', icon: 'reviews' },
+    { id: 'promos', key: 'admin.navPromos', icon: 'sell' },
     { id: 'logs', key: 'admin.navLogs', icon: 'monitoring' },
+    { id: 'audit', key: 'admin.navAudit', icon: 'history' },
+    { id: 'broadcast', key: 'admin.navBroadcast', icon: 'campaign' },
+    { id: 'flags', key: 'admin.navFlags', icon: 'toggle_on' },
+    { id: 'rag', key: 'admin.navRag', icon: 'network_intelligence' },
   ];
 
   /** Sections handled by the schema-driven entity manager. */
@@ -287,10 +471,25 @@ export class AdminComponent implements OnInit {
   readonly toast = signal('');
 
   readonly dashboard = signal<AdminDashboard | null>(null);
+  readonly alerts = signal<AdminAlert[]>([]);
   readonly users = signal<AdminUser[]>([]);
   readonly bookings = signal<AdminBooking[]>([]);
   readonly reviews = signal<AdminReview[]>([]);
   readonly logs = signal<AdminAiLog[]>([]);
+  readonly audit = signal<AdminAuditLog[]>([]);
+  readonly auditActor = signal('');
+  readonly ragStatus = signal<RagStatus | null>(null);
+  readonly ragBusy = signal(false);
+  readonly payments = signal<AdminPayment[]>([]);
+  readonly paymentStatus = signal('');
+
+  readonly paymentStatuses = ['', 'PENDING', 'PROCESSING', 'COMPLETED', 'FAILED', 'REFUNDED', 'PARTIALLY_REFUNDED'];
+
+  readonly broadcastForm = { subject: '', body: '', role: '' };
+  readonly broadcastRoles = ['', 'TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
+  readonly broadcastSending = signal(false);
+  readonly flags = signal<FeatureFlag[]>([]);
+  readonly flagForm = { key: '', description: '' };
 
   private readonly pageSize = 20;
 
@@ -323,6 +522,7 @@ export class AdminComponent implements OnInit {
     switch (this.section()) {
       case 'overview':
         this.admin.dashboard().pipe(catchError(() => of(null))).subscribe(d => this.dashboard.set(d));
+        this.admin.alerts().pipe(catchError(() => of([]))).subscribe(a => this.alerts.set(a));
         break;
       case 'users':
         this.admin.users(p, this.pageSize).pipe(catchError(() => of(null))).subscribe(res => {
@@ -348,7 +548,125 @@ export class AdminComponent implements OnInit {
           this.hasMore.set(this.computeHasMore(res));
         });
         break;
+      case 'audit':
+        this.admin.auditLogs(p, this.pageSize, this.auditActor()).pipe(catchError(() => of(null))).subscribe(res => {
+          this.audit.set(res?.content ?? []);
+          this.hasMore.set(this.computeHasMore(res));
+        });
+        break;
+      case 'rag':
+        this.admin.ragStatus().pipe(catchError(() => of(null))).subscribe(s => this.ragStatus.set(s));
+        break;
+      case 'payments':
+        this.admin.payments(p, this.pageSize, this.paymentStatus()).pipe(catchError(() => of(null))).subscribe(res => {
+          this.payments.set(res?.content ?? []);
+          this.hasMore.set(this.computeHasMore(res));
+        });
+        break;
+      case 'flags':
+        this.admin.featureFlags().pipe(catchError(() => of([]))).subscribe(f => this.flags.set(f));
+        break;
     }
+  }
+
+  toggleFlag(flag: FeatureFlag): void {
+    this.admin.toggleFlag(flag.id, !flag.enabled).pipe(catchError(() => of(null))).subscribe(updated => {
+      if (updated) {
+        this.flags.update(list => list.map(x => x.id === flag.id ? updated : x));
+        this.flash(this.transloco.translate(updated.enabled ? 'admin.flagEnabled' : 'admin.flagDisabled', { key: updated.key }));
+      }
+    });
+  }
+
+  createFlag(): void {
+    const key = this.flagForm.key.trim().toLowerCase();
+    if (!/^[a-z0-9._-]{2,80}$/.test(key)) {
+      this.flash(this.transloco.translate('admin.flagKeyInvalid'));
+      return;
+    }
+    this.admin.upsertFlag(key, false, this.flagForm.description).pipe(catchError(() => of(null))).subscribe(created => {
+      if (created) {
+        this.flagForm.key = '';
+        this.flagForm.description = '';
+        this.flash(this.transloco.translate('admin.flagCreated'));
+        this.admin.featureFlags().pipe(catchError(() => of([]))).subscribe(f => this.flags.set(f));
+      } else {
+        this.flash(this.transloco.translate('admin.saveFailed'));
+      }
+    });
+  }
+
+  removeFlag(flag: FeatureFlag): void {
+    if (!confirm(this.transloco.translate('admin.flagDeleteConfirm', { key: flag.key }))) return;
+    this.admin.deleteFlag(flag.id).pipe(catchError(() => of(null))).subscribe(() => {
+      this.flags.update(list => list.filter(x => x.id !== flag.id));
+      this.flash(this.transloco.translate('admin.flagDeleted'));
+    });
+  }
+
+  filterPayments(status: string): void {
+    this.paymentStatus.set(status);
+    this.page.set(0);
+    this.loadSection();
+  }
+
+  sendBroadcast(): void {
+    const f = this.broadcastForm;
+    if (!f.subject.trim() || !f.body.trim()) {
+      this.flash(this.transloco.translate('admin.broadcastIncomplete'));
+      return;
+    }
+    if (!confirm(this.transloco.translate('admin.broadcastConfirm'))) return;
+    this.broadcastSending.set(true);
+    this.admin.broadcast(f.subject, f.body, f.role).pipe(catchError(() => of(null))).subscribe(res => {
+      this.broadcastSending.set(false);
+      if (res) {
+        this.flash(this.transloco.translate('admin.broadcastSent', { count: res.recipients }));
+        this.broadcastForm.subject = '';
+        this.broadcastForm.body = '';
+      } else {
+        this.flash(this.transloco.translate('admin.broadcastFailed'));
+      }
+    });
+  }
+
+  refundPayment(pm: AdminPayment): void {
+    if (pm.status !== 'COMPLETED') return;
+    if (!confirm(this.transloco.translate('admin.refundConfirm'))) return;
+    this.admin.refundPayment(pm.id).pipe(catchError(() => of(null))).subscribe(updated => {
+      if (updated) {
+        this.payments.update(list => list.map(x => x.id === pm.id ? updated : x));
+        this.flash(this.transloco.translate('admin.refundDone'));
+      } else {
+        this.flash(this.transloco.translate('admin.refundFailed'));
+      }
+    });
+  }
+
+  ragTypes(): { type: string; count: number }[] {
+    const byType = this.ragStatus()?.byType ?? {};
+    return Object.entries(byType).map(([type, count]) => ({ type, count }));
+  }
+
+  rebuildRag(): void {
+    if (this.ragBusy()) return;
+    if (!confirm(this.transloco.translate('admin.ragRebuildConfirm'))) return;
+    this.ragBusy.set(true);
+    this.admin.ragReingest().pipe(catchError(() => of(null))).subscribe(res => {
+      this.ragBusy.set(false);
+      if (res) {
+        this.flash(this.transloco.translate('admin.ragRebuilt', { count: res.documentsIngested }));
+        this.admin.ragStatus().pipe(catchError(() => of(null))).subscribe(s => this.ragStatus.set(s));
+      } else {
+        this.flash(this.transloco.translate('admin.ragRebuildFailed'));
+      }
+    });
+  }
+
+  filterAudit(actor: string): void {
+    this.auditActor.set(actor);
+    this.page.set(0);
+    this.loadSection();
   }
 
   private computeHasMore(res: { totalElements: number } | null): boolean {
@@ -360,6 +678,44 @@ export class AdminComponent implements OnInit {
     if (role === u.role) return;
     this.admin.setUserRole(u.id, role).pipe(catchError(() => of(null))).subscribe(updated => {
       if (updated) { this.users.update(list => list.map(x => x.id === u.id ? updated : x)); this.flash(this.transloco.translate('admin.roleChanged', { email: u.email, role })); }
+    });
+  }
+
+  impersonate(u: AdminUser): void {
+    if (!confirm(this.transloco.translate('admin.impersonateConfirm', { email: u.email }))) return;
+    this.admin.impersonate(u.id).pipe(catchError(() => of(null))).subscribe(res => {
+      if (!res) { this.flash(this.transloco.translate('admin.impersonateFailed')); return; }
+      // Back up the admin session, swap in the impersonation token, reload as that user.
+      const adminToken = localStorage.getItem('ai_access_token');
+      if (adminToken) localStorage.setItem('ai_admin_token', adminToken);
+      localStorage.setItem('ai_impersonating', `${res.firstName} ${res.lastName} (${res.email})`);
+      localStorage.setItem('ai_access_token', res.accessToken);
+      window.location.href = '/';
+    });
+  }
+
+  exportUser(u: AdminUser): void {
+    this.admin.exportUserData(u.id).pipe(catchError(() => of(null))).subscribe(data => {
+      if (!data) { this.flash(this.transloco.translate('admin.gdprExportFailed')); return; }
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `user-${u.id}-data.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      this.flash(this.transloco.translate('admin.gdprExported'));
+    });
+  }
+
+  anonymizeUser(u: AdminUser): void {
+    if (!confirm(this.transloco.translate('admin.gdprEraseConfirm', { email: u.email }))) return;
+    this.admin.anonymizeUser(u.id).subscribe({
+      next: () => {
+        this.flash(this.transloco.translate('admin.gdprErased'));
+        this.loadCurrentUsers();
+      },
+      error: () => this.flash(this.transloco.translate('admin.gdprEraseFailed')),
     });
   }
 
