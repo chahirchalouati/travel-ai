@@ -157,7 +157,8 @@ public class ReviewService {
     private ReviewSummary.Ranking computeRanking(String targetType, UUID targetId) {
         List<ReviewRepository.TargetRatingAggregate> aggregates = reviewRepository.aggregateByType(targetType);
         if (aggregates.isEmpty()) {
-            return null;
+            // No reviews exist for this target type at all — target is not yet ranked.
+            return ReviewSummary.Ranking.empty();
         }
 
         long totalVotes = aggregates.stream().mapToLong(ReviewRepository.TargetRatingAggregate::getReviewCount).sum();
@@ -178,7 +179,10 @@ public class ReviewService {
                 return new ReviewSummary.Ranking(i + 1, ranked.size(), ranked.get(i).score());
             }
         }
-        return null;
+
+        // This target has no reviews yet while other targets of the same type do —
+        // return an "unranked" sentinel showing how many peers are ranked.
+        return ReviewSummary.Ranking.unranked(ranked.size());
     }
 
     private double bayesianScore(long count, double avg, double globalMean) {

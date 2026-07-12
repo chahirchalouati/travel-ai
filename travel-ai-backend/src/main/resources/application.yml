@@ -126,6 +126,9 @@ travel-ai:
     # Shared secret for inbound disruption webhooks. Blank in dev (header check skipped);
     # set ITINERARY_WEBHOOK_SECRET in production to require X-Webhook-Secret on every push.
     webhook-secret: ${ITINERARY_WEBHOOK_SECRET:}
+  contact:
+    admin-email: ${CONTACT_ADMIN_EMAIL:support@travelai.com}
+    send-submitter-ack: ${CONTACT_SEND_ACK:true}
   notification:
     from-email: noreply@travelai.com
   storage:

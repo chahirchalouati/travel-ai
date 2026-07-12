@@ -1,7 +1,9 @@
 package com.travelai.notification;
 
+import com.travelai.contact.ContactProperties;
 import com.travelai.event.BookingCancelledEvent;
 import com.travelai.event.BookingConfirmedEvent;
+import com.travelai.event.ContactSubmittedEvent;
 import com.travelai.event.EmailVerificationRequestedEvent;
 import com.travelai.event.PartnerWelcomeEvent;
 import com.travelai.event.PasswordResetRequestedEvent;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class NotificationService {
 
     private final EmailService emailService;
+    private final ContactProperties contactProperties;
 
     /** Sends booking confirmation email when a booking is confirmed. */
     @ApplicationModuleListener
@@ -82,6 +85,28 @@ public class NotificationService {
         String subject = "Verifica il tuo indirizzo email — Travel AI";
         String body = buildEmailVerificationHtml(event);
         emailService.sendHtml(event.userId(), event.userEmail(), subject, body);
+    }
+
+    /**
+     * Handles a new contact form submission.
+     * Sends a staff notification to the configured admin email and,
+     * when enabled, sends an acknowledgement to the submitter.
+     */
+    @ApplicationModuleListener
+    public void onContactSubmitted(ContactSubmittedEvent event) {
+        // Staff notification
+        String staffSubject = "Nuovo messaggio di contatto — " + event.subject();
+        String staffBody = buildContactStaffHtml(event);
+        emailService.sendHtml(null, contactProperties.adminEmail(), staffSubject, staffBody);
+        log.info("Contact staff notification sent to {} for message id={}", contactProperties.adminEmail(), event.messageId());
+
+        // Submitter acknowledgement (optional)
+        if (contactProperties.sendSubmitterAck()) {
+            String ackSubject = "Abbiamo ricevuto il tuo messaggio — Travel AI";
+            String ackBody = buildContactAckHtml(event);
+            emailService.sendHtml(null, event.submitterEmail(), ackSubject, ackBody);
+            log.info("Contact acknowledgement sent to {} for message id={}", event.submitterEmail(), event.messageId());
+        }
     }
 
     private String buildPasswordResetHtml(PasswordResetRequestedEvent e) {
@@ -200,5 +225,43 @@ public class NotificationService {
                 </body></html>
                 """
                 .formatted(e.partnerName());
+    }
+
+    private String buildContactStaffHtml(ContactSubmittedEvent e) {
+        return """
+                <html><body style="font-family:sans-serif;color:#241C15;">
+                <h2 style="color:#D9694C;">Nuovo messaggio di contatto</h2>
+                <table style="border-collapse:collapse;width:100%%;">
+                  <tr><td style="padding:6px 12px;font-weight:bold;color:#8A7C6A;">Da</td>
+                      <td style="padding:6px 12px;">%s &lt;%s&gt;</td></tr>
+                  <tr style="background:#F5F0EB;"><td style="padding:6px 12px;font-weight:bold;color:#8A7C6A;">Oggetto</td>
+                      <td style="padding:6px 12px;">%s</td></tr>
+                  <tr><td style="padding:6px 12px;font-weight:bold;color:#8A7C6A;">Messaggio</td>
+                      <td style="padding:6px 12px;white-space:pre-wrap;">%s</td></tr>
+                </table>
+                <p style="color:#8A7C6A;font-size:12px;">ID messaggio: %s</p>
+                </body></html>
+                """
+                .formatted(
+                        e.submitterName(),
+                        e.submitterEmail(),
+                        e.subject(),
+                        e.message(),
+                        e.messageId());
+    }
+
+    private String buildContactAckHtml(ContactSubmittedEvent e) {
+        return """
+                <html><body style="font-family:sans-serif;color:#241C15;">
+                <h2 style="color:#D9694C;">Abbiamo ricevuto il tuo messaggio</h2>
+                <p>Ciao <strong>%s</strong>,</p>
+                <p>Grazie per averci contattato. Abbiamo ricevuto il tuo messaggio riguardo a
+                   <strong>%s</strong> e ti risponderemo al più presto.</p>
+                <p style="color:#8A7C6A;font-size:12px;">
+                   Se non hai inviato tu questo messaggio, puoi ignorare questa email.
+                </p>
+                </body></html>
+                """
+                .formatted(e.submitterName(), e.subject());
     }
 }

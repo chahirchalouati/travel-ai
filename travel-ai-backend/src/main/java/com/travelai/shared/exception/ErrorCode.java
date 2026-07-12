@@ -59,6 +59,7 @@ public enum ErrorCode {
     SOCIAL_TOKEN_INVALID("Social login token is invalid or expired"),
     SUBSCRIPTION_PLAN_NOT_FOUND("Subscription plan not found"),
     SUBSCRIPTION_NOT_FOUND("No active subscription found"),
+    FAVORITE_NOT_FOUND("Favorite not found"),
     INTERNAL_ERROR("Internal server error");
 
     private final String message;
