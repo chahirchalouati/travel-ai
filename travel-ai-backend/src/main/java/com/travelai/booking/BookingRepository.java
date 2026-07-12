@@ -13,7 +13,10 @@ import java.util.UUID;
 
 public interface BookingRepository extends JpaRepository<Booking, UUID>, JpaSpecificationExecutor<Booking> {
 
-    @EntityGraph(attributePaths = {"travelers"})
+    // No @EntityGraph here: fetching the "travelers" collection together with a
+    // Pageable forces Hibernate to paginate in memory (HHH90003004). The
+    // travelers collection is @BatchSize-annotated, so it loads in one extra
+    // batched query per page instead — SQL-level pagination, no N+1.
     @Query(value = "SELECT b FROM Booking b WHERE b.user.email = :email",
            countQuery = "SELECT count(b) FROM Booking b WHERE b.user.email = :email")
     Page<Booking> findByUserEmail(@Param("email") String email, Pageable pageable);
