@@ -49,10 +49,13 @@
 .ad-tbl__frow app-ui-input {
   --ui-in-bg: var(--ad-inset);
   --ui-in-border: var(--ad-line);
+  --ui-in-border-hover: var(--ad-line-strong);
   --ui-in-radius: var(--ad-r-xs);
   --ui-in-text: var(--ad-text);
   --ui-in-placeholder: var(--ad-text-faint);
-  --ui-in-focus: var(--ad-accent-line);
+  --ui-in-focus: var(--ad-accent);
+  --ui-in-focus-ring: 0 0 0 2px color-mix(in srgb, var(--ad-accent) 14%, transparent);
+  --ui-in-bar-width: 2px;
   --ui-in-pad-y: 5px;
   --ui-in-pad-x: 8px;
   --ui-in-font-size: var(--ad-fx-xs);

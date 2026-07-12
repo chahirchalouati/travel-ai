@@ -46,10 +46,11 @@ type RoleMap = Record<string, boolean>;
       <div class="ff-new">
         <span class="fld__l">{{ 'admin.flagNew' | transloco }}</span>
         <div class="ff-new__grid">
-          <input type="text" [(ngModel)]="nkey" [placeholder]="'admin.flagKeyPlaceholder' | transloco" />
-          <input type="text" [(ngModel)]="ndesc" [placeholder]="'admin.fDescription' | transloco" />
-          <input type="text" [(ngModel)]="ngroup" [placeholder]="'admin.flagGroup' | transloco" />
-          <label class="ff-roll"><input type="number" min="0" max="100" [(ngModel)]="nrollout" /> %</label>
+          <app-ui-input [(ngModel)]="nkey" [placeholder]="'admin.flagKeyPlaceholder' | transloco" />
+          <app-ui-input [(ngModel)]="ndesc" [placeholder]="'admin.fDescription' | transloco" />
+          <app-ui-input [(ngModel)]="ngroup" [placeholder]="'admin.flagGroup' | transloco" />
+          <app-ui-input type="number" [min]="0" [max]="100" suffix="%" [(ngModel)]="nrollout"
+                        [ariaLabel]="'admin.flagRollout' | transloco" />
         </div>
         <div class="ff-roles">
           @for (r of allRoles; track r) {
@@ -91,7 +92,7 @@ type RoleMap = Record<string, boolean>;
       <div class="form-grid">
         <label class="fld fld--full" [attr.for]="feDesc.inputId()"><span class="fld__l">{{ 'admin.fDescription' | transloco }}</span><app-ui-input #feDesc [(ngModel)]="edesc" [ariaLabel]="'admin.fDescription' | transloco" /></label>
         <label class="fld" [attr.for]="feGroup.inputId()"><span class="fld__l">{{ 'admin.flagGroup' | transloco }}</span><app-ui-input #feGroup [(ngModel)]="egroup" [ariaLabel]="'admin.flagGroup' | transloco" /></label>
-        <label class="fld"><span class="fld__l">{{ 'admin.flagRollout' | transloco }} %</span><input type="number" min="0" max="100" [(ngModel)]="erollout" /></label>
+        <label class="fld"><span class="fld__l">{{ 'admin.flagRollout' | transloco }} %</span><app-ui-input type="number" [min]="0" [max]="100" [(ngModel)]="erollout" /></label>
         <div class="fld fld--full"><span class="fld__l">{{ 'admin.flagRoles' | transloco }}</span>
           <div class="ff-roles">
             @for (r of allRoles; track r) { <app-ui-checkbox [label]="r" [checked]="!!eroles[r]" (checkedChange)="eroles[r] = $event" /> }

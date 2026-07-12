@@ -5,6 +5,8 @@ import { catchError, of } from 'rxjs';
 import { AdminService } from '../../../core/services/admin.service';
 import { AdminSectionComponent } from '../ui/admin-section.component';
 import { UiSelectComponent, UiSelectOption } from '../../../shared/ui/ui-select.component';
+import { UiInputComponent } from '../../../shared/ui/ui-input.component';
+import { UiTextareaComponent } from '../../../shared/ui/ui-textarea.component';
 import { AdminToastService } from '../ui/admin-toast.service';
 import { AdminConfirmService } from '../ui/admin-confirm.service';
 
@@ -14,7 +16,7 @@ const ROLES = ['', 'TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
 @Component({
   selector: 'app-admin-broadcast',
   standalone: true,
-  imports: [FormsModule, TranslocoModule, AdminSectionComponent, UiSelectComponent],
+  imports: [FormsModule, TranslocoModule, AdminSectionComponent, UiSelectComponent, UiInputComponent, UiTextareaComponent],
   styleUrls: ['./section-shared.scss'],
   styles: [`
     .bc { max-width: 640px; background: var(--ad-surface); border: 1px solid var(--ad-line); border-radius: var(--ad-r-md); padding: var(--ad-sp-6); display: flex; flex-direction: column; gap: var(--ad-sp-4); }
@@ -29,11 +31,11 @@ const ROLES = ['', 'TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
           <app-ui-select [options]="roleOpts()" [(ngModel)]="role" [ariaLabel]="'admin.broadcastAudience' | transloco" />
         </label>
         <label class="fld"><span class="fld__l">{{ 'admin.broadcastSubject' | transloco }} *</span>
-          <input type="text" [(ngModel)]="subject" maxlength="140" />
+          <app-ui-input [(ngModel)]="subject" [maxlength]="140" />
           <span class="bc__count">{{ subject.length }}/140</span>
         </label>
         <label class="fld"><span class="fld__l">{{ 'admin.broadcastMessage' | transloco }} *</span>
-          <textarea rows="6" [(ngModel)]="body"></textarea></label>
+          <app-ui-textarea [rows]="6" [(ngModel)]="body" /></label>
         <div>
           <button type="button" class="sec-btn sec-btn--primary" [disabled]="sending()" (click)="send()">
             <span class="ad-ms">{{ sending() ? 'hourglass_top' : 'send' }}</span>

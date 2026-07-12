@@ -12,6 +12,7 @@
   --ui-in-border-hover: var(--ad-line-strong);
   --ui-in-focus: var(--ad-accent);
   --ui-in-focus-ring: 0 0 0 3px color-mix(in srgb, var(--ad-accent) 16%, transparent);
+  --ui-in-bar-width: 3px;
   --ui-in-icon: var(--ad-text-faint);
   --ui-in-icon-focus: var(--ad-accent);
   --ui-in-icon-size: 17px;
@@ -81,6 +82,7 @@
   --ui-in-placeholder: var(--ad-text-faint);
   --ui-in-focus: var(--ad-accent);
   --ui-in-focus-ring: 0 0 0 3px color-mix(in srgb, var(--ad-accent) 16%, transparent);
+  --ui-in-bar-width: 3px;
   --ui-in-pad-y: 8px;
   --ui-in-pad-x: var(--ad-sp-3);
   --ui-in-font-size: var(--ad-fx-base);
@@ -90,7 +92,7 @@
 .fld input:hover:not(:focus), .fld select:hover:not(:focus), .fld textarea:hover:not(:focus) { border-color: var(--ad-line-strong); }
 .fld input:focus, .fld select:focus, .fld textarea:focus {
   border-color: var(--ad-accent); outline: none;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ad-accent) 16%, transparent);
+  box-shadow: inset 3px 0 0 var(--ad-accent), 0 0 0 3px color-mix(in srgb, var(--ad-accent) 16%, transparent);
 }
 .fld input, .fld select, .fld textarea { transition: border-color var(--ad-dur-fast) var(--ad-ease), box-shadow var(--ad-dur-fast) var(--ad-ease); }
 .fld input:disabled { opacity: 0.6; }

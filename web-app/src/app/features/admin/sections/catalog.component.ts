@@ -12,6 +12,7 @@ import { AdminTableCellDirective } from '../ui/admin-table-cell.directive';
 import { AdminDrawerComponent } from '../ui/admin-drawer.component';
 import { UiSelectComponent, UiSelectOption } from '../../../shared/ui/ui-select.component';
 import { UiInputComponent } from '../../../shared/ui/ui-input.component';
+import { UiTextareaComponent } from '../../../shared/ui/ui-textarea.component';
 import { UiCheckboxComponent } from '../../../shared/ui/ui-checkbox.component';
 import { UiDatepickerComponent } from '../../../shared/ui/ui-datepicker.component';
 import { AdminToastService } from '../ui/admin-toast.service';
@@ -30,6 +31,7 @@ const SEARCH_DEBOUNCE_MS = 300;
     FormsModule, TranslocoModule, AdminSectionComponent, AdminDataTableComponent,
     AdminTableCellDirective, AdminDrawerComponent,
     UiSelectComponent, UiInputComponent, UiCheckboxComponent, UiDatepickerComponent,
+    UiTextareaComponent,
   ],
   styleUrls: ['./section-shared.scss'],
   template: `
@@ -104,10 +106,10 @@ const SEARCH_DEBOUNCE_MS = 300;
             } @else {
               <span class="fld__l">{{ f.labelKey | transloco }}@if (f.required) { * }</span>
               @switch (f.type) {
-                @case ('textarea') { <textarea rows="3" [(ngModel)]="form[f.key]"></textarea> }
-                @case ('number')   { <input type="number" step="any" [(ngModel)]="form[f.key]" /> }
+                @case ('textarea') { <app-ui-textarea [rows]="3" [(ngModel)]="form[f.key]" /> }
+                @case ('number')   { <app-ui-input type="number" step="any" [(ngModel)]="form[f.key]" [ariaLabel]="f.labelKey | transloco" /> }
                 @case ('date')     { <app-ui-datepicker [(ngModel)]="form[f.key]" [ariaLabel]="f.labelKey | transloco" /> }
-                @case ('datetime') { <input type="datetime-local" [(ngModel)]="form[f.key]" /> }
+                @case ('datetime') { <app-ui-input type="datetime-local" [(ngModel)]="form[f.key]" [ariaLabel]="f.labelKey | transloco" /> }
                 @case ('select')   { <app-ui-select [options]="selectFieldOpts(f)" [(ngModel)]="form[f.key]" placeholder="—" [ariaLabel]="f.labelKey | transloco" /> }
                 @case ('partner')  { <app-ui-select [options]="partnerOpts()" [(ngModel)]="form[f.key]" placeholder="—" [ariaLabel]="f.labelKey | transloco" /> }
                 @default           { <app-ui-input [inputId]="'cat-fld-' + f.key" [(ngModel)]="form[f.key]" [ariaLabel]="f.labelKey | transloco" /> }
