@@ -2,7 +2,9 @@
 export { UiSelectComponent } from './ui-select.component';
 export type { UiSelectOption } from './ui-select.component';
 export { UiInputComponent } from './ui-input.component';
-export type { UiInputVariant } from './ui-input.component';
+export type { UiInputVariant, UiInputSize } from './ui-input.component';
+export { UiTextareaComponent } from './ui-textarea.component';
+export { UiRangeComponent } from './ui-range.component';
 export { UiCheckboxComponent } from './ui-checkbox.component';
 export { UiAutocompleteComponent } from './ui-autocomplete.component';
 export type { SuggestFetch } from './ui-autocomplete.component';
