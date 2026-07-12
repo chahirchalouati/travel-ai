@@ -1,0 +1,151 @@
+/* ============================================================
+   Travel AI — Admin design tokens (Swiss / International style)
+   Aligned with the public app: warm paper surfaces, white cards,
+   hairline rules, ink text, a single International Red (#E5352B),
+   flat separation (no floaty shadows), sharp radii. Fonts reuse
+   the app pairing: Inter (display/UI) + IBM Plex Mono (all numbers,
+   IDs, data). Density and hierarchy carry the "operator" feel — the
+   palette matches the customer app for one coherent product.
+
+   All tokens are SCOPED to `.admin-root` so admin overrides never
+   collide with the global app tokens.
+   ============================================================ */
+
+.admin-root {
+  /* ---- Surfaces: warm paper + white cards ---------------------- */
+  --ad-bg:        #F6F5F1;   /* page (warm paper)         */
+  --ad-inset:     #ECEAE3;   /* sunken (inputs, tracks)   */
+  --ad-surface:   #FFFFFF;   /* panels / cards / rail     */
+  --ad-surface-2: #F1EFE9;   /* raised / header / hover   */
+  --ad-surface-3: #ECEAE3;   /* active                    */
+  --ad-surface-4: #E4E1D9;   /* pressed / highlight       */
+
+  --ad-line:        #E4E1D9;
+  --ad-line-strong: #D6D3C9;
+  --ad-line-soft:   #EEEBE3;
+
+  /* ---- Text: ink ---------------------------------------------- */
+  --ad-text:       #111111;
+  --ad-text-dim:   #55534E;
+  --ad-text-faint: #8B887F;
+  --ad-on-accent:  #FFFFFF;
+
+  /* ---- Accent — International Red ----------------------------- */
+  --ad-accent:       #E5352B;
+  --ad-accent-hover: #C42A22;
+  --ad-accent-press: #A81F18;
+  --ad-accent-ghost: #FDECEA;
+  --ad-accent-line:  rgba(229, 53, 43, 0.45);
+
+  /* ---- Semantic status (AA-safe on paper) --------------------- */
+  --ad-ok:       #1F7A4D;  --ad-ok-ghost:      rgba(31, 122, 77, 0.12);
+  --ad-warn:     #C25A17;  --ad-warn-ghost:    rgba(194, 90, 23, 0.12);
+  --ad-danger:   #C42A22;  --ad-danger-ghost:  rgba(196, 42, 34, 0.10);
+  --ad-info:     #1D6FB8;  --ad-info-ghost:    rgba(29, 111, 184, 0.12);
+  --ad-pending:  #6746C3;  --ad-pending-ghost: rgba(103, 70, 195, 0.12);
+  --ad-neutral-ghost: rgba(17, 17, 17, 0.06);
+
+  /* ---- Data-viz series (deep enough to read on white) --------- */
+  --ad-c1: #E5352B;  /* red    */
+  --ad-c2: #1D6FB8;  /* blue   */
+  --ad-c3: #1F7A4D;  /* green  */
+  --ad-c4: #C25A17;  /* amber  */
+  --ad-c5: #6746C3;  /* violet */
+  --ad-c6: #B03A73;  /* magenta*/
+  --ad-c7: #1E8A8A;  /* teal   */
+  --ad-grid: rgba(17, 17, 17, 0.08);
+
+  /* ---- Elevation: near-flat (Swiss separates with rules) ------ */
+  --ad-shadow-1: 0 1px 2px rgba(17, 17, 17, 0.05);
+  --ad-shadow-2: 0 4px 14px rgba(17, 17, 17, 0.08);
+  --ad-shadow-pop: 0 12px 34px rgba(17, 17, 17, 0.14);
+  --ad-ring: 0 0 0 3px rgba(229, 53, 43, 0.28);
+
+  /* ---- Typography (reuse app fonts) --------------------------- */
+  --ad-font: 'Inter', system-ui, -apple-system, sans-serif;
+  --ad-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  --ad-fx-kpi:   clamp(2.1rem, 1.2rem + 2.6vw, 3.3rem); /* huge KPI numeral */
+  --ad-fx-h1:    clamp(1.25rem, 1.05rem + 0.8vw, 1.6rem);
+  --ad-fx-h2:    1.0625rem;
+  --ad-fx-lg:    1.125rem;
+  --ad-fx-md:    0.9375rem;
+  --ad-fx-base:  0.875rem;
+  --ad-fx-sm:    0.8125rem;
+  --ad-fx-xs:    0.75rem;
+  --ad-fx-micro: 0.6875rem;   /* mono uppercase labels */
+
+  /* ---- Spacing (base-4; used with intentional rhythm) --------- */
+  --ad-sp-1: 4px;   --ad-sp-2: 8px;   --ad-sp-3: 12px;  --ad-sp-4: 16px;
+  --ad-sp-5: 20px;  --ad-sp-6: 24px;  --ad-sp-8: 32px;  --ad-sp-10: 40px;
+  --ad-sp-12: 48px; --ad-sp-16: 64px;
+
+  /* ---- Radii: sharp, precise (Swiss) -------------------------- */
+  --ad-r-xs: 2px; --ad-r-sm: 3px; --ad-r-md: 4px; --ad-r-lg: 6px; --ad-r-pill: 999px;
+
+  /* ---- Scrim (ink over paper) --------------------------------- */
+  --ad-scrim: rgba(17, 17, 17, 0.42);
+
+  /* ---- Motion: snappy, compositor-friendly only --------------- */
+  --ad-ease: cubic-bezier(0.2, 0, 0, 1);
+  --ad-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ad-dur-fast: 120ms;
+  --ad-dur: 200ms;
+  --ad-dur-slow: 320ms;
+
+  /* ---- Layout metrics ----------------------------------------- */
+  --ad-rail-w: 232px;
+  --ad-topbar-h: 60px;
+
+  /* ---- Base element styling (scoped) -------------------------- */
+  color: var(--ad-text);
+  background: var(--ad-bg);
+  font-family: var(--ad-font);
+  font-size: var(--ad-fx-base);
+  line-height: 1.45;
+  text-rendering: optimizeLegibility;
+
+  *::selection { background: var(--ad-accent); color: #fff; }
+
+  /* Scrollbars inside the admin only */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--ad-line-strong) transparent;
+  }
+  *::-webkit-scrollbar { width: 10px; height: 10px; }
+  *::-webkit-scrollbar-thumb {
+    background: var(--ad-line-strong);
+    border-radius: var(--ad-r-pill);
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  *::-webkit-scrollbar-thumb:hover { background: var(--ad-text-faint); }
+
+  /* Designed, visible keyboard focus everywhere */
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--ad-ring);
+    border-radius: var(--ad-r-xs);
+  }
+
+  .ad-mono { font-family: var(--ad-mono); font-variant-numeric: tabular-nums; }
+
+  /* Material Symbols glyph (font is loaded globally by index.html) */
+  .ad-ms {
+    font-family: 'Material Symbols Rounded';
+    font-weight: normal; font-style: normal; line-height: 1;
+    font-size: 20px; letter-spacing: normal; white-space: nowrap;
+    display: inline-block; direction: ltr; flex: none; user-select: none;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-root *,
+  .admin-root *::before,
+  .admin-root *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { filter, map } from 'rxjs';
+import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { NavComponent } from './shared/nav/nav.component';
@@ -20,15 +20,21 @@ import { SeoService, SeoData } from './core/services/seo.service';
       ]),
     ]),
   ],
+  host: { '[class.app--chromeless]': 'chromeless()' },
   template: `
-    <app-impersonation-banner />
-    <app-nav />
+    @if (!chromeless()) {
+      <app-impersonation-banner />
+      <app-nav />
+    }
     <main [@routeFade]="routeKey" [@.disabled]="reduceMotion">
       <router-outlet (activate)="onActivate()" />
     </main>
-    <app-footer />
+    @if (!chromeless()) { <app-footer /> }
   `,
-  styles: [`:host { display: block; padding-top: 64px; }`],
+  styles: [`
+    :host { display: block; padding-top: 64px; }
+    :host(.app--chromeless) { padding-top: 0; }
+  `],
 })
 export class AppComponent {
   private readonly router = inject(Router);
@@ -37,6 +43,9 @@ export class AppComponent {
 
   /** Bumped on each route activation so the fade trigger re-fires. */
   routeKey = 0;
+
+  /** Admin runs full-screen: the public nav/footer are hidden under /admin. */
+  readonly chromeless = signal(this.router.url.startsWith('/admin'));
 
   readonly reduceMotion =
     typeof window !== 'undefined' &&
@@ -48,10 +57,12 @@ export class AppComponent {
     this.router.events
       .pipe(
         filter((e): e is NavigationEnd => e instanceof NavigationEnd),
-        map(() => this.deepestRouteData()),
         takeUntilDestroyed(),
       )
-      .subscribe(seo => this.seo.setTag(seo));
+      .subscribe(e => {
+        this.chromeless.set(e.urlAfterRedirects.startsWith('/admin'));
+        this.seo.setTag(this.deepestRouteData());
+      });
   }
 
   onActivate(): void {

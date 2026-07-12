@@ -1,6 +1,8 @@
 // Form controls
 export { UiSelectComponent } from './ui-select.component';
 export type { UiSelectOption } from './ui-select.component';
+export { UiInputComponent } from './ui-input.component';
+export type { UiInputVariant } from './ui-input.component';
 export { UiCheckboxComponent } from './ui-checkbox.component';
 export { UiAutocompleteComponent } from './ui-autocomplete.component';
 export type { SuggestFetch } from './ui-autocomplete.component';

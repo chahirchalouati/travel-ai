@@ -1,0 +1,117 @@
+:host { display: block; }
+
+/* ── Toolbar (projected into admin-section [slot=toolbar]) ─────────── */
+.sec-tools { display: flex; align-items: center; gap: var(--ad-sp-3); flex-wrap: wrap; }
+/* Kit input primitive (app-ui-input) themed as the toolbar search box. */
+.sec-search {
+  --ui-in-bg: var(--ad-surface);
+  --ui-in-border: var(--ad-line);
+  --ui-in-radius: var(--ad-r-sm);
+  --ui-in-text: var(--ad-text);
+  --ui-in-placeholder: var(--ad-text-faint);
+  --ui-in-focus: var(--ad-accent-line);
+  --ui-in-icon: var(--ad-text-faint);
+  --ui-in-icon-size: 17px;
+  --ui-in-pad-y: 6px;
+  --ui-in-pad-x: var(--ad-sp-3);
+  --ui-in-gap: var(--ad-sp-2);
+  --ui-in-font-size: var(--ad-fx-sm);
+  --ui-in-font-family: var(--ad-font);
+  --ui-in-min-width: 200px;
+}
+
+/* Width wrapper for a kit dropdown (app-ui-select) used in a toolbar. */
+.sec-field { width: 180px; }
+/* Kit dropdown used inline inside a table cell. */
+.cell-select { display: block; min-width: 148px; }
+
+.sec-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px var(--ad-sp-4); border-radius: var(--ad-r-sm); cursor: pointer;
+  font-family: var(--ad-font); font-size: var(--ad-fx-sm); font-weight: 600;
+  border: 1px solid var(--ad-line-strong); background: var(--ad-surface-2); color: var(--ad-text);
+  transition: all var(--ad-dur-fast) var(--ad-ease);
+}
+.sec-btn .ad-ms { font-size: 17px; }
+.sec-btn:hover:not(:disabled) { background: var(--ad-surface-3); }
+.sec-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.sec-btn--primary { background: var(--ad-accent); border-color: transparent; color: #fff; }
+.sec-btn--primary:hover:not(:disabled) { background: var(--ad-accent-hover); }
+.sec-btn--ghost { background: transparent; }
+
+/* ── Row action icons ─────────────────────────────────────────────── */
+.row-actions { display: inline-flex; gap: 4px; justify-content: flex-end; }
+.ra {
+  width: 30px; height: 30px; display: grid; place-items: center;
+  background: transparent; border: 1px solid transparent; border-radius: var(--ad-r-sm);
+  color: var(--ad-text-dim); cursor: pointer; transition: all var(--ad-dur-fast) var(--ad-ease);
+}
+.ra .ad-ms { font-size: 17px; }
+.ra:hover { background: var(--ad-surface-3); color: var(--ad-text); border-color: var(--ad-line); }
+.ra--danger:hover { color: var(--ad-danger); border-color: color-mix(in oklch, var(--ad-danger) 40%, transparent); background: var(--ad-danger-ghost); }
+
+/* ── Inline cells ─────────────────────────────────────────────────── */
+.cell-user { display: flex; align-items: center; gap: var(--ad-sp-2); }
+.cell-user__av {
+  width: 26px; height: 26px; flex: none; display: grid; place-items: center; border-radius: 50%;
+  background: var(--ad-surface-3); color: var(--ad-text-dim); font-size: 10px; font-weight: 600;
+}
+.cell-user__name { font-weight: 500; }
+/* ── Drawer form ──────────────────────────────────────────────────── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ad-sp-4); }
+.fld { display: flex; flex-direction: column; gap: 6px; }
+.fld--full { grid-column: 1 / -1; }
+.fld--check { flex-direction: row; align-items: center; gap: var(--ad-sp-2); }
+.fld--check input { accent-color: var(--ad-accent); width: 16px; height: 16px; }
+.fld__l { font-size: var(--ad-fx-xs); color: var(--ad-text-dim); }
+.fld input, .fld select, .fld textarea {
+  padding: 8px var(--ad-sp-3); background: var(--ad-inset); border: 1px solid var(--ad-line);
+  border-radius: var(--ad-r-sm); color: var(--ad-text); font-size: var(--ad-fx-base); font-family: var(--ad-font); width: 100%;
+}
+/* Kit input primitive (app-ui-input) themed to match the native .fld fields. */
+.fld app-ui-input {
+  --ui-in-bg: var(--ad-inset);
+  --ui-in-border: var(--ad-line);
+  --ui-in-radius: var(--ad-r-sm);
+  --ui-in-text: var(--ad-text);
+  --ui-in-placeholder: var(--ad-text-faint);
+  --ui-in-focus: var(--ad-accent-line);
+  --ui-in-pad-y: 8px;
+  --ui-in-pad-x: var(--ad-sp-3);
+  --ui-in-font-size: var(--ad-fx-base);
+  --ui-in-font-family: var(--ad-font);
+}
+.fld textarea { resize: vertical; min-height: 72px; }
+.fld input:focus, .fld select:focus, .fld textarea:focus { border-color: var(--ad-accent-line); outline: none; }
+.fld input:disabled { opacity: 0.6; }
+.form-err { color: var(--ad-danger); font-size: var(--ad-fx-sm); margin: var(--ad-sp-4) 0 0; }
+
+/* ── Bulk action bar ──────────────────────────────────────────────── */
+.sec-bulk {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--ad-sp-4);
+  padding: var(--ad-sp-2) var(--ad-sp-4); margin-bottom: var(--ad-sp-3);
+  background: var(--ad-accent-ghost); border: 1px solid var(--ad-accent-line);
+  border-radius: var(--ad-r-sm); flex-wrap: wrap;
+}
+.sec-bulk__count { font-size: var(--ad-fx-sm); color: var(--ad-text); font-weight: 600; }
+.sec-bulk__actions { display: flex; gap: var(--ad-sp-2); flex-wrap: wrap; }
+
+/* ── Read-only detail drawer: key/value list ──────────────────────── */
+.kv { display: flex; flex-direction: column; }
+.kv__row { display: flex; flex-direction: column; gap: 3px; padding: var(--ad-sp-3) 0; border-bottom: 1px solid var(--ad-line-soft); }
+.kv__row:last-child { border-bottom: none; }
+.kv__k { font-size: var(--ad-fx-micro); text-transform: uppercase; letter-spacing: 0.1em; color: var(--ad-text-faint); }
+.kv__v { font-size: var(--ad-fx-base); color: var(--ad-text); word-break: break-word; }
+.kv__v.ad-mono { font-size: var(--ad-fx-sm); }
+
+/* ── Inline link (e.g. payment → booking) ─────────────────────────── */
+.pay-link {
+  display: inline-flex; align-items: center; gap: 5px; padding: 0;
+  background: none; border: none; cursor: pointer; color: var(--ad-accent);
+  font-family: var(--ad-mono); font-size: var(--ad-fx-sm);
+}
+.pay-link:hover { text-decoration: underline; }
+.pay-link .ad-ms { font-size: 15px; }
+
+/* ── Simple text/mono helpers reused in cells ─────────────────────── */
+.muted { color: var(--ad-text-dim); }

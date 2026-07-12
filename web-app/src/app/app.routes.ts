@@ -292,17 +292,8 @@ export const routes: Routes = [
     path: 'admin',
     canActivate: [adminGuard],
     data: { seo: { noindex: true } },
-    loadComponent: () =>
-      import('./features/admin/admin.component').then(m => m.AdminComponent),
-  },
-  {
-    path: 'admin/revenue',
-    canActivate: [adminGuard],
-    data: { seo: { noindex: true } },
-    loadComponent: () =>
-      import('./features/admin-revenue/admin-revenue.component').then(
-        m => m.AdminRevenueComponent
-      ),
+    loadChildren: () =>
+      import('./features/admin/admin.routes').then(m => m.ADMIN_ROUTES),
   },
   {
     path: 'forgot-password',

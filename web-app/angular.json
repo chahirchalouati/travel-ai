@@ -60,7 +60,8 @@
             ],
             "styles": [
               "node_modules/leaflet/dist/leaflet.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/app/features/admin/admin.tokens.scss"
             ],
             "scripts": [],
             "serviceWorker": "ngsw-config.json"
@@ -127,7 +128,8 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/app/features/admin/admin.tokens.scss"
             ],
             "scripts": []
           }

@@ -4,6 +4,27 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import type { ApiWrapper, PageWrapper } from '../models/api.models';
 
+/** Optional server-side list refinement: free-text search, sort and per-field filters. */
+export interface AdminListQuery {
+  search?: string;
+  sortKey?: string | null;
+  sortDir?: 'asc' | 'desc';
+  filters?: Record<string, string>;
+}
+
+/** Serializes pagination + an {@link AdminListQuery} into a URL query string. */
+export function listQueryString(page: number, size: number, q?: AdminListQuery): string {
+  const parts = [`page=${page}`, `size=${size}`];
+  if (q?.sortKey) parts.push(`sort=${encodeURIComponent(q.sortKey)},${q.sortDir ?? 'asc'}`);
+  if (q?.search?.trim()) parts.push(`search=${encodeURIComponent(q.search.trim())}`);
+  if (q?.filters) {
+    for (const [k, v] of Object.entries(q.filters)) {
+      if (v !== null && v !== undefined && `${v}`.trim() !== '') parts.push(`${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
+    }
+  }
+  return parts.join('&');
+}
+
 export interface AdminDashboard {
   totalUsers: number;
   totalPartners: number;
@@ -211,6 +232,31 @@ export interface FeatureFlagUpsert {
   groupName?: string | null;
 }
 
+export interface AdminSubscription {
+  id: string;
+  userEmail: string | null;
+  planCode: string;
+  planName: string | null;
+  status: string;
+  pricePaid: number;
+  currency: string;
+  startedAt: string | null;
+  renewsAt: string | null;
+  cancelledAt: string | null;
+  createdAt: string | null;
+}
+
+export interface RevenueSummary {
+  confirmedBookings: number;
+  grossBookingValue: number;
+  serviceFeeRevenue: number;
+  commissionRevenue: number;
+  ancillaryRevenue: number;
+  activeSubscriptions: number;
+  subscriptionRevenue: number;
+  totalPlatformRevenue: number;
+}
+
 export interface RagStatus {
   totalDocuments: number;
   byType: Record<string, number>;
@@ -236,9 +282,9 @@ export class AdminService {
     return this.http.get<ApiWrapper<AdminAlert[]>>(`${this.base}/alerts`).pipe(map(r => r.data));
   }
 
-  users(page = 0, size = 20): Observable<PageWrapper<AdminUser>> {
+  users(page = 0, size = 20, query?: AdminListQuery): Observable<PageWrapper<AdminUser>> {
     return this.http
-      .get<ApiWrapper<PageWrapper<AdminUser>>>(`${this.base}/users?page=${page}&size=${size}`)
+      .get<ApiWrapper<PageWrapper<AdminUser>>>(`${this.base}/users?${listQueryString(page, size, query)}`)
       .pipe(map(r => r.data));
   }
 
@@ -368,6 +414,18 @@ export class AdminService {
 
   deleteFlag(id: string): Observable<unknown> {
     return this.http.delete<ApiWrapper<unknown>>(`${this.base}/feature-flags/${id}`).pipe(map(r => r.data));
+  }
+
+  subscriptions(page = 0, size = 20, status = ''): Observable<PageWrapper<AdminSubscription>> {
+    let params = `page=${page}&size=${size}`;
+    if (status) params += `&status=${encodeURIComponent(status)}`;
+    return this.http
+      .get<ApiWrapper<PageWrapper<AdminSubscription>>>(`${this.base}/subscriptions?${params}`)
+      .pipe(map(r => r.data));
+  }
+
+  revenueSummary(): Observable<RevenueSummary> {
+    return this.http.get<ApiWrapper<RevenueSummary>>(`${this.base}/revenue/summary`).pipe(map(r => r.data));
   }
 
   ragStatus(): Observable<RagStatus> {
