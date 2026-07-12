@@ -33,6 +33,7 @@ export type UiInputSize = 'sm' | 'md' | 'lg';
     '[class.ui-in--lg]': "resolvedSize() === 'lg'",
     '[class.ui-in--invalid]': 'invalid() || !!error()',
     '[class.ui-in--disabled]': 'disabled()',
+    '[class.ui-in--upper]': 'uppercase()',
   },
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => UiInputComponent), multi: true },
@@ -293,6 +294,9 @@ export type UiInputSize = 'sm' | 'md' | 'lg';
       .ui-in__field::placeholder {
         color: var(--_placeholder);
       }
+      :host(.ui-in--upper) .ui-in__field {
+        text-transform: uppercase;
+      }
       .ui-in__field:disabled {
         cursor: not-allowed;
       }
@@ -375,6 +379,8 @@ export class UiInputComponent implements ControlValueAccessor {
   readonly required = input(false, { transform: booleanAttribute });
   readonly readonly = input(false, { transform: booleanAttribute });
 
+  /** Force uppercase display (e.g. promo/voucher codes). Cosmetic only. */
+  readonly uppercase = input(false, { transform: booleanAttribute });
   /** Show an inline clear (✕) button when there is a value. */
   readonly clearable = input(false, { transform: booleanAttribute });
   /** For `type="password"`, show the reveal toggle (on by default). */
