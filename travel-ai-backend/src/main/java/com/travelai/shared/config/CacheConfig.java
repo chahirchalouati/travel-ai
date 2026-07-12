@@ -20,8 +20,8 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import java.time.Duration;
 import java.util.Map;
 
-@Configuration
-@EnableCaching(proxyTargetClass = true)
+//@Configuration
+//@EnableCaching(proxyTargetClass = true)
 @Slf4j
 public class CacheConfig implements CachingConfigurer {
 
