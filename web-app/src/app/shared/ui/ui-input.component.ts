@@ -34,6 +34,7 @@ export type UiInputSize = 'sm' | 'md' | 'lg';
     '[class.ui-in--invalid]': 'invalid() || !!error()',
     '[class.ui-in--disabled]': 'disabled()',
     '[class.ui-in--upper]': 'uppercase()',
+    '[class.ui-in--action-inset]': 'actionInset()',
   },
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => UiInputComponent), multi: true },
@@ -102,6 +103,9 @@ export type UiInputSize = 'sm' | 'md' | 'lg';
       } @else if (trailingIcon()) {
         <span class="ms ui-in__trail" aria-hidden="true">{{ trailingIcon() }}</span>
       }
+
+      <!-- Consumer-projected trailing action (e.g. an embedded submit button). -->
+      <ng-content select="[uiInAction]" />
     </span>
 
     @if (error()) {
@@ -137,6 +141,7 @@ export type UiInputSize = 'sm' | 'md' | 'lg';
         --_bar-color: var(--ui-in-bar-color, var(--_focus));
         --_pad-y: var(--ui-in-pad-y, 10px);
         --_pad-x: var(--ui-in-pad-x, 12px);
+        --_pad-r: var(--ui-in-pad-r, var(--_pad-x));
         --_gap: var(--ui-in-gap, 9px);
         --_font-size: var(--ui-in-font-size, 0.92rem);
         --_font-family: var(--ui-in-font-family, inherit);
@@ -214,7 +219,8 @@ export type UiInputSize = 'sm' | 'md' | 'lg';
         gap: var(--_gap);
         width: 100%;
         min-width: var(--_min-width);
-        padding: var(--_pad-y) var(--_pad-x);
+        padding-block: var(--_pad-y);
+        padding-inline: var(--_pad-x) var(--_pad-r);
         background: var(--_bg);
         border: var(--_border-width) solid var(--_border);
         border-radius: var(--_radius);
@@ -296,6 +302,10 @@ export type UiInputSize = 'sm' | 'md' | 'lg';
       }
       :host(.ui-in--upper) .ui-in__field {
         text-transform: uppercase;
+      }
+      /* Pull the trailing edge in so a projected [uiInAction] control sits flush. */
+      :host(.ui-in--action-inset) {
+        --_pad-r: var(--ui-in-pad-r, 5px);
       }
       .ui-in__field:disabled {
         cursor: not-allowed;
@@ -381,6 +391,9 @@ export class UiInputComponent implements ControlValueAccessor {
 
   /** Force uppercase display (e.g. promo/voucher codes). Cosmetic only. */
   readonly uppercase = input(false, { transform: booleanAttribute });
+  /** Tighten the trailing padding so a projected `[uiInAction]` button (e.g. a
+   * submit control) sits flush inside the field box. */
+  readonly actionInset = input(false, { transform: booleanAttribute });
   /** Show an inline clear (✕) button when there is a value. */
   readonly clearable = input(false, { transform: booleanAttribute });
   /** For `type="password"`, show the reveal toggle (on by default). */
