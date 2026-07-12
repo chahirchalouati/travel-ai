@@ -729,13 +729,17 @@ export interface ConversationDetailResponse {
   createdAt: string;
 }
 
-// Page wrapper for paginated responses
+// Page wrapper for paginated responses.
+// Matches Spring Data's VIA_DTO serialization: top-level content[] plus a
+// nested `page` object holding the pagination metadata.
 export interface PageWrapper<T> {
   content: T[];
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number;
+  page: {
+    size: number;
+    number: number;
+    totalElements: number;
+    totalPages: number;
+  };
 }
 
 // ── In-app Notifications ───────────────────────────────────────────
