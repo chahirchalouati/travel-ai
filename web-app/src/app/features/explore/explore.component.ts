@@ -8,6 +8,7 @@ import { CtaSectionComponent } from '../cta-section/cta-section.component';
 import { TripStoriesComponent } from '../trip-stories/trip-stories.component';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
 import { HeroComponent } from '../hero/hero.component';
+import { UiSkeletonComponent } from '../../shared/ui/ui-skeleton.component';
 
 import { DestinationService } from '../../core/services/destination.service';
 import type { ContinentSummary, InterestSummary } from '../../core/services/destination.service';
@@ -20,7 +21,7 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
 @Component({
   selector: 'app-explore',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule, CtaSectionComponent, TripStoriesComponent, RevealDirective, HeroComponent],
+  imports: [CommonModule, FormsModule, TranslocoModule, CtaSectionComponent, TripStoriesComponent, RevealDirective, HeroComponent, UiSkeletonComponent],
   template: `
     <!-- HERO — flagship live-itinerary builder -->
     <app-hero />
@@ -38,7 +39,29 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     }
 
     <!-- FEATURED DESTINATIONS -->
-    @if (filteredFeatured().length > 0) {
+    @if (loading()) {
+      <section class="section" aria-labelledby="featured-heading">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title" data-index="01" id="featured-heading">{{ 'explore.sections.featured' | transloco }}</h2>
+          </div>
+        </div>
+        <div class="featured-scroll">
+          @for (i of [1, 2, 3, 4]; track i) {
+            <article class="dest-card">
+              <div class="dest-card__img-wrap">
+                <app-ui-skeleton width="100%" height="200px" radius="0" />
+              </div>
+              <div class="dest-card__body">
+                <app-ui-skeleton width="70%" height="18px" radius="4px" />
+                <app-ui-skeleton width="45%" height="14px" radius="4px" />
+                <app-ui-skeleton width="55%" height="14px" radius="4px" />
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+    } @else if (filteredFeatured().length > 0) {
       <section class="section" aria-labelledby="featured-heading">
         <div class="section-header" appReveal>
           <div>
@@ -89,7 +112,29 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
     }
 
     <!-- TRENDING DESTINATIONS -->
-    @if (filteredTrending().length > 0) {
+    @if (loading()) {
+      <section class="section section--gray" aria-labelledby="trending-heading">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title" data-index="02" id="trending-heading">{{ 'explore.sections.trending' | transloco }}</h2>
+          </div>
+        </div>
+        <div class="trending-scroll">
+          @for (i of [1, 2, 3, 4]; track i) {
+            <article class="trending-card">
+              <div class="trending-card__img-wrap">
+                <app-ui-skeleton width="100%" height="160px" radius="0" />
+              </div>
+              <div class="trending-card__body">
+                <app-ui-skeleton width="65%" height="16px" radius="4px" />
+                <app-ui-skeleton width="40%" height="12px" radius="4px" />
+                <app-ui-skeleton width="55%" height="12px" radius="4px" />
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+    } @else if (filteredTrending().length > 0) {
       <section class="section section--gray" aria-labelledby="trending-heading">
         <div class="section-header" appReveal>
           <div>
@@ -393,6 +438,12 @@ const QUICK_FILTERS = ['Beach', 'Cultural', 'Adventure', 'Romantic', 'Budget', '
 
     .dest-card__body {
       padding: 14px 16px 16px;
+    }
+
+    /* Skeleton placeholders stacked inside a card body need breathing room. */
+    .dest-card__body app-ui-skeleton + app-ui-skeleton,
+    .trending-card__body app-ui-skeleton + app-ui-skeleton {
+      margin-top: 8px;
     }
 
     .dest-card__name {
@@ -831,6 +882,7 @@ export class ExploreComponent implements OnInit {
   readonly stats = signal<PlatformStats | null>(null);
   readonly searchQuery = signal('');
   readonly activeContinent = signal('all');
+  readonly loading = signal(true);
 
   /** In-page continent filter applied to the featured and trending strips (client-side). */
   readonly filteredFeatured = computed(() => this.byContinent(this.featuredDestinations()));
@@ -848,7 +900,10 @@ export class ExploreComponent implements OnInit {
   ngOnInit(): void {
     this.destinationService.getFeatured().pipe(
       catchError(() => of([]))
-    ).subscribe(destinations => this.featuredDestinations.set(destinations));
+    ).subscribe(destinations => {
+      this.featuredDestinations.set(destinations);
+      this.loading.set(false);
+    });
 
     this.destinationService.getTrending(8).pipe(
       catchError(() => of([]))

@@ -5,6 +5,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { catchError, forkJoin, of } from 'rxjs';
 import { LoyaltyService } from '../../core/services/loyalty.service';
 import { AuthService } from '../../core/services/auth.service';
+import { UiSkeletonComponent } from '../../shared/ui/ui-skeleton.component';
 import type {
   LoyaltySummaryResponse,
   MemberRewardResponse,
@@ -19,7 +20,7 @@ import type {
 @Component({
   selector: 'app-rewards',
   standalone: true,
-  imports: [CommonModule, DatePipe, RouterLink, TranslocoModule],
+  imports: [CommonModule, DatePipe, RouterLink, TranslocoModule, UiSkeletonComponent],
   templateUrl: './rewards.component.html',
   styleUrl: './rewards.component.scss',
 })

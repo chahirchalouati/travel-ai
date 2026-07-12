@@ -12,6 +12,7 @@ import type { ReviewResponse } from '../../core/models/api.models';
 import { catchError, of } from 'rxjs';
 import { UiInputComponent } from '../../shared/ui/ui-input.component';
 import { UiTextareaComponent } from '../../shared/ui/ui-textarea.component';
+import { UiSkeletonComponent } from '../../shared/ui/ui-skeleton.component';
 
 type Tab = 'activity' | 'trips' | 'photos' | 'reviews' | 'forums' | 'map';
 
@@ -34,7 +35,7 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule, UiInputComponent, UiTextareaComponent],
+  imports: [CommonModule, FormsModule, TranslocoModule, UiInputComponent, UiTextareaComponent, UiSkeletonComponent],
   template: `
     <div class="profile-page">
 
@@ -51,14 +52,20 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
       }
 
       <!-- Cover photo -->
-      <div class="cover-photo has-custom-cover"
-           [style.background-image]="'url(' + (coverUrl() || defaultCover) + ')'">
-        <div class="cover-gradient"></div>
-        <button class="cover-edit-btn" (click)="coverInput.click()" type="button" aria-label="Edit cover photo">
-          <span class="ms" style="font-size:18px">photo_camera</span>
-          Edit cover photo
-        </button>
-      </div>
+      @if (imgLoading()) {
+        <div class="cover-photo">
+          <app-ui-skeleton width="100%" height="300px" radius="0" />
+        </div>
+      } @else {
+        <div class="cover-photo has-custom-cover"
+             [style.background-image]="'url(' + (coverUrl() || defaultCover) + ')'">
+          <div class="cover-gradient"></div>
+          <button class="cover-edit-btn" (click)="coverInput.click()" type="button" aria-label="Edit cover photo">
+            <span class="ms" style="font-size:18px">photo_camera</span>
+            Edit cover photo
+          </button>
+        </div>
+      }
 
       <!-- Profile header -->
       <div class="profile-header-wrap">
@@ -66,7 +73,11 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
           <div class="profile-identity">
             <div class="avatar-wrap">
               <div class="avatar-img">
-                <img [src]="avatarUrl() || defaultAvatar" alt="Your avatar" class="avatar-photo">
+                @if (imgLoading()) {
+                  <app-ui-skeleton width="100%" height="100%" radius="50%" />
+                } @else {
+                  <img [src]="avatarUrl() || defaultAvatar" alt="Your avatar" class="avatar-photo">
+                }
               </div>
               <button class="avatar-edit" (click)="avatarInput.click()" aria-label="Edit avatar" type="button">
                 <span class="ms" style="font-size:14px">photo_camera</span>
@@ -82,23 +93,34 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
               </h1>
               <span class="profile-handle">&#64;{{ handle() }}</span>
               <div class="profile-meta">
-                @if (homePlace()) {
-                  <span class="meta-chip"><span class="ms" style="font-size:15px">location_on</span> {{ homePlace() }}</span>
+                @if (loading()) {
+                  <app-ui-skeleton width="120px" height="22px" radius="999px" />
+                  <app-ui-skeleton width="90px" height="22px" radius="999px" />
+                } @else {
+                  @if (homePlace()) {
+                    <span class="meta-chip"><span class="ms" style="font-size:15px">location_on</span> {{ homePlace() }}</span>
+                  }
+                  <span class="meta-chip"><span class="ms" style="font-size:15px">flight_takeoff</span> {{ placesCount() }} {{ (placesCount() === 1 ? 'profile.place' : 'profile.places') | transloco }}</span>
+                  <span class="meta-chip"><span class="ms" style="font-size:15px">calendar_today</span> {{ 'profile.since' | transloco }} {{ memberSince() }}</span>
                 }
-                <span class="meta-chip"><span class="ms" style="font-size:15px">flight_takeoff</span> {{ placesCount() }} {{ (placesCount() === 1 ? 'profile.place' : 'profile.places') | transloco }}</span>
-                <span class="meta-chip"><span class="ms" style="font-size:15px">calendar_today</span> {{ 'profile.since' | transloco }} {{ memberSince() }}</span>
               </div>
               <div class="profile-stats-row">
                 <div class="profile-stat">
-                  <span class="stat-num">{{ contributions() }}</span>
+                  <span class="stat-num">
+                    @if (loading()) { <app-ui-skeleton width="32px" height="24px" /> } @else { {{ contributions() }} }
+                  </span>
                   <span class="stat-label">{{ 'profile.statReviews' | transloco }}</span>
                 </div>
                 <div class="profile-stat">
-                  <span class="stat-num">{{ trips() }}</span>
+                  <span class="stat-num">
+                    @if (loading()) { <app-ui-skeleton width="32px" height="24px" /> } @else { {{ trips() }} }
+                  </span>
                   <span class="stat-label">{{ 'profile.statTrips' | transloco }}</span>
                 </div>
                 <div class="profile-stat">
-                  <span class="stat-num">{{ photoCount() }}</span>
+                  <span class="stat-num">
+                    @if (loading()) { <app-ui-skeleton width="32px" height="24px" /> } @else { {{ photoCount() }} }
+                  </span>
                   <span class="stat-label">{{ 'profile.statPhotos' | transloco }}</span>
                 </div>
               </div>
@@ -136,20 +158,35 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
         <aside class="profile-sidebar">
           <div class="sidebar-card">
             <h2 class="sidebar-title">{{ 'profile.achievements' | transloco }}</h2>
-            <p class="sidebar-sub">{{ 'profile.unlockedOf' | transloco:{ count: unlockedCount(), total: achievements().length } }}</p>
-            <div class="achievements-list">
-              @for (ach of achievements(); track ach.label) {
-                <div class="achievement-item">
-                  <div class="ach-icon-wrap" [class.locked]="ach.locked" [style.--ach-color]="ach.color">
-                    <span class="ms ach-icon">{{ ach.locked ? 'lock' : ach.icon }}</span>
+            @if (loading()) {
+              <p class="sidebar-sub"><app-ui-skeleton width="80px" height="12px" /></p>
+              <div class="achievements-list">
+                @for (i of [1, 2, 3]; track i) {
+                  <div class="achievement-item">
+                    <app-ui-skeleton width="40px" height="40px" radius="8px" />
+                    <div class="ach-info" style="flex:1">
+                      <app-ui-skeleton width="60%" height="13px" />
+                      <app-ui-skeleton width="40%" height="11px" />
+                    </div>
                   </div>
-                  <div class="ach-info">
-                    <span class="ach-label">{{ ach.label }}</span>
-                    <span class="ach-sub">{{ ach.sublabel }}</span>
+                }
+              </div>
+            } @else {
+              <p class="sidebar-sub">{{ 'profile.unlockedOf' | transloco:{ count: unlockedCount(), total: achievements().length } }}</p>
+              <div class="achievements-list">
+                @for (ach of achievements(); track ach.label) {
+                  <div class="achievement-item">
+                    <div class="ach-icon-wrap" [class.locked]="ach.locked" [style.--ach-color]="ach.color">
+                      <span class="ms ach-icon">{{ ach.locked ? 'lock' : ach.icon }}</span>
+                    </div>
+                    <div class="ach-info">
+                      <span class="ach-label">{{ ach.label }}</span>
+                      <span class="ach-sub">{{ ach.sublabel }}</span>
+                    </div>
                   </div>
-                </div>
-              }
-            </div>
+                }
+              </div>
+            }
           </div>
 
           <!-- Profile strength -->
@@ -180,7 +217,11 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
             <div class="highlight-banner">
               <div class="highlight-text">
                 <span class="highlight-eyebrow">{{ 'profile.journey' | transloco }}</span>
-                <h2 class="highlight-title">{{ contributions() }} {{ (contributions() === 1 ? 'profile.review' : 'profile.reviews') | transloco }} {{ 'profile.across' | transloco }} <b>{{ placesCount() }}</b> {{ (placesCount() === 1 ? 'profile.place' : 'profile.places') | transloco }}</h2>
+                @if (loading()) {
+                  <h2 class="highlight-title"><app-ui-skeleton width="60%" height="26px" /></h2>
+                } @else {
+                  <h2 class="highlight-title">{{ contributions() }} {{ (contributions() === 1 ? 'profile.review' : 'profile.reviews') | transloco }} {{ 'profile.across' | transloco }} <b>{{ placesCount() }}</b> {{ (placesCount() === 1 ? 'profile.place' : 'profile.places') | transloco }}</h2>
+                }
                 <p class="highlight-sub">{{ 'profile.journeySub' | transloco }}</p>
                 <button class="btn-start-exploring" (click)="goPlanner()" type="button">
                   <span class="ms" style="font-size:18px">auto_awesome</span>
@@ -188,34 +229,46 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
                 </button>
               </div>
               <div class="highlight-stats">
-                <div class="hl-stat"><span class="hl-num">{{ contributions() }}</span><span class="hl-lbl">{{ 'profile.ovReviews' | transloco }}</span></div>
-                <div class="hl-stat"><span class="hl-num">{{ photoCount() }}</span><span class="hl-lbl">{{ 'profile.ovPhotos' | transloco }}</span></div>
-                <div class="hl-stat"><span class="hl-num">{{ helpfulVotes() }}</span><span class="hl-lbl">{{ 'profile.ovHelpful' | transloco }}</span></div>
+                <div class="hl-stat"><span class="hl-num">@if (loading()) { <app-ui-skeleton width="28px" height="22px" /> } @else { {{ contributions() }} }</span><span class="hl-lbl">{{ 'profile.ovReviews' | transloco }}</span></div>
+                <div class="hl-stat"><span class="hl-num">@if (loading()) { <app-ui-skeleton width="28px" height="22px" /> } @else { {{ photoCount() }} }</span><span class="hl-lbl">{{ 'profile.ovPhotos' | transloco }}</span></div>
+                <div class="hl-stat"><span class="hl-num">@if (loading()) { <app-ui-skeleton width="28px" height="22px" /> } @else { {{ helpfulVotes() }} }</span><span class="hl-lbl">{{ 'profile.ovHelpful' | transloco }}</span></div>
               </div>
             </div>
 
             <h3 class="feed-heading">{{ 'profile.recentActivity' | transloco }}</h3>
             <div class="activity-feed">
-              @for (a of activity(); track $index) {
-                <div class="feed-item">
-                  <span class="feed-icon" [style.background]="a.color + '1a'" [style.color]="a.color">
-                    <span class="ms" style="font-size:18px">{{ a.icon }}</span>
-                  </span>
-                  <div class="feed-body">
-                    <p class="feed-text" [innerHTML]="a.text"></p>
-                    <span class="feed-time">{{ a.time }}</span>
+              @if (loading()) {
+                @for (i of [1, 2, 3]; track i) {
+                  <div class="feed-item">
+                    <app-ui-skeleton width="36px" height="36px" radius="999px" />
+                    <div class="feed-body" style="flex:1">
+                      <app-ui-skeleton width="70%" height="14px" />
+                      <app-ui-skeleton width="30%" height="12px" />
+                    </div>
                   </div>
-                </div>
-              } @empty {
-                <div class="tab-empty">
-                  <span class="ms tab-empty-icon">rss_feed</span>
-                  <h3>{{ 'profile.noActivity' | transloco }}</h3>
-                  <p>{{ 'profile.noActivitySub' | transloco }}</p>
-                  <button class="btn-start-exploring" (click)="goExplore()" type="button">
-                    <span class="ms" style="font-size:18px">travel_explore</span>
-                    {{ 'profile.startExploring' | transloco }}
-                  </button>
-                </div>
+                }
+              } @else {
+                @for (a of activity(); track $index) {
+                  <div class="feed-item">
+                    <span class="feed-icon" [style.background]="a.color + '1a'" [style.color]="a.color">
+                      <span class="ms" style="font-size:18px">{{ a.icon }}</span>
+                    </span>
+                    <div class="feed-body">
+                      <p class="feed-text" [innerHTML]="a.text"></p>
+                      <span class="feed-time">{{ a.time }}</span>
+                    </div>
+                  </div>
+                } @empty {
+                  <div class="tab-empty">
+                    <span class="ms tab-empty-icon">rss_feed</span>
+                    <h3>{{ 'profile.noActivity' | transloco }}</h3>
+                    <p>{{ 'profile.noActivitySub' | transloco }}</p>
+                    <button class="btn-start-exploring" (click)="goExplore()" type="button">
+                      <span class="ms" style="font-size:18px">travel_explore</span>
+                      {{ 'profile.startExploring' | transloco }}
+                    </button>
+                  </div>
+                }
               }
             </div>
           }
@@ -532,6 +585,13 @@ export class ProfileComponent implements OnInit {
 
   /** Full profile snapshot fetched from the backend (/users/me/overview). */
   readonly overview = signal<ProfileOverview | null>(null);
+  /** True until the overview fetch settles — gates skeletons vs. the real
+   * numbers/empty-states so refresh doesn't flash zeros/placeholder content. */
+  readonly loading = signal(true);
+  /** Cover/avatar come from the cached user, which is null until /users/me
+   * resolves on refresh. Skeleton the image area until then so the default
+   * (Unsplash) placeholder never flashes over the user's real photo. */
+  readonly imgLoading = computed(() => this.authService.currentUser() === null);
 
   readonly achievements = computed(() => this.overview()?.achievements ?? []);
   readonly trips_list = computed(() => this.overview()?.trips ?? []);
@@ -635,7 +695,10 @@ export class ProfileComponent implements OnInit {
     }
 
     this.profileService.getOverview().pipe(catchError(() => of(null)))
-      .subscribe(overview => this.overview.set(overview));
+      .subscribe(overview => {
+        this.overview.set(overview);
+        this.loading.set(false);
+      });
     this.profileService.listPhotos().pipe(catchError(() => of([] as GalleryPhoto[])))
       .subscribe(photos => this.gallery.set(photos));
     this.profileService.listPlaces().pipe(catchError(() => of([] as TravelPlace[])))

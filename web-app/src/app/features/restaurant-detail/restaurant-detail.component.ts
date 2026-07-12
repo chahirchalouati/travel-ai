@@ -12,6 +12,7 @@ import type { RestaurantSearchResult, RestaurantSlot, ReviewSummary } from '../.
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
 import { UiInputComponent } from '../../shared/ui/ui-input.component';
 import { UiDatepickerComponent } from '../../shared/ui/ui-datepicker.component';
+import { UiSkeletonComponent } from '../../shared/ui/ui-skeleton.component';
 import { BookingDraftService } from '../booking-flow/booking-draft.service';
 
 const PRICE_TIER_LABELS: Record<number, string> = {
@@ -37,9 +38,71 @@ function localToday(): string {
 @Component({
   selector: 'app-restaurant-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule, RevealDirective, UiInputComponent, UiDatepickerComponent],
+  imports: [CommonModule, FormsModule, TranslocoModule, RevealDirective, UiInputComponent, UiDatepickerComponent, UiSkeletonComponent],
   template: `
-    @if (restaurant(); as r) {
+    @if (loading()) {
+      <nav style="padding: 16px 32px; max-width: 1100px; margin: 0 auto; display:flex; align-items:center; justify-content:space-between;">
+        <app-ui-skeleton width="90px" height="18px" />
+        <app-ui-skeleton width="120px" height="34px" radius="2px" />
+      </nav>
+
+      <div style="max-width: 1100px; margin: 0 auto; padding: 0 32px 80px;">
+        <!-- HERO CARD skeleton -->
+        <div class="hero-card">
+          <app-ui-skeleton width="100%" height="440px" radius="0" />
+          <div class="hero-card__content">
+            <div class="hero-card__badges">
+              <app-ui-skeleton width="90px" height="26px" radius="2px" />
+              <app-ui-skeleton width="110px" height="26px" radius="2px" />
+            </div>
+            <app-ui-skeleton width="60%" height="48px" radius="4px" />
+            <app-ui-skeleton width="30%" height="18px" radius="2px" />
+            <div class="hero-card__features">
+              <app-ui-skeleton width="110px" height="30px" radius="2px" />
+              <app-ui-skeleton width="100px" height="30px" radius="2px" />
+              <app-ui-skeleton width="95px" height="30px" radius="2px" />
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <div style="display:flex; flex-direction:column; gap:20px;">
+            <section class="info-card">
+              <app-ui-skeleton width="140px" height="22px" radius="2px" />
+              <div style="height:16px"></div>
+              <app-ui-skeleton width="100%" height="14px" />
+              <div style="height:8px"></div>
+              <app-ui-skeleton width="95%" height="14px" />
+              <div style="height:8px"></div>
+              <app-ui-skeleton width="80%" height="14px" />
+            </section>
+            <section class="info-card">
+              <app-ui-skeleton width="160px" height="22px" radius="2px" />
+              <div style="height:16px"></div>
+              <app-ui-skeleton width="60%" height="16px" />
+              <div style="height:10px"></div>
+              <app-ui-skeleton width="55%" height="16px" />
+              <div style="height:10px"></div>
+              <app-ui-skeleton width="65%" height="16px" />
+            </section>
+          </div>
+          <aside style="position:sticky; top:80px;">
+            <div class="booking-card">
+              <app-ui-skeleton width="140px" height="20px" radius="2px" />
+              <div style="height:20px"></div>
+              <app-ui-skeleton width="100%" height="18px" />
+              <div style="height:14px"></div>
+              <app-ui-skeleton width="90%" height="18px" />
+              <div style="height:14px"></div>
+              <app-ui-skeleton width="85%" height="18px" />
+              <div style="height:24px"></div>
+              <app-ui-skeleton width="100%" height="46px" radius="2px" />
+            </div>
+          </aside>
+        </div>
+      </div>
+    } @else {
+      @if (restaurant(); as r) {
       <nav style="padding: 16px 32px; max-width: 1100px; margin: 0 auto; display:flex; align-items:center; justify-content:space-between;">
         <button (click)="goBack()" class="back-link">
           <span class="ms" style="font-size:18px">arrow_back</span>
@@ -254,17 +317,16 @@ function localToday(): string {
           </aside>
         </div>
       </div>
-    } @else {
-      <div style="max-width:1100px; margin:0 auto; padding:32px;">
-        <div class="shimmer" style="height:260px; border-radius: 3px; margin-bottom:24px;"></div>
-        <div style="display:grid; grid-template-columns:2fr 1fr; gap:24px;">
-          <div style="display:flex; flex-direction:column; gap:20px;">
-            <div class="shimmer" style="height:180px; border-radius: 3px;"></div>
-            <div class="shimmer" style="height:140px; border-radius: 3px;"></div>
-          </div>
-          <div class="shimmer" style="height:340px; border-radius: 3px;"></div>
-        </div>
+      } @else {
+      <div style="max-width:1100px; margin:0 auto; padding:80px 32px; text-align:center;">
+        <span class="ms" style="font-size:56px; color:var(--text-tertiary)">restaurant</span>
+        <p style="font-size:16px; color:var(--text-secondary); margin:16px 0 24px;">{{ 'common.error' | transloco }}</p>
+        <button (click)="goBack()" class="back-link" style="justify-content:center;">
+          <span class="ms" style="font-size:18px">arrow_back</span>
+          {{ 'restaurant.back' | transloco }}
+        </button>
       </div>
+      }
     }
   `,
   styles: [`
@@ -463,6 +525,7 @@ export class RestaurantDetailComponent implements OnInit {
   private readonly bookingDraft = inject(BookingDraftService);
 
   readonly restaurant = signal<RestaurantSearchResult | null>(null);
+  readonly loading = signal(true);
   readonly summary = signal<ReviewSummary | null>(null);
   readonly tripFit = computed(() => this.tripContext.match(this.restaurant()?.city ?? null));
   readonly isFav = computed(() => {
@@ -493,8 +556,8 @@ export class RestaurantDetailComponent implements OnInit {
     if (!id) { this.router.navigate(['/']); return; }
 
     this.catalogService.getRestaurant(id).subscribe({
-      next: (r) => { this.restaurant.set(r); this.loadSlots(); },
-      error: () => this.router.navigate(['/']),
+      next: (r) => { this.restaurant.set(r); this.loading.set(false); this.loadSlots(); },
+      error: () => { this.loading.set(false); this.router.navigate(['/']); },
     });
 
     this.reviewService.getSummary('RESTAURANT', id)

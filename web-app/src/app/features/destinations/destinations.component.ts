@@ -6,11 +6,12 @@ import { DestinationService } from '../../core/services/destination.service';
 import type { DestinationResponse } from '../../core/models/api.models';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
 import { UiSelectComponent, UiCheckboxComponent, UiInputComponent } from '../../shared/ui';
+import { UiSkeletonComponent } from '../../shared/ui/ui-skeleton.component';
 
 @Component({
   selector: 'app-destinations',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, RevealDirective, UiSelectComponent, UiCheckboxComponent, UiInputComponent],
+  imports: [CommonModule, FormsModule, RouterLink, RevealDirective, UiSelectComponent, UiCheckboxComponent, UiInputComponent, UiSkeletonComponent],
   templateUrl: './destinations.component.html',
   styleUrl: './destinations.component.scss'
 })

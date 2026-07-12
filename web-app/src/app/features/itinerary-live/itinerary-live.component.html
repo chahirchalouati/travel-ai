@@ -1,6 +1,33 @@
 <ng-container *transloco="let t">
   @if (loading()) {
-    <div class="il-loading"><span class="il-spinner"></span></div>
+    <!-- Skeleton shaped like the header + segment timeline -->
+    <header class="il-head" aria-hidden="true">
+      <app-ui-skeleton width="42px" height="42px" radius="50%" />
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+        <app-ui-skeleton width="120px" height="14px" radius="999px" />
+        <app-ui-skeleton width="60%" height="30px" radius="4px" />
+        <app-ui-skeleton width="80%" height="16px" radius="4px" />
+      </div>
+    </header>
+    <div class="il-body">
+      <section class="il-section">
+        <app-ui-skeleton width="180px" height="22px" radius="4px" />
+        <ul class="il-timeline" style="margin-top:16px">
+          @for (i of [1, 2, 3, 4]; track i) {
+            <li class="il-segment" aria-hidden="true">
+              <div class="il-segment__icon"><app-ui-skeleton width="44px" height="44px" radius="3px" /></div>
+              <div class="il-segment__main">
+                <div class="il-segment__row">
+                  <app-ui-skeleton width="45%" height="16px" radius="4px" />
+                  <app-ui-skeleton width="90px" height="20px" radius="999px" />
+                </div>
+                <app-ui-skeleton width="120px" height="12px" radius="4px" style="display:block;margin-top:8px" />
+              </div>
+            </li>
+          }
+        </ul>
+      </section>
+    </div>
   } @else if (itinerary()) {
     @if (itinerary(); as it) {
     <header class="il-head">

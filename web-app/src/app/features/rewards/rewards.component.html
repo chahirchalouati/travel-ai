@@ -15,15 +15,27 @@
   } @else {
     <div class="rewards__balance" role="status">
       <div class="rewards__stat">
-        <span class="rewards__stat-num">{{ balance() | number }}</span>
+        @if (loading()) {
+          <app-ui-skeleton width="90px" height="30px" />
+        } @else {
+          <span class="rewards__stat-num">{{ balance() | number }}</span>
+        }
         <span class="rewards__stat-label">{{ t('rewards.pointsBalance') }}</span>
       </div>
       <div class="rewards__stat">
-        <span class="rewards__stat-num">{{ lifetime() | number }}</span>
+        @if (loading()) {
+          <app-ui-skeleton width="90px" height="30px" />
+        } @else {
+          <span class="rewards__stat-num">{{ lifetime() | number }}</span>
+        }
         <span class="rewards__stat-label">{{ t('rewards.lifetimePoints') }}</span>
       </div>
       <div class="rewards__stat">
-        <span class="rewards__stat-num">{{ activeRewards().length }}</span>
+        @if (loading()) {
+          <app-ui-skeleton width="48px" height="30px" />
+        } @else {
+          <span class="rewards__stat-num">{{ activeRewards().length }}</span>
+        }
         <span class="rewards__stat-label">{{ t('rewards.ownedActive') }}</span>
       </div>
     </div>
@@ -33,7 +45,21 @@
     }
 
     @if (loading()) {
-      <p class="rewards__loading">{{ t('rewards.loading') }}</p>
+      <h2 class="rewards__section">{{ t('rewards.milestones.title') }}</h2>
+      <p class="rewards__section-note">{{ t('rewards.milestones.note') }}</p>
+      <div class="rewards__grid">
+        @for (i of [1, 2, 3]; track i) {
+          <article class="reward">
+            <div class="reward__top">
+              <app-ui-skeleton width="72px" height="18px" />
+            </div>
+            <h3 class="reward__name"><app-ui-skeleton width="70%" height="20px" /></h3>
+            <p class="reward__desc"><app-ui-skeleton width="100%" height="13px" /></p>
+            <div class="reward__meter"><app-ui-skeleton width="100%" height="6px" /></div>
+            <p class="reward__foot"><app-ui-skeleton width="55%" height="12px" /></p>
+          </article>
+        }
+      </div>
     } @else {
       <!-- Milestones ------------------------------------------------------ -->
       <h2 class="rewards__section">{{ t('rewards.milestones.title') }}</h2>

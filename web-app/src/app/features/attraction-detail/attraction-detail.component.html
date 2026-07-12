@@ -1,7 +1,29 @@
 <ng-container *transloco="let t">
   @if (loading()) {
-    <div class="ad-loading">
-      <span class="ad-spinner"></span>
+    <div class="ad-skel">
+      <!-- Hero image block -->
+      <app-ui-skeleton width="100%" height="56vh" radius="0" />
+      <main class="ad-body">
+        <!-- Title + location lines -->
+        <div class="ad-skel__title">
+          <app-ui-skeleton width="110px" height="22px" radius="4px" />
+          <app-ui-skeleton width="60%" height="46px" radius="4px" />
+          <app-ui-skeleton width="38%" height="18px" radius="3px" />
+        </div>
+        <!-- Quick-fact chips -->
+        <section class="ad-facts">
+          @for (n of [1, 2, 3]; track n) {
+            <app-ui-skeleton width="180px" height="66px" radius="3px" />
+          }
+        </section>
+        <!-- Description block -->
+        <section class="ad-section">
+          <app-ui-skeleton width="30%" height="26px" radius="4px" />
+          <app-ui-skeleton width="100%" height="16px" radius="3px" />
+          <app-ui-skeleton width="92%" height="16px" radius="3px" />
+          <app-ui-skeleton width="66%" height="16px" radius="3px" />
+        </section>
+      </main>
     </div>
   } @else if (attraction()) {
     @if (attraction(); as a) {

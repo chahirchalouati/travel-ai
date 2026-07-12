@@ -30,6 +30,16 @@
 
 @keyframes ad-spin { to { transform: rotate(360deg); } }
 
+/* ── Skeleton loading ─────────────────────────────────────────── */
+.ad-skel__title {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 2.5rem;
+}
+
+.ad-skel .ad-section app-ui-skeleton + app-ui-skeleton { margin-top: 10px; }
+
 /* ── Hero ─────────────────────────────────────────────────────── */
 .ad-hero {
   position: relative;

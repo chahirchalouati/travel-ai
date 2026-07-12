@@ -1,6 +1,41 @@
 <ng-container *transloco="let t">
   @if (loading()) {
-    <div class="fd-loading"><span class="fd-spinner"></span></div>
+    <div class="fd-wrap">
+      <!-- Question skeleton -->
+      <article class="fd-question">
+        <app-ui-skeleton width="80%" height="2rem" radius="3px" />
+        <div class="fd-meta" style="margin-top: 14px;">
+          <app-ui-skeleton width="26px" height="26px" radius="50%" />
+          <app-ui-skeleton width="120px" height="0.82rem" radius="2px" />
+          <app-ui-skeleton width="90px" height="0.82rem" radius="2px" />
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 6px;">
+          <app-ui-skeleton width="100%" height="1rem" radius="2px" />
+          <app-ui-skeleton width="100%" height="1rem" radius="2px" />
+          <app-ui-skeleton width="92%" height="1rem" radius="2px" />
+          <app-ui-skeleton width="60%" height="1rem" radius="2px" />
+        </div>
+      </article>
+
+      <!-- Answers skeleton -->
+      <section class="fd-answers">
+        <app-ui-skeleton width="140px" height="1.2rem" radius="2px" />
+        <ul class="fd-answer-list" style="margin-top: 16px;">
+          @for (row of [0, 1, 2]; track row) {
+            <li class="fd-answer">
+              <div class="fd-answer__head">
+                <app-ui-skeleton width="26px" height="26px" radius="50%" />
+                <app-ui-skeleton width="110px" height="0.9rem" radius="2px" />
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <app-ui-skeleton width="100%" height="0.9rem" radius="2px" />
+                <app-ui-skeleton width="75%" height="0.9rem" radius="2px" />
+              </div>
+            </li>
+          }
+        </ul>
+      </section>
+    </div>
   } @else {
     @if (detail(); as d) {
       <div class="fd-wrap">

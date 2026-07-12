@@ -210,28 +210,19 @@ section {
 }
 
 /* ---- Loading skeleton ---- */
-.skeleton .dest-card-img {
-  background: var(--bg-secondary);
+.dest-card--skeleton {
+  cursor: default;
+
+  &:hover {
+    border-color: var(--border);
+    box-shadow: none;
+  }
 }
 
-.skeleton-img {
-  aspect-ratio: 400/260;
-  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-.skeleton-line {
-  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
-}
-
-@keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+.dest-card-body--skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .dest-card-placeholder {

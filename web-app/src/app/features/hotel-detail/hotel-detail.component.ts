@@ -17,15 +17,55 @@ import type {
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
 import { UiInputComponent } from '../../shared/ui/ui-input.component';
 import { UiTextareaComponent } from '../../shared/ui/ui-textarea.component';
+import { UiSkeletonComponent } from '../../shared/ui/ui-skeleton.component';
 
 const TARGET_TYPE = 'HOTEL';
 
 @Component({
   selector: 'app-hotel-detail',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, DatePipe, FormsModule, TranslocoModule, RevealDirective, UiInputComponent, UiTextareaComponent],
+  imports: [CommonModule, CurrencyPipe, DatePipe, FormsModule, TranslocoModule, RevealDirective, UiInputComponent, UiTextareaComponent, UiSkeletonComponent],
   template: `
-    @if (hotel(); as h) {
+    @if (loading()) {
+      <div style="max-width:1100px; margin:0 auto; padding:24px 32px 80px;">
+        <app-ui-skeleton width="100%" height="440px" radius="var(--radius-xl)" />
+        <div style="margin-top:20px; display:flex; flex-direction:column; gap:12px; max-width:520px;">
+          <app-ui-skeleton width="60%" height="34px" radius="3px" />
+          <app-ui-skeleton width="40%" height="16px" />
+          <app-ui-skeleton width="80%" height="14px" />
+          <div style="display:flex; gap:10px; margin-top:6px;">
+            <app-ui-skeleton width="90px" height="26px" radius="2px" />
+            <app-ui-skeleton width="90px" height="26px" radius="2px" />
+            <app-ui-skeleton width="90px" height="26px" radius="2px" />
+          </div>
+        </div>
+        <div class="detail-grid" style="margin-top:24px;">
+          <div style="display:flex; flex-direction:column; gap:20px;">
+            <section class="info-card" style="display:flex; flex-direction:column; gap:12px;">
+              <app-ui-skeleton width="35%" height="20px" radius="3px" />
+              <app-ui-skeleton width="100%" height="14px" />
+              <app-ui-skeleton width="95%" height="14px" />
+              <app-ui-skeleton width="70%" height="14px" />
+            </section>
+            <section class="info-card" style="display:flex; flex-direction:column; gap:12px;">
+              <app-ui-skeleton width="35%" height="20px" radius="3px" />
+              <app-ui-skeleton width="100%" height="14px" />
+              <app-ui-skeleton width="88%" height="14px" />
+            </section>
+          </div>
+          <aside>
+            <div class="booking-card" style="display:flex; flex-direction:column; gap:16px;">
+              <app-ui-skeleton width="50%" height="30px" radius="3px" />
+              <app-ui-skeleton width="100%" height="14px" />
+              <app-ui-skeleton width="100%" height="14px" />
+              <app-ui-skeleton width="100%" height="44px" radius="2px" />
+              <app-ui-skeleton width="100%" height="44px" radius="2px" />
+            </div>
+          </aside>
+        </div>
+      </div>
+    } @else {
+      @if (hotel(); as h) {
       <nav style="padding: 16px 32px; max-width: 1100px; margin: 0 auto; display:flex; align-items:center; justify-content:space-between;">
         <button (click)="goBack()" class="back-link">
           <span class="ms" style="font-size:18px">arrow_back</span>
@@ -317,18 +357,15 @@ const TARGET_TYPE = 'HOTEL';
           </aside>
         </div>
       </div>
-    } @else {
-      <div style="max-width:1100px; margin:0 auto; padding:32px;">
-        <div class="shimmer" style="height:260px; border-radius: 3px; margin-bottom:24px;"></div>
-        <div style="display:grid; grid-template-columns:2fr 1fr; gap:24px;">
-          <div style="display:flex; flex-direction:column; gap:20px;">
-            <div class="shimmer" style="height:180px; border-radius: 3px;"></div>
-            <div class="shimmer" style="height:140px; border-radius: 3px;"></div>
-            <div class="shimmer" style="height:240px; border-radius: 3px;"></div>
-          </div>
-          <div class="shimmer" style="height:340px; border-radius: 3px;"></div>
-        </div>
+      } @else {
+      <div style="max-width:1100px; margin:0 auto; padding:80px 32px; text-align:center; color:var(--text-tertiary); display:flex; flex-direction:column; align-items:center; gap:14px;">
+        <span class="ms" style="font-size:44px;">hotel</span>
+        <button (click)="goBack()" class="back-link">
+          <span class="ms" style="font-size:18px">arrow_back</span>
+          {{ 'hotel.back' | transloco }}
+        </button>
       </div>
+      }
     }
   `,
   styles: [`
@@ -432,9 +469,6 @@ const TARGET_TYPE = 'HOTEL';
     .btn-chat { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--surface); color: var(--color-red-ink); border: 1.5px solid var(--brand); border-radius: 2px; padding: 13px; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 150ms ease; }
     .btn-chat:hover { background: var(--brand-light); }
 
-    @keyframes shimmer { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }
-    .shimmer { background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%); background-size: 800px 100%; animation: shimmer 1.8s ease-in-out infinite; }
-
     @media (max-width: 900px) { .form-row--4 { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 768px) {
       .detail-grid { grid-template-columns: 1fr; }
@@ -454,6 +488,7 @@ export class HotelDetailComponent implements OnInit {
   readonly hotel = signal<HotelSearchResult | null>(null);
   readonly reviews = signal<ReviewResponse[]>([]);
   readonly summary = signal<ReviewSummary | null>(null);
+  readonly loading = signal(true);
 
   readonly isAuthenticated = this.auth.isAuthenticated;
   readonly showForm = signal(false);
@@ -483,8 +518,14 @@ export class HotelDetailComponent implements OnInit {
       return;
     }
     this.catalogService.getHotel(this.id).subscribe({
-      next: h => this.hotel.set(h),
-      error: () => this.router.navigate(['/hotels']),
+      next: h => {
+        this.hotel.set(h);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+        this.router.navigate(['/hotels']);
+      },
     });
     this.loadReviews();
   }
