@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Travel AI — Il racconto d'uso</title>
+<style>
+  :root {
+    --paper: #F6F5F1;
+    --paper-2: #EFEDE6;
+    --paper-3: #E7E5DC;
+    --ink: #121210;
+    --ink-70: #4B4A44;
+    --ink-45: #86847A;
+    --rule: #D8D6CC;
+    --red: #E5352B;
+    --green: #2E7D46;
+
+    --font-disp: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+    --font-body: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Menlo, Consolas, monospace;
+
+    --measure: 40rem;
+    --step: clamp(1.05rem, 0.98rem + 0.34vw, 1.2rem);
+    --h2: clamp(1.7rem, 1.2rem + 2.1vw, 3rem);
+    --hero: clamp(2.6rem, 1rem + 8vw, 6.5rem);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #111110;
+      --paper-2: #191917;
+      --paper-3: #201F1C;
+      --ink: #F2F1EC;
+      --ink-70: #B8B6AD;
+      --ink-45: #7E7C73;
+      --rule: #2C2C28;
+      --red: #FF4A3D;
+      --green: #4CAF6A;
+    }
+  }
+  :root[data-theme="light"] {
+    --paper: #F6F5F1; --paper-2: #EFEDE6; --paper-3: #E7E5DC;
+    --ink: #121210; --ink-70: #4B4A44; --ink-45: #86847A;
+    --rule: #D8D6CC; --red: #E5352B; --green: #2E7D46;
+  }
+  :root[data-theme="dark"] {
+    --paper: #111110; --paper-2: #191917; --paper-3: #201F1C;
+    --ink: #F2F1EC; --ink-70: #B8B6AD; --ink-45: #7E7C73;
+    --rule: #2C2C28; --red: #FF4A3D; --green: #4CAF6A;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: var(--step);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .wrap { max-width: 68rem; margin: 0 auto; padding: 0 clamp(1.1rem, 4vw, 3rem); }
+
+  .mono {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-45);
+  }
+
+  /* progress bar */
+  .progress {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: var(--red); z-index: 50;
+  }
+
+  /* topbar */
+  .topbar {
+    position: sticky; top: 0; z-index: 40;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .topbar .row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; padding: 0.7rem 0;
+  }
+  .brand { display: flex; align-items: baseline; gap: 0.55rem; }
+  .brand b { font-family: var(--font-disp); font-weight: 800; letter-spacing: -0.02em; font-size: 1rem; }
+  .brand .dot { width: 9px; height: 9px; background: var(--red); display: inline-block; }
+  .themebtn {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+    background: none; border: 1px solid var(--rule); color: var(--ink-70);
+    padding: 0.4rem 0.7rem; cursor: pointer; border-radius: 2px;
+  }
+  .themebtn:hover { border-color: var(--ink); color: var(--ink); }
+  .themebtn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+  /* hero */
+  .hero { padding: clamp(3.5rem, 9vw, 8rem) 0 clamp(2.5rem, 5vw, 4rem); border-bottom: 1px solid var(--rule); }
+  .hero .kick { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.6rem; }
+  .hero .kick span:first-child { color: var(--red); }
+  .hero h1 {
+    font-family: var(--font-disp); font-weight: 800;
+    font-size: var(--hero); line-height: 0.94; letter-spacing: -0.045em;
+    margin: 0 0 1.4rem; text-wrap: balance; max-width: 16ch;
+  }
+  .hero h1 em { font-style: normal; color: var(--red); }
+  .hero .lede { max-width: var(--measure); color: var(--ink-70); font-size: clamp(1.1rem, 1rem + 0.6vw, 1.4rem); line-height: 1.5; }
+  .hero .lede strong { color: var(--ink); font-weight: 700; }
+
+  .meta-strip {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    border-top: 1px solid var(--rule); margin-top: clamp(2.4rem, 5vw, 4rem);
+  }
+  .meta-strip div { padding: 1.1rem 0; border-right: 1px solid var(--rule); }
+  .meta-strip div:last-child { border-right: none; }
+  .meta-strip .n { font-family: var(--font-disp); font-weight: 800; font-size: 1.7rem; letter-spacing: -0.03em; display: block; }
+  .meta-strip .l { margin-top: 0.2rem; }
+
+  /* TOC */
+  .toc { padding: clamp(2.5rem, 6vw, 4.5rem) 0; border-bottom: 1px solid var(--rule); }
+  .toc h2 { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-45); font-weight: 500; margin: 0 0 1.6rem; }
+  .toc ol { list-style: none; margin: 0; padding: 0; }
+  .toc li { border-top: 1px solid var(--rule); }
+  .toc li:last-child { border-bottom: 1px solid var(--rule); }
+  .toc a {
+    display: grid; grid-template-columns: 3.4rem 1fr auto; align-items: baseline; gap: 1rem;
+    padding: 0.95rem 0.4rem; text-decoration: none; color: var(--ink);
+    transition: background 0.15s, padding 0.15s;
+  }
+  .toc a:hover { background: var(--paper-2); padding-left: 1rem; }
+  .toc a:focus-visible { outline: 2px solid var(--red); outline-offset: -2px; }
+  .toc .num { font-family: var(--font-mono); font-size: 0.85rem; color: var(--red); }
+  .toc .ttl { font-family: var(--font-disp); font-weight: 700; letter-spacing: -0.02em; font-size: clamp(1.05rem, 1rem + 0.5vw, 1.35rem); }
+  .toc .desc { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-45); text-align: right; }
+  @media (max-width: 640px) { .toc .desc { display: none; } .toc a { grid-template-columns: 2.6rem 1fr; } }
+
+  /* chapters */
+  .chapter { padding: clamp(3rem, 7vw, 6rem) 0; border-bottom: 1px solid var(--rule); }
+  .chapter-grid { display: grid; grid-template-columns: 5.5rem 1fr; gap: clamp(1rem, 3vw, 2.5rem); }
+  @media (max-width: 720px) { .chapter-grid { grid-template-columns: 1fr; gap: 1.2rem; } }
+
+  .ch-num {
+    font-family: var(--font-disp); font-weight: 800; font-size: 2.4rem; letter-spacing: -0.04em;
+    color: var(--ink); line-height: 1;
+    position: sticky; top: 4.5rem; align-self: start;
+  }
+  .ch-num small { display: block; font-family: var(--font-mono); font-size: 0.62rem; font-weight: 400; letter-spacing: 0.1em; color: var(--red); margin-top: 0.5rem; }
+  @media (max-width: 720px) { .ch-num { position: static; display: flex; align-items: baseline; gap: 0.8rem; font-size: 1.8rem; } .ch-num small { margin-top: 0; } }
+
+  .ch-body { max-width: var(--measure); }
+  .ch-body h2 {
+    font-family: var(--font-disp); font-weight: 800; font-size: var(--h2); line-height: 1.02;
+    letter-spacing: -0.04em; margin: 0 0 0.4rem; text-wrap: balance;
+  }
+  .ch-goal { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--red); margin: 0 0 1.5rem; }
+  .ch-body p { color: var(--ink-70); margin: 0 0 1.15rem; }
+  .ch-body p strong { color: var(--ink); font-weight: 700; }
+  .ch-body p .path { font-family: var(--font-mono); font-size: 0.85em; color: var(--ink); background: var(--paper-2); border: 1px solid var(--rule); padding: 0.05em 0.4em; border-radius: 2px; white-space: nowrap; }
+
+  /* steps */
+  .steps { list-style: none; counter-reset: s; margin: 1.6rem 0; padding: 0; }
+  .steps li {
+    counter-increment: s; position: relative;
+    padding: 0.35rem 0 1.15rem 3rem; color: var(--ink);
+  }
+  .steps li::before {
+    content: counter(s, decimal-leading-zero);
+    position: absolute; left: 0; top: 0.35rem;
+    font-family: var(--font-mono); font-size: 0.78rem; color: var(--red);
+    border: 1px solid var(--rule); width: 2rem; height: 2rem;
+    display: flex; align-items: center; justify-content: center; border-radius: 2px;
+    background: var(--paper);
+  }
+  .steps li:not(:last-child)::after {
+    content: ""; position: absolute; left: 1rem; top: 2.35rem; bottom: 0.3rem;
+    width: 1px; background: var(--rule);
+  }
+  .steps li b { font-weight: 700; }
+  .steps li span { color: var(--ink-70); display: block; font-size: 0.94em; margin-top: 0.15rem; }
+
+  /* callout */
+  .note {
+    border: 1px solid var(--rule); background: var(--paper-2);
+    padding: 1.2rem 1.3rem; margin: 1.8rem 0 0; border-radius: 3px;
+    border-left: 3px solid var(--red);
+  }
+  .note .lbl { display: block; font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red); margin-bottom: 0.5rem; }
+  .note p { margin: 0; color: var(--ink-70); font-size: 0.95rem; }
+  .note.info { border-left-color: var(--ink-45); }
+  .note.info .lbl { color: var(--ink-45); }
+
+  .tip { font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-45); margin-top: 1.2rem; letter-spacing: 0.02em; }
+  .tip b { color: var(--ink); }
+
+  /* closing */
+  .closing { padding: clamp(4rem, 9vw, 7rem) 0; }
+  .closing h2 { font-family: var(--font-disp); font-weight: 800; font-size: var(--h2); letter-spacing: -0.04em; margin: 0 0 1rem; max-width: 18ch; text-wrap: balance; }
+  .closing p { color: var(--ink-70); max-width: var(--measure); }
+  .foot { border-top: 1px solid var(--rule); padding: 2rem 0 4rem; display: flex; flex-wrap: wrap; gap: 0.6rem 1.5rem; justify-content: space-between; }
+
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16,1,0.3,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  a.inline { color: var(--ink); text-decoration: underline; text-decoration-color: var(--red); text-underline-offset: 3px; }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="wrap row">
+    <div class="brand"><span class="dot" aria-hidden="true"></span><b>TRAVEL&nbsp;AI</b><span class="mono">GUIDA D'USO</span></div>
+    <button class="themebtn" id="themebtn" type="button" aria-label="Cambia tema chiaro/scuro">Tema</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <p class="kick mono"><span>●</span><span>Il racconto d'uso — passo dopo passo</span></p>
+      <h1>Come si usa Travel AI, <em>raccontato come un viaggio</em>.</h1>
+      <p class="lede">Questa non è una lista di funzioni. È la storia di <strong>Giulia</strong>, che deve organizzare un weekend a Lisbona e non sa da dove iniziare. La seguiamo dal primo tocco fino al biglietto in tasca: a ogni capitolo un caso d'uso, e per ognuno i passi esatti da fare. Se usi tu l'app, i passi valgono identici.</p>
+      <div class="meta-strip mono">
+        <div><span class="n">13</span><span class="l">capitoli / casi d'uso</span></div>
+        <div><span class="n">5</span><span class="l">cataloghi prenotabili</span></div>
+        <div><span class="n">2</span><span class="l">strumenti AI: chat + planner</span></div>
+        <div><span class="n">4</span><span class="l">lingue: 🇮🇹 🇬🇧 🇪🇸 🇫🇷</span></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="toc">
+    <div class="wrap">
+      <h2>Indice del viaggio</h2>
+      <ol>
+        <li><a href="#c1"><span class="num">01</span><span class="ttl">Aprire Travel AI</span><span class="desc">home · ricerca · lingua</span></a></li>
+        <li><a href="#c2"><span class="num">02</span><span class="ttl">Creare l'account ed entrare</span><span class="desc">registrazione · 2FA</span></a></li>
+        <li><a href="#c3"><span class="num">03</span><span class="ttl">Parlare con l'assistente AI</span><span class="desc">/chat</span></a></li>
+        <li><a href="#c4"><span class="num">04</span><span class="ttl">Farsi disegnare l'itinerario</span><span class="desc">/planner</span></a></li>
+        <li><a href="#c5"><span class="num">05</span><span class="ttl">Cercare hotel, voli e il resto</span><span class="desc">i 5 cataloghi</span></a></li>
+        <li><a href="#c6"><span class="num">06</span><span class="ttl">Confrontare e salvare</span><span class="desc">compara · preferiti</span></a></li>
+        <li><a href="#c7"><span class="num">07</span><span class="ttl">Prenotare</span><span class="desc">carrello · pagamento</span></a></li>
+        <li><a href="#c8"><span class="num">08</span><span class="ttl">Prenotazioni e biglietti</span><span class="desc">le mie prenotazioni</span></a></li>
+        <li><a href="#c9"><span class="num">09</span><span class="ttl">Viaggiare in gruppo</span><span class="desc">inviti · itinerario live</span></a></li>
+        <li><a href="#c10"><span class="num">10</span><span class="ttl">Prime e Rewards</span><span class="desc">abbonamento · punti</span></a></li>
+        <li><a href="#c11"><span class="num">11</span><span class="ttl">La community</span><span class="desc">forum · blog · recensioni</span></a></li>
+        <li><a href="#c12"><span class="num">12</span><span class="ttl">Il mio spazio</span><span class="desc">profilo · notifiche</span></a></li>
+        <li><a href="#c13"><span class="num">13</span><span class="ttl">Per chi gestisce (Admin)</span><span class="desc">console · ruolo ADMIN</span></a></li>
+      </ol>
+    </div>
+  </nav>
+
+  <!-- 01 -->
+  <article class="chapter" id="c1">
+    <div class="wrap chapter-grid reveal">
+      <div class="ch-num">01<small>APRIRE</small></div>
+      <div class="ch-body">
+        <h2>Il primo sguardo</h2>
+        <p class="ch-goal">Obiettivo · capire dove sono e cosa posso fare</p>
+        <p>Giulia apre <span class="path">localhost:4200</span> e non trova un modulo pieno di campi da compilare. Trova la <strong>home “Explore”</strong>: una grande barra di ricerca al centro, sotto delle destinazioni in evidenza, e in alto una barra di navigazione con hotel, voli, ristoranti, cose da fare, crociere, l'assistente AI e la community. È fatta apposta per non spaventare: puoi partire da una ricerca o semplicemente sfogliare.</p>
+        <ol class="steps">
+          <li><b>Guarda la barra grande al centro.</b><span>È il punto di partenza: scrivi una città o un'idea (“Lisbona”, “weekend al mare”) e premi il pulsante rosso a destra.</span></li>
+          <li><b>Oppure usa il menu in alto.</b><span>Ogni voce — Hotel, Voli, Ristoranti, Cose da fare, Crociere — porta al catalogo corrispondente.</span></li>
+          <li><b>Cambia lingua se ti serve.</b><span>Il selettore di lingua in alto passa tra italiano, inglese, spagnolo e francese. Tutto si traduce all'istante.</span></li>
+          <li><b>Scorri la home.</b><span>Sotto la ricerca trovi destinazioni consigliate, testimonianze e le sezioni per iniziare: puoi cliccare qualsiasi cosa per aprirne il dettaglio.</span></li>
+        </ol>
+        <p class="tip">Suggerimento · non serve un account per <b>guardare e cercare</b>. L'accesso serve solo quando vuoi salvare, prenotare o parlare con l'AI.</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- 02 -->
+  <article class="chapter" id="c2">
+    <div class="wrap chapter-grid reveal">
+      <div class="ch-num">02<small>ACCEDERE</small></div>
+      <div class="ch-body">
+        <h2>Creare l'account ed entrare</h2>
+        <p class="ch-goal">Obiettivo · avere un profilo per salvare e prenotare</p>
+        <p>Giulia decide di fare sul serio. Clicca <strong>Accedi</strong> in alto a destra: si apre una finestra (non cambia pagina) dove può registrarsi con email o entrare con <strong>Google</strong>. Per la sicurezza, l'app supporta anche un secondo fattore (un codice a 6 cifre da un'app come Google Authenticator).</p>
+        <ol class="steps">
+          <li><b>Apri la finestra di accesso.</b><span>Pulsante “Accedi” nella barra in alto. Scegli “Crea account”.</span></li>
+          <li><b>Inserisci email e password</b> — oppure premi <b>Continua con Google</b> per saltare la password.</li>
+          <li><b>Verifica l'email.</b><span>Ricevi un messaggio con un link di conferma; cliccalo per attivare l'account (in sviluppo le email si leggono su Mailpit, <span class="path">localhost:8025</span>).</span></li>
+          <li><b>Attiva la verifica in due passaggi (2FA).</b><span>Facoltativa ma consigliata: scansioni un QR con l'app di autenticazione e poi inserisci il codice a 6 cifre a ogni accesso.</span></li>
+          <li><b>Hai dimenticato la password?</b><span>Dal link “Password dimenticata” ricevi un'email per reimpostarla in sicurezza.</span></li>
+        </ol>
+        <div class="note info">
+          <span class="lbl">Cosa succede dietro le quinte</span>
+          <p>L'accesso genera un token sicuro che resta valido 24 ore, così non devi rifare il login a ogni pagina. Le credenziali non vengono mai salvate nel browser in chiaro.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 03 -->
+  <article class="chapter" id="c3">
+    <div class="wrap chapter-grid reveal">
+      <div class="ch-num">03<small>CHIEDERE</small></div>
+      <div class="ch-body">
+        <h2>Parlare con l'assistente AI</h2>
+        <p class="ch-goal">Obiettivo · farsi consigliare come da un amico esperto</p>
+        <p>Giulia non ha voglia di leggere venti articoli. Va su <span class="path">/chat</span> e scrive come parlerebbe a una persona: <em>“Cosa vedo a Lisbona in due giorni se amo il cibo e le viste?”</em>. L'assistente risponde con consigli scritti su misura, basati sui contenuti reali della piattaforma — non frasi generiche.</p>
+        <ol class="steps">
+          <li><b>Apri l'assistente.</b><span>Voce “Assistente AI” nel menu, o vai su <span class="path">/chat</span>.</span></li>
+          <li><b>Scrivi la tua domanda in linguaggio naturale</b> e premi Invio.</li>
+          <li><b>Leggi la risposta e incalza.</b><span>Puoi continuare la conversazione: “e per la sera?”, “alternative economiche?”. L'AI tiene il filo del discorso.</span></li>
+          <li><b>Salta dai consigli all'azione.</b><span>Quando cita un hotel o un ristorante, puoi aprirne il dettaglio e prenotarlo.</span></li>
+        </ol>
+        <div class="note">
+          <span class="lbl">Perché è affidabile</span>
+          <p>L'assistente non “inventa”: pesca dai documenti reali del catalogo (una tecnica chiamata RAG) e risponde solo su ciò che conosce. Se una cosa non la sa, lo dice invece di inventarsela.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 04 -->
+  <article class="chapter" id="c4">
+    <div class="wrap chapter-grid reveal">
+      <div class="ch-num">04<small>PIANIFICARE</small></div>
+      <div class="ch-body">
+        <h2>Farsi disegnare l'itinerario</h2>
+        <p class="ch-goal">Obiettivo · un programma giorno per giorno, in pochi minuti</p>
+        <p>Qui succede la magia. Giulia va su <span class="path">/planner</span> e invece di un modulo trova <strong>una frase da completare</strong>: “Voglio andare a ___ per ___ giorni, mi interessano ___, con un budget ___”. Riempie gli spazi come se scrivesse un pensiero, preme <strong>Crea</strong>, e l'app costruisce un itinerario completo diviso per giornate.</p>
+        <ol class="steps">
+          <li><b>Apri il Planner.</b><span>Voce “Trip Planner” nel menu, o <span class="path">/planner</span>. È l'unico pianificatore dell'app.</span></li>
+          <li><b>Completa la frase.</b><span>Destinazione, durata, interessi (cibo, arte, natura…) e budget. Nessun campo tecnico da capire.</span></li>
+          <li><b>Premi “Crea itinerario”</b> e aspetta qualche secondo.</li>
+          <li><b>Leggi il piano giorno per giorno.</b><span>Voli suggeriti, hotel, ristoranti e attività, già organizzati e ordinati per rilevanza.</span></li>
+          <li><b>Aggiusta e salva.</b><span>Quello che ti convince lo aggiungi ai preferiti o al carrello di viaggio per prenotarlo dopo.</span></li>
+        </ol>
+        <div class="note">
+          <span class="lbl">Cosa succede dietro le quinte</span>
+          <p>Non è un solo modello a rispondere: un “orchestratore” coordina agenti specializzati — uno per i voli, uno per gli hotel, uno per i ristoranti e uno che mette tutto in ordine di rilevanza. Il risultato è un piano coerente, non una lista casuale.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 05 -->
+  <article class="chapter" id="c5">
+    <div class="wrap chapter-grid reveal">
+      <div class="ch-num">05<small>CERCARE</small></div>
+      <div class="ch-body">
+        <h2>Cercare hotel, voli e tutto il resto</h2>
+        <p class="ch-goal">Obiettivo · trovare la cosa giusta in ogni categoria</p>
+        <p>Giulia vuole scegliere con calma. Ogni categoria ha il suo catalogo, tutti fatti allo stesso modo: una griglia di risultati, filtri sulla sinistra, e una pagina di dettaglio quando clicchi su un elemento. I cinque cataloghi sono <strong>Hotel, Voli, Ristoranti, Cose da fare</strong> e <strong>Crociere</strong>.</p>
+        <ol class="steps">
+          <li><b>Scegli la categoria dal menu</b> (es. <span class="path">/hotels</span>, <span class="path">/flights</span>, <span class="path">/restaurants</span>, <span class="path">/attractions</span>, <span class="path">/cruises</span>).</li>
+          <li><b>Applica i filtri.</b><span>Prezzo, valutazione, servizi, date. La lista si aggiorna mentre scegli.</span></li>
+          <li><b>Scorri la griglia.</b><span>I risultati si caricano man mano che scendi: non c'è un tasto “pagina 2”, continui a scorrere.</span></li>
+          <li><b>Apri il dettaglio.</b><span>Clic su un risultato per foto, recensioni, servizi, calendario prezzi (nei voli) o programma giorno-per-giorno (nelle crociere).</span></li>
+          <li><b>Decidi.</b><span>Da qui puoi salvarlo tra i preferiti, aggiungerlo al confronto, o passare alla prenotazione.</span></li>
+        </ol>
+        <p class="tip">Nota · c'è anche una <b>ricerca globale</b> (<span class="path">/search</span>) che cerca in tutte le categorie insieme, se non sai da dove partire.</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- 06 -->
+  <article class="chapter" id="c6">
+    <div class="wrap chapter-grid reveal">
+      <div class="ch-num">06<small>SCEGLIERE</small></div>
+      <div class="ch-body">
+        <h2>Confrontare e salvare</h2>
+        <p class="ch-goal">Obiettivo · decidere senza aprire dieci schede</p>
+        <p>Tra tre hotel Giulia non riesce a scegliere. Invece di saltare avanti e indietro, li mette a confronto fianco a fianco e salva quelli che le piacciono in una lista personale.</p>
+        <ol class="steps">
+          <li><b>Salva nei preferiti.</b><span>Il cuoricino su ogni scheda aggiunge l'elemento a <span class="path">/favorites</span>. Li ritrovi tutti in un posto solo.</span></li>
+          <li><b>Aggiungi al confronto.</b><span>Dagli hotel, scegli quelli da paragonare e apri <span class="path">/compare</span>.</span></li>
+          <li><b>Leggi la tabella affiancata.</b><span>Prezzo, valutazione e servizi uno accanto all'altro: le differenze saltano all'occhio.</span></li>
+          <li><b>Scegli il vincitore</b> e vai alla prenotazione.</li>
+        </ol>
+        <div class="note info">
+          <span class="lbl">Serve l'account?</span>
+          <p>I preferiti sono legati al tuo profilo, quindi conviene aver fatto l'accesso (Capitolo 02) per ritrovarli su ogni dispositivo.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 07 -->
+  <article class="chapter" id="c7">
+    <div class="wrap chapter-grid reveal">
+      <div class="ch-num">07<small>PRENOTARE</small></div>
+      <div class="ch-body">
+        <h2>Prenotare</h2>
+        <p class="ch-goal">Obiettivo · trasformare la scelta in una prenotazione confermata</p>
+        <p>Giulia è pronta. Dalla pagina di un hotel preme <strong>Prenota</strong>. L'app la porta in un percorso guidato: conferma le date, aggiunge eventuali extra, controlla il totale e paga. Alla fine riceve un biglietto/voucher con un codice.</p>
+        <ol class="steps">
+          <li><b>Avvia la prenotazione.</b><span>Pulsante “Prenota” sul dettaglio, oppure raccogli più elementi nel <b>carrello di viaggio</b> (<span class="path">/trip-cart</span>) e prenotali insieme.</span></li>
+          <li><b>Conferma i dettagli.</b><span>Date, numero di persone, camera o tariffa scelta.</span></li>
+          <li><b>Aggiungi gli extra (opzionale).</b><span>Servizi aggiuntivi proposti durante il percorso: colazione, bagagli, assicurazione…</span></li>
+          <li><b>Controlla il totale.</b><span>Il prezzo finale, tasse ed eventuali commissioni sono mostrati chiaramente prima di pagare.</span></li>
+          <li><b>Paga e conferma.</b><span>Completi il pagamento; la prenotazione passa a “confermata”.</span></li>
+          <li><b>Ricevi il biglietto.</b><span>Trovi il voucher su <span class="path">/ticket/…</span> e la conferma via email.</span></li>
+        </ol>
+        <div class="note">
+          <span class="lbl">Sul prezzo, tranquilla</span>
+          <p>Il totale è sempre calcolato dal server, non dal tuo browser: nessuno può “barare” sull'importo. Quello che vedi al momento di pagare è quello che paghi.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 08 -->
+  <article class="chapter" id="c8">
+    <div class="wrap chapter-grid reveal">
+      <div class="ch-num">08<small>RITROVARE</small></div>
+      <div class="ch-body">
+        <h2>Le mie prenotazioni e i biglietti</h2>
+        <p class="ch-goal">Obiettivo · avere tutto sott'occhio, prima e durante il viaggio</p>
+        <p>Il giorno prima della partenza Giulia vuole ricontrollare tutto. Va su <span class="path">/bookings</span> e trova l'elenco di ciò che ha prenotato, con lo stato di ciascuna voce e il biglietto pronto da mostrare.</p>
+        <ol class="steps">
+          <li><b>Apri “Le mie prenotazioni”</b> dal menu utente o su <span class="path">/bookings</span>.</li>
+          <li><b>Controlla gli stati.</b><span>Confermata, in attesa, annullata: ogni prenotazione dice a che punto è.</span></li>
+          <li><b>Apri un biglietto.</b><span>Il voucher con il codice è pronto da salvare o mostrare all'arrivo.</span></li>
+          <li><b>Gestisci se serve.</b><span>Da qui accedi ai dettagli e alle azioni disponibili per ogni prenotazione.</span></li>
+        </ol>
+      </div>
+    </div>
+  </article>
+
+  <!-- 09 -->
+  <article class="chapter" id="c9">
+    <div class="wrap chapter-grid reveal">
+      <div class="ch-num">09<small>CONDIVIDERE</small></div>
+      <div class="ch-body">
+        <h2>Viaggiare in gruppo</h2>
+        <p class="ch-goal">Obiettivo · organizzare con gli amici e seguire il viaggio dal vivo</p>
+        <p>Giulia non parte da sola: invita Marco a co-organizzare. Crea un viaggio, lo invita, e durante i due giorni seguono insieme l'itinerario “dal vivo”, tappa per tappa.</p>
+        <ol class="steps">
+          <li><b>Apri i tuoi viaggi.</b><span>Su <span class="path">/trips</span> raccogli gli itinerari salvati.</span></li>
+          <li><b>Invita un compagno.</b><span>Dalla pagina di invito (<span class="path">/trips/invite</span>) mandi a Marco l'accesso condiviso al viaggio.</span></li>
+          <li><b>Pianificate insieme.</b><span>Entrambi vedete e modificate lo stesso itinerario.</span></li>
+          <li><b>Seguite l'itinerario live.</b><span>Durante il viaggio, <span class="path">/trips/:id/live</span> mostra la giornata in corso, tappa dopo tappa.</span></li>
+        </ol>
+        <div class="note info">
+          <span class="lbl">Restare in contatto</span>
+          <p>Le comunicazioni legate al viaggio arrivano tra le notifiche (Capitolo 12) e nei messaggi, così nessuno perde un aggiornamento.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 10 -->
+  <article class="chapter" id="c10">
+    <div class="wrap chapter-grid reveal">
+      <div class="ch-num">10<small>RISPARMIARE</small></div>
+      <div class="ch-body">
+        <h2>Prime e Rewards</h2>
+        <p class="ch-goal">Obiettivo · pagare meno e guadagnare vantaggi viaggiando</p>
+        <p>Dopo la prima prenotazione, Giulia scopre due modi per risparmiare: l'abbonamento <strong>Prime</strong> e il programma a punti <strong>Rewards</strong>.</p>
+        <ol class="steps">
+          <li><b>Valuta Travel AI Prime.</b><span>Su <span class="path">/membership</span>: zero commissioni di servizio su ogni prenotazione più uno sconto riservato ai membri.</span></li>
+          <li><b>Guarda i tuoi Rewards.</b><span>Su <span class="path">/rewards</span> accumuli punti fedeltà a ogni viaggio.</span></li>
+          <li><b>Riscatta i vantaggi.</b><span>I punti diventano buoni, perk e regali da usare sulle prenotazioni successive.</span></li>
+        </ol>
+        <p class="tip">In pratica · <b>Prime</b> conviene se prenoti spesso; <b>Rewards</b> premia comunque, anche senza abbonamento.</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- 11 -->
+  <article class="chapter" id="c11">
+    <div class="wrap chapter-grid reveal">
+      <div class="ch-num">11<small>CONFRONTARSI</small></div>
+      <div class="ch-body">
+        <h2>La community</h2>
+        <p class="ch-goal">Obiettivo · imparare dagli altri viaggiatori e lasciare la propria traccia</p>
+        <p>Al ritorno, Giulia ha consigli da dare e domande già in mente per il prossimo viaggio. La community è il posto giusto.</p>
+        <ol class="steps">
+          <li><b>Entra nel forum.</b><span>Su <span class="path">/forum</span> fai domande, rispondi e leggi le discussioni; ogni thread ha la sua pagina.</span></li>
+          <li><b>Leggi il Journal.</b><span>Il blog (<span class="path">/blog</span>) raccoglie ispirazioni, guide e storie di viaggio.</span></li>
+          <li><b>Lascia una recensione.</b><span>Dopo un soggiorno, valuti hotel, ristoranti e attività per aiutare chi viene dopo.</span></li>
+        </ol>
+      </div>
+    </div>
+  </article>
+
+  <!-- 12 -->
+  <article class="chapter" id="c12">
+    <div class="wrap chapter-grid reveal">
+      <div class="ch-num">12<small>GESTIRSI</small></div>
+      <div class="ch-body">
+        <h2>Il mio spazio</h2>
+        <p class="ch-goal">Obiettivo · tenere in ordine profilo, avvisi e conversazioni</p>
+        <p>Tutto ciò che è “tuo” vive in poche pagine collegate al menu utente in alto a destra.</p>
+        <ol class="steps">
+          <li><b>Profilo.</b><span>Su <span class="path">/profile</span> aggiorni foto, dati e preferenze.</span></li>
+          <li><b>Account e sicurezza.</b><span>Su <span class="path">/account</span> gestisci email, password e la verifica in due passaggi.</span></li>
+          <li><b>Notifiche.</b><span>Su <span class="path">/notifications</span> trovi avvisi su prenotazioni, cali di prezzo e attività del viaggio.</span></li>
+          <li><b>Messaggi.</b><span>Su <span class="path">/messages</span> le conversazioni con partner e compagni di viaggio.</span></li>
+          <li><b>Preferiti.</b><span>Su <span class="path">/favorites</span> tutto ciò che hai salvato lungo il percorso.</span></li>
+        </ol>
+        <div class="note info">
+          <span class="lbl">Un avviso utile</span>
+          <p>Se segui il prezzo di qualcosa, l'app ti manda una notifica quando cala: non devi ricontrollare a mano.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 13 -->
+  <article class="chapter" id="c13">
+    <div class="wrap chapter-grid reveal">
+      <div class="ch-num">13<small>AMMINISTRARE</small></div>
+      <div class="ch-body">
+        <h2>Per chi gestisce la piattaforma</h2>
+        <p class="ch-goal">Obiettivo · governare cataloghi, utenti e prenotazioni — solo per lo staff</p>
+        <p>Questo capitolo non è per Giulia, ma per chi manda avanti Travel AI. La <strong>console di amministrazione</strong> vive su <span class="path">/admin</span> ed è riservata a chi ha il ruolo <strong>ADMIN</strong>: chiunque altro non riesce nemmeno ad aprirla.</p>
+        <ol class="steps">
+          <li><b>Accedi con un account ADMIN.</b><span>Senza il ruolo giusto la pagina è bloccata.</span></li>
+          <li><b>Usa la navigazione laterale.</b><span>La console ha un menu a sinistra con le varie sezioni: panoramica, cataloghi, utenti, prenotazioni e altro.</span></li>
+          <li><b>Cerca al volo con la palette.</b><span>La scorciatoia da tastiera <b>Cmd/Ctrl + K</b> apre una ricerca rapida per saltare ovunque.</span></li>
+          <li><b>Gestisci i dati.</b><span>Tabelle con filtri e pannelli laterali per creare e modificare le voci dei nove tipi di catalogo.</span></li>
+        </ol>
+        <p class="tip">Stessa estetica dell'app · l'admin usa lo stesso tema chiaro “Swiss”, non una dashboard scura a parte.</p>
+      </div>
+    </div>
+  </article>
+
+  <section class="closing">
+    <div class="wrap reveal">
+      <p class="mono" style="color:var(--red); margin:0 0 1rem;">Fine del viaggio</p>
+      <h2>Dal primo tocco al biglietto in tasca.</h2>
+      <p>Questa è la storia completa di Giulia — e la mappa dei tuoi casi d'uso. Se ti serve solo una cosa: <strong>cerca</strong> dalla home, <strong>chiedi</strong> all'assistente se hai dubbi, <strong>fatti costruire</strong> l'itinerario dal Planner, <strong>prenota</strong> in pochi passi e ritrova tutto ne “Il mio spazio”. Il resto — Prime, Rewards, community, viaggi di gruppo — è lì quando ti serve.</p>
+      <div class="note info" style="margin-top:2rem;">
+        <span class="lbl">Se qualcosa non va</span>
+        <p>Il Centro assistenza (<span class="path">/help</span>), la pagina Sicurezza (<span class="path">/safety</span>) e i Contatti (<span class="path">/contact</span>) sono sempre raggiungibili dal fondo di ogni pagina.</p>
+      </div>
+    </div>
+    <div class="wrap foot mono">
+      <span>TRAVEL AI · GUIDA D'USO</span>
+      <span>13 CAPITOLI · 1 VIAGGIO</span>
+    </div>
+  </section>
+</main>
+
+<script>
+  // theme toggle
+  (function () {
+    var btn = document.getElementById('themebtn');
+    var root = document.documentElement;
+    function current() {
+      if (root.getAttribute('data-theme')) return root.getAttribute('data-theme');
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    btn.addEventListener('click', function () {
+      var next = current() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      btn.textContent = next === 'dark' ? 'Chiaro' : 'Scuro';
+    });
+  })();
+
+  // progress bar
+  (function () {
+    var bar = document.getElementById('progress');
+    function upd() {
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      var p = max > 0 ? (h.scrollTop || document.body.scrollTop) / max * 100 : 0;
+      bar.style.width = p + '%';
+    }
+    window.addEventListener('scroll', upd, { passive: true });
+    window.addEventListener('resize', upd);
+    upd();
+  })();
+
+  // reveal on scroll
+  (function () {
+    var els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      els.forEach(function (e) { e.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { rootMargin: '0px 0px -12% 0px' });
+    els.forEach(function (e) { io.observe(e); });
+  })();
+</script>
+</body>
+</html>
