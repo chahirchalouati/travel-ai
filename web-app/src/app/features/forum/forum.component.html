@@ -7,11 +7,9 @@
     <p class="fo-subtitle">{{ t('forum.subtitle') }}</p>
 
     <div class="fo-bar">
-      <div class="fo-search">
-        <span class="ms">search</span>
-        <input type="text" [(ngModel)]="search" name="search" (keyup.enter)="load()"
-               [placeholder]="t('forum.searchPlaceholder')" />
-      </div>
+      <app-ui-input class="fo-search" variant="search" icon="search"
+                    type="text" [(ngModel)]="search" name="search" (keyup.enter)="load()"
+                    [placeholder]="t('forum.searchPlaceholder')" [ariaLabel]="t('forum.searchPlaceholder')" />
       <button class="fo-ask" (click)="toggleForm()">
         <span class="ms">edit</span> {{ isAuthenticated() ? t('forum.askButton') : t('forum.signInToAsk') }}
       </button>

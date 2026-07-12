@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { catchError, forkJoin, of } from 'rxjs';
+import { UiInputComponent } from '../../shared/ui/ui-input.component';
 import { CatalogService, emptyPage } from '../../core/services/catalog.service';
 import { DestinationService } from '../../core/services/destination.service';
 import type {
@@ -21,7 +22,7 @@ type SearchType = 'all' | 'destinations' | 'hotels' | 'restaurants' | 'cruises';
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, TranslocoModule],
+  imports: [CommonModule, FormsModule, CurrencyPipe, TranslocoModule, UiInputComponent],
   template: `
     <header class="catalog-header">
       <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
@@ -30,10 +31,11 @@ type SearchType = 'all' | 'destinations' | 'hotels' | 'restaurants' | 'cruises';
       <h1 class="catalog-title">{{ 'catalog.searchResults.title' | transloco }}</h1>
 
       <form class="filter-bar" (ngSubmit)="runSearch()" style="max-width:620px">
-        <div class="field" style="flex:1 1 auto">
-          <label for="q">{{ 'catalog.searchResults.query' | transloco }}</label>
-          <input id="q" type="text" [(ngModel)]="query" name="q"
-                 [placeholder]="'explore.search.placeholder' | transloco" />
+        <div style="flex:1 1 auto">
+          <app-ui-input inputId="q" variant="search" icon="search" type="text"
+                        [label]="'catalog.searchResults.query' | transloco"
+                        [(ngModel)]="query" name="q"
+                        [placeholder]="'explore.search.placeholder' | transloco" />
         </div>
         <button class="search-submit" type="submit">{{ 'catalog.search' | transloco }}</button>
       </form>

@@ -3,11 +3,12 @@ import { FormsModule } from '@angular/forms';
 import { TranslocoModule } from '@jsverse/transloco';
 import { RouterLink } from '@angular/router';
 import { HelpService, HelpFaq } from '../../core/services/help.service';
+import { UiInputComponent } from '../../shared/ui/ui-input.component';
 
 @Component({
   selector: 'app-help',
   standalone: true,
-  imports: [FormsModule, TranslocoModule, RouterLink],
+  imports: [FormsModule, TranslocoModule, RouterLink, UiInputComponent],
   template: `
     <div class="help">
       <header class="help-hero">
@@ -15,10 +16,9 @@ import { HelpService, HelpFaq } from '../../core/services/help.service';
           <p class="eyebrow">{{ 'help.eyebrow' | transloco }}</p>
           <h1>{{ 'help.headline' | transloco }}</h1>
           <p class="hero-sub">{{ 'help.sub' | transloco }}</p>
-          <div class="search-bar">
-            <span class="ms search-icon">search</span>
-            <input type="text" [placeholder]="'help.search' | transloco" class="search-input" [(ngModel)]="query" />
-          </div>
+          <app-ui-input class="search-bar" variant="search" icon="search" type="text"
+                        [placeholder]="'help.search' | transloco" [(ngModel)]="query"
+                        [ariaLabel]="'help.search' | transloco" />
         </div>
       </header>
 
@@ -85,9 +85,7 @@ import { HelpService, HelpFaq } from '../../core/services/help.service';
     .help-hero h1 { font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.06; margin: 0 0 1rem; }
     .hero-sub { font-size: 1.05rem; color: var(--text-secondary); margin: 0 0 2rem; line-height: 1.7; }
 
-    .search-bar { display: flex; align-items: center; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 14px 20px; gap: 12px; max-width: 520px; margin: 0 auto; transition: border-color 140ms ease; &:focus-within { border-color: var(--color-red); } }
-    .search-icon { font-size: 22px; color: var(--text-tertiary); }
-    .search-input { flex: 1; border: none; background: none; font-family: inherit; font-size: 1rem; color: var(--text-primary); &:focus { outline: none; } &::placeholder { color: var(--text-tertiary); } }
+    .search-bar { display: block; max-width: 520px; margin: 0 auto; }
 
     .help-body { padding: clamp(3rem, 6vw, 5.5rem) 1.5rem; }
     .help-inner { max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 3.5rem; }
