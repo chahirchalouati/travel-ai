@@ -1,0 +1,73 @@
+package com.travelai.booking;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.Optional;
+import java.util.UUID;
+
+public interface BookingRepository extends JpaRepository<Booking, UUID>, JpaSpecificationExecutor<Booking> {
+
+    // No @EntityGraph here: fetching the "travelers" collection together with a
+    // Pageable forces Hibernate to paginate in memory (HHH90003004). The
+    // travelers collection is @BatchSize-annotated, so it loads in one extra
+    // batched query per page instead — SQL-level pagination, no N+1.
+    @Query(value = "SELECT b FROM Booking b WHERE b.user.email = :email",
+           countQuery = "SELECT count(b) FROM Booking b WHERE b.user.email = :email")
+    Page<Booking> findByUserEmail(@Param("email") String email, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"travelers"})
+    Optional<Booking> findByIdAndUserEmail(UUID id, String email);
+
+    Optional<Booking> findByBookingReference(String reference);
+
+    /** All bookings of a user, regardless of status. Used by trip budget aggregation. */
+    java.util.List<Booking> findByUserId(UUID userId);
+
+    @EntityGraph(attributePaths = {"travelers"})
+    java.util.List<Booking> findByTripGroupIdAndUserEmail(UUID tripGroupId, String email);
+
+    /** Admin listing: eager-fetch the user so the DTO mapping doesn't N+1. */
+    @EntityGraph(attributePaths = {"user"})
+    @Query(value = "SELECT b FROM Booking b",
+           countQuery = "SELECT count(b) FROM Booking b")
+    Page<Booking> findAllWithUser(Pageable pageable);
+
+    /**
+     * True when the user has a confirmed or completed booking referencing the given target
+     * (hotel, restaurant, or flight). Used to mark reviews as verified stays.
+     */
+    @Query("""
+            SELECT COUNT(b) > 0 FROM Booking b
+            WHERE b.user.id = :userId
+              AND b.status IN (com.travelai.booking.BookingStatus.CONFIRMED, com.travelai.booking.BookingStatus.COMPLETED)
+              AND (b.hotelId = :targetId OR b.restaurantId = :targetId OR b.flightId = :targetId)
+            """)
+    boolean existsConfirmedBookingForTarget(@Param("userId") UUID userId, @Param("targetId") UUID targetId);
+
+    /** Aggregated booking revenue for a given status, for the revenue dashboard. */
+    @Query("""
+            SELECT count(b)                          AS bookings,
+                   coalesce(sum(b.totalAmount), 0)    AS gross,
+                   coalesce(sum(b.serviceFeeAmount),0) AS serviceFee,
+                   coalesce(sum(b.commissionAmount),0) AS commission,
+                   coalesce(sum(b.ancillaryAmount), 0) AS ancillary
+            FROM Booking b
+            WHERE b.status = :status
+            """)
+    RevenueAggregate aggregateByStatus(@Param("status") BookingStatus status);
+
+    /** Projection for {@link #aggregateByStatus}. */
+    interface RevenueAggregate {
+        long getBookings();
+        java.math.BigDecimal getGross();
+        java.math.BigDecimal getServiceFee();
+        java.math.BigDecimal getCommission();
+        java.math.BigDecimal getAncillary();
+    }
+}

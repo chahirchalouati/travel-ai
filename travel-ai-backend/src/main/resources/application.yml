@@ -1,0 +1,166 @@
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  application:
+    name: travel-ai-backend
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:travelai}
+    username: ${DB_USERNAME:travelai}
+    password: ${DB_PASSWORD:travelai}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+
+  aop:
+    proxy-target-class: true
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 12MB
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        default_schema: public
+        # Batch-load lazy associations/collections in IN(..) chunks instead of
+        # one query per parent row — turns residual N+1s into ceil(N/size)+1.
+        default_batch_fetch_size: 100
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+
+  mail:
+    host: ${MAIL_HOST:localhost}
+    port: ${MAIL_PORT:1025}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail.smtp.auth: ${MAIL_SMTP_AUTH:false}
+      mail.smtp.starttls.enable: ${MAIL_SMTP_STARTTLS:false}
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+
+  ai:
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      chat:
+        # qwen2.5:7b follows instructions and grounds on RAG context far better than the 3B llama3.2,
+        # and is strong multilingually (the app ships en/it/fr/es). Override with OLLAMA_MODEL.
+        # Requires: `ollama pull qwen2.5:7b`. Alternative: llama3.1:8b.
+        options:
+          model: ${OLLAMA_MODEL:qwen2.5:7b}
+          # Lower temperature than before: factual travel answers should stick to retrieved data, not improvise.
+          temperature: ${OLLAMA_TEMPERATURE:0.4}
+          num-predict: 2048
+      embedding:
+        options:
+          model: ${OLLAMA_EMBEDDING_MODEL:nomic-embed-text}
+    vectorstore:
+      pgvector:
+        index-type: hnsw
+        distance-type: cosine_distance
+        dimensions: 768
+        schema-name: public
+        table-name: vector_store
+        initialize-schema: true
+
+server:
+  port: 8080
+
+app:
+  frontend-url: ${APP_FRONTEND_URL:http://localhost:4200}
+  oauth:
+    google:
+      # OAuth 2.0 Web client id from Google Cloud Console. Empty by default →
+      # the social-login endpoint returns a clear 4xx (feature disabled) and the
+      # frontend hides the "Continue with Google" button. Never commit a secret;
+      # only the (non-secret) client id lives here, via env GOOGLE_CLIENT_ID.
+      client-id: ${GOOGLE_CLIENT_ID:}
+
+security:
+  jwt:
+    secret: ${JWT_SECRET:change-me-in-production-min-256-bit-secret-key}
+    expiration-ms: 86400000        # 24h
+    refresh-expiration-ms: 604800000 # 7d
+
+travel-ai:
+  booking:
+    budget-tolerance-pct: 10       # proposals allowed up to budget +10%
+    min-hotels-pilot: 10
+    min-restaurants-pilot: 10
+  ai:
+    rate-limit-per-minute: 60
+    max-proposals: 3
+    agents:
+      timeout-ms: 10000
+  payment:
+    stripe:
+      secret-key: ${STRIPE_SECRET_KEY:}
+      webhook-secret: ${STRIPE_WEBHOOK_SECRET:}
+    klarna:
+      api-key: ${KLARNA_API_KEY:}
+    commission:
+      hotel-pct: 10
+      other-pct: 3
+  concierge:
+    activation-days-before-departure: 3
+  itinerary:
+    # Shared secret for inbound disruption webhooks. Blank in dev (header check skipped);
+    # set ITINERARY_WEBHOOK_SECRET in production to require X-Webhook-Secret on every push.
+    webhook-secret: ${ITINERARY_WEBHOOK_SECRET:}
+  notification:
+    from-email: noreply@travelai.com
+  storage:
+    # S3-compatible object storage. Local dev points at MinIO; prod overrides via env.
+    endpoint: ${STORAGE_ENDPOINT:http://localhost:9000}
+    public-url: ${STORAGE_PUBLIC_URL:http://localhost:9000}
+    region: ${STORAGE_REGION:us-east-1}
+    bucket: ${STORAGE_BUCKET:travelai-media}
+    access-key: ${STORAGE_ACCESS_KEY:travelai}
+    secret-key: ${STORAGE_SECRET_KEY:travelai-secret}
+    # MinIO needs path-style access (bucket in the path, not the host).
+    path-style-access: ${STORAGE_PATH_STYLE:true}
+    max-file-size-bytes: ${STORAGE_MAX_FILE_SIZE:10485760}  # 10 MB
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,modulith
+  endpoint:
+    health:
+      show-details: when-authorized
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) [%15.15thread] %cyan(%-40.40logger{39}) : %msg%n"
+  level:
+    com.travelai: DEBUG
+    org.springframework.modulith: INFO
+    org.springframework.security: INFO
+#    org.hibernate.SQL: DEBUG
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method

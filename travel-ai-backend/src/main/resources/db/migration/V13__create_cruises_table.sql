@@ -1,0 +1,20 @@
+CREATE TABLE cruises (
+    id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    operator      VARCHAR(255) NOT NULL,
+    name          VARCHAR(255) NOT NULL,
+    ship_name     VARCHAR(255),
+    departure_port VARCHAR(255) NOT NULL,
+    arrival_port  VARCHAR(255),
+    departure_date DATE,
+    return_date   DATE,
+    duration_nights INTEGER NOT NULL DEFAULT 0,
+    price_per_person NUMERIC(19,2) NOT NULL,
+    cabins_available INTEGER NOT NULL DEFAULT 0,
+    cruise_type   VARCHAR(255),
+    description   TEXT,
+    image_url     VARCHAR(1024),
+    itinerary     VARCHAR(2048),
+    all_inclusive  BOOLEAN NOT NULL DEFAULT FALSE,
+    active        BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at    TIMESTAMP WITH TIME ZONE
+);
