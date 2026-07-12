@@ -331,7 +331,7 @@
     "origin": "Origine",
     "destination": "Destination",
     "schedule": "Horaire",
-    "inclusions": "Inclusions",
+    "inclusions": "Inclus",
     "baggage": "Bagage enregistré inclus",
     "carryOn": "Bagage cabine",
     "seatSelection": "Choix du siège",
@@ -854,7 +854,7 @@
     "broadcastFailed": "Échec de la diffusion",
     "broadcastIncomplete": "L'objet et le message sont obligatoires",
     "broadcastConfirm": "Envoyer cette notification à l'audience sélectionnée ?",
-    "navFlags": "Feature flags",
+    "navFlags": "Flags de fonctionnalités",
     "flagNew": "Nouveau flag",
     "flagKeyPlaceholder": "ex. new_checkout",
     "flagAdd": "Ajouter",
@@ -1028,7 +1028,7 @@
     "cPopularity": "Popularité",
     "cFeatured": "En vedette",
     "cPlace": "Lieu",
-    "cTag": "Tag",
+    "cTag": "Étiquette",
     "cMinutes": "Minutes",
     "cType": "Type",
     "cEmail": "E-mail",
@@ -1072,7 +1072,7 @@
     "fCountry": "Pays",
     "fContinent": "Continent",
     "fGallery": "URLs de galerie",
-    "fTags": "Tags",
+    "fTags": "Étiquettes",
     "fClimate": "Climat",
     "fBestMonths": "Meilleurs mois",
     "fAvgCost": "Coût moyen journalier",
@@ -1082,7 +1082,7 @@
     "fPopularity": "Score de popularité",
     "fFeatured": "En vedette",
     "fPlace": "Lieu",
-    "fTag": "Tag",
+    "fTag": "Étiquette",
     "fMinutes": "Minutes",
     "fPosterUrl": "URL de l'affiche",
     "fVideoUrl": "URL de la vidéo",
@@ -1726,7 +1726,7 @@
     "forgotLink": "Mot de passe oublié ?",
     "forgotTitle": "Réinitialiser votre mot de passe",
     "forgotSub": "Saisissez l'email lié à votre compte et nous vous enverrons un lien de réinitialisation.",
-    "emailLabel": "Email",
+    "emailLabel": "E-mail",
     "sendLink": "Envoyer le lien",
     "sentTitle": "Vérifiez votre boîte mail",
     "sentBody": "Si un compte existe pour cet email, un lien de réinitialisation est en route. Le lien expire dans 1 heure.",
@@ -1843,7 +1843,7 @@
         "body": "Courbes d'apprentissage abruptes et vraie propriété."
       },
       "remote": {
-        "title": "Remote-first",
+        "title": "Travail à distance",
         "body": "Travaillez de partout. Nous avons des coéquipiers dans 15 pays."
       },
       "benefits": {
@@ -1925,7 +1925,7 @@
     },
     "channels": {
       "title": "Autres façons de nous contacter",
-      "email": "Email",
+      "email": "E-mail",
       "chat": "Chat IA en direct",
       "help": "Centre d'aide"
     },

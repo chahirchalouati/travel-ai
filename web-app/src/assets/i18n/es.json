@@ -790,7 +790,7 @@
     "thRating": "Valoración",
     "thReview": "Reseña",
     "brand1": "Admin",
-    "brand2": "Console",
+    "brand2": "Consola",
     "signOut": "Cerrar sesión",
     "crumb": "Administración de la plataforma",
     "badge": "ADMIN",
@@ -854,7 +854,7 @@
     "broadcastFailed": "Error en la difusión",
     "broadcastIncomplete": "El asunto y el mensaje son obligatorios",
     "broadcastConfirm": "¿Enviar esta notificación a la audiencia seleccionada?",
-    "navFlags": "Feature flags",
+    "navFlags": "Flags de funcionalidades",
     "flagNew": "Nuevo flag",
     "flagKeyPlaceholder": "p. ej. new_checkout",
     "flagAdd": "Añadir",
@@ -1726,7 +1726,7 @@
     "forgotLink": "¿Olvidaste tu contraseña?",
     "forgotTitle": "Restablece tu contraseña",
     "forgotSub": "Introduce el email vinculado a tu cuenta y te enviaremos un enlace de restablecimiento.",
-    "emailLabel": "Email",
+    "emailLabel": "Correo electrónico",
     "sendLink": "Enviar enlace",
     "sentTitle": "Revisa tu bandeja de entrada",
     "sentBody": "Si existe una cuenta con este email, el enlace está en camino. Caduca en 1 hora.",
@@ -1843,7 +1843,7 @@
         "body": "Curvas de aprendizaje pronunciadas y propiedad real."
       },
       "remote": {
-        "title": "Remote-first",
+        "title": "Trabajo remoto",
         "body": "Trabaja desde cualquier lugar. Tenemos compañeros en 15 países."
       },
       "benefits": {

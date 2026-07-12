@@ -1676,9 +1676,9 @@
   },
   "loyalty": {
     "tier": {
-      "EXPLORER": "Explorer",
-      "VOYAGER": "Voyager",
-      "ELITE": "Elite"
+      "EXPLORER": "Esploratore",
+      "VOYAGER": "Viaggiatore",
+      "ELITE": "Élite"
     },
     "type": {
       "EARN": "Punti guadagnati",
@@ -1843,7 +1843,7 @@
         "body": "Curve di apprendimento ripide e vera proprietà."
       },
       "remote": {
-        "title": "Remote-first",
+        "title": "Lavoro da remoto",
         "body": "Lavora da ovunque. Abbiamo colleghi in 15 paesi."
       },
       "benefits": {
