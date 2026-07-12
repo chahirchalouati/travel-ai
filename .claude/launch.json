@@ -1,0 +1,35 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "web",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd web-app && npx ng serve --port 4200"],
+      "port": 4200
+    },
+    {
+      "name": "web-report",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd web-app && npx ng serve --port 4310"],
+      "port": 4310
+    },
+    {
+      "name": "web-preview",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd web-app && npx ng serve --port 4211"],
+      "port": 4211
+    },
+    {
+      "name": "web-flagship",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd web-app && npx ng serve --port 4315"],
+      "port": 4315
+    },
+    {
+      "name": "web-verify",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd web-app && npx ng serve --port 4400"],
+      "port": 4400
+    }
+  ]
+}
