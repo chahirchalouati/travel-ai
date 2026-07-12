@@ -2,17 +2,23 @@ package com.travelai.subscription;
 
 import com.travelai.auth.User;
 import com.travelai.auth.UserRepository;
+import com.travelai.subscription.dto.AdminSubscriptionResponse;
 import com.travelai.subscription.dto.MembershipResponse;
 import com.travelai.subscription.dto.SubscriptionPlanResponse;
 import com.travelai.shared.exception.ErrorCode;
 import com.travelai.shared.exception.TravelAiException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Reads membership plans and manages a user's subscription. Payment is simulated
@@ -36,6 +42,30 @@ public class SubscriptionService {
         return planRepository.findByActiveTrueOrderBySortOrderAsc().stream()
                 .map(SubscriptionPlanResponse::from)
                 .toList();
+    }
+
+    /** Admin: paginated Prime memberships, optionally filtered by status, newest first. */
+    @Transactional(readOnly = true)
+    public Page<AdminSubscriptionResponse> adminList(String status, Pageable pageable) {
+        SubscriptionStatus filter = parseStatus(status);
+        Page<UserSubscription> page = filter != null
+                ? subscriptionRepository.findByStatus(filter, pageable)
+                : subscriptionRepository.findAll(pageable);
+        Map<String, String> planNames = planRepository.findAll().stream()
+                .collect(Collectors.toMap(SubscriptionPlan::getCode, SubscriptionPlan::getName, (a, b) -> a));
+        return page.map(s -> AdminSubscriptionResponse.from(
+                s, planNames.getOrDefault(s.getPlanCode(), s.getPlanCode())));
+    }
+
+    private SubscriptionStatus parseStatus(String status) {
+        if (!StringUtils.hasText(status)) {
+            return null;
+        }
+        try {
+            return SubscriptionStatus.valueOf(status.trim().toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            throw TravelAiException.badRequest(ErrorCode.VALIDATION_ERROR);
+        }
     }
 
     /** The caller's current membership status and benefits. */

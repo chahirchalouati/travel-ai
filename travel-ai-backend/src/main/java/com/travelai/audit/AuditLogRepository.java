@@ -12,8 +12,8 @@ public interface AuditLogRepository extends JpaRepository<AuditLog, UUID> {
 
     @Query("""
             SELECT a FROM AuditLog a
-            WHERE (:actor IS NULL OR LOWER(a.actor) LIKE LOWER(CONCAT('%', :actor, '%')))
-              AND (:action IS NULL OR a.action = :action)
+            WHERE (:actor IS NULL OR LOWER(a.actor) LIKE LOWER(CONCAT('%', CAST(:actor AS string), '%')))
+              AND (:action IS NULL OR a.action = CAST(:action AS string))
             ORDER BY a.createdAt DESC
             """)
     Page<AuditLog> search(@Param("actor") String actor,
