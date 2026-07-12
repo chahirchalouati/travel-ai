@@ -62,8 +62,6 @@ public class AttractionService {
         return attractionRepository.findDistinctCategories();
     }
 
-    // --- private helpers ---
-
     private List<Attraction> candidatesFor(AttractionSearchRequest request) {
         boolean hasCity = request.city() != null && !request.city().isBlank();
         boolean hasCategory = request.category() != null && !request.category().isBlank();

@@ -26,14 +26,12 @@ public class ProfileContentController {
 
     private final ProfileContentService service;
 
-    // ── Presentation ───────────────────────────────────────────────────────
     @PatchMapping("/media")
     public ResponseEntity<ApiResponse<UserProfileResponse>> updateMedia(
             Authentication auth, @Valid @RequestBody UpdateProfileMediaRequest request) {
         return ResponseEntity.ok(ApiResponse.ok(service.updateMedia(auth.getName(), request)));
     }
 
-    // ── Travel-map places ──────────────────────────────────────────────────
     @GetMapping("/places")
     public ResponseEntity<ApiResponse<List<PlaceResponse>>> listPlaces(Authentication auth) {
         return ResponseEntity.ok(ApiResponse.ok(service.listPlaces(auth.getName())));
@@ -57,7 +55,6 @@ public class ProfileContentController {
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
 
-    // ── Photo gallery ──────────────────────────────────────────────────────
     @GetMapping("/photos")
     public ResponseEntity<ApiResponse<List<PhotoResponse>>> listPhotos(Authentication auth) {
         return ResponseEntity.ok(ApiResponse.ok(service.listPhotos(auth.getName())));

@@ -267,8 +267,6 @@ public class AdminService {
         log.info("Admin suspended partner: id={}", partnerId);
     }
 
-    // ── User management ───────────────────────────────────────────────────
-
     /** Creates a new user from the admin panel with a hashed password. */
     @Transactional
     public AdminUserResponse createUser(AdminUserUpsertRequest req) {
@@ -340,8 +338,6 @@ public class AdminService {
         return toAdminUser(saved);
     }
 
-    // ── GDPR (data portability + right to erasure) ─────────────────────────
-
     /** Assembles the personal data held directly on the user record for a GDPR export. */
     @Transactional(readOnly = true)
     public java.util.Map<String, Object> exportUserData(UUID userId) {
@@ -394,8 +390,6 @@ public class AdminService {
         log.info("Admin anonymized (GDPR erasure) user {}", userId);
     }
 
-    // ── Support impersonation (login-as) ───────────────────────────────────
-
     /**
      * Mints an access token for the target user so support can reproduce their view.
      * Refuses to impersonate another ADMIN (no lateral privilege moves). Audited via the
@@ -418,8 +412,6 @@ public class AdminService {
             target.getFirstName(), target.getLastName(), target.getRole().name());
     }
 
-    // ── Review moderation ─────────────────────────────────────────────────
-
     /** Returns paginated reviews for moderation. */
     public Page<AdminReviewResponse> listReviews(Pageable pageable) {
         return reviewRepository.findAllByOrderByCreatedAtDesc(pageable)
@@ -434,8 +426,6 @@ public class AdminService {
         reviewRepository.delete(review);
         log.info("Admin deleted review {}", reviewId);
     }
-
-    // ── Helpers ───────────────────────────────────────────────────────────
 
     private AdminUserResponse toAdminUser(User u) {
         return new AdminUserResponse(

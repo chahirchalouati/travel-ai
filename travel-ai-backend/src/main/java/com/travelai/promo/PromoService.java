@@ -64,8 +64,6 @@ public class PromoService {
                 "Promo code applied.");
     }
 
-    // ── Admin CRUD ─────────────────────────────────────────────────────────
-
     private static final java.util.List<String> PROMO_SEARCH = java.util.List.of("code");
 
     @Transactional(readOnly = true)

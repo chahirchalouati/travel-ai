@@ -84,8 +84,6 @@ public class NotificationService {
         emailService.sendHtml(event.userId(), event.userEmail(), subject, body);
     }
 
-    // ── HTML builders ─────────────────────────────────────────────────────
-
     private String buildPasswordResetHtml(PasswordResetRequestedEvent e) {
         return """
                 <html><body style="font-family:sans-serif;color:#241C15;">

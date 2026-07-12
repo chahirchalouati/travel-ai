@@ -63,8 +63,6 @@ public class AdminCatalogService {
                 q.pageable()).map(toDto);
     }
 
-    // ── Hotels ────────────────────────────────────────────────────────────
-
     public Page<AdminHotelDto.View> listHotels(AdminListQuery q) {
         return find(hotelRepository, Hotel.class, HOTEL_SEARCH, q, AdminHotelDto.View::from);
     }
@@ -112,8 +110,6 @@ public class AdminCatalogService {
         h.setActive(req.active() == null || req.active());
     }
 
-    // ── Flights ───────────────────────────────────────────────────────────
-
     public Page<AdminFlightDto.View> listFlights(AdminListQuery q) {
         return find(flightRepository, Flight.class, FLIGHT_SEARCH, q, AdminFlightDto.View::from);
     }
@@ -156,8 +152,6 @@ public class AdminCatalogService {
         f.setBaggageIncluded(req.baggageIncluded());
         f.setActive(req.active() == null || req.active());
     }
-
-    // ── Cruises ───────────────────────────────────────────────────────────
 
     public Page<AdminCruiseDto.View> listCruises(AdminListQuery q) {
         return find(cruiseRepository, Cruise.class, CRUISE_SEARCH, q, AdminCruiseDto.View::from);
@@ -208,8 +202,6 @@ public class AdminCatalogService {
         c.setActive(req.active() == null || req.active());
     }
 
-    // ── Restaurants ───────────────────────────────────────────────────────
-
     public Page<AdminRestaurantDto.View> listRestaurants(AdminListQuery q) {
         return find(restaurantRepository, Restaurant.class, RESTAURANT_SEARCH, q, AdminRestaurantDto.View::from);
     }
@@ -254,8 +246,6 @@ public class AdminCatalogService {
         r.setImageUrl(req.imageUrl());
         r.setActive(req.active() == null || req.active());
     }
-
-    // ── Destinations ──────────────────────────────────────────────────────
 
     public Page<AdminDestinationDto.View> listDestinations(AdminListQuery q) {
         return find(destinationRepository, Destination.class, DESTINATION_SEARCH, q, AdminDestinationDto.View::from);
@@ -312,8 +302,6 @@ public class AdminCatalogService {
         d.setActive(req.active() == null || req.active());
     }
 
-    // ── Attractions ────────────────────────────────────────────────────────
-
     public Page<AdminAttractionDto.View> listAttractions(AdminListQuery q) {
         return find(attractionRepository, com.travelai.attraction.Attraction.class, ATTRACTION_SEARCH, q,
                 AdminAttractionDto.View::from);
@@ -364,8 +352,6 @@ public class AdminCatalogService {
         a.setActive(req.active() == null || req.active());
     }
 
-    // ── Travel stories ────────────────────────────────────────────────────
-
     public Page<AdminStoryDto.View> listStories(AdminListQuery q) {
         return find(storyRepository, TravelStory.class, STORY_SEARCH, q, AdminStoryDto.View::from);
     }
@@ -407,8 +393,6 @@ public class AdminCatalogService {
         s.setSortOrder(req.sortOrder());
         s.setActive(req.active() == null || req.active());
     }
-
-    // ── Helpers ───────────────────────────────────────────────────────────
 
     private Partner requirePartner(UUID partnerId) {
         return partnerRepository.findById(partnerId)

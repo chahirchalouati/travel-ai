@@ -47,8 +47,6 @@ public class LiveItineraryService {
     private final com.travelai.messaging.MessagingService messagingService;
     private final ApplicationEventPublisher eventPublisher;
 
-    // ── Creation ────────────────────────────────────────────────────────────
-
     /** Creates a live itinerary for each newly confirmed booking. */
     @ApplicationModuleListener
     public void onBookingConfirmed(BookingConfirmedEvent event) {
@@ -96,8 +94,6 @@ public class LiveItineraryService {
         segmentRepository.save(segment);
     }
 
-    // ── Read ────────────────────────────────────────────────────────────────
-
     @Transactional(readOnly = true)
     public LiveItineraryResponse getByBooking(String userEmail, UUID bookingId) {
         // Owner or any accepted trip companion may view.
@@ -113,8 +109,6 @@ public class LiveItineraryService {
         return toProposalResponses(
                 proposalRepository.findByItineraryIdOrderByCreatedAtDesc(itinerary.getId()));
     }
-
-    // ── Manual disruption trigger ─────────────────────────────────────────────
 
     @Transactional
     public void recordManualEvent(String userEmail, UUID itineraryId, ReportEventRequest request) {
@@ -148,8 +142,6 @@ public class LiveItineraryService {
                 EventSource.MANUAL.name()));
     }
 
-    // ── Webhook disruption trigger (external push, unauthenticated) ───────────
-
     @Transactional
     public void recordWebhookEvent(UUID segmentId, String description, String rawData) {
         ItinerarySegment segment = segmentRepository.findById(segmentId)
@@ -174,8 +166,6 @@ public class LiveItineraryService {
                 savedEvent.getId(), segment.getId(), itinerary.getId(), userEmail,
                 EventSource.WEBHOOK.name()));
     }
-
-    // ── Approval gate ─────────────────────────────────────────────────────────
 
     @Transactional
     public void approve(String userEmail, UUID proposalId) {
@@ -252,8 +242,6 @@ public class LiveItineraryService {
         });
     }
 
-    // ── Scheduled maintenance ──────────────────────────────────────────────────
-
     /** Expires pending proposals whose approval window has elapsed. Returns the count expired. */
     @Transactional
     public int expireStaleProposals() {
@@ -279,8 +267,6 @@ public class LiveItineraryService {
         itineraryRepository.saveAll(watched);
         return watched.size();
     }
-
-    // ── Helpers ───────────────────────────────────────────────────────────────
 
     /** Owner or accepted EDITOR companion — may mutate segments and proposals. */
     private LiveItinerary loadOwnedItinerary(String userEmail, UUID itineraryId) {

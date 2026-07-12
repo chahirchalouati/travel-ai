@@ -91,8 +91,6 @@ public class PaymentService {
         return paymentRepository.findByUserEmail(email, pageable).map(this::toResponse);
     }
 
-    // ── Admin operations (no ownership check; caller must be ADMIN) ──────────
-
     @Transactional(readOnly = true)
     public Page<com.travelai.payment.dto.AdminPaymentResponse> adminList(PaymentStatus status, Pageable pageable) {
         Page<Payment> page = (status != null)

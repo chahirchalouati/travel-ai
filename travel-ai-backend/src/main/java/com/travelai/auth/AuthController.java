@@ -46,8 +46,6 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
 
-    // ── Two-factor authentication ────────────────────────────────────────────
-
     /** Authenticated: begins 2FA enrolment (stores pending secret; not yet enabled). */
     @PostMapping("/2fa/setup")
     public ResponseEntity<ApiResponse<TwoFactorSetupResponse>> setup2fa(Authentication auth) {

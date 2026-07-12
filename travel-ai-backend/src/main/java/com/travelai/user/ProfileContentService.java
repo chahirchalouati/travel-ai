@@ -31,7 +31,6 @@ public class ProfileContentService {
     private final UserPhotoRepository photoRepository;
     private final UserMapper userMapper;
 
-    // ── Profile presentation ───────────────────────────────────────────────
     @Transactional
     public UserProfileResponse updateMedia(String email, UpdateProfileMediaRequest request) {
         User user = user(email);
@@ -43,7 +42,6 @@ public class ProfileContentService {
         return userMapper.toProfileResponse(userRepository.save(user));
     }
 
-    // ── Travel-map places ──────────────────────────────────────────────────
     @Transactional(readOnly = true)
     public List<PlaceResponse> listPlaces(String email) {
         return placeRepository.findByUserIdOrderByVisitedOnDesc(user(email).getId()).stream()
@@ -83,7 +81,6 @@ public class ProfileContentService {
         placeRepository.delete(ownedPlace(email, placeId));
     }
 
-    // ── Photo gallery ──────────────────────────────────────────────────────
     @Transactional(readOnly = true)
     public List<PhotoResponse> listPhotos(String email) {
         return photoRepository.findByUserIdOrderByCreatedAtDesc(user(email).getId()).stream()
@@ -110,7 +107,6 @@ public class ProfileContentService {
         photoRepository.delete(photo);
     }
 
-    // ── Helpers ────────────────────────────────────────────────────────────
     private UserPlace ownedPlace(String email, UUID placeId) {
         return placeRepository.findByIdAndUserId(placeId, user(email).getId())
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.PLACE_NOT_FOUND));

@@ -70,8 +70,6 @@ public class HotelService {
         return toResult(hotel, 1);
     }
 
-    // --- private helpers ---
-
     private boolean isAvailable(UUID hotelId, LocalDate from, LocalDate to) {
         List<HotelAvailability> slots = hotelAvailabilityRepository
                 .findByHotelIdAndDateBetweenAndRoomsAvailableGreaterThan(hotelId, from, to, (short) 0);

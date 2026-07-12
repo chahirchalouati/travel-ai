@@ -84,8 +84,6 @@ public class InvoiceService {
         return renderInvoice(invoice, bookings);
     }
 
-    // ── internals ─────────────────────────────────────────────────────────
-
     private Invoice newInvoice(UUID userId, BigDecimal gross) {
         Invoice i = new Invoice();
         i.setNumber(nextNumber());

@@ -102,8 +102,6 @@ public class AdminController {
         return ResponseEntity.ok(ApiResponse.ok(page, meta));
     }
 
-    // ── User management ───────────────────────────────────────────────────
-
     @PostMapping("/users")
     public ResponseEntity<ApiResponse<AdminUserResponse>> createUser(
             @Valid @RequestBody AdminUserUpsertRequest request) {
@@ -128,8 +126,6 @@ public class AdminController {
         return ResponseEntity.ok(ApiResponse.ok(adminService.setUserActive(id, request.active())));
     }
 
-    // ── GDPR ──────────────────────────────────────────────────────────────
-
     @GetMapping("/users/{id}/export")
     public ResponseEntity<ApiResponse<java.util.Map<String, Object>>> exportUser(@PathVariable UUID id) {
         return ResponseEntity.ok(ApiResponse.ok(adminService.exportUserData(id)));
@@ -145,8 +141,6 @@ public class AdminController {
     public ResponseEntity<ApiResponse<ImpersonationResponse>> impersonate(@PathVariable UUID id) {
         return ResponseEntity.ok(ApiResponse.ok(adminService.impersonate(id)));
     }
-
-    // ── Review moderation ─────────────────────────────────────────────────
 
     @GetMapping("/reviews")
     public ResponseEntity<ApiResponse<Page<AdminReviewResponse>>> listReviews(Pageable pageable) {

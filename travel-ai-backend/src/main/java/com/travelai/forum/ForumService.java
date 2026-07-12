@@ -108,8 +108,6 @@ public class ForumService {
         return AnswerResponse.from(saved, avatarsFor(List.of(saved.getAuthorId())).get(saved.getAuthorId()));
     }
 
-    // --- helpers ---
-
     private User resolveUser(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.USER_NOT_FOUND));

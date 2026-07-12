@@ -113,8 +113,6 @@ public class FlightService {
                 .orElse(false);
     }
 
-    // --- private helpers ---
-
     private FlightSearchResult toResult(Flight flight) {
         Airport origin = airportLookup.find(flight.getOriginIata()).orElse(null);
         Airport dest = airportLookup.find(flight.getDestIata()).orElse(null);

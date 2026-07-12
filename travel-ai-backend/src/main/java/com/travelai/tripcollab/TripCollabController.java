@@ -30,8 +30,6 @@ public class TripCollabController {
     private final TripCollabService tripCollabService;
     private final SegmentVoteService segmentVoteService;
 
-    // ── Members ─────────────────────────────────────────────────────────────
-
     @GetMapping("/{tripId}/members")
     public ApiResponse<List<TripMemberResponse>> listMembers(
             @AuthenticationPrincipal UserDetails user,
@@ -64,8 +62,6 @@ public class TripCollabController {
             @RequestBody @Valid AcceptInviteRequest request) {
         return ApiResponse.ok(tripCollabService.accept(request.token(), user.getUsername()));
     }
-
-    // ── Segment votes ───────────────────────────────────────────────────────
 
     @GetMapping("/{tripId}/segments/votes")
     public ApiResponse<List<SegmentVotesResponse>> listVotes(

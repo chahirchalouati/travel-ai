@@ -28,8 +28,6 @@ public class AdminCatalogController {
         return ApiResponse.ok(page, meta);
     }
 
-    // ── Hotels ────────────────────────────────────────────────────────────
-
     @GetMapping("/hotels")
     public ResponseEntity<ApiResponse<Page<AdminHotelDto.View>>> listHotels(
             Pageable pageable, @RequestParam Map<String, String> params) {
@@ -52,8 +50,6 @@ public class AdminCatalogController {
         service.deleteHotel(id);
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
-
-    // ── Flights ───────────────────────────────────────────────────────────
 
     @GetMapping("/flights")
     public ResponseEntity<ApiResponse<Page<AdminFlightDto.View>>> listFlights(
@@ -78,8 +74,6 @@ public class AdminCatalogController {
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
 
-    // ── Cruises ───────────────────────────────────────────────────────────
-
     @GetMapping("/cruises")
     public ResponseEntity<ApiResponse<Page<AdminCruiseDto.View>>> listCruises(
             Pageable pageable, @RequestParam Map<String, String> params) {
@@ -102,8 +96,6 @@ public class AdminCatalogController {
         service.deleteCruise(id);
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
-
-    // ── Restaurants ───────────────────────────────────────────────────────
 
     @GetMapping("/restaurants")
     public ResponseEntity<ApiResponse<Page<AdminRestaurantDto.View>>> listRestaurants(
@@ -129,8 +121,6 @@ public class AdminCatalogController {
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
 
-    // ── Destinations ──────────────────────────────────────────────────────
-
     @GetMapping("/destinations")
     public ResponseEntity<ApiResponse<Page<AdminDestinationDto.View>>> listDestinations(
             Pageable pageable, @RequestParam Map<String, String> params) {
@@ -155,8 +145,6 @@ public class AdminCatalogController {
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
 
-    // ── Attractions ────────────────────────────────────────────────────────
-
     @GetMapping("/attractions")
     public ResponseEntity<ApiResponse<Page<AdminAttractionDto.View>>> listAttractions(
             Pageable pageable, @RequestParam Map<String, String> params) {
@@ -180,8 +168,6 @@ public class AdminCatalogController {
         service.deleteAttraction(id);
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
-
-    // ── Travel stories ────────────────────────────────────────────────────
 
     @GetMapping("/stories")
     public ResponseEntity<ApiResponse<Page<AdminStoryDto.View>>> listStories(

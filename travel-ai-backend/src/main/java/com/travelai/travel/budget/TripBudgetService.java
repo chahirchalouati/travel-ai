@@ -56,8 +56,6 @@ public class TripBudgetService {
     private final BookingRepository bookingRepository;
     private final TripExpenseRepository expenseRepository;
 
-    // ------------------------------------------------------------------ budget
-
     public TripBudgetSummaryResponse setBudget(String email, UUID tripId, BigDecimal amount) {
         TravelRequest trip = ownedTrip(email, tripId);
         trip.setBudgetAmount(amount);
@@ -72,8 +70,6 @@ public class TripBudgetService {
     public TripBudgetSummaryResponse getSummary(String email, UUID tripId) {
         return summarize(ownedTrip(email, tripId));
     }
-
-    // ---------------------------------------------------------------- expenses
 
     @Transactional(readOnly = true)
     public List<TripExpenseResponse> listExpenses(String email, UUID tripId) {
@@ -100,8 +96,6 @@ public class TripBudgetService {
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.EXPENSE_NOT_FOUND));
         expenseRepository.delete(expense);
     }
-
-    // ------------------------------------------------------------- resolution
 
     /**
      * Resolves the trip a booking belongs to: first via its proposal, then by
@@ -130,8 +124,6 @@ public class TripBudgetService {
                 .map(trip -> new TripRefResponse(trip.getId(), trip.getDestination()))
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.REQUEST_NOT_FOUND));
     }
-
-    // ------------------------------------------------------------ aggregation
 
     private TripBudgetSummaryResponse summarize(TravelRequest trip) {
         Map<String, Slice> slices = new LinkedHashMap<>();

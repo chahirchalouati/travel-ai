@@ -122,8 +122,6 @@ public class BookingCancellationService {
                 refund != null ? refund.getStatus() : null);
     }
 
-    // ── internals ────────────────────────────────────────────────────────────
-
     private Booking findOwned(String email, UUID bookingId) {
         return bookingRepository.findByIdAndUserEmail(bookingId, email)
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.BOOKING_NOT_FOUND));

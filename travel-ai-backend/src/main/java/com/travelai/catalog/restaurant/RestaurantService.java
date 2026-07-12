@@ -62,8 +62,6 @@ public class RestaurantService {
                 .toList();
     }
 
-    // --- private helpers ---
-
     private List<Restaurant> resolveCandidates(RestaurantSearchRequest request) {
         if (request.city() == null) {
             return restaurantRepository.findByActiveTrue();
