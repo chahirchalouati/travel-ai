@@ -20,6 +20,7 @@ import type {
   BookingResponse,
 } from '../../core/models/api.models';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
+import { UiTextareaComponent } from '../../shared/ui/ui-textarea.component';
 import { TripMapComponent } from './trip-map.component';
 import { TripCompanionsComponent } from '../trip-collab/trip-companions.component';
 import { SegmentVoteComponent } from '../trip-collab/segment-vote.component';
@@ -32,6 +33,7 @@ const POLL_INTERVAL_MS = 20000;
   imports: [
     CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, RevealDirective,
     TripMapComponent, TripCompanionsComponent, SegmentVoteComponent, TripBudgetCardComponent,
+    UiTextareaComponent,
   ],
   templateUrl: './itinerary-live.component.html',
   styleUrl: './itinerary-live.component.scss',

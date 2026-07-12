@@ -5,12 +5,12 @@ import { RouterLink } from '@angular/router';
 import { DestinationService } from '../../core/services/destination.service';
 import type { DestinationResponse } from '../../core/models/api.models';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
-import { UiSelectComponent, UiCheckboxComponent } from '../../shared/ui';
+import { UiSelectComponent, UiCheckboxComponent, UiInputComponent } from '../../shared/ui';
 
 @Component({
   selector: 'app-destinations',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, RevealDirective, UiSelectComponent, UiCheckboxComponent],
+  imports: [CommonModule, FormsModule, RouterLink, RevealDirective, UiSelectComponent, UiCheckboxComponent, UiInputComponent],
   templateUrl: './destinations.component.html',
   styleUrl: './destinations.component.scss'
 })

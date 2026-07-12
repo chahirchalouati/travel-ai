@@ -1,4 +1,5 @@
 import { Component, computed, input, output, signal } from '@angular/core';
+import { UiRangeComponent } from './ui-range.component';
 
 export interface TripBrief {
   nights: number;
@@ -18,6 +19,7 @@ type Token = 'nights' | 'place' | 'travellers' | 'budget' | 'focus';
 @Component({
   selector: 'app-ui-sentence-brief',
   standalone: true,
+  imports: [UiRangeComponent],
   template: `
     <div class="sb">
       <p class="sb__sentence">
@@ -59,7 +61,7 @@ type Token = 'nights' | 'place' | 'travellers' | 'budget' | 'focus';
             }
             @case ('budget') {
               <div class="sb__range">
-                <input type="range" [min]="budgetMin()" [max]="budgetMax()" step="100" [value]="budget()" (input)="setBudget($any($event.target).value)" />
+                <app-ui-range [min]="budgetMin()" [max]="budgetMax()" [step]="100" [value]="budget()" (valueChange)="setBudget($event)" [valueText]="money(budget())" />
                 <span class="sb__range-val">{{ money(budget()) }}</span>
               </div>
             }

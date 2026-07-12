@@ -17,9 +17,9 @@
         <div class="tb-set">
           <label class="tb-label" for="tb-budget">{{ t('tripBudget.setPrompt') }}</label>
           <div class="tb-set__row">
-            <input id="tb-budget" class="tb-input" type="number" min="1" step="1"
-                   [(ngModel)]="budgetInput" name="budget"
-                   [placeholder]="t('tripBudget.amountPlaceholder')" />
+            <app-ui-input inputId="tb-budget" type="number" [min]="1" [step]="1"
+                          [(ngModel)]="budgetInput" name="budget"
+                          [placeholder]="t('tripBudget.amountPlaceholder')" />
             <button class="tb-btn tb-btn--accent" type="button"
                     [disabled]="saving() || !budgetInput || budgetInput <= 0"
                     (click)="saveBudget()">
@@ -90,21 +90,17 @@
         <summary class="tb-add__toggle"><span class="ms">add_circle</span> {{ t('tripBudget.addExpense') }}</summary>
         <div class="tb-form">
           <div class="tb-form__row">
-            <select class="tb-input" [(ngModel)]="newCategory" name="cat"
-                    [attr.aria-label]="t('tripBudget.category')">
-              @for (cat of categories; track cat) {
-                <option [value]="cat">{{ t('tripBudget.categories.' + cat) }}</option>
-              }
-            </select>
-            <input class="tb-input" type="number" min="0" step="0.01"
-                   [(ngModel)]="newAmount" name="amt"
-                   [placeholder]="t('tripBudget.amountPlaceholder')" />
+            <app-ui-select [options]="categoryOptions()" [(ngModel)]="newCategory"
+                           [ariaLabel]="t('tripBudget.category')" />
+            <app-ui-input type="number" [min]="0" [step]="0.01"
+                          [(ngModel)]="newAmount" name="amt"
+                          [placeholder]="t('tripBudget.amountPlaceholder')" />
           </div>
           <div class="tb-form__row">
-            <input class="tb-input" type="text" [(ngModel)]="newDescription" name="desc"
-                   [placeholder]="t('tripBudget.descriptionPlaceholder')" />
-            <input class="tb-input" type="date" [(ngModel)]="newDate" name="date"
-                   [attr.aria-label]="t('tripBudget.date')" />
+            <app-ui-input type="text" [(ngModel)]="newDescription" name="desc"
+                          [placeholder]="t('tripBudget.descriptionPlaceholder')" />
+            <app-ui-datepicker [(ngModel)]="newDate" name="date"
+                               [ariaLabel]="t('tripBudget.date')" />
           </div>
           <button class="tb-btn tb-btn--accent tb-btn--full" type="button"
                   [disabled]="saving() || !newAmount || newAmount <= 0"

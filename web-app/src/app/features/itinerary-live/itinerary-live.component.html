@@ -56,8 +56,8 @@
 
                 @if (reportingSegmentId() === s.id) {
                   <div class="il-report">
-                    <textarea class="il-input" rows="2" [(ngModel)]="reportText" name="reportText"
-                              [placeholder]="t('itinerary.reportPlaceholder')"></textarea>
+                    <app-ui-textarea name="reportText" [rows]="2" [(ngModel)]="reportText"
+                                     [placeholder]="t('itinerary.reportPlaceholder')" />
                     <div class="il-report__actions">
                       <button class="il-btn" (click)="cancelReport()">{{ t('itinerary.cancel') }}</button>
                       <button class="il-btn il-btn--accent" [disabled]="submitting() || !reportText.trim()"

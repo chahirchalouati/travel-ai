@@ -1,10 +1,12 @@
-import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import { Component, Input, OnInit, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { catchError, of } from 'rxjs';
 import { TripCollabService } from '../../core/services/trip-collab.service';
 import type { TripMemberResponse, TripRole } from '../../core/models/api.models';
+import { UiSelectComponent, UiSelectOption } from '../../shared/ui/ui-select.component';
 
 /**
  * Self-contained "Compagni di viaggio" panel. Mount it on the live-itinerary
@@ -14,7 +16,7 @@ import type { TripMemberResponse, TripRole } from '../../core/models/api.models'
 @Component({
   selector: 'app-trip-companions',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule],
+  imports: [CommonModule, FormsModule, TranslocoModule, UiSelectComponent],
   template: `
     <ng-container *transloco="let t">
       <section class="tc-panel" aria-labelledby="tc-heading">
@@ -64,10 +66,8 @@ import type { TripMemberResponse, TripRole } from '../../core/models/api.models'
             <form class="tc-invite" (ngSubmit)="invite()">
               <input class="tc-input" type="email" name="inviteEmail" [(ngModel)]="email"
                      [placeholder]="t('tripCollab.emailPlaceholder')" required />
-              <select class="tc-input tc-input--role" name="inviteRole" [(ngModel)]="role">
-                <option value="VIEWER">{{ t('tripCollab.role.VIEWER') }}</option>
-                <option value="EDITOR">{{ t('tripCollab.role.EDITOR') }}</option>
-              </select>
+              <app-ui-select name="inviteRole" style="flex:0 0 130px" [options]="roleOptions()" [(ngModel)]="role"
+                             [ariaLabel]="t('tripCollab.role.' + role)" />
               <button class="tc-btn" type="submit" [disabled]="submitting() || !email.trim()">
                 <span class="ms">send</span> {{ t('tripCollab.invite') }}
               </button>
@@ -120,6 +120,13 @@ export class TripCompanionsComponent implements OnInit {
   @Input() owner = false;
 
   private readonly collab = inject(TripCollabService);
+  private readonly transloco = inject(TranslocoService);
+
+  private readonly lang = toSignal(this.transloco.langChanges$, { initialValue: this.transloco.getActiveLang() });
+  readonly roleOptions = computed<UiSelectOption[]>(() => {
+    this.lang();
+    return (['VIEWER', 'EDITOR'] as const).map(r => ({ value: r, label: this.transloco.translate('tripCollab.role.' + r) }));
+  });
 
   readonly loading = signal(true);
   readonly submitting = signal(false);

@@ -17,16 +17,15 @@
     </div>
 
     <div class="dest-controls">
-      <div class="dest-search">
-        <span class="ms" aria-hidden="true">search</span>
-        <input
-          type="search"
-          [ngModel]="search()"
-          (ngModelChange)="search.set($event)"
-          placeholder="Search destination or country"
-          aria-label="Search destinations"
-        >
-      </div>
+      <app-ui-input
+        class="dest-search"
+        variant="search"
+        icon="search"
+        [ngModel]="search()"
+        (ngModelChange)="search.set($event)"
+        placeholder="Search destination or country"
+        ariaLabel="Search destinations"
+      />
       <app-ui-select
         class="dest-select"
         [ngModel]="activeInterest()"

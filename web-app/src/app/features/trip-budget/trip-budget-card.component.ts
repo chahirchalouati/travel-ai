@@ -1,7 +1,11 @@
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule, CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { UiSelectComponent, UiSelectOption } from '../../shared/ui/ui-select.component';
+import { UiInputComponent } from '../../shared/ui/ui-input.component';
+import { UiDatepickerComponent } from '../../shared/ui/ui-datepicker.component';
 import { catchError, of } from 'rxjs';
 import { TripBudgetService } from '../../core/services/trip-budget.service';
 import type {
@@ -35,7 +39,7 @@ const EXPENSE_CATEGORIES: TripExpenseCategory[] = ['FOOD', 'TRANSPORT', 'SHOPPIN
 @Component({
   selector: 'app-trip-budget-card',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, DecimalPipe, TranslocoModule],
+  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, DecimalPipe, TranslocoModule, UiSelectComponent, UiInputComponent, UiDatepickerComponent],
   templateUrl: './trip-budget-card.component.html',
   styleUrl: './trip-budget-card.component.scss',
 })
@@ -60,6 +64,13 @@ export class TripBudgetCardComponent {
   newDate = '';
 
   readonly categories = EXPENSE_CATEGORIES;
+
+  private readonly transloco = inject(TranslocoService);
+  private readonly lang = toSignal(this.transloco.langChanges$, { initialValue: this.transloco.getActiveLang() });
+  readonly categoryOptions = computed<UiSelectOption[]>(() => {
+    this.lang();
+    return this.categories.map(c => ({ value: c, label: this.transloco.translate('tripBudget.categories.' + c) }));
+  });
 
   readonly hasBudget = computed(() => {
     const s = this.summary();

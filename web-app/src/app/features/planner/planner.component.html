@@ -33,9 +33,9 @@
           <span class="field-label">{{ t().i_budget }}</span>
           <span class="field-value">€{{ budgetStr() }}<small>{{ t().i_total }}</small></span>
         </div>
-        <input type="range" min="400" max="4000" step="50"
-               [value]="budget()" (input)="onBudget($event)"
-               [style.--pct]="budgetPct()" />
+        <app-ui-range [min]="400" [max]="4000" [step]="50"
+                      [value]="budget()" (valueChange)="onBudget($event)"
+                      [ariaLabel]="t().i_budget" [valueText]="'€' + budgetStr()" />
       </div>
 
       <!-- Dates -->
@@ -471,12 +471,16 @@
 
       @if (authMode() === 'register') {
         <div class="auth-names">
-          <label class="auth-field"><span>{{ t().auth_first_name }}</span><input [(ngModel)]="authFirstNameVal" [placeholder]="t().auth_first_placeholder"></label>
-          <label class="auth-field"><span>{{ t().auth_last_name }}</span><input [(ngModel)]="authLastNameVal" [placeholder]="t().auth_last_placeholder"></label>
+          <app-ui-input [(ngModel)]="authFirstNameVal" name="firstName" autocomplete="given-name"
+                        [label]="t().auth_first_name" [placeholder]="t().auth_first_placeholder" />
+          <app-ui-input [(ngModel)]="authLastNameVal" name="lastName" autocomplete="family-name"
+                        [label]="t().auth_last_name" [placeholder]="t().auth_last_placeholder" />
         </div>
       }
-      <label class="auth-field"><span>Email</span><input [(ngModel)]="authEmailVal" type="email" placeholder="email@example.com"></label>
-      <label class="auth-field"><span>Password</span><input [(ngModel)]="authPasswordVal" type="password" [placeholder]="t().auth_password_placeholder"></label>
+      <app-ui-input [(ngModel)]="authEmailVal" name="email" type="email" autocomplete="email"
+                    label="Email" placeholder="email@example.com" />
+      <app-ui-input [(ngModel)]="authPasswordVal" name="password" type="password"
+                    label="Password" [placeholder]="t().auth_password_placeholder" />
 
       <button class="generate" (click)="authMode() === 'login' ? login() : register()" [disabled]="authLoadingState">
         @if (authLoadingState) { {{ t().auth_loading }} } @else { {{ authMode() === 'login' ? t().auth_sign_in : t().auth_create }} }

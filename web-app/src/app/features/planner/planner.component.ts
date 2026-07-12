@@ -13,7 +13,7 @@ import { PaymentService } from '../../core/services/payment.service';
 import { ChatService } from '../../core/services/chat.service';
 import { DestinationService } from '../../core/services/destination.service';
 import { PlannerMapComponent, PlannerPin } from './planner-map.component';
-import { UiSentenceBriefComponent, type TripBrief } from '../../shared/ui';
+import { UiSentenceBriefComponent, UiInputComponent, UiRangeComponent, type TripBrief } from '../../shared/ui';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -245,7 +245,7 @@ const PLANNER_GENERATION_TIMEOUT_MS =
 @Component({
   selector: 'app-planner',
   standalone: true,
-  imports: [CommonModule, FormsModule, PlannerMapComponent, UiSentenceBriefComponent],
+  imports: [CommonModule, FormsModule, PlannerMapComponent, UiSentenceBriefComponent, UiInputComponent, UiRangeComponent],
   templateUrl: './planner.component.html',
   styleUrl: './planner.component.scss'
 })
@@ -839,8 +839,8 @@ export class PlannerComponent implements OnDestroy {
     });
   }
 
-  onBudget(e: Event): void {
-    this.budget.set(parseInt((e.target as HTMLInputElement).value, 10));
+  onBudget(v: number): void {
+    this.budget.set(v);
   }
 
   nightsUp():    void { this.nights.update(n => Math.min(21, n + 1)); }
