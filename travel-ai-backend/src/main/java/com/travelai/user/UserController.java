@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -52,5 +55,11 @@ public class UserController {
             Authentication auth,
             @Valid @RequestBody UpdatePreferencesRequest request) {
         return ResponseEntity.ok(ApiResponse.ok(userService.updatePreferences(auth.getName(), request)));
+    }
+
+    /** GET /users/me/bookings — ids of every booking belonging to the current user */
+    @GetMapping("/me/bookings")
+    public ResponseEntity<ApiResponse<List<UUID>>> getBookingIds(Authentication auth) {
+        return ResponseEntity.ok(ApiResponse.ok(userService.getBookingIds(auth.getName())));
     }
 }

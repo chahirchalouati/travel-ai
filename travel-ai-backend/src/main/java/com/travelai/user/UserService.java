@@ -2,6 +2,8 @@ package com.travelai.user;
 
 import com.travelai.auth.User;
 import com.travelai.auth.UserRepository;
+import com.travelai.booking.Booking;
+import com.travelai.booking.BookingRepository;
 import com.travelai.shared.domain.SpendingPriority;
 import com.travelai.shared.exception.ErrorCode;
 import com.travelai.shared.exception.TravelAiException;
@@ -26,6 +28,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserPreferencesRepository preferencesRepository;
     private final UserMapper userMapper;
+    private final BookingRepository bookingRepository;
 
     /** Returns profile of the currently authenticated user. */
     @Transactional(readOnly = true)
@@ -63,11 +66,13 @@ public class UserService {
         return userMapper.toPreferencesResponse(saved);
     }
 
-    /** Returns full booking history summary for the authenticated user (stub — expanded in booking sprint). */
+    /** Returns the ids of every booking (any status) belonging to the authenticated user. */
     @Transactional(readOnly = true)
     public List<UUID> getBookingIds(String email) {
-        // Booking module will publish data; for now return empty list
-        return List.of();
+        User user = findUserByEmail(email);
+        return bookingRepository.findByUserId(user.getId()).stream()
+                .map(Booking::getId)
+                .toList();
     }
 
     private User findUserByEmail(String email) {
