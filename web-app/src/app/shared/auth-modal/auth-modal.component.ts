@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../core/services/auth.service';
 import { environment } from '../../../environments/environment';
+import { UiInputComponent } from '../ui/ui-input.component';
 
 type Mode = 'login' | 'register';
 
@@ -18,7 +19,7 @@ const GIS_SRC = 'https://accounts.google.com/gsi/client';
 @Component({
   selector: 'app-auth-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule],
+  imports: [CommonModule, FormsModule, TranslocoModule, UiInputComponent],
   template: `
     <div class="auth-overlay" (click)="onClose()" role="dialog" aria-modal="true" aria-label="Account">
       <div class="auth-card" (click)="$event.stopPropagation()">
@@ -70,31 +71,20 @@ const GIS_SRC = 'https://accounts.google.com/gsi/client';
         <form class="auth-form" (ngSubmit)="submit()">
           @if (mode() === 'register') {
             <div class="auth-row">
-              <div class="auth-field">
-                <label class="auth-label" for="auth-first">{{ 'auth.firstName' | transloco }}</label>
-                <input id="auth-first" class="auth-input" type="text" name="firstName"
-                       [(ngModel)]="firstName" autocomplete="given-name" required>
-              </div>
-              <div class="auth-field">
-                <label class="auth-label" for="auth-last">{{ 'auth.lastName' | transloco }}</label>
-                <input id="auth-last" class="auth-input" type="text" name="lastName"
-                       [(ngModel)]="lastName" autocomplete="family-name" required>
-              </div>
+              <app-ui-input name="firstName" autocomplete="given-name" required
+                            [label]="'auth.firstName' | transloco" [(ngModel)]="firstName" />
+              <app-ui-input name="lastName" autocomplete="family-name" required
+                            [label]="'auth.lastName' | transloco" [(ngModel)]="lastName" />
             </div>
           }
 
-          <div class="auth-field">
-            <label class="auth-label" for="auth-email">{{ 'auth.email' | transloco }}</label>
-            <input id="auth-email" class="auth-input" type="email" name="email"
-                   [(ngModel)]="email" autocomplete="email" placeholder="you@example.com" required>
-          </div>
+          <app-ui-input name="email" type="email" autocomplete="email" required
+                        placeholder="you@example.com"
+                        [label]="'auth.email' | transloco" [(ngModel)]="email" />
 
-          <div class="auth-field">
-            <label class="auth-label" for="auth-pass">{{ 'auth.password' | transloco }}</label>
-            <input id="auth-pass" class="auth-input" type="password" name="password"
-                   [(ngModel)]="password" [attr.autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'"
-                   placeholder="••••••••" required>
-          </div>
+          <app-ui-input name="password" type="password" required placeholder="••••••••"
+                        [autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'"
+                        [label]="'auth.password' | transloco" [(ngModel)]="password" />
 
           @if (mode() === 'login') {
             <div class="auth-forgot">

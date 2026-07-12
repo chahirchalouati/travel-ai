@@ -8,13 +8,14 @@ import { DatePipe } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
 import { LoyaltyService } from '../../core/services/loyalty.service';
 import type { LoyaltySummaryResponse, TwoFactorSetupResponse } from '../../core/models/api.models';
+import { UiInputComponent } from '../../shared/ui/ui-input.component';
 
 type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
 
 @Component({
   selector: 'app-account',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule, DatePipe],
+  imports: [CommonModule, FormsModule, TranslocoModule, DatePipe, UiInputComponent],
   styleUrls: ['../../shared/styles/dashboard.scss'],
   template: `
     <div class="dash-container">
@@ -65,23 +66,17 @@ type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
 
           <form class="form" (ngSubmit)="save()">
             <div class="field-row">
-              <label class="field">
-                <span>{{ 'auth.firstName' | transloco }}</span>
-                <input [(ngModel)]="firstName" name="firstName" required maxlength="100" />
-              </label>
-              <label class="field">
-                <span>{{ 'auth.lastName' | transloco }}</span>
-                <input [(ngModel)]="lastName" name="lastName" required maxlength="100" />
-              </label>
+              <app-ui-input name="firstName" required [maxlength]="100"
+                            [label]="'auth.firstName' | transloco" [(ngModel)]="firstName" />
+              <app-ui-input name="lastName" required [maxlength]="100"
+                            [label]="'auth.lastName' | transloco" [(ngModel)]="lastName" />
             </div>
-            <label class="field">
-              <span>{{ 'account.phone' | transloco }}</span>
-              <input [(ngModel)]="phone" name="phone" maxlength="30" [placeholder]="'account.phonePlaceholder' | transloco" />
-            </label>
-            <label class="field">
-              <span>{{ 'auth.email' | transloco }} <small>{{ 'account.readonly' | transloco }}</small></span>
-              <input [value]="user()?.email" disabled />
-            </label>
+            <app-ui-input name="phone" [maxlength]="30" autocomplete="tel"
+                          [label]="'account.phone' | transloco"
+                          [placeholder]="'account.phonePlaceholder' | transloco" [(ngModel)]="phone" />
+            <app-ui-input name="email" [disabled]="true"
+                          [label]="('auth.email' | transloco) + ' · ' + ('account.readonly' | transloco)"
+                          [ngModel]="user()?.email" />
             <div class="form-actions">
               <button type="button" class="dash-cta dash-cta--ghost" (click)="reset()" [disabled]="!dirty()">{{ 'account.reset' | transloco }}</button>
               <button type="submit" class="dash-cta" [disabled]="!dirty() || saving()">
@@ -170,11 +165,9 @@ type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
               </button>
             } @else if (mfaView() === 'disable') {
               <p class="security-body">{{ 'twoFactor.disablePrompt' | transloco }}</p>
-              <label class="field">
-                <span>{{ 'twoFactor.codeLabel' | transloco }}</span>
-                <input [(ngModel)]="mfaCode" name="disableCode" inputmode="text" autocomplete="one-time-code"
-                       [placeholder]="'twoFactor.codePlaceholder' | transloco" />
-              </label>
+              <app-ui-input name="disableCode" inputmode="text" autocomplete="one-time-code"
+                            [label]="'twoFactor.codeLabel' | transloco"
+                            [placeholder]="'twoFactor.codePlaceholder' | transloco" [(ngModel)]="mfaCode" />
               @if (mfaError()) { <p class="security-err">{{ mfaError() }}</p> }
               <div class="form-actions">
                 <button type="button" class="dash-cta dash-cta--ghost" (click)="cancelMfa()">{{ 'account.reset' | transloco }}</button>
@@ -198,11 +191,9 @@ type MfaView = 'idle' | 'setup' | 'recovery' | 'disable';
               <p class="security-secret-label">{{ 'twoFactor.manualEntry' | transloco }}</p>
               <code class="security-secret">{{ s.secret }}</code>
 
-              <label class="field security-code-field">
-                <span>{{ 'twoFactor.setupStep2' | transloco }}</span>
-                <input [(ngModel)]="mfaCode" name="enableCode" inputmode="text" autocomplete="one-time-code"
-                       [placeholder]="'twoFactor.codePlaceholder' | transloco" />
-              </label>
+              <app-ui-input class="security-code-field" name="enableCode" inputmode="text" autocomplete="one-time-code"
+                            [label]="'twoFactor.setupStep2' | transloco"
+                            [placeholder]="'twoFactor.codePlaceholder' | transloco" [(ngModel)]="mfaCode" />
               @if (mfaError()) { <p class="security-err">{{ mfaError() }}</p> }
               <div class="form-actions">
                 <button type="button" class="dash-cta dash-cta--ghost" (click)="cancelMfa()">{{ 'account.reset' | transloco }}</button>

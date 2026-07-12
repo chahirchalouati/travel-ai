@@ -5,13 +5,14 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../core/services/auth.service';
 import { AUTH_RECOVERY_STYLES } from './auth-recovery.styles';
+import { UiInputComponent } from '../../shared/ui/ui-input.component';
 
 const MIN_PASSWORD_LENGTH = 8;
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, TranslocoModule],
+  imports: [CommonModule, FormsModule, RouterLink, TranslocoModule, UiInputComponent],
   template: `
     <main class="rec-wrap">
       <section class="rec-card" aria-labelledby="reset-heading">
@@ -33,16 +34,12 @@ const MIN_PASSWORD_LENGTH = 8;
           <p class="rec-sub">{{ 'authRecovery.resetSub' | transloco }}</p>
 
           <form class="rec-form" (ngSubmit)="submit()">
-            <div class="rec-field">
-              <label class="rec-label" for="reset-pass">{{ 'authRecovery.newPassword' | transloco }}</label>
-              <input id="reset-pass" class="rec-input" type="password" name="password"
-                     [(ngModel)]="password" autocomplete="new-password" placeholder="••••••••" required>
-            </div>
-            <div class="rec-field">
-              <label class="rec-label" for="reset-confirm">{{ 'authRecovery.confirmPassword' | transloco }}</label>
-              <input id="reset-confirm" class="rec-input" type="password" name="confirm"
-                     [(ngModel)]="confirm" autocomplete="new-password" placeholder="••••••••" required>
-            </div>
+            <app-ui-input name="password" type="password" autocomplete="new-password" required
+                          placeholder="••••••••"
+                          [label]="'authRecovery.newPassword' | transloco" [(ngModel)]="password" />
+            <app-ui-input name="confirm" type="password" autocomplete="new-password" required
+                          placeholder="••••••••"
+                          [label]="'authRecovery.confirmPassword' | transloco" [(ngModel)]="confirm" />
 
             @if (error()) {
               <div class="rec-error" role="alert">

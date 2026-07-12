@@ -5,11 +5,12 @@ import { RouterLink } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../core/services/auth.service';
 import { AUTH_RECOVERY_STYLES } from './auth-recovery.styles';
+import { UiInputComponent } from '../../shared/ui/ui-input.component';
 
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, TranslocoModule],
+  imports: [CommonModule, FormsModule, RouterLink, TranslocoModule, UiInputComponent],
   template: `
     <main class="rec-wrap">
       <section class="rec-card" aria-labelledby="forgot-heading">
@@ -24,11 +25,9 @@ import { AUTH_RECOVERY_STYLES } from './auth-recovery.styles';
           <p class="rec-sub">{{ 'authRecovery.forgotSub' | transloco }}</p>
 
           <form class="rec-form" (ngSubmit)="submit()">
-            <div class="rec-field">
-              <label class="rec-label" for="forgot-email">{{ 'authRecovery.emailLabel' | transloco }}</label>
-              <input id="forgot-email" class="rec-input" type="email" name="email"
-                     [(ngModel)]="email" autocomplete="email" placeholder="you@example.com" required>
-            </div>
+            <app-ui-input name="email" type="email" autocomplete="email" required
+                          placeholder="you@example.com"
+                          [label]="'authRecovery.emailLabel' | transloco" [(ngModel)]="email" />
 
             @if (error()) {
               <div class="rec-error" role="alert">
