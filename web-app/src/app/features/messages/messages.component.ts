@@ -5,11 +5,13 @@ import { catchError, of } from 'rxjs';
 import { TranslocoModule } from '@jsverse/transloco';
 import { MessagingService } from '../../core/services/messaging.service';
 import type { Conversation } from '../../core/services/messaging.service';
+import { UiInputComponent } from '../../shared/ui/ui-input.component';
+import { UiTextareaComponent } from '../../shared/ui/ui-textarea.component';
 
 @Component({
   selector: 'app-messages',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule],
+  imports: [CommonModule, FormsModule, TranslocoModule, UiInputComponent, UiTextareaComponent],
   styleUrls: ['../../shared/styles/dashboard.scss'],
   template: `
     <div class="dash-container">
@@ -28,8 +30,8 @@ import type { Conversation } from '../../core/services/messaging.service';
           <aside class="thread-list">
             @if (composing()) {
               <div class="compose card">
-                <input class="compose-subject" [(ngModel)]="newSubject" [placeholder]="'messages.subjectPlaceholder' | transloco" maxlength="200" />
-                <textarea class="compose-body" [(ngModel)]="newBody" [placeholder]="'messages.bodyPlaceholder' | transloco" rows="4" maxlength="4000"></textarea>
+                <app-ui-input [(ngModel)]="newSubject" [maxlength]="200" [placeholder]="'messages.subjectPlaceholder' | transloco" />
+                <app-ui-textarea [(ngModel)]="newBody" [rows]="4" [maxlength]="4000" [placeholder]="'messages.bodyPlaceholder' | transloco" />
                 <div class="compose-actions">
                   <button class="dash-cta dash-cta--ghost" (click)="cancelCompose()">{{ 'messages.cancel' | transloco }}</button>
                   <button class="dash-cta" [disabled]="!newSubject.trim() || !newBody.trim() || sending()" (click)="send()">

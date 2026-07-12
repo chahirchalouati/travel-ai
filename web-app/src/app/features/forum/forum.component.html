@@ -22,12 +22,12 @@
     @if (showForm()) {
       <form class="fo-form" (ngSubmit)="submit()" appReveal>
         <h3>{{ t('forum.askTitle') }}</h3>
-        <input class="fo-input" type="text" [(ngModel)]="formTitle" name="title"
-               [placeholder]="t('forum.titlePlaceholder')" maxlength="280" />
-        <textarea class="fo-input fo-textarea" rows="4" [(ngModel)]="formBody" name="body"
-                  [placeholder]="t('forum.bodyPlaceholder')"></textarea>
-        <input class="fo-input" type="text" [(ngModel)]="formLocation" name="location"
-               [placeholder]="t('forum.locationPlaceholder')" />
+        <app-ui-input name="title" [maxlength]="280" [(ngModel)]="formTitle"
+                      [placeholder]="t('forum.titlePlaceholder')" />
+        <app-ui-textarea name="body" [rows]="4" [(ngModel)]="formBody"
+                         [placeholder]="t('forum.bodyPlaceholder')" />
+        <app-ui-input name="location" [(ngModel)]="formLocation"
+                      [placeholder]="t('forum.locationPlaceholder')" />
         <div class="fo-form__actions">
           <button type="button" class="fo-btn" (click)="toggleForm()">{{ t('forum.cancel') }}</button>
           <button type="submit" class="fo-btn fo-btn--accent" [disabled]="submitting() || !formTitle.trim() || !formBody.trim()">

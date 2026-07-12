@@ -8,11 +8,12 @@ import { ForumService } from '../../core/services/forum.service';
 import { AuthService } from '../../core/services/auth.service';
 import type { ForumQuestionDetail, ForumAnswerResponse } from '../../core/models/api.models';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
+import { UiTextareaComponent } from '../../shared/ui/ui-textarea.component';
 
 @Component({
   selector: 'app-forum-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe, TranslocoModule, RevealDirective],
+  imports: [CommonModule, FormsModule, DatePipe, TranslocoModule, RevealDirective, UiTextareaComponent],
   templateUrl: './forum-detail.component.html',
   styleUrl: './forum-detail.component.scss',
 })

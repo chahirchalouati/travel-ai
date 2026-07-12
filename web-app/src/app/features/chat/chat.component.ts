@@ -13,6 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MarkdownPipe } from '../../shared/pipes/markdown.pipe';
 import { ChatMapComponent, MapPin } from './chat-map.component';
 import { EntityCardComponent, EntityAttachment } from './entity-card.component';
+import { UiInputComponent } from '../../shared/ui/ui-input.component';
 import type {
   ConversationResponse, ChatEntityAttachment,
   ItineraryPlanRequest, ItineraryPlanResponse,
@@ -31,7 +32,7 @@ interface ChatMsg {
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule, MarkdownPipe, ChatMapComponent, EntityCardComponent],
+  imports: [CommonModule, FormsModule, TranslocoModule, MarkdownPipe, ChatMapComponent, EntityCardComponent, UiInputComponent],
   template: `
     <div class="stage">
       <!-- Atmospheric backdrop -->
@@ -260,26 +261,18 @@ interface ChatMsg {
 
           @if (authMode() === 'register') {
             <div class="auth-names">
-              <div class="auth-field">
-                <label>{{ 'auth.firstName' | transloco }}</label>
-                <input [(ngModel)]="authFirstNameVal" placeholder="John">
-              </div>
-              <div class="auth-field">
-                <label>{{ 'auth.lastName' | transloco }}</label>
-                <input [(ngModel)]="authLastNameVal" placeholder="Doe">
-              </div>
+              <app-ui-input [(ngModel)]="authFirstNameVal" name="firstName" autocomplete="given-name"
+                            [label]="'auth.firstName' | transloco" placeholder="John" />
+              <app-ui-input [(ngModel)]="authLastNameVal" name="lastName" autocomplete="family-name"
+                            [label]="'auth.lastName' | transloco" placeholder="Doe" />
             </div>
           }
 
-          <div class="auth-field">
-            <label>{{ 'auth.email' | transloco }}</label>
-            <input [(ngModel)]="authEmailVal" type="email" placeholder="email@example.com">
-          </div>
+          <app-ui-input [(ngModel)]="authEmailVal" name="email" type="email" autocomplete="email"
+                        [label]="'auth.email' | transloco" placeholder="email@example.com" />
 
-          <div class="auth-field auth-field--last">
-            <label>{{ 'auth.password' | transloco }}</label>
-            <input [(ngModel)]="authPasswordVal" type="password" placeholder="••••••••">
-          </div>
+          <app-ui-input class="auth-field--last" [(ngModel)]="authPasswordVal" name="password" type="password"
+                        [label]="'auth.password' | transloco" placeholder="••••••••" />
 
           <button class="auth-submit" (click)="authMode() === 'login' ? loginAuth() : registerAuth()" [disabled]="authLoadingState" type="button">
             @if (authLoadingState) {

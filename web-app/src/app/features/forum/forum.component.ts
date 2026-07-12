@@ -8,6 +8,8 @@ import { ForumService } from '../../core/services/forum.service';
 import { AuthService } from '../../core/services/auth.service';
 import type { ForumQuestionResponse } from '../../core/models/api.models';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
+import { UiInputComponent } from '../../shared/ui/ui-input.component';
+import { UiTextareaComponent } from '../../shared/ui/ui-textarea.component';
 
 const HEADER_IMG =
   'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&q=80';
@@ -15,7 +17,7 @@ const HEADER_IMG =
 @Component({
   selector: 'app-forum',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe, TranslocoModule, RevealDirective],
+  imports: [CommonModule, FormsModule, DatePipe, TranslocoModule, RevealDirective, UiInputComponent, UiTextareaComponent],
   templateUrl: './forum.component.html',
   styleUrl: './forum.component.scss',
 })

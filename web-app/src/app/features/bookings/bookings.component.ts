@@ -9,6 +9,8 @@ import { InvoiceService } from '../../core/services/invoice.service';
 import { CalendarService } from '../../core/services/calendar.service';
 import { ReviewService } from '../../core/services/review.service';
 import type { BookingResponse, CancellationPreview } from '../../core/models/api.models';
+import { UiInputComponent } from '../../shared/ui/ui-input.component';
+import { UiTextareaComponent } from '../../shared/ui/ui-textarea.component';
 
 /** Maps a booking to the reviewable catalog entity it represents. */
 interface ReviewTarget {
@@ -19,7 +21,7 @@ interface ReviewTarget {
 @Component({
   selector: 'app-bookings',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule],
+  imports: [CommonModule, FormsModule, TranslocoModule, UiInputComponent, UiTextareaComponent],
   styleUrls: ['../../shared/styles/dashboard.scss'],
   template: `
     <div class="dash-container">
@@ -129,8 +131,8 @@ interface ReviewTarget {
                           <li>{{ 'cancellation.tierNone' | transloco }}</li>
                         </ul>
                       </div>
-                      <textarea class="review-input" rows="2" [(ngModel)]="cancelReason"
-                                [placeholder]="'cancellation.reasonPlaceholder' | transloco" maxlength="500"></textarea>
+                      <app-ui-textarea [rows]="2" [(ngModel)]="cancelReason" [maxlength]="500"
+                                       [placeholder]="'cancellation.reasonPlaceholder' | transloco" />
                       <div class="review-actions">
                         <button class="review-cancel" (click)="closeCancel()">{{ 'cancellation.keep' | transloco }}</button>
                         <button class="cancel-confirm" (click)="confirmCancel(b)" [disabled]="cancelling() === b.id">
@@ -165,10 +167,10 @@ interface ReviewTarget {
                       </button>
                     }
                   </div>
-                  <input class="review-input" type="text" [(ngModel)]="draftTitle"
-                         [placeholder]="'bookings.reviewTitle' | transloco" maxlength="120" />
-                  <textarea class="review-input" rows="3" [(ngModel)]="draftContent"
-                            [placeholder]="'bookings.reviewBody' | transloco" maxlength="2000"></textarea>
+                  <app-ui-input [(ngModel)]="draftTitle" [maxlength]="120"
+                                [placeholder]="'bookings.reviewTitle' | transloco" />
+                  <app-ui-textarea [rows]="3" [(ngModel)]="draftContent" [maxlength]="2000"
+                                   [placeholder]="'bookings.reviewBody' | transloco" />
                   <div class="review-actions">
                     <button class="review-cancel" (click)="closeReview()">{{ 'booking.flow.cancel' | transloco }}</button>
                     <button class="review-submit" (click)="submitReview(b)"

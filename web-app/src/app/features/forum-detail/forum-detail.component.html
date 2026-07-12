@@ -73,8 +73,8 @@
         <!-- Answer form -->
         <section class="fd-reply" appReveal>
           <h3>{{ t('forum.yourAnswer') }}</h3>
-          <textarea class="fd-input" rows="4" [(ngModel)]="answerText" name="answer"
-                    [placeholder]="t('forum.answerPlaceholder')"></textarea>
+          <app-ui-textarea name="answer" [rows]="4" [(ngModel)]="answerText"
+                           [placeholder]="t('forum.answerPlaceholder')" />
           <div class="fd-reply__actions">
             <button class="fd-btn fd-btn--accent" [disabled]="submitting() || !answerText.trim()" (click)="submitAnswer()">
               {{ submitting() ? t('forum.posting') : (isAuthenticated() ? t('forum.postAnswer') : t('forum.signInToAnswer')) }}
