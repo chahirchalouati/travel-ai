@@ -38,23 +38,22 @@
       </p>
 
       <div class="hero-search reveal reveal-delay-3">
-        <div class="search-bar" role="search">
-          <span class="search-icon ms" aria-hidden="true">auto_awesome</span>
-          <input
-            type="text"
-            class="search-input"
-            [value]="searchQuery()"
-            (focus)="onSearchFocus()"
-            (input)="searchQuery.set($any($event.target).value)"
-            (keyup.enter)="planTrip()"
-            [placeholder]="'hero.searchPlaceholder' | transloco"
-            autocomplete="off"
-            [attr.aria-label]="'hero.searchAria' | transloco"
-          />
-          <button class="search-submit" (click)="planTrip()" [attr.aria-label]="'hero.buildAria' | transloco">
+        <app-ui-input
+          class="hero-search__field"
+          variant="search"
+          icon="auto_awesome"
+          [actionInset]="true"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+          (focusin)="onSearchFocus()"
+          (keyup.enter)="planTrip()"
+          [placeholder]="'hero.searchPlaceholder' | transloco"
+          [ariaLabel]="'hero.searchAria' | transloco"
+        >
+          <button uiInAction class="search-submit" (click)="planTrip()" [attr.aria-label]="'hero.buildAria' | transloco">
             <span class="ms" aria-hidden="true">arrow_forward</span>
           </button>
-        </div>
+        </app-ui-input>
 
         <div class="hero-quick-picks" role="list" [attr.aria-label]="'hero.tryAria' | transloco">
           <span class="hero-quick-label">{{ 'hero.tryLabel' | transloco }}</span>

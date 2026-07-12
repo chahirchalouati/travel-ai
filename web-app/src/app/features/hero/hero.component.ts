@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { UiInputComponent } from '../../shared/ui/ui-input.component';
 
 type ItemKind = 'flight' | 'stay' | 'do' | 'eat';
 
@@ -49,7 +50,7 @@ interface QuickPick {
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule],
+  imports: [CommonModule, FormsModule, TranslocoModule, UiInputComponent],
   templateUrl: './hero.component.html',
   styleUrl: './hero.component.scss',
 })

@@ -140,42 +140,22 @@ section {
   margin-top: 1.75rem;
 }
 
-.search-bar {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.4rem 0.4rem 1.1rem;
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  border: 1px solid var(--color-ink);
-  box-shadow: none;
-  transition: box-shadow var(--duration-normal) var(--ease);
-
-  &:focus-within {
-    box-shadow: var(--ring-focus);
-  }
-}
-
-.search-icon {
-  flex-shrink: 0;
-  color: var(--color-red-ink);
-  font-size: 1.25rem;
-}
-
-.search-input {
-  flex: 1;
-  min-width: 0;
-  background: none;
-  border: none;
-  outline: none;
-  color: var(--text-primary);
-  font-family: var(--font-body);
-  font-size: 0.98rem;
-  padding: 0.7rem 0;
-
-  &::placeholder {
-    color: var(--text-tertiary);
-  }
+/* The hero pill is app-ui-input (variant=search) themed via --ui-in-* tokens:
+   ink border, red leading icon, a roomier field, and a flush trailing submit. */
+.hero-search__field {
+  --ui-in-border: var(--color-ink);
+  --ui-in-border-hover: var(--color-ink);
+  --ui-in-radius: var(--radius-sm);
+  --ui-in-icon: var(--color-red-ink);
+  --ui-in-icon-focus: var(--color-red-ink);
+  --ui-in-icon-size: 1.25rem;
+  --ui-in-font-family: var(--font-body);
+  --ui-in-font-size: 0.98rem;
+  --ui-in-pad-y: 0.4rem;
+  --ui-in-pad-x: 1.1rem;
+  --ui-in-pad-r: 0.4rem;
+  --ui-in-gap: 0.5rem;
+  --ui-in-bar-width: 0px;
 }
 
 .search-submit {
