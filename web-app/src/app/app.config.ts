@@ -1,5 +1,5 @@
 import { ApplicationConfig, isDevMode, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideServiceWorker } from '@angular/service-worker';
@@ -13,7 +13,12 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideAnimationsAsync(),
-    provideRouter(routes),
+    provideRouter(
+      routes,
+      // Reset to the top on forward navigation; restore the saved position on
+      // back/forward so browser history still feels right.
+      withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' }),
+    ),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideTransloco({
       config: {
