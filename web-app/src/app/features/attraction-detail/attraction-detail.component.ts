@@ -14,13 +14,15 @@ import type {
   CreateReviewRequest,
 } from '../../core/models/api.models';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
+import { UiInputComponent } from '../../shared/ui/ui-input.component';
+import { UiTextareaComponent } from '../../shared/ui/ui-textarea.component';
 
 const TARGET_TYPE = 'ATTRACTION';
 
 @Component({
   selector: 'app-attraction-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, RevealDirective],
+  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, RevealDirective, UiInputComponent, UiTextareaComponent],
   templateUrl: './attraction-detail.component.html',
   styleUrl: './attraction-detail.component.scss',
 })

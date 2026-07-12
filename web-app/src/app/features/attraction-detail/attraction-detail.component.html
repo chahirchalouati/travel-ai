@@ -113,11 +113,11 @@
                 }
               </div>
             </div>
-            <input class="ad-input" type="text" [(ngModel)]="formTitle" name="title"
-                   [placeholder]="t('attractions.reviewTitlePlaceholder')" maxlength="120" />
-            <textarea class="ad-input ad-textarea" [(ngModel)]="formContent" name="content" rows="4"
-                      [placeholder]="t('attractions.reviewBodyPlaceholder')"
-                      [class.is-error]="formError() === 'content'"></textarea>
+            <app-ui-input name="title" [(ngModel)]="formTitle" [maxlength]="120"
+                          [placeholder]="t('attractions.reviewTitlePlaceholder')" />
+            <app-ui-textarea name="content" [rows]="4" [(ngModel)]="formContent"
+                             [placeholder]="t('attractions.reviewBodyPlaceholder')"
+                             [invalid]="formError() === 'content'" />
             @if (formError() === 'submit') {
               <p class="ad-form__err">{{ t('attractions.reviewError') }}</p>
             }

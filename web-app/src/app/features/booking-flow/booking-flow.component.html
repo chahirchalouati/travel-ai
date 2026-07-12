@@ -125,16 +125,16 @@
                   @if (t.primary) { <span class="bf-badge">{{ 'booking.flow.primary' | transloco }}</span> }
                 </legend>
                 <div class="bf-row">
-                  <input type="text" class="bf-input" [ngModel]="t.firstName"
-                         (ngModelChange)="store.updateTraveler($index, { firstName: $event })"
-                         [placeholder]="'booking.flow.firstName' | transloco" />
-                  <input type="text" class="bf-input" [ngModel]="t.lastName"
-                         (ngModelChange)="store.updateTraveler($index, { lastName: $event })"
-                         [placeholder]="'booking.flow.lastName' | transloco" />
+                  <app-ui-input [ngModel]="t.firstName"
+                                (ngModelChange)="store.updateTraveler($index, { firstName: $event })"
+                                [placeholder]="'booking.flow.firstName' | transloco" />
+                  <app-ui-input [ngModel]="t.lastName"
+                                (ngModelChange)="store.updateTraveler($index, { lastName: $event })"
+                                [placeholder]="'booking.flow.lastName' | transloco" />
                 </div>
-                <input type="text" class="bf-input" [ngModel]="t.documentNumber"
-                       (ngModelChange)="store.updateTraveler($index, { documentNumber: $event })"
-                       [placeholder]="'booking.flow.document' | transloco" />
+                <app-ui-input [ngModel]="t.documentNumber"
+                              (ngModelChange)="store.updateTraveler($index, { documentNumber: $event })"
+                              [placeholder]="'booking.flow.document' | transloco" />
               </fieldset>
             }
           </section>

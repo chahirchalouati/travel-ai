@@ -15,13 +15,15 @@ import type {
   CreateReviewRequest,
 } from '../../core/models/api.models';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
+import { UiInputComponent } from '../../shared/ui/ui-input.component';
+import { UiTextareaComponent } from '../../shared/ui/ui-textarea.component';
 
 const TARGET_TYPE = 'HOTEL';
 
 @Component({
   selector: 'app-hotel-detail',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, DatePipe, FormsModule, TranslocoModule, RevealDirective],
+  imports: [CommonModule, CurrencyPipe, DatePipe, FormsModule, TranslocoModule, RevealDirective, UiInputComponent, UiTextareaComponent],
   template: `
     @if (hotel(); as h) {
       <nav style="padding: 16px 32px; max-width: 1100px; margin: 0 auto; display:flex; align-items:center; justify-content:space-between;">
@@ -213,11 +215,11 @@ const TARGET_TYPE = 'HOTEL';
                     </div>
                   </div>
 
-                  <input class="form-input" type="text" [(ngModel)]="formTitle" name="title"
-                         [placeholder]="'attractions.reviewTitlePlaceholder' | transloco" maxlength="120" />
-                  <textarea class="form-input form-textarea" [(ngModel)]="formContent" name="content" rows="4"
-                            [placeholder]="'attractions.reviewBodyPlaceholder' | transloco"
-                            [class.is-error]="formError() === 'content'"></textarea>
+                  <app-ui-input name="title" [(ngModel)]="formTitle" [maxlength]="120"
+                                [placeholder]="'attractions.reviewTitlePlaceholder' | transloco" />
+                  <app-ui-textarea name="content" [rows]="4" [(ngModel)]="formContent"
+                                   [placeholder]="'attractions.reviewBodyPlaceholder' | transloco"
+                                   [invalid]="formError() === 'content'" />
                   @if (formError() === 'submit') {
                     <p class="form-error">{{ 'attractions.reviewError' | transloco }}</p>
                   }

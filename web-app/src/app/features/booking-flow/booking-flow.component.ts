@@ -13,6 +13,7 @@ import { SubscriptionService } from '../../core/services/subscription.service';
 import type { BookingResponse, MemberRewardResponse, PaymentGateway } from '../../core/models/api.models';
 import { BookingDraftService } from './booking-draft.service';
 import { TripCartService } from './trip-cart.service';
+import { UiInputComponent } from '../../shared/ui/ui-input.component';
 
 type Step = 'configure' | 'travelers' | 'review' | 'done';
 
@@ -29,7 +30,7 @@ const VERTICAL_ICON: Record<string, string> = {
 @Component({
   selector: 'app-booking-flow',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule],
+  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, TranslocoModule, UiInputComponent],
   templateUrl: './booking-flow.component.html',
   styleUrl: './booking-flow.component.scss',
 })

@@ -10,6 +10,8 @@ import { TripContextService } from '../../core/services/trip-context.service';
 import { FavoritesService } from '../../core/services/favorites.service';
 import type { RestaurantSearchResult, RestaurantSlot, ReviewSummary } from '../../core/models/api.models';
 import { RevealDirective } from '../../shared/reveal/reveal.directive';
+import { UiInputComponent } from '../../shared/ui/ui-input.component';
+import { UiDatepickerComponent } from '../../shared/ui/ui-datepicker.component';
 import { BookingDraftService } from '../booking-flow/booking-draft.service';
 
 const PRICE_TIER_LABELS: Record<number, string> = {
@@ -35,7 +37,7 @@ function localToday(): string {
 @Component({
   selector: 'app-restaurant-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule, RevealDirective],
+  imports: [CommonModule, FormsModule, TranslocoModule, RevealDirective, UiInputComponent, UiDatepickerComponent],
   template: `
     @if (restaurant(); as r) {
       <nav style="padding: 16px 32px; max-width: 1100px; margin: 0 auto; display:flex; align-items:center; justify-content:space-between;">
@@ -210,13 +212,15 @@ function localToday(): string {
                 <div class="reserve__controls">
                   <label class="reserve__field">
                     <span>{{ 'restaurant.pickDate' | transloco }}</span>
-                    <input type="date" [ngModel]="reserveDate()" [min]="today"
-                           (ngModelChange)="onDateChange($event)" />
+                    <app-ui-datepicker [ngModel]="reserveDate()" [min]="today"
+                                       (ngModelChange)="onDateChange($event)"
+                                       [ariaLabel]="'restaurant.pickDate' | transloco" />
                   </label>
                   <label class="reserve__field">
                     <span>{{ 'restaurant.guests' | transloco }}</span>
-                    <input type="number" min="1" max="12" [ngModel]="covers()"
-                           (ngModelChange)="onCoversChange($event)" />
+                    <app-ui-input type="number" [min]="1" [max]="12" [ngModel]="covers()"
+                                  (ngModelChange)="onCoversChange($event)"
+                                  [ariaLabel]="'restaurant.guests' | transloco" />
                   </label>
                 </div>
 
