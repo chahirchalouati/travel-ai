@@ -62,6 +62,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/press/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/help/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/site-content/**").permitAll()
+                        .requestMatchers("/api/favorites/**").authenticated()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/api/webhooks/**").permitAll()
                         .requestMatchers("/api/api-docs/**").permitAll()
