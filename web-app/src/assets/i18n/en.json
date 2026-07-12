@@ -2069,5 +2069,212 @@
       "addAllNote": "Adds the hotel, flight and restaurants to your trip cart for one checkout.",
       "daysLabel": "days"
     }
+  },
+  "planner": {
+    "restart": "Restart",
+    "intake": {
+      "title": "Plan the trip",
+      "sub": "Set the parameters, the AI does the rest",
+      "budget": "Budget",
+      "required": "required",
+      "total": "total",
+      "dates": "Dates",
+      "fixed": "Fixed",
+      "flex": "Flexible ±3d",
+      "nights": "Nights",
+      "people": "Travellers",
+      "adults": "Adults",
+      "children": "Children",
+      "optional": "optional",
+      "priority": "Spending priority",
+      "prioritySub": "Where would you rather spend more?",
+      "constraints": "Constraints"
+    },
+    "priority": {
+      "food": "Food",
+      "stay": "Stay",
+      "balanced": "Balanced"
+    },
+    "constraints": {
+      "sea": "Sea",
+      "pets": "Pets",
+      "accessible": "Accessible",
+      "family": "Family"
+    },
+    "destination": {
+      "openTitle": "Open destination",
+      "openSub": "AI picks based on your budget",
+      "setTitle": "Seaside city",
+      "setSub": "Suggested by AI · click to reopen"
+    },
+    "generate": {
+      "label": "Generate AI proposals",
+      "again": "Regenerate proposals"
+    },
+    "empty": {
+      "title": "Ready to compose your trip",
+      "sub": "Set budget, dates and priorities in the left panel, then generate. The AI builds 2–3 complete packages — hotel, restaurants and flight — within your budget."
+    },
+    "generating": {
+      "title": "Composing your trip",
+      "sub": "AI agents searching in parallel",
+      "footer": "proprietary agents · rate-limited · budget-aware"
+    },
+    "agents": {
+      "orchestrator": {
+        "name": "Orchestrator Agent",
+        "task": "Normalising input & budget"
+      },
+      "hotel": {
+        "name": "Hotel Agent",
+        "task": "Matching stays in the DB"
+      },
+      "restaurant": {
+        "name": "Restaurant Agent",
+        "task": "Direct partners in the area"
+      },
+      "flight": {
+        "name": "Flight Agent",
+        "task": "Flights within remaining budget"
+      },
+      "ranking": {
+        "name": "Ranking Agent",
+        "task": "Builds 2–3 coherent packages"
+      }
+    },
+    "results": {
+      "title": "Your proposals",
+      "recommended": "Recommended",
+      "view": "Detail",
+      "regenerate": "New proposals",
+      "fitIn": "in budget",
+      "fitOver": "over budget",
+      "empty": "No proposals available right now."
+    },
+    "notice": {
+      "offline": "AI service unreachable — no proposals to show. Please try again shortly.",
+      "slow": "The AI is taking longer than usual — no proposals yet. Try again in a moment.",
+      "dismiss": "Dismiss"
+    },
+    "detail": {
+      "back": "Back to proposals",
+      "breakdown": "Budget breakdown",
+      "vsBudget": "of your budget",
+      "ideal": "Ideal split for your priorities",
+      "elements": "Trip components",
+      "change": "Change",
+      "book": "Book"
+    },
+    "booking": {
+      "title": "Booking",
+      "checking": "Real-time availability",
+      "traveler": "Traveller",
+      "summary": "Cost summary",
+      "total": "Total",
+      "continue": "Go to payment",
+      "waiting": "Checking availability…",
+      "error": "Could not confirm the booking. Please try again."
+    },
+    "payment": {
+      "title": "Payment",
+      "paying": "You’re paying",
+      "how": "How would you like to pay",
+      "full": "Pay in full",
+      "fullSub": "Pay everything now",
+      "install": "Pay in instalments",
+      "plan": "3-instalment plan",
+      "now": "Today",
+      "platform": "The platform collects the full amount immediately, even on instalments: default risk stays with the gateway, never the partners.",
+      "payFull": "Pay €",
+      "payInstall": "Start Klarna · €"
+    },
+    "confirmation": {
+      "title": "Trip confirmed!",
+      "sub": "Bookings sent, confirmations on their way by email.",
+      "concierge": "Travel Concierge",
+      "conciergeSub": "Your in-stay AI assistant. It unlocks 3 days before departure.",
+      "open": "Open Concierge",
+      "restart": "Restart the flow",
+      "concept": "CONCEPT"
+    },
+    "concierge": {
+      "title": "Concierge AI",
+      "context": "I already know your trip: hotel, dates and group. Just ask in plain language.",
+      "suggestion": "Find me a table tonight near the hotel",
+      "placeholder": "Type a request…",
+      "error": "The concierge is unavailable right now. Please try again shortly."
+    },
+    "steps": {
+      "plan": "Plan",
+      "proposals": "Proposals",
+      "detail": "Detail",
+      "book": "Checkout"
+    },
+    "session": {
+      "signOut": "Sign out",
+      "signIn": "Sign in"
+    },
+    "pill": {
+      "hotel": "Hotel",
+      "restaurants": "Restaurants",
+      "flight": "Flight"
+    },
+    "auth": {
+      "signIn": "Sign in",
+      "register": "Register",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "passwordPlaceholder": "At least 8 characters",
+      "loading": "Loading...",
+      "create": "Create account",
+      "emailRequired": "Enter your email and password.",
+      "fieldsRequired": "Please fill in all fields.",
+      "invalid": "Invalid credentials.",
+      "registerError": "Registration failed.",
+      "firstPlaceholder": "John",
+      "lastPlaceholder": "Doe"
+    },
+    "check": {
+      "restaurants": "Partner restaurants",
+      "flight": "Round-trip flight",
+      "available": "Available",
+      "checking": "Checking…"
+    },
+    "traveler": {
+      "adults": "adults",
+      "children": "children"
+    },
+    "summary": {
+      "nights": "nights",
+      "people": "ppl",
+      "prioFood": "food priority",
+      "prioStay": "stay priority",
+      "prioBalanced": "balanced"
+    },
+    "installment": {
+      "sub": "3 payments of €"
+    },
+    "confirmed": {
+      "hotel": "Hotel booked",
+      "restaurants": "Restaurants confirmed",
+      "flight": "Flight issued"
+    },
+    "proposal": {
+      "restaurantsRecommended": "Recommended restaurants",
+      "flightRoundtrip": "Round-trip",
+      "whyDefault": "Optimised for your preferences.",
+      "hotelSea": " · sea",
+      "localCuisine": "Local cuisine",
+      "bagIncluded": "Bag included",
+      "carryOn": "Carry-on",
+      "freeCancel": "Free cancellation up to 7 days before.",
+      "perPerson": "per person",
+      "underBudget": "under budget · "
+    },
+    "split": {
+      "stay": "Stay",
+      "food": "Food",
+      "transport": "Transport"
+    }
   }
 }

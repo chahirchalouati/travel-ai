@@ -2069,5 +2069,212 @@
       "addAllNote": "Añade el hotel, el vuelo y los restaurantes a tu carrito para un solo pago.",
       "daysLabel": "días"
     }
+  },
+  "planner": {
+    "restart": "Reiniciar",
+    "intake": {
+      "title": "Planifica el viaje",
+      "sub": "Configura los parámetros, la IA hace el resto",
+      "budget": "Presupuesto",
+      "required": "obligatorio",
+      "total": "total",
+      "dates": "Fechas",
+      "fixed": "Fijas",
+      "flex": "Flexibles ±3d",
+      "nights": "Noches",
+      "people": "Viajeros",
+      "adults": "Adultos",
+      "children": "Niños",
+      "optional": "opcional",
+      "priority": "Prioridad de gasto",
+      "prioritySub": "¿En qué prefieres gastar más?",
+      "constraints": "Restricciones"
+    },
+    "priority": {
+      "food": "Gastronomía",
+      "stay": "Alojamiento",
+      "balanced": "Equilibrado"
+    },
+    "constraints": {
+      "sea": "Mar",
+      "pets": "Mascotas",
+      "accessible": "Accesible",
+      "family": "Familias"
+    },
+    "destination": {
+      "openTitle": "Destino abierto",
+      "openSub": "La IA elige según tu presupuesto",
+      "setTitle": "Ciudad costera",
+      "setSub": "Sugerida por la IA · haz clic para reabrir"
+    },
+    "generate": {
+      "label": "Generar propuestas IA",
+      "again": "Regenerar propuestas"
+    },
+    "empty": {
+      "title": "Listo para componer tu viaje",
+      "sub": "Configura presupuesto, fechas y prioridades en el panel izquierdo, luego genera. La IA compone 2–3 paquetes completos — hotel, restaurantes y vuelo — dentro de tu presupuesto."
+    },
+    "generating": {
+      "title": "Componiendo tu viaje",
+      "sub": "Los agentes IA buscan en paralelo",
+      "footer": "agentes propietarios · con límites · budget-aware"
+    },
+    "agents": {
+      "orchestrator": {
+        "name": "Agente Orquestador",
+        "task": "Normaliza entradas y presupuesto"
+      },
+      "hotel": {
+        "name": "Agente Hotel",
+        "task": "Alojamientos compatibles en la BDD"
+      },
+      "restaurant": {
+        "name": "Agente Restaurantes",
+        "task": "Socios directos en la zona"
+      },
+      "flight": {
+        "name": "Agente Vuelos",
+        "task": "Vuelos en el presupuesto restante"
+      },
+      "ranking": {
+        "name": "Agente de Ranking",
+        "task": "Compone 2–3 paquetes coherentes"
+      }
+    },
+    "results": {
+      "title": "Tus propuestas",
+      "recommended": "Recomendada",
+      "view": "Detalle",
+      "regenerate": "Nuevas propuestas",
+      "fitIn": "dentro del presupuesto",
+      "fitOver": "fuera del presupuesto",
+      "empty": "No hay propuestas disponibles por ahora."
+    },
+    "notice": {
+      "offline": "Servicio de IA no disponible — no hay propuestas para mostrar. Inténtalo de nuevo en un momento.",
+      "slow": "La IA está tardando más de lo habitual — todavía no hay propuestas. Inténtalo de nuevo pronto.",
+      "dismiss": "Cerrar"
+    },
+    "detail": {
+      "back": "Volver a propuestas",
+      "breakdown": "Desglose del presupuesto",
+      "vsBudget": "de tu presupuesto",
+      "ideal": "Desglose ideal según tus prioridades",
+      "elements": "Componentes del viaje",
+      "change": "Cambiar",
+      "book": "Reservar"
+    },
+    "booking": {
+      "title": "Reserva",
+      "checking": "Disponibilidad en tiempo real",
+      "traveler": "Viajero",
+      "summary": "Resumen de costes",
+      "total": "Total",
+      "continue": "Ir al pago",
+      "waiting": "Verificando disponibilidad…",
+      "error": "No se pudo confirmar la reserva. Inténtalo de nuevo."
+    },
+    "payment": {
+      "title": "Pago",
+      "paying": "Estás pagando",
+      "how": "¿Cómo quieres pagar?",
+      "full": "Pago único",
+      "fullSub": "Paga todo ahora",
+      "install": "Pago a plazos",
+      "plan": "Plan en 3 cuotas",
+      "now": "Hoy",
+      "platform": "La plataforma cobra el importe total de inmediato, incluso a plazos: el riesgo de impago queda en el gateway, nunca en los socios.",
+      "payFull": "Pagar €",
+      "payInstall": "Activar Klarna · €"
+    },
+    "confirmation": {
+      "title": "¡Viaje confirmado!",
+      "sub": "Reservas enviadas, confirmaciones en camino por email.",
+      "concierge": "Travel Concierge",
+      "conciergeSub": "Tu asistente IA durante la estancia. Se activa 3 días antes de la salida.",
+      "open": "Abrir Concierge",
+      "restart": "Reiniciar el flujo",
+      "concept": "CONCEPT"
+    },
+    "concierge": {
+      "title": "Concierge IA",
+      "context": "Ya conozco tu viaje: hotel, fechas y grupo. Pregúntame en lenguaje natural.",
+      "suggestion": "Encuéntrame una mesa esta noche cerca del hotel",
+      "placeholder": "Escribe una solicitud…",
+      "error": "El conserje no está disponible ahora mismo. Inténtalo de nuevo en un momento."
+    },
+    "steps": {
+      "plan": "Planificar",
+      "proposals": "Propuestas",
+      "detail": "Detalle",
+      "book": "Pago"
+    },
+    "session": {
+      "signOut": "Cerrar sesión",
+      "signIn": "Iniciar sesión"
+    },
+    "pill": {
+      "hotel": "Hotel",
+      "restaurants": "Restaurantes",
+      "flight": "Vuelo"
+    },
+    "auth": {
+      "signIn": "Iniciar sesión",
+      "register": "Registrarse",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "passwordPlaceholder": "Al menos 8 caracteres",
+      "loading": "Cargando...",
+      "create": "Crear cuenta",
+      "emailRequired": "Ingresa tu email y contraseña.",
+      "fieldsRequired": "Por favor completa todos los campos.",
+      "invalid": "Credenciales inválidas.",
+      "registerError": "Error en el registro.",
+      "firstPlaceholder": "Juan",
+      "lastPlaceholder": "García"
+    },
+    "check": {
+      "restaurants": "Restaurantes socios",
+      "flight": "Vuelo ida y vuelta",
+      "available": "Disponible",
+      "checking": "Verificando…"
+    },
+    "traveler": {
+      "adults": "adultos",
+      "children": "niños"
+    },
+    "summary": {
+      "nights": "noches",
+      "people": "pers.",
+      "prioFood": "prioridad gastronomía",
+      "prioStay": "prioridad alojamiento",
+      "prioBalanced": "equilibrado"
+    },
+    "installment": {
+      "sub": "3 pagos de €"
+    },
+    "confirmed": {
+      "hotel": "Hotel reservado",
+      "restaurants": "Restaurantes confirmados",
+      "flight": "Vuelo emitido"
+    },
+    "proposal": {
+      "restaurantsRecommended": "Restaurantes recomendados",
+      "flightRoundtrip": "Vuelo ida y vuelta",
+      "whyDefault": "Optimizado para tus preferencias.",
+      "hotelSea": " · mar",
+      "localCuisine": "Cocina local",
+      "bagIncluded": "Equipaje incluido",
+      "carryOn": "Equipaje de mano",
+      "freeCancel": "Cancelación gratuita hasta 7 días antes.",
+      "perPerson": "por persona",
+      "underBudget": "dentro del presupuesto · "
+    },
+    "split": {
+      "stay": "Alojamiento",
+      "food": "Gastronomía",
+      "transport": "Transportes"
+    }
   }
 }

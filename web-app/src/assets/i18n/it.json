@@ -2069,5 +2069,212 @@
       "addAllNote": "Aggiunge hotel, volo e ristoranti al carrello viaggio per un unico checkout.",
       "daysLabel": "giorni"
     }
+  },
+  "planner": {
+    "restart": "Riavvia",
+    "intake": {
+      "title": "Pianifica il viaggio",
+      "sub": "Imposta i parametri, l’AI fa il resto",
+      "budget": "Budget",
+      "required": "obbligatorio",
+      "total": "totale",
+      "dates": "Date",
+      "fixed": "Fisse",
+      "flex": "Flessibili ±3g",
+      "nights": "Notti",
+      "people": "Viaggiatori",
+      "adults": "Adulti",
+      "children": "Bambini",
+      "optional": "opzionale",
+      "priority": "Priorità di spesa",
+      "prioritySub": "Su cosa preferisci spendere di più?",
+      "constraints": "Vincoli"
+    },
+    "priority": {
+      "food": "Cibo",
+      "stay": "Alloggio",
+      "balanced": "Bilanciato"
+    },
+    "constraints": {
+      "sea": "Mare",
+      "pets": "Animali",
+      "accessible": "Accessibile",
+      "family": "Famiglie"
+    },
+    "destination": {
+      "openTitle": "Destinazione aperta",
+      "openSub": "L’AI sceglie in base al budget",
+      "setTitle": "Città di mare",
+      "setSub": "Suggerita dall’AI · clic per riaprire"
+    },
+    "generate": {
+      "label": "Genera proposte AI",
+      "again": "Rigenera proposte"
+    },
+    "empty": {
+      "title": "Pronto a comporre il tuo viaggio",
+      "sub": "Imposta budget, date e priorità nel pannello a sinistra, poi genera. L’AI compone 2–3 pacchetti completi — hotel, ristoranti e volo — entro il tuo budget."
+    },
+    "generating": {
+      "title": "Sto componendo il tuo viaggio",
+      "sub": "Gli agenti AI cercano in parallelo",
+      "footer": "agenti proprietari · rate-limited · budget-aware"
+    },
+    "agents": {
+      "orchestrator": {
+        "name": "Agente Orchestratore",
+        "task": "Normalizza input e budget"
+      },
+      "hotel": {
+        "name": "Agente Hotel",
+        "task": "Strutture compatibili nel DB"
+      },
+      "restaurant": {
+        "name": "Agente Ristoranti",
+        "task": "Partner diretti in zona"
+      },
+      "flight": {
+        "name": "Agente Voli",
+        "task": "Voli nel budget residuo"
+      },
+      "ranking": {
+        "name": "Agente di Ranking",
+        "task": "Compone 2–3 pacchetti coerenti"
+      }
+    },
+    "results": {
+      "title": "Le tue proposte",
+      "recommended": "Consigliata",
+      "view": "Dettaglio",
+      "regenerate": "Nuove proposte",
+      "fitIn": "in budget",
+      "fitOver": "oltre budget",
+      "empty": "Nessuna proposta disponibile al momento."
+    },
+    "notice": {
+      "offline": "Servizio AI non raggiungibile — nessuna proposta da mostrare. Riprova tra poco.",
+      "slow": "L’AI sta impiegando più del previsto — nessuna proposta ancora. Riprova tra poco.",
+      "dismiss": "Chiudi"
+    },
+    "detail": {
+      "back": "Torna alle proposte",
+      "breakdown": "Ripartizione budget",
+      "vsBudget": "sul tuo budget",
+      "ideal": "Ripartizione ideale per le tue priorità",
+      "elements": "Componenti del viaggio",
+      "change": "Cambia",
+      "book": "Prenota"
+    },
+    "booking": {
+      "title": "Prenotazione",
+      "checking": "Disponibilità in tempo reale",
+      "traveler": "Viaggiatore",
+      "summary": "Riepilogo costi",
+      "total": "Totale",
+      "continue": "Vai al pagamento",
+      "waiting": "Verifica disponibilità…",
+      "error": "Impossibile confermare la prenotazione. Riprova."
+    },
+    "payment": {
+      "title": "Pagamento",
+      "paying": "Stai pagando",
+      "how": "Come vuoi pagare",
+      "full": "Saldo unico",
+      "fullSub": "Paga tutto adesso",
+      "install": "Pagamento rateale",
+      "plan": "Piano in 3 rate",
+      "now": "Oggi",
+      "platform": "La piattaforma incassa l’intero importo subito, anche con rate: il rischio insoluto resta al gateway, mai alle strutture.",
+      "payFull": "Paga €",
+      "payInstall": "Attiva Klarna · €"
+    },
+    "confirmation": {
+      "title": "Viaggio confermato!",
+      "sub": "Prenotazioni inviate, conferme in arrivo via email.",
+      "concierge": "Travel Concierge",
+      "conciergeSub": "La tua assistente AI durante il soggiorno. Si attiva 3 giorni prima della partenza.",
+      "open": "Apri il Concierge",
+      "restart": "Ricomincia il flusso",
+      "concept": "CONCEPT"
+    },
+    "concierge": {
+      "title": "Concierge AI",
+      "context": "Conosco già il tuo viaggio: hotel, date e gruppo. Chiedimi pure in linguaggio naturale.",
+      "suggestion": "Trovami un tavolo per stasera vicino all’hotel",
+      "placeholder": "Scrivi una richiesta…",
+      "error": "Il concierge non è al momento raggiungibile. Riprova tra poco."
+    },
+    "steps": {
+      "plan": "Pianifica",
+      "proposals": "Proposte",
+      "detail": "Dettaglio",
+      "book": "Checkout"
+    },
+    "session": {
+      "signOut": "Esci",
+      "signIn": "Accedi"
+    },
+    "pill": {
+      "hotel": "Hotel",
+      "restaurants": "Ristoranti",
+      "flight": "Volo"
+    },
+    "auth": {
+      "signIn": "Accedi",
+      "register": "Registrati",
+      "firstName": "Nome",
+      "lastName": "Cognome",
+      "passwordPlaceholder": "Almeno 8 caratteri",
+      "loading": "Caricamento...",
+      "create": "Crea account",
+      "emailRequired": "Inserisci email e password.",
+      "fieldsRequired": "Compila tutti i campi.",
+      "invalid": "Credenziali non valide.",
+      "registerError": "Errore durante la registrazione.",
+      "firstPlaceholder": "Marco",
+      "lastPlaceholder": "Bianchi"
+    },
+    "check": {
+      "restaurants": "Ristoranti partner",
+      "flight": "Volo A/R",
+      "available": "Disponibile",
+      "checking": "Verifica…"
+    },
+    "traveler": {
+      "adults": "adulti",
+      "children": "bambini"
+    },
+    "summary": {
+      "nights": "notti",
+      "people": "pers.",
+      "prioFood": "priorità cibo",
+      "prioStay": "priorità alloggio",
+      "prioBalanced": "bilanciato"
+    },
+    "installment": {
+      "sub": "3 rate da €"
+    },
+    "confirmed": {
+      "hotel": "Hotel prenotato",
+      "restaurants": "Ristoranti confermati",
+      "flight": "Volo emesso"
+    },
+    "proposal": {
+      "restaurantsRecommended": "Ristoranti consigliati",
+      "flightRoundtrip": "Volo A/R",
+      "whyDefault": "Proposta ottimizzata per le tue preferenze.",
+      "hotelSea": " · mare",
+      "localCuisine": "Cucina locale",
+      "bagIncluded": "Bagaglio incluso",
+      "carryOn": "Bagaglio a mano",
+      "freeCancel": "Cancellazione gratuita fino a 7 giorni prima.",
+      "perPerson": "a persona",
+      "underBudget": "sotto budget · "
+    },
+    "split": {
+      "stay": "Alloggio",
+      "food": "Cibo",
+      "transport": "Trasporti"
+    }
   }
 }

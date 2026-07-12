@@ -2069,5 +2069,212 @@
       "addAllNote": "Ajoute l'hôtel, le vol et les restaurants à votre panier pour un seul paiement.",
       "daysLabel": "jours"
     }
+  },
+  "planner": {
+    "restart": "Redémarrer",
+    "intake": {
+      "title": "Planifiez le voyage",
+      "sub": "Définissez les paramètres, l’IA fait le reste",
+      "budget": "Budget",
+      "required": "obligatoire",
+      "total": "total",
+      "dates": "Dates",
+      "fixed": "Fixes",
+      "flex": "Flexibles ±3j",
+      "nights": "Nuits",
+      "people": "Voyageurs",
+      "adults": "Adultes",
+      "children": "Enfants",
+      "optional": "optionnel",
+      "priority": "Priorité de dépense",
+      "prioritySub": "Sur quoi préférez-vous dépenser plus ?",
+      "constraints": "Contraintes"
+    },
+    "priority": {
+      "food": "Gastronomie",
+      "stay": "Hébergement",
+      "balanced": "Équilibré"
+    },
+    "constraints": {
+      "sea": "Mer",
+      "pets": "Animaux",
+      "accessible": "Accessible",
+      "family": "Familles"
+    },
+    "destination": {
+      "openTitle": "Destination ouverte",
+      "openSub": "L’IA choisit selon votre budget",
+      "setTitle": "Ville côtière",
+      "setSub": "Suggérée par l’IA · cliquez pour rouvrir"
+    },
+    "generate": {
+      "label": "Générer des propositions IA",
+      "again": "Régénérer les propositions"
+    },
+    "empty": {
+      "title": "Prêt à composer votre voyage",
+      "sub": "Définissez budget, dates et priorités dans le panneau de gauche, puis générez. L’IA compose 2–3 forfaits complets — hôtel, restaurants et vol — dans votre budget."
+    },
+    "generating": {
+      "title": "Je compose votre voyage",
+      "sub": "Les agents IA recherchent en parallèle",
+      "footer": "agents propriétaires · cadencés · budget-aware"
+    },
+    "agents": {
+      "orchestrator": {
+        "name": "Agent Orchestrateur",
+        "task": "Normalise les entrées et le budget"
+      },
+      "hotel": {
+        "name": "Agent Hôtel",
+        "task": "Hébergements compatibles en BDD"
+      },
+      "restaurant": {
+        "name": "Agent Restaurants",
+        "task": "Partenaires directs dans la zone"
+      },
+      "flight": {
+        "name": "Agent Vols",
+        "task": "Vols dans le budget restant"
+      },
+      "ranking": {
+        "name": "Agent de Classement",
+        "task": "Compose 2–3 forfaits cohérents"
+      }
+    },
+    "results": {
+      "title": "Vos propositions",
+      "recommended": "Recommandé",
+      "view": "Détail",
+      "regenerate": "Nouvelles propositions",
+      "fitIn": "dans le budget",
+      "fitOver": "hors budget",
+      "empty": "Aucune proposition disponible pour le moment."
+    },
+    "notice": {
+      "offline": "Service IA injoignable — aucune proposition à afficher. Réessayez dans un instant.",
+      "slow": "L’IA prend plus de temps que d’habitude — aucune proposition pour le moment. Réessayez bientôt.",
+      "dismiss": "Fermer"
+    },
+    "detail": {
+      "back": "Retour aux propositions",
+      "breakdown": "Répartition du budget",
+      "vsBudget": "de votre budget",
+      "ideal": "Répartition idéale selon vos priorités",
+      "elements": "Composants du voyage",
+      "change": "Changer",
+      "book": "Réserver"
+    },
+    "booking": {
+      "title": "Réservation",
+      "checking": "Disponibilité en temps réel",
+      "traveler": "Voyageur",
+      "summary": "Résumé des coûts",
+      "total": "Total",
+      "continue": "Passer au paiement",
+      "waiting": "Vérification de la disponibilité…",
+      "error": "Impossible de confirmer la réservation. Réessayez."
+    },
+    "payment": {
+      "title": "Paiement",
+      "paying": "Vous payez",
+      "how": "Comment souhaitez-vous payer",
+      "full": "Paiement intégral",
+      "fullSub": "Payez tout maintenant",
+      "install": "Paiement échelonné",
+      "plan": "Plan en 3 versements",
+      "now": "Aujourd’hui",
+      "platform": "La plateforme encaisse la totalité immédiatement, même en versements : le risque d’impayé reste au gateway, jamais aux partenaires.",
+      "payFull": "Payer €",
+      "payInstall": "Activer Klarna · €"
+    },
+    "confirmation": {
+      "title": "Voyage confirmé !",
+      "sub": "Réservations envoyées, confirmations en route par email.",
+      "concierge": "Travel Concierge",
+      "conciergeSub": "Votre assistant IA pendant le séjour. Il s’active 3 jours avant le départ.",
+      "open": "Ouvrir le Concierge",
+      "restart": "Recommencer le flux",
+      "concept": "CONCEPT"
+    },
+    "concierge": {
+      "title": "Concierge IA",
+      "context": "Je connais déjà votre voyage : hôtel, dates et groupe. Demandez-moi en langage naturel.",
+      "suggestion": "Trouvez-moi une table ce soir près de l’hôtel",
+      "placeholder": "Écrivez une demande…",
+      "error": "Le concierge est indisponible pour le moment. Réessayez dans un instant."
+    },
+    "steps": {
+      "plan": "Planifier",
+      "proposals": "Propositions",
+      "detail": "Détail",
+      "book": "Paiement"
+    },
+    "session": {
+      "signOut": "Déconnexion",
+      "signIn": "Se connecter"
+    },
+    "pill": {
+      "hotel": "Hôtel",
+      "restaurants": "Restaurants",
+      "flight": "Vol"
+    },
+    "auth": {
+      "signIn": "Se connecter",
+      "register": "S’inscrire",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "passwordPlaceholder": "Au moins 8 caractères",
+      "loading": "Chargement...",
+      "create": "Créer un compte",
+      "emailRequired": "Saisissez votre email et mot de passe.",
+      "fieldsRequired": "Veuillez remplir tous les champs.",
+      "invalid": "Identifiants invalides.",
+      "registerError": "Échec de l’inscription.",
+      "firstPlaceholder": "Jean",
+      "lastPlaceholder": "Dupont"
+    },
+    "check": {
+      "restaurants": "Restaurants partenaires",
+      "flight": "Vol A/R",
+      "available": "Disponible",
+      "checking": "Vérification…"
+    },
+    "traveler": {
+      "adults": "adultes",
+      "children": "enfants"
+    },
+    "summary": {
+      "nights": "nuits",
+      "people": "pers.",
+      "prioFood": "priorité gastronomie",
+      "prioStay": "priorité hébergement",
+      "prioBalanced": "équilibré"
+    },
+    "installment": {
+      "sub": "3 versements de €"
+    },
+    "confirmed": {
+      "hotel": "Hôtel réservé",
+      "restaurants": "Restaurants confirmés",
+      "flight": "Vol émis"
+    },
+    "proposal": {
+      "restaurantsRecommended": "Restaurants recommandés",
+      "flightRoundtrip": "Vol A/R",
+      "whyDefault": "Optimisé pour vos préférences.",
+      "hotelSea": " · mer",
+      "localCuisine": "Cuisine locale",
+      "bagIncluded": "Bagage inclus",
+      "carryOn": "Bagage cabine",
+      "freeCancel": "Annulation gratuite jusqu’à 7 jours avant.",
+      "perPerson": "par personne",
+      "underBudget": "sous le budget · "
+    },
+    "split": {
+      "stay": "Hébergement",
+      "food": "Gastronomie",
+      "transport": "Transports"
+    }
   }
 }
