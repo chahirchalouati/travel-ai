@@ -1,7 +1,9 @@
 import {
   Component,
+  DestroyRef,
   ElementRef,
   HostListener,
+  NgZone,
   ViewChild,
   computed,
   forwardRef,
@@ -218,6 +220,21 @@ export class UiSelectComponent implements ControlValueAccessor {
   private onTouched: () => void = () => {};
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
+  constructor() {
+    // Close the open menu on scroll without paying an app-wide change-detection
+    // pass every scroll frame: listen outside the zone and only re-enter when a
+    // menu is actually open.
+    const zone = inject(NgZone);
+    const onScroll = () => {
+      if (!this.open()) return;
+      zone.run(() => this.close());
+    };
+    zone.runOutsideAngular(() =>
+      window.addEventListener('scroll', onScroll, { passive: true }),
+    );
+    inject(DestroyRef).onDestroy(() => window.removeEventListener('scroll', onScroll));
+  }
+
   writeValue(value: unknown): void {
     this.value.set(value);
   }
@@ -251,7 +268,6 @@ export class UiSelectComponent implements ControlValueAccessor {
     }
   }
 
-  @HostListener('window:scroll')
   @HostListener('window:resize')
   onViewportChange(): void {
     this.close();

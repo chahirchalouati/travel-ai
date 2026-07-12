@@ -4,6 +4,7 @@ import {
   DestroyRef,
   ElementRef,
   HostListener,
+  NgZone,
   QueryList,
   ViewChild,
   ViewChildren,
@@ -42,6 +43,7 @@ export class NavComponent implements AfterViewInit {
   readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly zone = inject(NgZone);
 
   scrolled = signal(false);
   mobileOpen = signal(false);
@@ -117,6 +119,7 @@ export class NavComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.measure();
+    this.listenScroll();
 
     // Recompute when the bar resizes or when translated labels change width (language switch).
     const inner = this.navInner?.nativeElement;
@@ -175,9 +178,21 @@ export class NavComponent implements AfterViewInit {
   @HostListener('document:keydown.escape')
   onEscape(): void { this.closeMore(); }
 
-  @HostListener('window:scroll')
-  onScroll(): void {
-    this.scrolled.set(window.scrollY > 40);
+  /**
+   * Scroll is handled outside Angular's zone so it never schedules an app-wide
+   * change-detection pass per frame. We only re-enter the zone on the rare frame
+   * where the compact/expanded state actually flips (crossing the 40px mark).
+   */
+  private listenScroll(): void {
+    const onScroll = () => {
+      const next = window.scrollY > 40;
+      if (next === this.scrolled()) return;
+      this.zone.run(() => this.scrolled.set(next));
+    };
+    this.zone.runOutsideAngular(() => {
+      window.addEventListener('scroll', onScroll, { passive: true });
+    });
+    this.destroyRef.onDestroy(() => window.removeEventListener('scroll', onScroll));
   }
 
   openMenu(): void { this.mobileOpen.set(true); document.body.style.overflow = 'hidden'; }

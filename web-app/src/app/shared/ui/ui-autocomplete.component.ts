@@ -1,7 +1,9 @@
 import {
   Component,
+  DestroyRef,
   ElementRef,
   HostListener,
+  NgZone,
   ViewChild,
   forwardRef,
   inject,
@@ -263,6 +265,18 @@ export class UiAutocompleteComponent implements ControlValueAccessor {
         this.open.set(list.length > 0);
         this.activeIndex.set(-1);
       });
+
+    // Close the open menu on scroll without a per-frame app-wide change-detection
+    // pass: listen outside the zone, re-enter only when a menu is actually open.
+    const zone = inject(NgZone);
+    const onScroll = () => {
+      if (!this.open()) return;
+      zone.run(() => this.close());
+    };
+    zone.runOutsideAngular(() =>
+      window.addEventListener('scroll', onScroll, { passive: true }),
+    );
+    inject(DestroyRef).onDestroy(() => window.removeEventListener('scroll', onScroll));
   }
 
   private updateMenuPosition(): void {
@@ -270,7 +284,6 @@ export class UiAutocompleteComponent implements ControlValueAccessor {
     this.menuPosition.set(computeMenuPosition(rect, 6, 300));
   }
 
-  @HostListener('window:scroll')
   @HostListener('window:resize')
   onViewportChange(): void {
     this.close();
