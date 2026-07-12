@@ -12,6 +12,34 @@ export interface PartnerOption {
   name: string;
 }
 
+/** Sort direction for a list query. */
+export type SortDir = 'asc' | 'desc';
+
+/** Optional filtering/sorting for admin list queries. */
+export interface ListQuery {
+  /** Free-text search across the resource's key columns. */
+  search?: string;
+  /** Column key to sort by. */
+  sortKey?: string;
+  sortDir?: SortDir;
+  /** Exact/contains field filters: field key → value. */
+  filters?: Record<string, string>;
+}
+
+function buildParams(page: number, size: number, q?: ListQuery): string {
+  const parts = [`page=${page}`, `size=${size}`];
+  if (q?.sortKey) parts.push(`sort=${encodeURIComponent(q.sortKey)},${q.sortDir ?? 'asc'}`);
+  if (q?.search?.trim()) parts.push(`search=${encodeURIComponent(q.search.trim())}`);
+  if (q?.filters) {
+    for (const [key, value] of Object.entries(q.filters)) {
+      if (value !== null && value !== undefined && `${value}`.trim() !== '') {
+        parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
+      }
+    }
+  }
+  return parts.join('&');
+}
+
 /**
  * Generic admin CRUD client for catalog, destinations, stories and partners.
  * `resource` is the path under `/admin`, e.g. `catalog/hotels` or `partners`.
@@ -21,9 +49,9 @@ export class AdminCatalogService {
   private readonly http = inject(HttpClient);
   private readonly base = `${environment.apiUrl}/admin`;
 
-  list(resource: string, page = 0, size = 20): Observable<PageWrapper<AdminEntity>> {
+  list(resource: string, page = 0, size = 20, query?: ListQuery): Observable<PageWrapper<AdminEntity>> {
     return this.http
-      .get<ApiWrapper<PageWrapper<AdminEntity>>>(`${this.base}/${resource}?page=${page}&size=${size}`)
+      .get<ApiWrapper<PageWrapper<AdminEntity>>>(`${this.base}/${resource}?${buildParams(page, size, query)}`)
       .pipe(map(r => r.data));
   }
 

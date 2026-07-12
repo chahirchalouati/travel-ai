@@ -132,12 +132,83 @@ export interface AdminPayment {
   createdAt: string;
 }
 
+export interface AdminBookingDetail {
+  id: string;
+  bookingReference: string | null;
+  status: string | null;
+  destination: string | null;
+  checkIn: string | null;
+  checkOut: string | null;
+  partySize: number | null;
+  totalAmount: number | null;
+  hotelAmount: number | null;
+  flightAmount: number | null;
+  restaurantAmount: number | null;
+  cruiseAmount: number | null;
+  serviceFeeAmount: number | null;
+  commissionAmount: number | null;
+  createdAt: string | null;
+  user: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: string | null;
+    active: boolean;
+    createdAt: string | null;
+  } | null;
+  payments: {
+    id: string;
+    status: string | null;
+    type: string | null;
+    gateway: string | null;
+    amount: number | null;
+    currency: string | null;
+    paidAt: string | null;
+    refundedAt: string | null;
+    failureReason: string | null;
+    createdAt: string | null;
+  }[];
+  userReviews: {
+    id: string;
+    targetType: string;
+    rating: number;
+    title: string | null;
+    createdAt: string | null;
+  }[];
+  userTotalBookings: number;
+}
+
+export interface AdminSearchHit {
+  id: string;
+  primary: string;
+  secondary: string | null;
+}
+
+export interface AdminSearchResult {
+  users: AdminSearchHit[];
+  bookings: AdminSearchHit[];
+  partners: AdminSearchHit[];
+}
+
 export interface FeatureFlag {
   id: string;
   key: string;
   enabled: boolean;
   description: string | null;
+  rolloutPercentage: number;
+  targetRoles: string | null;
+  groupName: string | null;
   updatedAt: string;
+}
+
+export interface FeatureFlagUpsert {
+  key: string;
+  enabled: boolean;
+  description?: string | null;
+  rolloutPercentage?: number;
+  targetRoles?: string | null;
+  groupName?: string | null;
 }
 
 export interface RagStatus {
@@ -209,6 +280,18 @@ export class AdminService {
       .pipe(map(r => r.data));
   }
 
+  bookingDetail(id: string): Observable<AdminBookingDetail> {
+    return this.http
+      .get<ApiWrapper<AdminBookingDetail>>(`${this.base}/bookings/${id}/detail`)
+      .pipe(map(r => r.data));
+  }
+
+  search(query: string): Observable<AdminSearchResult> {
+    return this.http
+      .get<ApiWrapper<AdminSearchResult>>(`${this.base}/search?q=${encodeURIComponent(query)}`)
+      .pipe(map(r => r.data));
+  }
+
   createUser(body: AdminUserUpsert): Observable<AdminUser> {
     return this.http.post<ApiWrapper<AdminUser>>(`${this.base}/users`, body).pipe(map(r => r.data));
   }
@@ -271,9 +354,9 @@ export class AdminService {
     return this.http.get<ApiWrapper<FeatureFlag[]>>(`${this.base}/feature-flags`).pipe(map(r => r.data));
   }
 
-  upsertFlag(key: string, enabled: boolean, description: string): Observable<FeatureFlag> {
+  upsertFlag(payload: FeatureFlagUpsert): Observable<FeatureFlag> {
     return this.http
-      .post<ApiWrapper<FeatureFlag>>(`${this.base}/feature-flags`, { key, enabled, description })
+      .post<ApiWrapper<FeatureFlag>>(`${this.base}/feature-flags`, payload)
       .pipe(map(r => r.data));
   }
 

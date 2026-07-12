@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, HostListener, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -8,7 +8,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { AdminService } from '../../core/services/admin.service';
 import type {
   AdminDashboard, AdminUser, AdminBooking, AdminReview, AdminAiLog, AdminAuditLog, AdminUserUpsert,
-  AdminPayment, RagStatus, FeatureFlag, AdminAlert,
+  AdminPayment, RagStatus, FeatureFlag, FeatureFlagUpsert, AdminAlert, AdminBookingDetail, AdminSearchResult,
 } from '../../core/services/admin.service';
 import { AdminEntityManagerComponent } from './entity-manager/admin-entity-manager.component';
 import { ENTITY_CONFIGS, EntityConfig } from './entity-manager/entity-configs';
@@ -55,7 +55,49 @@ function emptyUserForm(): AdminUserUpsert {
             <h1 class="admin-h1">{{ currentLabel() }}</h1>
             <p class="admin-crumb">{{ 'admin.crumb' | transloco }} · {{ adminName() }}</p>
           </div>
-          <span class="admin-badge"><span class="ms" style="font-size:16px">verified_user</span> {{ 'admin.badge' | transloco }}</span>
+          <div class="admin-top-right">
+            <div class="gsearch" (click)="$event.stopPropagation()">
+              <span class="ms">search</span>
+              <input type="search" [ngModel]="globalQuery()" (ngModelChange)="onGlobalSearch($event)"
+                     (focus)="searchOpen.set(!!globalResults())"
+                     [placeholder]="'admin.globalSearchPlaceholder' | transloco" />
+              @if (searchOpen() && globalResults(); as gr) {
+                <div class="gsearch-panel">
+                  @if (!gr.users.length && !gr.bookings.length && !gr.partners.length) {
+                    <div class="gsearch-empty">{{ 'admin.gsNoResults' | transloco }}</div>
+                  }
+                  @if (gr.users.length) {
+                    <div class="gsearch-group">{{ 'admin.navUsers' | transloco }}</div>
+                    @for (h of gr.users; track h.id) {
+                      <button class="gsearch-hit" (click)="pickUser()">
+                        <span class="ms">person</span>
+                        <span class="gh-main">{{ h.primary || h.secondary }}</span><span class="gh-sub">{{ h.secondary }}</span>
+                      </button>
+                    }
+                  }
+                  @if (gr.bookings.length) {
+                    <div class="gsearch-group">{{ 'admin.navBookings' | transloco }}</div>
+                    @for (h of gr.bookings; track h.id) {
+                      <button class="gsearch-hit" (click)="pickBooking(h.id)">
+                        <span class="ms">confirmation_number</span>
+                        <span class="gh-main">{{ h.primary }}</span><span class="gh-sub">{{ h.secondary }}</span>
+                      </button>
+                    }
+                  }
+                  @if (gr.partners.length) {
+                    <div class="gsearch-group">{{ 'admin.navPartners' | transloco }}</div>
+                    @for (h of gr.partners; track h.id) {
+                      <button class="gsearch-hit" (click)="pickPartner()">
+                        <span class="ms">store</span>
+                        <span class="gh-main">{{ h.primary }}</span><span class="gh-sub">{{ h.secondary }}</span>
+                      </button>
+                    }
+                  }
+                </div>
+              }
+            </div>
+            <span class="admin-badge"><span class="ms" style="font-size:16px">verified_user</span> {{ 'admin.badge' | transloco }}</span>
+          </div>
         </header>
 
         @if (toast()) { <div class="admin-toast">{{ toast() }}</div> }
@@ -77,20 +119,20 @@ function emptyUserForm(): AdminUserUpsert {
           }
           @if (dashboard(); as d) {
             <div class="stat-grid">
-              <div class="stat-card"><span class="ms stat-ic" style="color:#5b8def">group</span><div><span class="stat-num">{{ d.totalUsers }}</span><span class="stat-lbl">{{ 'admin.statUsers' | transloco }}</span></div></div>
-              <div class="stat-card"><span class="ms stat-ic" style="color:#e0a23a">store</span><div><span class="stat-num">{{ d.totalPartners }}</span><span class="stat-lbl">{{ 'admin.statPartners' | transloco }}</span></div></div>
-              <div class="stat-card"><span class="ms stat-ic" style="color:#42b07a">confirmation_number</span><div><span class="stat-num">{{ d.totalBookings }}</span><span class="stat-lbl">{{ 'admin.statBookings' | transloco }}</span></div></div>
-              <div class="stat-card"><span class="ms stat-ic" style="color:#e0573a">hourglass_top</span><div><span class="stat-num">{{ d.pendingPartners }}</span><span class="stat-lbl">{{ 'admin.statPending' | transloco }}</span></div></div>
-              <div class="stat-card"><span class="ms stat-ic" style="color:#42b07a">rocket_launch</span><div><span class="stat-num">{{ d.activePartners }}</span><span class="stat-lbl">{{ 'admin.statLive' | transloco }}</span></div></div>
+              <div class="stat-card"><span class="ms stat-ic">group</span><div><span class="stat-num">{{ d.totalUsers }}</span><span class="stat-lbl">{{ 'admin.statUsers' | transloco }}</span></div></div>
+              <div class="stat-card"><span class="ms stat-ic">store</span><div><span class="stat-num">{{ d.totalPartners }}</span><span class="stat-lbl">{{ 'admin.statPartners' | transloco }}</span></div></div>
+              <div class="stat-card"><span class="ms stat-ic">confirmation_number</span><div><span class="stat-num">{{ d.totalBookings }}</span><span class="stat-lbl">{{ 'admin.statBookings' | transloco }}</span></div></div>
+              <div class="stat-card"><span class="ms stat-ic">hourglass_top</span><div><span class="stat-num">{{ d.pendingPartners }}</span><span class="stat-lbl">{{ 'admin.statPending' | transloco }}</span></div></div>
+              <div class="stat-card"><span class="ms stat-ic">rocket_launch</span><div><span class="stat-num">{{ d.activePartners }}</span><span class="stat-lbl">{{ 'admin.statLive' | transloco }}</span></div></div>
             </div>
             <h2 class="admin-sub">{{ 'admin.catalogContent' | transloco }}</h2>
             <div class="stat-grid">
-              <div class="stat-card stat-link" (click)="go('hotels')"><span class="ms stat-ic" style="color:#5b8def">hotel</span><div><span class="stat-num">{{ d.totalHotels }}</span><span class="stat-lbl">{{ 'admin.navHotels' | transloco }}</span></div></div>
-              <div class="stat-card stat-link" (click)="go('flights')"><span class="ms stat-ic" style="color:#e0573a">flight</span><div><span class="stat-num">{{ d.totalFlights }}</span><span class="stat-lbl">{{ 'admin.navFlights' | transloco }}</span></div></div>
-              <div class="stat-card stat-link" (click)="go('cruises')"><span class="ms stat-ic" style="color:#2f9fe0">directions_boat</span><div><span class="stat-num">{{ d.totalCruises }}</span><span class="stat-lbl">{{ 'admin.navCruises' | transloco }}</span></div></div>
-              <div class="stat-card stat-link" (click)="go('restaurants')"><span class="ms stat-ic" style="color:#e0a23a">restaurant</span><div><span class="stat-num">{{ d.totalRestaurants }}</span><span class="stat-lbl">{{ 'admin.navRestaurants' | transloco }}</span></div></div>
-              <div class="stat-card stat-link" (click)="go('destinations')"><span class="ms stat-ic" style="color:#42b07a">public</span><div><span class="stat-num">{{ d.totalDestinations }}</span><span class="stat-lbl">{{ 'admin.navDestinations' | transloco }}</span></div></div>
-              <div class="stat-card stat-link" (click)="go('stories')"><span class="ms stat-ic" style="color:#9b59b6">movie</span><div><span class="stat-num">{{ d.totalStories }}</span><span class="stat-lbl">{{ 'admin.navStories' | transloco }}</span></div></div>
+              <div class="stat-card stat-link" (click)="go('hotels')"><span class="ms stat-ic">hotel</span><div><span class="stat-num">{{ d.totalHotels }}</span><span class="stat-lbl">{{ 'admin.navHotels' | transloco }}</span></div></div>
+              <div class="stat-card stat-link" (click)="go('flights')"><span class="ms stat-ic">flight</span><div><span class="stat-num">{{ d.totalFlights }}</span><span class="stat-lbl">{{ 'admin.navFlights' | transloco }}</span></div></div>
+              <div class="stat-card stat-link" (click)="go('cruises')"><span class="ms stat-ic">directions_boat</span><div><span class="stat-num">{{ d.totalCruises }}</span><span class="stat-lbl">{{ 'admin.navCruises' | transloco }}</span></div></div>
+              <div class="stat-card stat-link" (click)="go('restaurants')"><span class="ms stat-ic">restaurant</span><div><span class="stat-num">{{ d.totalRestaurants }}</span><span class="stat-lbl">{{ 'admin.navRestaurants' | transloco }}</span></div></div>
+              <div class="stat-card stat-link" (click)="go('destinations')"><span class="ms stat-ic">public</span><div><span class="stat-num">{{ d.totalDestinations }}</span><span class="stat-lbl">{{ 'admin.navDestinations' | transloco }}</span></div></div>
+              <div class="stat-card stat-link" (click)="go('stories')"><span class="ms stat-ic">movie</span><div><span class="stat-num">{{ d.totalStories }}</span><span class="stat-lbl">{{ 'admin.navStories' | transloco }}</span></div></div>
             </div>
             <div class="quick-actions">
               <button (click)="go('users')"><span class="ms">manage_accounts</span> {{ 'admin.manageUsers' | transloco }}</button>
@@ -159,13 +201,13 @@ function emptyUserForm(): AdminUserUpsert {
               <thead><tr><th>{{ 'admin.thBookingRef' | transloco }}</th><th>{{ 'admin.thUser' | transloco }}</th><th>{{ 'admin.thDestination' | transloco }}</th><th>{{ 'admin.thAmount' | transloco }}</th><th>{{ 'admin.thCreated' | transloco }}</th><th>{{ 'admin.thStatus' | transloco }}</th></tr></thead>
               <tbody>
                 @for (b of bookings(); track b.id) {
-                  <tr>
+                  <tr class="row-click" (click)="openBookingDetail(b.id)">
                     <td class="mono">{{ b.bookingReference || b.id.slice(0, 8) }}</td>
                     <td class="muted">{{ b.userEmail || b.userId.slice(0, 8) }}</td>
                     <td>{{ b.destination || '—' }}</td>
                     <td>{{ b.totalAmount != null ? (b.totalAmount | currency) : '—' }}</td>
                     <td class="muted">{{ b.createdAt ? (b.createdAt | date:'medium') : '—' }}</td>
-                    <td>
+                    <td (click)="$event.stopPropagation()">
                       <select class="role-select" [ngModel]="b.status" (ngModelChange)="changeBookingStatus(b, $event)">
                         @for (s of bookingStatuses; track s) { <option [value]="s">{{ s }}</option> }
                       </select>
@@ -268,7 +310,7 @@ function emptyUserForm(): AdminUserUpsert {
         @if (section() === 'rag') {
           @if (ragStatus(); as s) {
             <div class="stat-grid">
-              <div class="stat-card"><span class="ms stat-ic" style="color:#5b8def">database</span><div><span class="stat-num">{{ s.totalDocuments }}</span><span class="stat-lbl">{{ 'admin.ragDocuments' | transloco }}</span></div></div>
+              <div class="stat-card"><span class="ms stat-ic">database</span><div><span class="stat-num">{{ s.totalDocuments }}</span><span class="stat-lbl">{{ 'admin.ragDocuments' | transloco }}</span></div></div>
               <div class="stat-card"><span class="ms stat-ic" [style.color]="s.populated ? '#42b07a' : '#e0573a'">{{ s.populated ? 'check_circle' : 'error' }}</span><div><span class="stat-num">{{ (s.populated ? 'admin.ragReady' : 'admin.ragEmpty') | transloco }}</span><span class="stat-lbl">{{ 'admin.ragStatus' | transloco }}</span></div></div>
             </div>
             <h2 class="admin-sub">{{ 'admin.ragByType' | transloco }}</h2>
@@ -363,30 +405,51 @@ function emptyUserForm(): AdminUserUpsert {
         @if (section() === 'flags') {
           <div class="broadcast-card">
             <span class="u-lbl">{{ 'admin.flagNew' | transloco }}</span>
-            <div class="flag-new-row">
+            <div class="flag-new-grid">
               <input type="text" [(ngModel)]="flagForm.key" [placeholder]="'admin.flagKeyPlaceholder' | transloco" />
               <input type="text" [(ngModel)]="flagForm.description" [placeholder]="'admin.fDescription' | transloco" />
+              <input type="text" [(ngModel)]="flagForm.groupName" [placeholder]="'admin.flagGroup' | transloco" />
+              <label class="flag-rollout">
+                <span>{{ 'admin.flagRollout' | transloco }}</span>
+                <input type="number" min="0" max="100" [(ngModel)]="flagForm.rolloutPercentage" /> %
+              </label>
+            </div>
+            <div class="flag-roles">
+              <span class="u-lbl">{{ 'admin.flagRoles' | transloco }}</span>
+              @for (r of flagRoles; track r) {
+                <label class="flag-role-chip" [class.on]="flagForm.roles[r]">
+                  <input type="checkbox" [(ngModel)]="flagForm.roles[r]" /> {{ r }}
+                </label>
+              }
               <button class="em-new-btn" (click)="createFlag()"><span class="ms">add</span> {{ 'admin.flagAdd' | transloco }}</button>
             </div>
           </div>
           <div class="table-wrap">
             <table class="admin-table">
-              <thead><tr><th>{{ 'admin.flagKey' | transloco }}</th><th>{{ 'admin.fDescription' | transloco }}</th><th>{{ 'admin.thStatus' | transloco }}</th><th>{{ 'admin.thWhen' | transloco }}</th><th>{{ 'admin.thActions' | transloco }}</th></tr></thead>
+              <thead><tr><th>{{ 'admin.flagKey' | transloco }}</th><th>{{ 'admin.flagGroup' | transloco }}</th><th>{{ 'admin.flagRollout' | transloco }}</th><th>{{ 'admin.flagRoles' | transloco }}</th><th>{{ 'admin.thStatus' | transloco }}</th><th>{{ 'admin.thActions' | transloco }}</th></tr></thead>
               <tbody>
                 @for (flag of flags(); track flag.id) {
                   <tr>
-                    <td class="mono"><b>{{ flag.key }}</b></td>
-                    <td class="muted">{{ flag.description || '—' }}</td>
+                    <td class="mono"><b>{{ flag.key }}</b>@if (flag.description) { <span class="flag-desc">{{ flag.description }}</span> }</td>
+                    <td>@if (flag.groupName) { <span class="tag tag-neutral">{{ flag.groupName }}</span> } @else { <span class="muted">—</span> }</td>
+                    <td>
+                      <span class="rollout-badge" [class.rollout-full]="flag.rolloutPercentage >= 100" [class.rollout-off]="flag.rolloutPercentage <= 0">{{ flag.rolloutPercentage }}%</span>
+                    </td>
+                    <td>
+                      @if (flag.targetRoles) {
+                        @for (r of flag.targetRoles.split(','); track r) { <span class="tag tag-neutral role-tag">{{ r }}</span> }
+                      } @else { <span class="muted">{{ 'admin.flagAllRoles' | transloco }}</span> }
+                    </td>
                     <td><span class="tag" [class.tag-ok]="flag.enabled" [class.tag-off]="!flag.enabled">{{ (flag.enabled ? 'admin.flagOn' : 'admin.flagOff') | transloco }}</span></td>
-                    <td class="muted">{{ flag.updatedAt | date:'short' }}</td>
                     <td class="user-actions">
+                      <button class="mini" (click)="openFlagEdit(flag)">{{ 'admin.edit' | transloco }}</button>
                       <button class="mini" [class.mini-ok]="!flag.enabled" [class.mini-danger]="flag.enabled" (click)="toggleFlag(flag)">
                         {{ (flag.enabled ? 'admin.flagTurnOff' : 'admin.flagTurnOn') | transloco }}
                       </button>
                       <button class="mini mini-danger" (click)="removeFlag(flag)">{{ 'admin.delete' | transloco }}</button>
                     </td>
                   </tr>
-                } @empty { <tr><td colspan="5" class="empty-row">{{ 'admin.noFlags' | transloco }}</td></tr> }
+                } @empty { <tr><td colspan="6" class="empty-row">{{ 'admin.noFlags' | transloco }}</td></tr> }
               </tbody>
             </table>
           </div>
@@ -423,6 +486,129 @@ function emptyUserForm(): AdminUserUpsert {
             <footer class="u-foot">
               <button class="u-ghost" (click)="closeUserForm()">{{ 'admin.cancel' | transloco }}</button>
               <button class="u-primary" [disabled]="userSaving()" (click)="saveUser()">{{ (userSaving() ? 'admin.saving' : 'admin.save') | transloco }}</button>
+            </footer>
+          </div>
+        </div>
+      }
+
+      <!-- BOOKING DETAIL DRAWER -->
+      @if (bookingDetailOpen()) {
+        <div class="u-overlay" (click)="closeBookingDetail()">
+          <div class="bd-drawer" (click)="$event.stopPropagation()">
+            @if (bookingDetail(); as d) {
+              <header class="u-head">
+                <div>
+                  <h3 class="mono">{{ d.bookingReference || d.id.slice(0, 8) }}</h3>
+                  <span class="tag" [class.tag-ok]="d.status === 'CONFIRMED' || d.status === 'COMPLETED'"
+                        [class.tag-off]="d.status === 'CANCELLED'"
+                        [class.tag-neutral]="d.status === 'PENDING'">{{ d.status }}</span>
+                </div>
+                <button class="u-close" (click)="closeBookingDetail()"><span class="ms">close</span></button>
+              </header>
+
+              <div class="bd-body">
+                <!-- Customer -->
+                @if (d.user; as u) {
+                  <section class="bd-card">
+                    <h4 class="bd-h4"><span class="ms">person</span> {{ 'admin.bdCustomer' | transloco }}</h4>
+                    <div class="bd-kv"><span>{{ u.firstName }} {{ u.lastName }}</span><span class="muted">{{ u.email }}</span></div>
+                    <div class="bd-tags">
+                      <span class="tag tag-neutral">{{ u.role }}</span>
+                      <span class="tag" [class.tag-ok]="u.active" [class.tag-off]="!u.active">{{ (u.active ? 'admin.active' : 'admin.banned') | transloco }}</span>
+                      <span class="tag tag-neutral">{{ 'admin.bdTotalBookings' | transloco:{ count: d.userTotalBookings } }}</span>
+                    </div>
+                    <p class="admin-crumb">{{ 'admin.bdMemberSince' | transloco }} {{ u.createdAt ? (u.createdAt | date:'mediumDate') : '—' }}</p>
+                  </section>
+                }
+
+                <!-- Trip -->
+                <section class="bd-card">
+                  <h4 class="bd-h4"><span class="ms">luggage</span> {{ 'admin.bdTrip' | transloco }}</h4>
+                  <div class="bd-grid">
+                    <div><span class="bd-lbl">{{ 'admin.thDestination' | transloco }}</span><span>{{ d.destination || '—' }}</span></div>
+                    <div><span class="bd-lbl">{{ 'admin.bdParty' | transloco }}</span><span>{{ d.partySize ?? '—' }}</span></div>
+                    <div><span class="bd-lbl">{{ 'admin.bdCheckIn' | transloco }}</span><span>{{ d.checkIn ? (d.checkIn | date:'mediumDate') : '—' }}</span></div>
+                    <div><span class="bd-lbl">{{ 'admin.bdCheckOut' | transloco }}</span><span>{{ d.checkOut ? (d.checkOut | date:'mediumDate') : '—' }}</span></div>
+                  </div>
+                </section>
+
+                <!-- Amounts -->
+                <section class="bd-card">
+                  <h4 class="bd-h4"><span class="ms">payments</span> {{ 'admin.bdAmounts' | transloco }}</h4>
+                  <div class="bd-amounts">
+                    @if (d.hotelAmount) { <div class="bd-amt"><span>{{ 'admin.navHotels' | transloco }}</span><span>{{ d.hotelAmount | currency }}</span></div> }
+                    @if (d.flightAmount) { <div class="bd-amt"><span>{{ 'admin.navFlights' | transloco }}</span><span>{{ d.flightAmount | currency }}</span></div> }
+                    @if (d.restaurantAmount) { <div class="bd-amt"><span>{{ 'admin.navRestaurants' | transloco }}</span><span>{{ d.restaurantAmount | currency }}</span></div> }
+                    @if (d.cruiseAmount) { <div class="bd-amt"><span>{{ 'admin.navCruises' | transloco }}</span><span>{{ d.cruiseAmount | currency }}</span></div> }
+                    @if (d.serviceFeeAmount) { <div class="bd-amt"><span>{{ 'admin.bdServiceFee' | transloco }}</span><span>{{ d.serviceFeeAmount | currency }}</span></div> }
+                    @if (d.commissionAmount) { <div class="bd-amt muted"><span>{{ 'admin.bdCommission' | transloco }}</span><span>{{ d.commissionAmount | currency }}</span></div> }
+                    <div class="bd-amt bd-amt-total"><span>{{ 'admin.thAmount' | transloco }}</span><span>{{ d.totalAmount != null ? (d.totalAmount | currency) : '—' }}</span></div>
+                  </div>
+                </section>
+
+                <!-- Payments -->
+                <section class="bd-card">
+                  <h4 class="bd-h4"><span class="ms">receipt_long</span> {{ 'admin.bdPayments' | transloco }} ({{ d.payments.length }})</h4>
+                  @for (p of d.payments; track p.id) {
+                    <div class="bd-pay">
+                      <span class="tag" [class.tag-ok]="p.status === 'COMPLETED'" [class.tag-off]="p.status === 'FAILED' || p.status === 'REFUNDED'"
+                            [class.tag-neutral]="p.status !== 'COMPLETED' && p.status !== 'FAILED' && p.status !== 'REFUNDED'">{{ p.status }}</span>
+                      <span>{{ p.amount != null ? (p.amount | currency:(p.currency || 'EUR')) : '—' }}</span>
+                      <span class="muted">{{ p.gateway || '—' }}</span>
+                      <span class="muted">{{ p.createdAt ? (p.createdAt | date:'short') : '—' }}</span>
+                    </div>
+                  } @empty { <p class="admin-crumb">{{ 'admin.bdNoPayments' | transloco }}</p> }
+                </section>
+
+                <!-- Reviews by customer -->
+                <section class="bd-card">
+                  <h4 class="bd-h4"><span class="ms">reviews</span> {{ 'admin.bdReviews' | transloco }} ({{ d.userReviews.length }})</h4>
+                  @for (r of d.userReviews; track r.id) {
+                    <div class="bd-review">
+                      <span class="stars-mini">@for (s of [1,2,3,4,5]; track s) { <span class="ms" [class.lit]="s <= r.rating">star</span> }</span>
+                      <span class="gh-main">{{ r.title || ('admin.untitledReview' | transloco) }}</span>
+                      <span class="tag tag-neutral">{{ r.targetType }}</span>
+                    </div>
+                  } @empty { <p class="admin-crumb">{{ 'admin.bdNoReviews' | transloco }}</p> }
+                </section>
+              </div>
+            } @else {
+              <div class="admin-loading">{{ 'admin.loading' | transloco }}</div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- FEATURE FLAG TARGETING MODAL -->
+      @if (flagEditOpen()) {
+        <div class="u-overlay" (click)="closeFlagEdit()">
+          <div class="u-modal" (click)="$event.stopPropagation()">
+            <header class="u-head">
+              <h3>{{ 'admin.flagConfigure' | transloco }} · <span class="mono">{{ flagEditKey() }}</span></h3>
+              <button class="u-close" (click)="closeFlagEdit()"><span class="ms">close</span></button>
+            </header>
+            <div class="u-grid">
+              <label class="u-field u-full"><span class="u-lbl">{{ 'admin.fDescription' | transloco }}</span>
+                <input type="text" [(ngModel)]="flagEdit.description" /></label>
+              <label class="u-field"><span class="u-lbl">{{ 'admin.flagGroup' | transloco }}</span>
+                <input type="text" [(ngModel)]="flagEdit.groupName" /></label>
+              <label class="u-field"><span class="u-lbl">{{ 'admin.flagRollout' | transloco }} (%)</span>
+                <input type="number" min="0" max="100" [(ngModel)]="flagEdit.rolloutPercentage" /></label>
+              <div class="u-field u-full">
+                <span class="u-lbl">{{ 'admin.flagRoles' | transloco }}</span>
+                <div class="flag-roles">
+                  @for (r of flagRoles; track r) {
+                    <label class="flag-role-chip" [class.on]="flagEdit.roles[r]">
+                      <input type="checkbox" [(ngModel)]="flagEdit.roles[r]" /> {{ r }}
+                    </label>
+                  }
+                </div>
+                <p class="admin-crumb">{{ 'admin.flagRolesHint' | transloco }}</p>
+              </div>
+            </div>
+            <footer class="u-foot">
+              <button class="u-ghost" (click)="closeFlagEdit()">{{ 'admin.cancel' | transloco }}</button>
+              <button class="u-primary" (click)="saveFlagEdit()">{{ 'admin.save' | transloco }}</button>
             </footer>
           </div>
         </div>
@@ -489,7 +675,23 @@ export class AdminComponent implements OnInit {
   readonly broadcastRoles = ['', 'TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
   readonly broadcastSending = signal(false);
   readonly flags = signal<FeatureFlag[]>([]);
-  readonly flagForm = { key: '', description: '' };
+  readonly flagRoles = ['TRAVELER', 'PARTNER', 'OPERATIONS', 'ADMIN'];
+  flagForm: { key: string; description: string; groupName: string; rolloutPercentage: number; roles: Record<string, boolean> } =
+    { key: '', description: '', groupName: '', rolloutPercentage: 100, roles: {} };
+  // Flag targeting edit modal
+  readonly flagEditOpen = signal(false);
+  readonly flagEditKey = signal('');
+  readonly flagEditEnabled = signal(true);
+  flagEdit: { description: string; groupName: string; rolloutPercentage: number; roles: Record<string, boolean> } =
+    { description: '', groupName: '', rolloutPercentage: 100, roles: {} };
+
+  // Booking drill-down + global search
+  readonly bookingDetail = signal<AdminBookingDetail | null>(null);
+  readonly bookingDetailOpen = signal(false);
+  readonly globalQuery = signal('');
+  readonly globalResults = signal<AdminSearchResult | null>(null);
+  readonly searchOpen = signal(false);
+  private searchTimer: ReturnType<typeof setTimeout> | null = null;
 
   private readonly pageSize = 20;
 
@@ -578,22 +780,80 @@ export class AdminComponent implements OnInit {
     });
   }
 
+  private rolesToString(roles: Record<string, boolean>): string | null {
+    const picked = this.flagRoles.filter(r => roles[r]);
+    return picked.length ? picked.join(',') : null;
+  }
+
+  private reloadFlags(): void {
+    this.admin.featureFlags().pipe(catchError(() => of([]))).subscribe(f => this.flags.set(f));
+  }
+
   createFlag(): void {
     const key = this.flagForm.key.trim().toLowerCase();
     if (!/^[a-z0-9._-]{2,80}$/.test(key)) {
       this.flash(this.transloco.translate('admin.flagKeyInvalid'));
       return;
     }
-    this.admin.upsertFlag(key, false, this.flagForm.description).pipe(catchError(() => of(null))).subscribe(created => {
+    const payload: FeatureFlagUpsert = {
+      key,
+      enabled: false,
+      description: this.flagForm.description || null,
+      rolloutPercentage: this.clampPct(this.flagForm.rolloutPercentage),
+      targetRoles: this.rolesToString(this.flagForm.roles),
+      groupName: this.flagForm.groupName || null,
+    };
+    this.admin.upsertFlag(payload).pipe(catchError(() => of(null))).subscribe(created => {
       if (created) {
-        this.flagForm.key = '';
-        this.flagForm.description = '';
+        this.flagForm = { key: '', description: '', groupName: '', rolloutPercentage: 100, roles: {} };
         this.flash(this.transloco.translate('admin.flagCreated'));
-        this.admin.featureFlags().pipe(catchError(() => of([]))).subscribe(f => this.flags.set(f));
+        this.reloadFlags();
       } else {
         this.flash(this.transloco.translate('admin.saveFailed'));
       }
     });
+  }
+
+  openFlagEdit(flag: FeatureFlag): void {
+    this.flagEditKey.set(flag.key);
+    this.flagEditEnabled.set(flag.enabled);
+    const roles: Record<string, boolean> = {};
+    (flag.targetRoles ? flag.targetRoles.split(',') : []).forEach(r => { roles[r.trim()] = true; });
+    this.flagEdit = {
+      description: flag.description ?? '',
+      groupName: flag.groupName ?? '',
+      rolloutPercentage: flag.rolloutPercentage,
+      roles,
+    };
+    this.flagEditOpen.set(true);
+  }
+
+  closeFlagEdit(): void { this.flagEditOpen.set(false); }
+
+  saveFlagEdit(): void {
+    const payload: FeatureFlagUpsert = {
+      key: this.flagEditKey(),
+      enabled: this.flagEditEnabled(),
+      description: this.flagEdit.description || null,
+      rolloutPercentage: this.clampPct(this.flagEdit.rolloutPercentage),
+      targetRoles: this.rolesToString(this.flagEdit.roles),
+      groupName: this.flagEdit.groupName || null,
+    };
+    this.admin.upsertFlag(payload).pipe(catchError(() => of(null))).subscribe(updated => {
+      if (updated) {
+        this.flagEditOpen.set(false);
+        this.flash(this.transloco.translate('admin.flagUpdated'));
+        this.reloadFlags();
+      } else {
+        this.flash(this.transloco.translate('admin.saveFailed'));
+      }
+    });
+  }
+
+  private clampPct(v: number): number {
+    const n = Number(v);
+    if (Number.isNaN(n)) return 100;
+    return Math.max(0, Math.min(100, Math.round(n)));
   }
 
   removeFlag(flag: FeatureFlag): void {
@@ -793,6 +1053,46 @@ export class AdminComponent implements OnInit {
       this.flash(this.transloco.translate('admin.reviewDeleted'));
     });
   }
+
+  // ── Booking drill-down ──────────────────────────────────────────────────
+
+  openBookingDetail(id: string): void {
+    this.bookingDetail.set(null);
+    this.bookingDetailOpen.set(true);
+    this.admin.bookingDetail(id).pipe(catchError(() => of(null))).subscribe(d => {
+      if (d) this.bookingDetail.set(d);
+      else { this.bookingDetailOpen.set(false); this.flash(this.transloco.translate('admin.loadFailed')); }
+    });
+  }
+
+  closeBookingDetail(): void { this.bookingDetailOpen.set(false); }
+
+  // ── Global search ───────────────────────────────────────────────────────
+
+  onGlobalSearch(q: string): void {
+    this.globalQuery.set(q);
+    if (this.searchTimer) clearTimeout(this.searchTimer);
+    if (!q.trim()) { this.globalResults.set(null); this.searchOpen.set(false); return; }
+    this.searchTimer = setTimeout(() => {
+      this.admin.search(q).pipe(catchError(() => of(null))).subscribe(r => {
+        this.globalResults.set(r);
+        this.searchOpen.set(true);
+      });
+    }, 300);
+  }
+
+  pickUser(): void { this.closeSearch(); this.go('users'); }
+  pickPartner(): void { this.closeSearch(); this.go('partners'); }
+  pickBooking(id: string): void { this.closeSearch(); this.openBookingDetail(id); }
+
+  private closeSearch(): void {
+    this.searchOpen.set(false);
+    this.globalQuery.set('');
+    this.globalResults.set(null);
+  }
+
+  @HostListener('document:click')
+  onDocumentClick(): void { if (this.searchOpen()) this.searchOpen.set(false); }
 
   exit(): void { this.router.navigate(['/']); }
 
