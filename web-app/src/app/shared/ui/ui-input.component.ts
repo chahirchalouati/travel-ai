@@ -145,7 +145,8 @@ export type UiInputVariant = 'field' | 'search' | 'filter';
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .ui-input {
+        .ui-input,
+        .ui-input__icon {
           transition: none;
         }
       }

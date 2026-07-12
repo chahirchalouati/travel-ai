@@ -9,8 +9,11 @@
   --ui-in-radius: var(--ad-r-sm);
   --ui-in-text: var(--ad-text);
   --ui-in-placeholder: var(--ad-text-faint);
-  --ui-in-focus: var(--ad-accent-line);
+  --ui-in-border-hover: var(--ad-line-strong);
+  --ui-in-focus: var(--ad-accent);
+  --ui-in-focus-ring: 0 0 0 3px color-mix(in srgb, var(--ad-accent) 16%, transparent);
   --ui-in-icon: var(--ad-text-faint);
+  --ui-in-icon-focus: var(--ad-accent);
   --ui-in-icon-size: 17px;
   --ui-in-pad-y: 6px;
   --ui-in-pad-x: var(--ad-sp-3);
@@ -72,17 +75,24 @@
 .fld app-ui-input {
   --ui-in-bg: var(--ad-inset);
   --ui-in-border: var(--ad-line);
+  --ui-in-border-hover: var(--ad-line-strong);
   --ui-in-radius: var(--ad-r-sm);
   --ui-in-text: var(--ad-text);
   --ui-in-placeholder: var(--ad-text-faint);
-  --ui-in-focus: var(--ad-accent-line);
+  --ui-in-focus: var(--ad-accent);
+  --ui-in-focus-ring: 0 0 0 3px color-mix(in srgb, var(--ad-accent) 16%, transparent);
   --ui-in-pad-y: 8px;
   --ui-in-pad-x: var(--ad-sp-3);
   --ui-in-font-size: var(--ad-fx-base);
   --ui-in-font-family: var(--ad-font);
 }
 .fld textarea { resize: vertical; min-height: 72px; }
-.fld input:focus, .fld select:focus, .fld textarea:focus { border-color: var(--ad-accent-line); outline: none; }
+.fld input:hover:not(:focus), .fld select:hover:not(:focus), .fld textarea:hover:not(:focus) { border-color: var(--ad-line-strong); }
+.fld input:focus, .fld select:focus, .fld textarea:focus {
+  border-color: var(--ad-accent); outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ad-accent) 16%, transparent);
+}
+.fld input, .fld select, .fld textarea { transition: border-color var(--ad-dur-fast) var(--ad-ease), box-shadow var(--ad-dur-fast) var(--ad-ease); }
 .fld input:disabled { opacity: 0.6; }
 .form-err { color: var(--ad-danger); font-size: var(--ad-fx-sm); margin: var(--ad-sp-4) 0 0; }
 
