@@ -50,8 +50,8 @@ import { AdminCommandPaletteComponent } from './ui/admin-command-palette.compone
           }
         </nav>
 
-        <button type="button" class="ash-exit" (click)="exit()">
-          <span class="ad-ms">logout</span> {{ 'admin.backToApp' | transloco }}
+        <button type="button" class="ash-exit" (click)="signOut()">
+          <span class="ad-ms">logout</span> {{ 'admin.signOut' | transloco }}
         </button>
       </aside>
 
@@ -133,5 +133,8 @@ export class AdminShellComponent {
     return ((u.firstName?.[0] ?? '') + (u.lastName?.[0] ?? '')).toUpperCase() || u.email[0].toUpperCase();
   }
 
-  exit(): void { this.router.navigate(['/']); }
+  /** Signs the admin out and returns to the public home page. */
+  signOut(): void {
+    this.auth.logout().subscribe({ complete: () => this.router.navigate(['/']) });
+  }
 }

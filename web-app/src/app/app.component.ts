@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -7,6 +7,10 @@ import { NavComponent } from './shared/nav/nav.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { ImpersonationBannerComponent } from './shared/impersonation-banner/impersonation-banner.component';
 import { SeoService, SeoData } from './core/services/seo.service';
+import { AuthService } from './core/services/auth.service';
+
+/** Landing area for admins — the only surface they are allowed to see. */
+const ADMIN_HOME = '/admin';
 
 @Component({
   selector: 'app-root',
@@ -40,12 +44,16 @@ export class AppComponent {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly seo = inject(SeoService);
+  private readonly auth = inject(AuthService);
 
   /** Bumped on each route activation so the fade trigger re-fires. */
   routeKey = 0;
 
   /** Admin runs full-screen: the public nav/footer are hidden under /admin. */
   readonly chromeless = signal(this.router.url.startsWith('/admin'));
+
+  /** Current URL, kept in a signal so the admin-lock effect can react to it. */
+  private readonly currentUrl = signal(this.router.url);
 
   readonly reduceMotion =
     typeof window !== 'undefined' &&
@@ -60,9 +68,21 @@ export class AppComponent {
         takeUntilDestroyed(),
       )
       .subscribe(e => {
+        this.currentUrl.set(e.urlAfterRedirects);
         this.chromeless.set(e.urlAfterRedirects.startsWith('/admin'));
         this.seo.setTag(this.deepestRouteData());
       });
+
+    // Admins are confined to the admin panel: whenever a signed-in ADMIN lands
+    // on any public surface (fresh page load, in-place login via the modal, or
+    // direct navigation) we bounce them back to /admin. Reacts to both the URL
+    // and the auth state because an in-place login changes the role without a
+    // navigation event of its own.
+    effect(() => {
+      if (this.auth.isAdmin() && !this.currentUrl().startsWith(ADMIN_HOME)) {
+        this.router.navigateByUrl(ADMIN_HOME);
+      }
+    });
   }
 
   onActivate(): void {
