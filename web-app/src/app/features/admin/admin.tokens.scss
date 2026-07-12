@@ -127,6 +127,13 @@
     box-shadow: var(--ad-ring);
     border-radius: var(--ad-r-xs);
   }
+  /* The kit form primitives draw their own focus ring on their wrapper box,
+     so don't stamp a second (sharp-cornered) ring on their inner native
+     control — that produced a doubled red glow on the toolbar search field. */
+  :where(app-ui-input, app-ui-textarea, app-ui-select) :focus-visible {
+    box-shadow: none;
+    border-radius: 0;
+  }
 
   .ad-mono { font-family: var(--ad-mono); font-variant-numeric: tabular-nums; }
 
