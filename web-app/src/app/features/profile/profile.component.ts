@@ -10,6 +10,8 @@ import { MediaService } from '../../core/services/media.service';
 import { DEFAULT_AVATAR, DEFAULT_COVER } from './profile.data';
 import type { ReviewResponse } from '../../core/models/api.models';
 import { catchError, of } from 'rxjs';
+import { UiInputComponent } from '../../shared/ui/ui-input.component';
+import { UiTextareaComponent } from '../../shared/ui/ui-textarea.component';
 
 type Tab = 'activity' | 'trips' | 'photos' | 'reviews' | 'forums' | 'map';
 
@@ -32,7 +34,7 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule],
+  imports: [CommonModule, FormsModule, TranslocoModule, UiInputComponent, UiTextareaComponent],
   template: `
     <div class="profile-page">
 
@@ -366,9 +368,9 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
 
             @if (showAddPlace()) {
               <div class="add-place-form">
-                <input class="ap-input" [(ngModel)]="newPlaceName" [placeholder]="'profile.placePlaceholder' | transloco" maxlength="160">
-                <input class="ap-input" [(ngModel)]="newPlaceCountry" [placeholder]="'profile.countryPlaceholder' | transloco" maxlength="120">
-                <input class="ap-input ap-note" [(ngModel)]="newPlaceNote" [placeholder]="'profile.notePlaceholder' | transloco" maxlength="500">
+                <app-ui-input [(ngModel)]="newPlaceName" [maxlength]="160" [placeholder]="'profile.placePlaceholder' | transloco" />
+                <app-ui-input [(ngModel)]="newPlaceCountry" [maxlength]="120" [placeholder]="'profile.countryPlaceholder' | transloco" />
+                <app-ui-input [(ngModel)]="newPlaceNote" [maxlength]="500" [placeholder]="'profile.notePlaceholder' | transloco" />
                 <button class="ap-save" type="button" [disabled]="!newPlaceName.trim()" (click)="addPlace()">{{ 'profile.add' | transloco }}</button>
               </div>
             }
@@ -437,23 +439,12 @@ const REVIEW_FALLBACK_COVERS: Record<string, string> = {
           </div>
           <div class="modal-body">
             <div class="form-row">
-              <div class="form-field">
-                <label class="form-label" for="edit-first-name">{{ 'auth.firstName' | transloco }}</label>
-                <input id="edit-first-name" class="form-input" type="text" [(ngModel)]="editFirstName" [placeholder]="'auth.firstName' | transloco">
-              </div>
-              <div class="form-field">
-                <label class="form-label" for="edit-last-name">{{ 'auth.lastName' | transloco }}</label>
-                <input id="edit-last-name" class="form-input" type="text" [(ngModel)]="editLastName" [placeholder]="'auth.lastName' | transloco">
-              </div>
+              <app-ui-input [(ngModel)]="editFirstName" [label]="'auth.firstName' | transloco" [placeholder]="'auth.firstName' | transloco" />
+              <app-ui-input [(ngModel)]="editLastName" [label]="'auth.lastName' | transloco" [placeholder]="'auth.lastName' | transloco" />
             </div>
-            <div class="form-field">
-              <label class="form-label" for="edit-bio">{{ 'profile.bio' | transloco }}</label>
-              <textarea id="edit-bio" class="form-input form-textarea" [(ngModel)]="editBio" [placeholder]="'profile.bioPlaceholder' | transloco" rows="3"></textarea>
-            </div>
-            <div class="form-field">
-              <label class="form-label" for="edit-city">{{ 'profile.homeCity' | transloco }}</label>
-              <input id="edit-city" class="form-input" type="text" [(ngModel)]="editCity" [placeholder]="'profile.homeCityPlaceholder' | transloco">
-            </div>
+            <app-ui-textarea [rows]="3" [(ngModel)]="editBio"
+                             [label]="'profile.bio' | transloco" [placeholder]="'profile.bioPlaceholder' | transloco" />
+            <app-ui-input [(ngModel)]="editCity" [label]="'profile.homeCity' | transloco" [placeholder]="'profile.homeCityPlaceholder' | transloco" />
           </div>
           <div class="modal-footer">
             <button class="btn-cancel" type="button" (click)="showEditModal.set(false)">{{ 'profile.cancel' | transloco }}</button>

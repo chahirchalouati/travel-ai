@@ -1,12 +1,16 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { ContactService } from '../../core/services/contact.service';
+import { UiInputComponent } from '../../shared/ui/ui-input.component';
+import { UiTextareaComponent } from '../../shared/ui/ui-textarea.component';
+import { UiSelectComponent, UiSelectOption } from '../../shared/ui/ui-select.component';
 
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [FormsModule, TranslocoModule],
+  imports: [FormsModule, TranslocoModule, UiInputComponent, UiTextareaComponent, UiSelectComponent],
   template: `
     <div class="contact">
       <header class="contact-hero">
@@ -26,27 +30,18 @@ import { ContactService } from '../../core/services/contact.service';
                 <h2>{{ 'contact.form.title' | transloco }}</h2>
                 <form class="cform" (ngSubmit)="submit()" #f="ngForm">
                   <div class="field-row">
-                    <div class="field">
-                      <label class="flabel" for="cf-name">{{ 'contact.form.name' | transloco }}</label>
-                      <input id="cf-name" type="text" class="finput" [(ngModel)]="form.name" name="name" required autocomplete="name" />
-                    </div>
-                    <div class="field">
-                      <label class="flabel" for="cf-email">{{ 'contact.form.email' | transloco }}</label>
-                      <input id="cf-email" type="email" class="finput" [(ngModel)]="form.email" name="email" required autocomplete="email" />
-                    </div>
+                    <app-ui-input name="name" required autocomplete="name"
+                                  [label]="'contact.form.name' | transloco" [(ngModel)]="form.name" />
+                    <app-ui-input name="email" type="email" required autocomplete="email"
+                                  [label]="'contact.form.email' | transloco" [(ngModel)]="form.email" />
                   </div>
                   <div class="field">
-                    <label class="flabel" for="cf-subject">{{ 'contact.form.subject' | transloco }}</label>
-                    <select id="cf-subject" class="finput finput--select" [(ngModel)]="form.subject" name="subject">
-                      @for (opt of subjects; track opt.key) {
-                        <option [value]="opt.key">{{ opt.key | transloco }}</option>
-                      }
-                    </select>
+                    <label class="flabel">{{ 'contact.form.subject' | transloco }}</label>
+                    <app-ui-select name="subject" [options]="subjectOptions()" [(ngModel)]="form.subject"
+                                   [ariaLabel]="'contact.form.subject' | transloco" />
                   </div>
-                  <div class="field">
-                    <label class="flabel" for="cf-msg">{{ 'contact.form.message' | transloco }}</label>
-                    <textarea id="cf-msg" class="finput finput--ta" [(ngModel)]="form.message" name="message" rows="5" required></textarea>
-                  </div>
+                  <app-ui-textarea name="message" [rows]="5" required
+                                   [label]="'contact.form.message' | transloco" [(ngModel)]="form.message" />
                   @if (error()) {
                     <p class="form-error" role="alert">{{ 'contact.form.error' | transloco }}</p>
                   }
@@ -175,6 +170,13 @@ export class ContactComponent {
     { key: 'contact.subjects.press' },
     { key: 'contact.subjects.other' },
   ];
+
+  /** Re-emits on language change so the translated option labels stay current. */
+  private readonly lang = toSignal(this.transloco.langChanges$, { initialValue: this.transloco.getActiveLang() });
+  readonly subjectOptions = computed<UiSelectOption[]>(() => {
+    this.lang();
+    return this.subjects.map(s => ({ value: s.key, label: this.transloco.translate(s.key) }));
+  });
 
   channels = [
     { icon: 'mail', labelKey: 'contact.channels.email', value: 'hello@travelai.com', href: 'mailto:hello@travelai.com' },
