@@ -7,6 +7,7 @@ import { catchError, of } from 'rxjs';
 import { TripCollabService } from '../../core/services/trip-collab.service';
 import type { TripMemberResponse, TripRole } from '../../core/models/api.models';
 import { UiSelectComponent, UiSelectOption } from '../../shared/ui/ui-select.component';
+import { UiInputComponent } from '../../shared/ui/ui-input.component';
 
 /**
  * Self-contained "Compagni di viaggio" panel. Mount it on the live-itinerary
@@ -16,7 +17,7 @@ import { UiSelectComponent, UiSelectOption } from '../../shared/ui/ui-select.com
 @Component({
   selector: 'app-trip-companions',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule, UiSelectComponent],
+  imports: [CommonModule, FormsModule, TranslocoModule, UiSelectComponent, UiInputComponent],
   template: `
     <ng-container *transloco="let t">
       <section class="tc-panel" aria-labelledby="tc-heading">
@@ -64,8 +65,9 @@ import { UiSelectComponent, UiSelectOption } from '../../shared/ui/ui-select.com
 
           @if (owner) {
             <form class="tc-invite" (ngSubmit)="invite()">
-              <input class="tc-input" type="email" name="inviteEmail" [(ngModel)]="email"
-                     [placeholder]="t('tripCollab.emailPlaceholder')" required />
+              <app-ui-input class="tc-input" type="email" name="inviteEmail" [(ngModel)]="email"
+                            autocomplete="email" [required]="true"
+                            [placeholder]="t('tripCollab.emailPlaceholder')" />
               <app-ui-select name="inviteRole" style="flex:0 0 130px" [options]="roleOptions()" [(ngModel)]="role"
                              [ariaLabel]="t('tripCollab.role.' + role)" />
               <button class="tc-btn" type="submit" [disabled]="submitting() || !email.trim()">
@@ -103,7 +105,7 @@ import { UiSelectComponent, UiSelectOption } from '../../shared/ui/ui-select.com
     .tc-remove:hover { background: #fee2e2; color: #b91c1c; }
     .tc-remove .ms { font-size: 18px; }
     .tc-invite { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    .tc-input { flex: 1 1 180px; padding: 0.6rem 0.8rem; border: 1px solid var(--border); border-radius: 3px; font: inherit; }
+    .tc-input { flex: 1 1 180px; }
     .tc-input--role { flex: 0 0 130px; }
     .tc-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--brand); color: #fff; border: none; border-radius: 3px; padding: 0.6rem 1.1rem; font-weight: 700; cursor: pointer; transition: filter 120ms; }
     .tc-btn:hover:not(:disabled) { filter: brightness(1.08); }

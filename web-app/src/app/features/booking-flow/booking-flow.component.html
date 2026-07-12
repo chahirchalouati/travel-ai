@@ -180,9 +180,8 @@
             <div class="bf-field">
               <label class="bf-label">{{ 'booking.flow.promoPlaceholder' | transloco }}</label>
               <div class="bf-promo">
-                <input type="text" class="bf-input" [(ngModel)]="promoInput"
-                       [placeholder]="'booking.flow.promoPlaceholder' | transloco"
-                       style="text-transform:uppercase" />
+                <app-ui-input class="bf-input" type="text" [(ngModel)]="promoInput" [uppercase]="true"
+                              [placeholder]="'booking.flow.promoPlaceholder' | transloco" />
                 <button type="button" class="bf-btn bf-btn--ghost" (click)="applyPromo()">{{ 'booking.flow.promoApply' | transloco }}</button>
               </div>
               @if (promoMsgKey(); as m) {

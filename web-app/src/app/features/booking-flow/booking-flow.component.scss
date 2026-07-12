@@ -167,12 +167,7 @@
 }
 .bf-row { display: flex; gap: 12px; margin-bottom: 12px; }
 @media (max-width: 520px) { .bf-row { flex-direction: column; } }
-.bf-input {
-  flex: 1; width: 100%; border: 1px solid var(--bf-line); border-radius: 2px;
-  padding: 11px 14px; font-family: inherit; font-size: 14px; color: var(--bf-ink);
-  transition: border-color 150ms ease;
-}
-.bf-input:focus { outline: none; border-color: var(--bf-accent); }
+.bf-input { flex: 1; width: 100%; }
 
 /* Review */
 .bf-review-line {
