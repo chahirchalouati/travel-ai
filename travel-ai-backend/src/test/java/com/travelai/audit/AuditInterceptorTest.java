@@ -75,7 +75,7 @@ class AuditInterceptorTest {
 
         interceptor.afterCompletion(request, response, new Object(), null);
 
-        verify(auditService, never()).record(org.mockito.ArgumentMatchers.any());
+        verify(auditService, never()).record(org.mockito.ArgumentMatchers.any(AuditLog.class));
     }
 
     @Test

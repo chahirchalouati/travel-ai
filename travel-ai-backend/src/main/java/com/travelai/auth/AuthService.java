@@ -7,12 +7,14 @@ import com.travelai.auth.dto.RefreshRequest;
 import com.travelai.auth.dto.RegisterRequest;
 import com.travelai.auth.social.GoogleTokenVerifier;
 import com.travelai.auth.social.SocialIdentity;
+import com.travelai.event.AuthAuditEvent;
 import com.travelai.event.EmailVerificationRequestedEvent;
 import com.travelai.event.PasswordResetRequestedEvent;
 import com.travelai.shared.config.JwtProperties;
 import com.travelai.shared.config.JwtService;
 import com.travelai.shared.exception.ErrorCode;
 import com.travelai.shared.exception.TravelAiException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +25,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -77,6 +82,7 @@ public class AuthService {
         String refreshToken = jwtService.generateRefreshToken(savedUser);
         saveRefreshToken(savedUser, refreshToken);
 
+        audit("register", savedUser.getEmail(), savedUser.getId(), true);
         return buildAuthResponse(savedUser, accessToken, refreshToken);
     }
 
@@ -87,13 +93,16 @@ public class AuthService {
             );
         } catch (AuthenticationException ex) {
             log.warn("Login failed for email: {}", request.email());
+            audit("login_failed", request.email(), null, false);
             throw TravelAiException.unauthorized(ErrorCode.INVALID_CREDENTIALS);
         }
 
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.USER_NOT_FOUND));
 
-        return issueTokens(user);
+        AuthResponse response = issueTokens(user);
+        audit("login", user.getEmail(), user.getId(), true);
+        return response;
     }
 
     /**
@@ -104,7 +113,12 @@ public class AuthService {
      * must complete {@link #verifyMfaChallenge}.
      */
     public LoginResponse loginWithMfa(LoginRequest request) {
-        authenticateCredentials(request);
+        try {
+            authenticateCredentials(request);
+        } catch (TravelAiException ex) {
+            audit("login_failed", request.email(), null, false);
+            throw ex;
+        }
 
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> TravelAiException.notFound(ErrorCode.USER_NOT_FOUND));
@@ -112,10 +126,13 @@ public class AuthService {
         if (user.isMfaEnabled()) {
             String mfaToken = jwtService.generateMfaChallengeToken(user.getEmail());
             log.info("2FA challenge issued for user: {}", user.getEmail());
+            audit("mfa_challenge", user.getEmail(), user.getId(), true);
             return LoginResponse.challenge(mfaToken);
         }
 
-        return LoginResponse.tokens(issueTokens(user));
+        LoginResponse response = LoginResponse.tokens(issueTokens(user));
+        audit("login", user.getEmail(), user.getId(), true);
+        return response;
     }
 
     /**
@@ -129,11 +146,14 @@ public class AuthService {
 
         if (!twoFactorService.verifyChallenge(user, code)) {
             log.warn("2FA challenge verification failed for user: {}", email);
+            audit("mfa_failed", email, user.getId(), false);
             throw TravelAiException.unauthorized(ErrorCode.MFA_CODE_INVALID);
         }
 
         log.info("2FA challenge verified, tokens issued for user: {}", email);
-        return LoginResponse.tokens(issueTokens(user));
+        LoginResponse response = LoginResponse.tokens(issueTokens(user));
+        audit("mfa_verified", email, user.getId(), true);
+        return response;
     }
 
     private void authenticateCredentials(LoginRequest request) {
@@ -178,7 +198,9 @@ public class AuthService {
                 .ifPresent(token -> {
                     token.revoke();
                     refreshTokenRepository.save(token);
-                    log.info("Revoked refresh token for user: {}", token.getUser().getEmail());
+                    User user = token.getUser();
+                    log.info("Revoked refresh token for user: {}", user.getEmail());
+                    audit("logout", user.getEmail(), user.getId(), true);
                 });
     }
 
@@ -199,7 +221,11 @@ public class AuthService {
             eventPublisher.publishEvent(new PasswordResetRequestedEvent(
                     user.getId(), user.getEmail(), user.getFirstName(), resetLink));
             log.info("Password reset requested for user: {}", user.getEmail());
-        }, () -> log.info("Password reset requested for unknown email"));
+            audit("password_reset_requested", user.getEmail(), user.getId(), true);
+        }, () -> {
+            log.info("Password reset requested for unknown email");
+            audit("password_reset_requested", email, null, false);
+        });
     }
 
     /** Validates a single-use reset token, updates the password and revokes all refresh tokens. */
@@ -223,6 +249,7 @@ public class AuthService {
 
         refreshTokenRepository.deleteByUser(user);
         log.info("Password reset completed for user: {}", user.getEmail());
+        audit("password_reset", user.getEmail(), user.getId(), true);
     }
 
     /** Marks the account matching the verification token as verified. */
@@ -234,6 +261,7 @@ public class AuthService {
         user.setEmailVerificationToken(null);
         userRepository.save(user);
         log.info("Email verified for user: {}", user.getEmail());
+        audit("email_verified", user.getEmail(), user.getId(), true);
     }
 
     /** Re-sends the verification email for the authenticated user; no-op when already verified. */
@@ -277,6 +305,7 @@ public class AuthService {
         saveRefreshToken(user, refreshToken);
 
         log.info("Google social login for user: {}", user.getEmail());
+        audit("social_login", user.getEmail(), user.getId(), true);
         return buildAuthResponse(user, accessToken, refreshToken);
     }
 
@@ -347,5 +376,27 @@ public class AuthService {
                 jwtProperties.expirationMs() / 1000,
                 user.getRole().name()
         );
+    }
+
+    /**
+     * Publishes an authentication action to the audit trail. The client IP is captured here,
+     * on the request thread, because the audit consumer records it out-of-band.
+     */
+    private void audit(String action, String actor, UUID targetId, boolean success) {
+        eventPublisher.publishEvent(new AuthAuditEvent(
+                action, actor, targetId == null ? null : targetId.toString(), success, clientIp()));
+    }
+
+    /** Best-effort client IP from the current request; {@code null} when outside a request. */
+    private String clientIp() {
+        if (!(RequestContextHolder.getRequestAttributes() instanceof ServletRequestAttributes attrs)) {
+            return null;
+        }
+        HttpServletRequest request = attrs.getRequest();
+        String forwarded = request.getHeader("X-Forwarded-For");
+        if (StringUtils.hasText(forwarded)) {
+            return forwarded.split(",")[0].trim();
+        }
+        return request.getRemoteAddr();
     }
 }
