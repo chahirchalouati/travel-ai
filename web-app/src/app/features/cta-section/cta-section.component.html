@@ -1,0 +1,27 @@
+<section id="cta" aria-labelledby="cta-heading">
+  <div class="container">
+    <div class="cta-card">
+      <div class="cta-icon-side" aria-hidden="true">
+        <span class="ms cta-icon">flight_takeoff</span>
+      </div>
+      <div class="cta-text-side">
+        <h2 class="cta-title" id="cta-heading">
+          {{ 'cta.title' | transloco }}
+        </h2>
+        <p class="cta-subtitle">
+          {{ 'cta.subtitle' | transloco }}
+        </p>
+        <div class="cta-actions">
+          <a routerLink="/planner" class="cta-btn">
+            {{ 'cta.primary' | transloco }}
+            <span class="ms" aria-hidden="true">arrow_forward</span>
+          </a>
+          <a routerLink="/chat" class="cta-link">{{ 'cta.secondary' | transloco }}</a>
+        </div>
+        <p class="cta-trust">
+          {{ 'cta.trust' | transloco }}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

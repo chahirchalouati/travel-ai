@@ -1,0 +1,667 @@
+:host {
+  display: block;
+}
+
+/* ====================================================================
+   HERO — editorial split: pitch on the left, living itinerary right
+   ==================================================================== */
+section {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(2.5rem, 1.5rem + 4vw, 5.5rem) 0 clamp(3rem, 2rem + 4vw, 6rem);
+  background:
+    radial-gradient(120% 90% at 88% -10%, rgba(190, 67, 41, 0.10), transparent 55%),
+    radial-gradient(90% 70% at 0% 110%, rgba(17, 102, 76, 0.08), transparent 60%),
+    var(--bg-primary);
+}
+
+/* ====================================================================
+   Cinematic backdrop — destination photos that crossfade with the trip
+   ==================================================================== */
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  /* "far" parallax layer — drifts against the pointer for depth */
+  transform: translate3d(calc(var(--mx, 0) * -18px), calc(var(--my, 0) * -13px), 0);
+  transition: transform 320ms var(--ease-out-expo);
+  will-change: transform;
+}
+
+.hero-shot {
+  position: absolute;
+  inset: -6%; /* bleed so the ken-burns zoom never exposes an edge */
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  filter: saturate(1.05) contrast(1.02);
+  transition: opacity 1.3s ease;
+
+  &.is-active {
+    opacity: 1;
+    animation: kenburns 17s ease-out both;
+  }
+}
+@keyframes kenburns {
+  from { transform: scale(1.05) translate3d(0, 0, 0); }
+  to   { transform: scale(1.16) translate3d(-1.6%, -1.4%, 0); }
+}
+
+/* Feather the photo into the paper so the left-hand pitch stays legible */
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      100deg,
+      var(--bg-primary) 4%,
+      color-mix(in srgb, var(--bg-primary) 62%, transparent) 34%,
+      transparent 64%
+    ),
+    linear-gradient(0deg, var(--bg-primary) 1%, transparent 26%),
+    radial-gradient(130% 80% at 100% 0%, transparent 38%, color-mix(in srgb, var(--bg-primary) 70%, transparent) 118%);
+}
+
+/* fine paper grain for atmosphere */
+.hero-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.4;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+
+.hero-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1.02fr 0.98fr;
+  gap: clamp(2rem, 1rem + 4vw, 4.5rem);
+  align-items: center;
+}
+
+/* ---------------- Left column ---------------- */
+.hero-lede {
+  max-width: 33rem;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.3rem 0 0.45rem;
+  border-bottom: 1px solid var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+.hero-eyebrow-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 0;
+  background: var(--color-red);
+}
+
+.hero-title {
+  margin: 1.4rem 0 0;
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 800;
+  font-size: clamp(2.5rem, 1.4rem + 5vw, 4.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.038em;
+  color: var(--text-primary);
+  text-wrap: balance;
+
+  em {
+    font-style: normal;
+    font-weight: 800;
+    color: var(--color-red-ink);
+  }
+}
+
+.hero-subtitle {
+  margin: 1.15rem 0 0;
+  max-width: 30rem;
+  font-size: clamp(0.98rem, 0.92rem + 0.3vw, 1.12rem);
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* ---- Search ---- */
+.hero-search {
+  margin-top: 1.75rem;
+}
+
+/* The hero pill is app-ui-input (variant=search) themed via --ui-in-* tokens:
+   ink border, red leading icon, a roomier field, and a flush trailing submit. */
+.hero-search__field {
+  --ui-in-border: var(--color-ink);
+  --ui-in-border-hover: var(--color-ink);
+  --ui-in-radius: var(--radius-sm);
+  --ui-in-icon: var(--color-red-ink);
+  --ui-in-icon-focus: var(--color-red-ink);
+  --ui-in-icon-size: 1.25rem;
+  --ui-in-font-family: var(--font-body);
+  --ui-in-font-size: 0.98rem;
+  --ui-in-pad-y: 0.4rem;
+  --ui-in-pad-x: 1.1rem;
+  --ui-in-pad-r: 0.4rem;
+  --ui-in-gap: 0.5rem;
+  --ui-in-bar-width: 0px;
+}
+
+.search-submit {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-sm);
+  background: var(--color-red);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  transition: background var(--duration-normal) var(--ease),
+    transform var(--duration-fast) var(--ease);
+
+  .ms {
+    font-size: 1.3rem;
+  }
+
+  &:hover {
+    background: var(--color-red-hover);
+  }
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+/* ---- Quick picks ---- */
+.hero-quick-picks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.hero-quick-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+}
+
+.quick-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 160ms var(--ease),
+    border-color 160ms var(--ease),
+    color 160ms var(--ease);
+
+  &:hover {
+    color: #fff;
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+  }
+
+  /* the destination currently building in the live preview */
+  &.is-live {
+    color: var(--color-red-ink);
+    border-color: var(--color-red-ink);
+    background: var(--color-red-tint);
+  }
+}
+.quick-pill-emoji {
+  font-size: 0.95rem;
+}
+
+/* ---- Trust strip ---- */
+.hero-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.1rem;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+  .ms {
+    font-size: 1.05rem;
+    color: var(--teal);
+  }
+}
+
+/* ====================================================================
+   Right column — the living itinerary "device"
+   ==================================================================== */
+.hero-stage {
+  position: relative;
+  perspective: 1400px;
+}
+
+.trip-card {
+  position: relative;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  /* precise, no tilt — subtle pointer parallax only */
+  transform: translate3d(calc(var(--mx, 0) * 6px), calc(var(--my, 0) * 5px), 0);
+  transition: transform 240ms var(--ease);
+  will-change: transform;
+
+  &:hover {
+    box-shadow: var(--shadow-xl);
+  }
+}
+
+/* ---- header ---- */
+.trip-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1.05rem 1.2rem;
+  background: var(--surface-ink);
+  color: var(--text-on-ink);
+}
+.trip-head-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+}
+.trip-avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: var(--color-red);
+  color: #fff;
+
+  .ms { font-size: 1.15rem; }
+}
+.trip-head-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.trip-brief {
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #fff;
+}
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 0.95em;
+  margin-left: 1px;
+  vertical-align: text-bottom;
+  background: var(--brand);
+  animation: caret-blink 0.9s steps(1) infinite;
+
+  &.hidden { display: none; }
+}
+@keyframes caret-blink { 50% { opacity: 0; } }
+
+.trip-summary {
+  margin-top: 0.15rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: rgba(244, 238, 229, 0.55);
+}
+
+.trip-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+  padding: 0.28rem 0.6rem;
+  border-radius: var(--radius-sm);
+  background: rgba(244, 238, 229, 0.1);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(244, 238, 229, 0.85);
+  transition: background var(--duration-normal) var(--ease-out-expo),
+    color var(--duration-normal) var(--ease-out-expo);
+
+  .ms { font-size: 0.9rem; }
+
+  &.is-done {
+    background: rgba(85, 180, 140, 0.18);
+    color: #8ee0bd;
+  }
+}
+.dot-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: pulse 1.1s ease-in-out infinite;
+}
+
+/* ---- body ---- */
+.trip-body {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+}
+
+/* mini map */
+.trip-map {
+  position: relative;
+  border-right: 1px solid var(--border-light);
+  background:
+    radial-gradient(120% 100% at 50% 0%, rgba(17, 102, 76, 0.06), transparent 60%),
+    var(--bg-secondary);
+  overflow: hidden;
+}
+.map-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(33, 27, 20, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(33, 27, 20, 0.05) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(120% 100% at 50% 40%, #000 55%, transparent 100%);
+}
+.map-route {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.route-line {
+  fill: none;
+  stroke: var(--brand);
+  stroke-width: 0.7;
+  stroke-dasharray: 2.5 2.5;
+  opacity: 0.5;
+  vector-effect: non-scaling-stroke;
+  animation: dash-drift 18s linear infinite;
+}
+@keyframes dash-drift { to { stroke-dashoffset: -40; } }
+
+.map-pin {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
+  border-radius: 50% 50% 50% 2px;
+  background: var(--brand);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(17, 17, 17, 0.14);
+  transform: rotate(-45deg) scale(0);
+  opacity: 0;
+  transition: transform 0.5s var(--ease-out-expo), opacity 0.3s ease;
+
+  &.shown {
+    opacity: 1;
+    transform: rotate(-45deg) scale(1);
+  }
+}
+.map-pin-n {
+  transform: rotate(45deg);
+  font-size: 0.66rem;
+  font-weight: 700;
+}
+
+/* day plan */
+.trip-days {
+  padding: 0.9rem 1rem 1rem;
+  max-height: 360px;
+  overflow: hidden;
+}
+.trip-day {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.45s var(--ease-out-expo), transform 0.45s var(--ease-out-expo);
+
+  &.shown { opacity: 1; transform: none; }
+  & + & { margin-top: 0.4rem; }
+}
+.trip-day-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0.5rem 0 0.45rem;
+}
+.trip-day-label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+}
+.trip-day-place {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-red-ink);
+}
+
+.trip-item {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: var(--radius-sm);
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  transition: opacity 0.4s var(--ease-out-expo), transform 0.4s var(--ease-out-expo),
+    background 0.2s ease;
+
+  &.shown { opacity: 1; transform: none; }
+  &:hover { background: var(--bg-secondary); }
+}
+.trip-item-time {
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-tertiary);
+}
+.trip-item-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+
+  .ms { font-size: 1.05rem; }
+
+  &[data-kind='stay']  { background: var(--brand-light); color: var(--color-red-ink); }
+  &[data-kind='flight']{ background: var(--gold-light); color: var(--gold); }
+  &[data-kind='eat']   { background: var(--gold-light); color: var(--gold); }
+  &[data-kind='do']    { background: var(--teal-light); color: var(--teal); }
+}
+.trip-item-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.trip-item-title {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.trip-item-meta {
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* footer */
+.trip-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  padding: 0.85rem 1.1rem;
+  border-top: 1px solid var(--border-light);
+  background: var(--bg-secondary);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo);
+
+  &.shown { opacity: 1; transform: none; }
+}
+.trip-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--text-primary);
+  border: none;
+  color: var(--bg-primary);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 200ms var(--ease-out-expo), background 200ms ease;
+
+  .ms { font-size: 1rem; transition: transform 200ms var(--ease-out-expo); }
+  &:hover {
+    background: var(--brand);
+    .ms { transform: translateX(3px); }
+  }
+}
+.trip-foot-note {
+  font-size: 0.74rem;
+  color: var(--text-tertiary);
+}
+
+/* ---- floating proof chips ---- */
+.float-chip {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  animation: float-bob 5s ease-in-out infinite;
+
+  .ms { font-size: 1rem; }
+
+  &--a {
+    top: 8%;
+    left: -1.4rem;
+    .ms { color: var(--teal); }
+  }
+  &--b {
+    bottom: 12%;
+    right: -1.2rem;
+    animation-delay: -2.5s;
+    .ms { color: var(--gold); }
+  }
+}
+@keyframes float-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
+}
+
+/* ---- reveal (left column entrance) ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: revealUp 0.7s var(--ease-out-expo) forwards;
+}
+.reveal-delay-1 { animation-delay: 0.08s; }
+.reveal-delay-2 { animation-delay: 0.16s; }
+.reveal-delay-3 { animation-delay: 0.24s; }
+@keyframes revealUp { to { opacity: 1; transform: none; } }
+
+/* ====================================================================
+   Responsive
+   ==================================================================== */
+@media (max-width: 940px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .hero-lede { max-width: 38rem; }
+  .hero-stage { max-width: 30rem; }
+  .float-chip--a { left: -0.5rem; }
+  .float-chip--b { right: -0.5rem; }
+
+  /* Stacked layout: feather the photo top-to-bottom so the pitch stays readable */
+  .hero-shot { opacity: 0; }
+  .hero-shot.is-active { opacity: 0.85; }
+  .hero-scrim {
+    background:
+      linear-gradient(
+        180deg,
+        var(--bg-primary) 18%,
+        color-mix(in srgb, var(--bg-primary) 55%, transparent) 44%,
+        transparent 78%
+      ),
+      linear-gradient(0deg, var(--bg-primary) 2%, transparent 30%);
+  }
+}
+
+@media (max-width: 560px) {
+  .trip-body { grid-template-columns: 1fr; }
+  .trip-map { height: 120px; border-right: none; border-bottom: 1px solid var(--border-light); }
+  .float-chip { display: none; }
+  .trip-foot-note { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { animation: none; opacity: 1; transform: none; }
+  .trip-card { transform: rotate(0.6deg); }
+  .route-line, .dot-pulse, .float-chip, .caret { animation: none; }
+  .trip-day, .trip-item, .trip-foot, .map-pin {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  /* Keep the backdrop, drop the motion */
+  .hero-canvas { transform: none !important; }
+  .hero-shot { transition: none; }
+  .hero-shot.is-active { animation: none; transform: none; }
+}

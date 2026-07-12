@@ -1,0 +1,289 @@
+:host {
+  display: block;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.rewards {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: clamp(2rem, 1rem + 4vw, 4.5rem) clamp(1rem, 0.5rem + 2vw, 2rem) 6rem;
+
+  &__kicker {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-red);
+    margin: 0 0 0.75rem;
+  }
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: var(--text-h1);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+    margin: 0 0 0.5rem;
+  }
+
+  &__lede {
+    max-width: 46ch;
+    color: var(--color-text-muted);
+    font-size: var(--text-body-lg);
+    margin: 0 0 2.5rem;
+  }
+
+  /* Balance strip ------------------------------------------------------- */
+  &__balance {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--color-border-strong);
+    margin-bottom: 3rem;
+  }
+
+  &__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1.25rem 1.5rem;
+
+    & + & {
+      border-left: 1px solid var(--color-border);
+    }
+  }
+
+  &__stat-num {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  &__stat-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+
+  /* Sections ------------------------------------------------------------ */
+  &__section {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 2.5rem 0 0.25rem;
+    padding-top: 1.25rem;
+    border-top: 2px solid var(--color-border-strong);
+  }
+
+  &__section-note {
+    color: var(--color-text-subtle);
+    font-size: var(--text-sm);
+    margin: 0 0 1.5rem;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+
+  &__loading,
+  &__empty {
+    color: var(--color-text-subtle);
+    font-size: var(--text-sm);
+    padding: 1.5rem 0;
+  }
+
+  &__error {
+    color: var(--color-red);
+    font-size: var(--text-sm);
+    margin: 0 0 1.5rem;
+  }
+
+  /* Buttons ------------------------------------------------------------- */
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.7rem 1.1rem;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background var(--duration-fast, 150ms) ease, color var(--duration-fast, 150ms) ease;
+
+    &--ink { background: var(--color-ink, #111); color: var(--color-text-on-dark); }
+    &--ink:hover { background: #000; }
+
+    &--red { background: var(--color-red); color: #fff; }
+    &--red:hover:not(:disabled) { background: var(--color-red-hover, #c8382f); }
+
+    &:disabled { background: var(--color-surface-sunken); color: var(--color-text-subtle); cursor: not-allowed; }
+  }
+
+  &__gate {
+    border: 1px solid var(--color-border-strong);
+    padding: 2rem;
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+  }
+}
+
+/* Reward card ----------------------------------------------------------- */
+.reward {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: border-color var(--duration-fast, 150ms) ease, transform var(--duration-fast, 150ms) ease;
+
+  &:hover { border-color: var(--color-border-strong); transform: translateY(-2px); }
+
+  &--unlocked { border-color: var(--color-border-strong); }
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  &__type {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.45rem;
+    border: 1px solid currentColor;
+
+    &--voucher { color: var(--color-red); }
+    &--perk { color: var(--gold, #B4791A); }
+    &--gift { color: var(--color-success-strong, #1a7d54); }
+  }
+
+  &__badge {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--color-ink, #111);
+    color: var(--color-text-on-dark);
+    padding: 0.15rem 0.45rem;
+  }
+
+  &__cost {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-text-muted);
+  }
+
+  &__name {
+    font-size: var(--text-body-lg);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+
+  &__desc {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    line-height: 1.45;
+    margin: 0;
+    flex: 1;
+  }
+
+  &__meter {
+    height: 4px;
+    background: var(--color-surface-sunken);
+    overflow: hidden;
+  }
+
+  &__meter-fill {
+    display: block;
+    height: 100%;
+    background: var(--color-red);
+    transition: width var(--duration-normal, 300ms) ease;
+  }
+
+  &__foot {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.04em;
+    color: var(--color-text-subtle);
+    margin: 0;
+  }
+
+  &__cta { margin-top: 0.4rem; width: 100%; }
+}
+
+/* Owned rewards --------------------------------------------------------- */
+.rewards__owned {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--color-border);
+}
+
+.owned {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1.1rem;
+  flex-wrap: wrap;
+
+  & + & { border-top: 1px solid var(--color-border); }
+
+  &--used, &--expired { opacity: 0.55; }
+
+  &__main {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  &__code {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+
+  &__value {
+    font-weight: 700;
+    color: var(--color-red);
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__status {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  &__exp {
+    font-size: var(--text-micro);
+    color: var(--color-text-subtle);
+  }
+}
+
+@media (max-width: 640px) {
+  .rewards__balance { grid-template-columns: 1fr; }
+  .rewards__stat + .rewards__stat { border-left: 0; border-top: 1px solid var(--color-border); }
+}

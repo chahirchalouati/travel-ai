@@ -1,0 +1,286 @@
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslocoModule } from '@jsverse/transloco';
+import { catchError, of } from 'rxjs';
+import { CatalogService, emptyPage } from '../../core/services/catalog.service';
+import type { RestaurantSearchQuery } from '../../core/services/catalog.service';
+import type { RestaurantSearchResult } from '../../core/models/api.models';
+import { InfiniteScrollDirective } from '../../shared/infinite-scroll/infinite-scroll.directive';
+import { RevealDirective } from '../../shared/reveal/reveal.directive';
+import { TripContextService } from '../../core/services/trip-context.service';
+import { UiSelectComponent, UiAutocompleteComponent, UiDatepickerComponent } from '../../shared/ui';
+import { SuggestService } from '../../core/services/suggest.service';
+import { GUEST_COUNT_OPTIONS } from '../catalog/catalog-options';
+
+const HEADER_IMG =
+  'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80';
+
+@Component({
+  selector: 'app-restaurants',
+  standalone: true,
+  imports: [CommonModule, FormsModule, TranslocoModule, InfiniteScrollDirective, RevealDirective, UiSelectComponent, UiAutocompleteComponent, UiDatepickerComponent],
+  template: `
+    <header class="catalog-header">
+      <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
+      <div class="catalog-header__scrim"></div>
+      <span class="catalog-eyebrow"><span class="ms" style="font-size:15px">restaurant</span> {{ 'catalog.restaurants.eyebrow' | transloco }}</span>
+      <h1 class="catalog-title">{{ 'catalog.restaurants.title' | transloco }}</h1>
+      <p class="catalog-subtitle">{{ 'catalog.restaurants.subtitle' | transloco }}</p>
+
+      <form class="filter-bar" (ngSubmit)="runSearch()">
+        <div class="field field--primary">
+          <label>{{ 'catalog.fields.city' | transloco }}</label>
+          <app-ui-autocomplete [(ngModel)]="city" name="city" icon="location_on"
+                               [fetch]="citySuggest" (selected)="runSearch()"
+                               [ariaLabel]="'catalog.fields.city' | transloco"
+                               [placeholder]="'catalog.fields.cityPlaceholder' | transloco" />
+        </div>
+        <div class="field">
+          <label>{{ 'catalog.fields.cuisine' | transloco }}</label>
+          <app-ui-autocomplete [(ngModel)]="cuisineType" name="cuisine" icon="restaurant"
+                               optionIcon="restaurant" [fetch]="cuisineSuggest"
+                               [ariaLabel]="'catalog.fields.cuisine' | transloco"
+                               [placeholder]="'catalog.fields.cuisinePlaceholder' | transloco" />
+        </div>
+
+        <span class="filter-bar__divider"></span>
+
+        <div class="field">
+          <label>{{ 'catalog.fields.date' | transloco }}</label>
+          <app-ui-datepicker [(ngModel)]="date" name="date"
+                             [ariaLabel]="'catalog.fields.date' | transloco" />
+        </div>
+        <div class="field field--compact">
+          <label>{{ 'catalog.fields.covers' | transloco }}</label>
+          <app-ui-select [(ngModel)]="covers" name="covers" (ngModelChange)="runSearch()"
+                         [ariaLabel]="'catalog.fields.covers' | transloco"
+                         [options]="GUEST_OPTIONS" />
+        </div>
+
+        <span class="filter-bar__break"></span>
+
+        <div class="field">
+          <label>{{ 'catalog.fields.maxPerPerson' | transloco }}</label>
+          <app-ui-select [(ngModel)]="maxBudgetPerPerson" name="budget" (ngModelChange)="runSearch()"
+                         [ariaLabel]="'catalog.fields.maxPerPerson' | transloco"
+                         [options]="[
+                           { value: undefined, label: ('catalog.fields.anyPrice' | transloco) },
+                           { value: 20, label: '≤ €20' },
+                           { value: 30, label: '≤ €30' },
+                           { value: 50, label: '≤ €50' },
+                           { value: 75, label: '≤ €75' },
+                           { value: 100, label: '≤ €100' },
+                           { value: 150, label: '≤ €150' },
+                           { value: 200, label: '≤ €200' },
+                           { value: 300, label: '≤ €300' }
+                         ]" />
+        </div>
+        <div class="field">
+          <label>{{ 'catalog.fields.sort' | transloco }}</label>
+          <app-ui-select [(ngModel)]="sort" name="sort" (ngModelChange)="runSearch()"
+                         [ariaLabel]="'catalog.fields.sort' | transloco"
+                         [options]="[
+                           { value: '', label: ('catalog.sort.relevance' | transloco) },
+                           { value: 'price_asc', label: ('catalog.sort.priceAsc' | transloco) },
+                           { value: 'price_desc', label: ('catalog.sort.priceDesc' | transloco) },
+                           { value: 'name_asc', label: ('catalog.sort.nameAsc' | transloco) }
+                         ]" />
+        </div>
+        <button class="search-submit" type="submit"><span class="ms">search</span>{{ 'catalog.search' | transloco }}</button>
+      </form>
+
+      <!-- Active filter tags -->
+      @if (activeFilterTags().length > 0) {
+        <div class="active-filters">
+          <span class="active-filters__label"><span class="ms">filter_list</span> {{ 'catalog.activeFilters' | transloco }}</span>
+          @for (tag of activeFilterTags(); track tag.key) {
+            <span class="filter-tag">
+              {{ tag.label }}
+              <button class="filter-tag__remove" (click)="removeFilter(tag.key)"><span class="ms">close</span></button>
+            </span>
+          }
+          <button class="clear-all-btn" type="button" (click)="clearAll()">
+            <span class="ms">delete_sweep</span> {{ 'catalog.clearAll' | transloco }}
+          </button>
+        </div>
+      }
+    </header>
+
+    <section class="results">
+      @if (loading()) {
+        <div class="skeleton-grid">
+          @for (s of [1,2,3,4,5,6]; track s) {
+            <div class="skeleton"><div class="skeleton__img"></div><div class="skeleton__line"></div><div class="skeleton__line" style="width:60%"></div></div>
+          }
+        </div>
+      } @else if (results().length === 0) {
+        <div class="state">
+          <span class="ms">no_meals</span>
+          <h3>{{ 'catalog.empty.title' | transloco }}</h3>
+          <p>{{ 'catalog.empty.subtitle' | transloco }}</p>
+        </div>
+      } @else {
+        <div class="results-head">
+          <p class="results-count">{{ total() }} <span>{{ 'catalog.restaurants.found' | transloco }}</span></p>
+        </div>
+        <div class="card-grid">
+          @for (r of results(); track r.id) {
+            <article class="card" appReveal [appRevealDelay]="($index % 8) * 50" tabindex="0" (click)="open(r.id)" (keydown.enter)="open(r.id)">
+              <div class="card__img-wrap">
+                <img class="card__img" [src]="r.imageUrl" [alt]="r.name" loading="lazy" />
+                <span class="card__badge">{{ priceTier(r.priceTier) }}</span>
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">{{ r.name }}</h3>
+                <p class="card__sub"><span class="ms" style="font-size:14px">location_on</span>{{ r.city }} · {{ r.cuisineType }}</p>
+                <p class="card__desc">{{ r.description }}</p>
+                <div class="card__tags">
+                  @if (r.petFriendly) { <span class="tag-pill">{{ 'catalog.amenities.pet' | transloco }}</span> }
+                  @if (r.accessible) { <span class="tag-pill">{{ 'catalog.amenities.accessible' | transloco }}</span> }
+                  <span class="tag-pill">{{ r.available ? ('catalog.restaurants.available' | transloco) : ('catalog.restaurants.fullyBooked' | transloco) }}</span>
+                  @if (tripFit(r); as place) { <span class="tag-pill tag-pill--ai"><span class="ms" style="font-size:13px;vertical-align:middle">auto_awesome</span> {{ 'common.fitsTrip' | transloco:{ place: place } }}</span> }
+                </div>
+                <div class="card__foot">
+                  <span class="card__sub" style="font-weight:600;color:var(--text-secondary)">{{ r.cuisineType }}</span>
+                  <span class="card__cta">{{ 'catalog.view' | transloco }} <span class="ms" style="font-size:16px">arrow_forward</span></span>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+        @if (hasMore()) {
+          <div class="infinite-sentinel" appInfiniteScroll
+               [scrollDisabled]="loadingMore()" (scrolled)="loadMore()"></div>
+        }
+        @if (loadingMore()) {
+          <div class="loading-more"><span class="loading-more__spinner"></span>{{ 'catalog.loadingMore' | transloco }}</div>
+        }
+      }
+    </section>
+  `,
+  styleUrl: '../catalog/catalog-shared.scss',
+})
+export class RestaurantsComponent implements OnInit {
+  private readonly catalog = inject(CatalogService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly tripContext = inject(TripContextService);
+  private readonly suggest = inject(SuggestService);
+
+  readonly citySuggest = (q: string) => this.suggest.restaurantCities(q);
+  readonly cuisineSuggest = (q: string) => this.suggest.cuisines(q);
+
+  readonly headerImg = HEADER_IMG;
+  readonly GUEST_OPTIONS = GUEST_COUNT_OPTIONS;
+
+  tripFit(r: RestaurantSearchResult): string | null {
+    return this.tripContext.match(r.city);
+  }
+  readonly results = signal<RestaurantSearchResult[]>([]);
+  readonly total = signal(0);
+  readonly loading = signal(true);
+  readonly loadingMore = signal(false);
+  readonly hasMore = computed(() => this.results().length < this.total());
+  private page = 0;
+
+  city = '';
+  cuisineType = '';
+  date = '';
+  covers = 2;
+  maxBudgetPerPerson?: number;
+  sort = '';
+
+  readonly activeFilterTags = computed(() => {
+    const tags: { key: string; label: string }[] = [];
+    if (this.city.trim()) {
+      tags.push({ key: 'city', label: this.city });
+    }
+    if (this.cuisineType.trim()) {
+      tags.push({ key: 'cuisine', label: this.cuisineType });
+    }
+    if (this.date) {
+      tags.push({ key: 'date', label: this.date });
+    }
+    if (this.maxBudgetPerPerson !== undefined) {
+      tags.push({ key: 'budget', label: `≤ €${this.maxBudgetPerPerson}/pp` });
+    }
+    return tags;
+  });
+
+  removeFilter(key: string): void {
+    if (key === 'city') { this.city = ''; }
+    else if (key === 'cuisine') { this.cuisineType = ''; }
+    else if (key === 'date') { this.date = ''; }
+    else if (key === 'budget') { this.maxBudgetPerPerson = undefined; }
+    this.runSearch();
+  }
+
+  clearAll(): void {
+    this.city = '';
+    this.cuisineType = '';
+    this.date = '';
+    this.covers = 2;
+    this.maxBudgetPerPerson = undefined;
+    this.sort = '';
+    this.runSearch();
+  }
+
+  ngOnInit(): void {
+    this.tripContext.ensureLoaded();
+    const q = this.route.snapshot.queryParamMap.get('city') ?? this.route.snapshot.queryParamMap.get('q');
+    if (q) {
+      this.city = q;
+    }
+    this.runSearch();
+  }
+
+  runSearch(): void {
+    this.page = 0;
+    this.loading.set(true);
+    this.catalog
+      .searchRestaurants(this.buildQuery(), 0)
+      .pipe(catchError(() => of(emptyPage<RestaurantSearchResult>())))
+      .subscribe(res => {
+        this.results.set(res.items);
+        this.total.set(res.total);
+        this.loading.set(false);
+      });
+  }
+
+  loadMore(): void {
+    if (this.loadingMore() || !this.hasMore()) {
+      return;
+    }
+    this.loadingMore.set(true);
+    this.catalog
+      .searchRestaurants(this.buildQuery(), this.page + 1)
+      .pipe(catchError(() => of(emptyPage<RestaurantSearchResult>(this.page, this.total()))))
+      .subscribe(res => {
+        this.page = res.page;
+        this.total.set(res.total);
+        this.results.update(current => [...current, ...res.items]);
+        this.loadingMore.set(false);
+      });
+  }
+
+  private buildQuery(): RestaurantSearchQuery {
+    return {
+      city: this.city.trim() || undefined,
+      cuisineType: this.cuisineType.trim() || undefined,
+      date: this.date || undefined,
+      covers: this.covers || 1,
+      maxBudgetPerPerson: this.maxBudgetPerPerson,
+      sort: this.sort || undefined,
+    };
+  }
+
+  priceTier(tier: number): string {
+    return '€'.repeat(Math.max(1, Math.min(4, tier || 1)));
+  }
+
+  open(id: string): void {
+    this.router.navigate(['/restaurants', id]);
+  }
+}

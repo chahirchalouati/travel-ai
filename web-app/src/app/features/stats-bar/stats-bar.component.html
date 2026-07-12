@@ -1,0 +1,15 @@
+<section id="stats" aria-label="Key statistics">
+  <div class="container">
+    <div class="stats-row">
+      @for (stat of stats; track stat.label; let i = $index; let last = $last) {
+        <div class="stat-item">
+          <div class="stat-value">{{ stat.display }}</div>
+          <div class="stat-label">{{ stat.label }}</div>
+        </div>
+        @if (!last) {
+          <div class="stat-divider" aria-hidden="true"></div>
+        }
+      }
+    </div>
+  </div>
+</section>

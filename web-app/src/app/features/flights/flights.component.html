@@ -1,0 +1,323 @@
+<header class="catalog-header">
+  <div class="catalog-header__bg" [style.background-image]="'url(' + headerImg + ')'"></div>
+  <div class="catalog-header__scrim"></div>
+  <span class="catalog-eyebrow"><span class="ms" style="font-size:15px">flight</span> {{ 'catalog.flights.eyebrow' | transloco }}</span>
+  <h1 class="catalog-title">{{ 'catalog.flights.title' | transloco }}</h1>
+  <p class="catalog-subtitle">{{ 'catalog.flights.subtitle' | transloco }}</p>
+
+  <!-- Trip type -->
+  <div class="trip-toggle" role="tablist">
+    <button type="button" role="tab" [class.trip-toggle__on]="tripType() === 'oneway'" (click)="setTripType('oneway')">
+      <span class="ms" style="font-size:16px">trending_flat</span> {{ 'catalog.flights.tripOneway' | transloco }}
+    </button>
+    <button type="button" role="tab" [class.trip-toggle__on]="tripType() === 'round'" (click)="setTripType('round')">
+      <span class="ms" style="font-size:16px">sync_alt</span> {{ 'catalog.flights.tripRound' | transloco }}
+    </button>
+    <button type="button" role="tab" [class.trip-toggle__on]="tripType() === 'multi'" (click)="setTripType('multi')">
+      <span class="ms" style="font-size:16px">alt_route</span> {{ 'catalog.flights.tripMulti' | transloco }}
+    </button>
+  </div>
+
+  @if (tripType() !== 'multi') {
+    <form class="filter-bar" (ngSubmit)="runSearch()">
+      <div class="field field--primary">
+        <label>{{ 'catalog.fields.from' | transloco }}</label>
+        <app-ui-autocomplete [(ngModel)]="originIata" name="origin" icon="flight_takeoff"
+                             optionIcon="flight" [fetch]="airportSuggest"
+                             [ariaLabel]="'catalog.fields.from' | transloco"
+                             [placeholder]="'catalog.fields.fromPlaceholder' | transloco" />
+      </div>
+      <div class="field field--primary">
+        <label>{{ 'catalog.fields.to' | transloco }}</label>
+        <app-ui-autocomplete [(ngModel)]="destIata" name="dest" icon="flight_land"
+                             optionIcon="flight" [fetch]="airportSuggest"
+                             [ariaLabel]="'catalog.fields.to' | transloco"
+                             [placeholder]="'catalog.fields.toPlaceholder' | transloco" />
+      </div>
+      <span class="filter-bar__divider"></span>
+
+      <div class="field">
+        <label>{{ 'catalog.fields.departure' | transloco }}</label>
+        <app-ui-datepicker [(ngModel)]="departureDate" name="date"
+                           [ariaLabel]="'catalog.fields.departure' | transloco" />
+      </div>
+      @if (tripType() === 'round') {
+        <div class="field">
+          <label>{{ 'catalog.fields.return' | transloco }}</label>
+          <app-ui-datepicker [(ngModel)]="returnDate" name="return"
+                             [ariaLabel]="'catalog.fields.return' | transloco" />
+        </div>
+      } @else {
+        <div class="field field--compact">
+          <label>{{ 'catalog.fields.passengers' | transloco }}</label>
+          <app-ui-select [(ngModel)]="passengers" name="pax" (ngModelChange)="runSearch()"
+                         [ariaLabel]="'catalog.fields.passengers' | transloco"
+                         [options]="GUEST_OPTIONS" />
+        </div>
+      }
+
+      <span class="filter-bar__break"></span>
+      @if (tripType() === 'round') {
+        <div class="field field--compact">
+          <label>{{ 'catalog.fields.passengers' | transloco }}</label>
+          <app-ui-select [(ngModel)]="passengers" name="pax" (ngModelChange)="runSearch()"
+                         [ariaLabel]="'catalog.fields.passengers' | transloco"
+                         [options]="GUEST_OPTIONS" />
+        </div>
+      }
+      <div class="field">
+        <label>{{ 'catalog.fields.maxPrice' | transloco }}</label>
+        <app-ui-select [(ngModel)]="maxPrice" name="maxPrice" (ngModelChange)="runSearch()"
+                       [ariaLabel]="'catalog.fields.maxPrice' | transloco"
+                       [options]="[
+                         { value: undefined, label: ('catalog.fields.anyPrice' | transloco) },
+                         { value: 100, label: '≤ €100' },
+                         { value: 200, label: '≤ €200' },
+                         { value: 300, label: '≤ €300' },
+                         { value: 500, label: '≤ €500' },
+                         { value: 750, label: '≤ €750' },
+                         { value: 1000, label: '≤ €1000' },
+                         { value: 1500, label: '≤ €1500' },
+                         { value: 2000, label: '≤ €2000' },
+                         { value: 3000, label: '≤ €3000' }
+                       ]" />
+      </div>
+      <div class="field">
+        <label>{{ 'catalog.fields.sort' | transloco }}</label>
+        <app-ui-select [(ngModel)]="sort" name="sort" (ngModelChange)="runSearch()"
+                       [ariaLabel]="'catalog.fields.sort' | transloco"
+                       [options]="[
+                         { value: '', label: ('catalog.sort.relevance' | transloco) },
+                         { value: 'price_asc', label: ('catalog.sort.priceAsc' | transloco) },
+                         { value: 'price_desc', label: ('catalog.sort.priceDesc' | transloco) },
+                         { value: 'departure_asc', label: ('catalog.sort.departureAsc' | transloco) },
+                         { value: 'departure_desc', label: ('catalog.sort.departureDesc' | transloco) }
+                       ]" />
+      </div>
+      <button class="search-submit" type="submit"><span class="ms">search</span>{{ 'catalog.search' | transloco }}</button>
+    </form>
+  } @else {
+    <!-- Multi-city leg editor -->
+    <div class="legs">
+      @for (leg of legs(); track $index) {
+        <div class="leg-row">
+          <span class="leg-row__num">{{ $index + 1 }}</span>
+          <app-ui-autocomplete class="leg-row__airport" [ngModel]="leg.originIata" (ngModelChange)="updateLeg($index, { originIata: $event })"
+                               icon="flight_takeoff" optionIcon="flight" [fetch]="airportSuggest"
+                               [ariaLabel]="'catalog.fields.from' | transloco"
+                               [placeholder]="'catalog.fields.fromPlaceholder' | transloco" />
+          <span class="ms" style="font-size:18px;color:#fff">arrow_forward</span>
+          <app-ui-autocomplete class="leg-row__airport" [ngModel]="leg.destIata" (ngModelChange)="updateLeg($index, { destIata: $event })"
+                               icon="flight_land" optionIcon="flight" [fetch]="airportSuggest"
+                               [ariaLabel]="'catalog.fields.to' | transloco"
+                               [placeholder]="'catalog.fields.toPlaceholder' | transloco" />
+          <app-ui-datepicker class="leg-row__date" [ngModel]="leg.date" (ngModelChange)="updateLeg($index, { date: $event })"
+                              [ariaLabel]="'catalog.fields.departure' | transloco" />
+          @if (legs().length > 1) {
+            <button type="button" class="leg-row__remove" (click)="removeLeg($index)"
+                    [attr.aria-label]="'catalog.flights.removeLeg' | transloco"><span class="ms">close</span></button>
+          }
+        </div>
+      }
+      <div class="legs__actions">
+        <button type="button" class="leg-add" (click)="addLeg()">
+          <span class="ms" style="font-size:18px">add</span> {{ 'catalog.flights.addLeg' | transloco }}
+        </button>
+        <button type="button" class="search-submit" (click)="runSearch()"><span class="ms">search</span>{{ 'catalog.search' | transloco }}</button>
+      </div>
+    </div>
+  }
+</header>
+
+<!-- Fare calendar strip -->
+@if (tripType() !== 'multi' && fareCalendar().length > 0) {
+  <section class="fare-cal" appReveal>
+    <div class="fare-cal__label">
+      <span class="ms" style="font-size:16px">calendar_month</span>
+      {{ 'catalog.flights.fareCalendar' | transloco }}
+    </div>
+    <div class="fare-cal__strip">
+      @for (day of fareCalendar(); track day.date) {
+        <button type="button" class="fare-cal__day"
+                [class.fare-cal__day--on]="day.date === departureDate"
+                [class.fare-cal__day--cheap]="day.minPrice === cheapestFare()"
+                (click)="pickFareDay(day.date)">
+          <span class="fare-cal__date">{{ day.date | date:'EEE dd' }}</span>
+          <span class="fare-cal__price">{{ day.minPrice | currency:'EUR':'symbol':'1.0-0' }}</span>
+        </button>
+      }
+    </div>
+  </section>
+}
+
+<section class="results">
+  @if (loading()) {
+    <div class="skeleton-grid">
+      @for (s of [1,2,3,4,5,6]; track s) {
+        <div class="skeleton"><div class="skeleton__img"></div><div class="skeleton__line"></div><div class="skeleton__line" style="width:60%"></div></div>
+      }
+    </div>
+  } @else if (tripType() === 'multi') {
+    <!-- Multi-city: a section per leg -->
+    @if (legResults().length === 0) {
+      <div class="state">
+        <span class="ms">alt_route</span>
+        <h3>{{ 'catalog.empty.title' | transloco }}</h3>
+        <p>{{ 'catalog.empty.subtitle' | transloco }}</p>
+      </div>
+    } @else {
+      @for (lr of legResults(); track $index) {
+        <section class="leg-section" appReveal>
+          <header class="leg-section__head">
+            <span class="leg-section__num">{{ 'catalog.flights.leg' | transloco }} {{ $index + 1 }}</span>
+            <h2 class="leg-section__route">{{ lr.leg.originIata || '—' }} <span class="ms" style="font-size:18px;vertical-align:middle">arrow_forward</span> {{ lr.leg.destIata || '—' }}</h2>
+            <span class="leg-section__date">{{ lr.leg.date | date:'EEE, dd MMM' }}</span>
+          </header>
+          @if (lr.flights.length === 0) {
+            <p class="leg-section__empty">{{ 'catalog.empty.title' | transloco }}</p>
+          } @else {
+            <div class="card-grid">
+              @for (f of lr.flights; track f.id) {
+                <ng-container *ngTemplateOutlet="fcard; context: { $implicit: f }"></ng-container>
+              }
+            </div>
+          }
+        </section>
+      }
+    }
+  } @else if (filteredOutbound().length === 0) {
+    <div class="state">
+      <span class="ms">flight_takeoff</span>
+      <h3>{{ 'catalog.empty.title' | transloco }}</h3>
+      <p>{{ 'catalog.empty.subtitle' | transloco }}</p>
+    </div>
+  } @else {
+    <!-- Filters -->
+    @if (availableAirlines().length > 1 || maxDurationHours() > 0) {
+      <div class="flight-filters" appReveal>
+        <span class="flight-filters__title"><span class="ms" style="font-size:16px">tune</span>{{ 'catalog.flights.filters' | transloco }}</span>
+        <div class="flight-filters__airlines">
+          @for (a of availableAirlines(); track a) {
+            <app-ui-checkbox [label]="a" [checked]="airlineFilter().has(a)" (checkedChange)="toggleAirline(a)" />
+          }
+        </div>
+        <label class="flight-filters__duration">
+          {{ 'catalog.flights.maxDuration' | transloco }}
+          <app-ui-select [ngModel]="maxDurationHours()" (ngModelChange)="setMaxDuration(+$event)"
+                         [ariaLabel]="'catalog.flights.maxDuration' | transloco"
+                         [options]="[
+                           { value: 0, label: ('catalog.flights.anyDuration' | transloco) },
+                           { value: 3, label: '≤ 3h' },
+                           { value: 6, label: '≤ 6h' },
+                           { value: 10, label: '≤ 10h' }
+                         ]" />
+        </label>
+        @if (hasActiveFilters()) {
+          <button type="button" class="flight-filters__clear" (click)="clearFilters()">{{ 'catalog.flights.clearFilters' | transloco }}</button>
+        }
+      </div>
+    }
+
+    @if (tripType() === 'round') {
+      <h2 class="leg-heading"><span class="ms" style="font-size:18px;vertical-align:middle">flight_takeoff</span> {{ 'catalog.flights.outbound' | transloco }}</h2>
+    }
+
+    <div class="results-head">
+      <p class="results-count">{{ filteredOutbound().length }} <span>{{ 'catalog.flights.found' | transloco }}</span></p>
+      <p class="results-breakdown">
+        <span class="ms" style="font-size:15px">public</span>
+        {{ countryCount() }} {{ 'catalog.flights.countries' | transloco }}
+        <span class="dot">·</span>
+        {{ destinationCount() }} {{ 'catalog.flights.destinations' | transloco }}
+      </p>
+    </div>
+
+    @for (country of grouped(); track country.country) {
+      <ng-container *ngTemplateOutlet="countrySection; context: { $implicit: country }"></ng-container>
+    }
+
+    <!-- Return leg (round trip) -->
+    @if (tripType() === 'round') {
+      <h2 class="leg-heading leg-heading--return"><span class="ms" style="font-size:18px;vertical-align:middle">flight_land</span> {{ 'catalog.flights.return' | transloco }}</h2>
+      @if (groupedInbound().length === 0) {
+        <p class="leg-section__empty">{{ 'catalog.empty.title' | transloco }}</p>
+      } @else {
+        @for (country of groupedInbound(); track country.country) {
+          <ng-container *ngTemplateOutlet="countrySection; context: { $implicit: country }"></ng-container>
+        }
+      }
+    }
+
+    @if (tripType() === 'oneway' && hasMore()) {
+      <div class="infinite-sentinel" appInfiniteScroll
+           [scrollDisabled]="loadingMore()" (scrolled)="loadMore()"></div>
+    }
+    @if (loadingMore()) {
+      <div class="loading-more"><span class="loading-more__spinner"></span>{{ 'catalog.loadingMore' | transloco }}</div>
+    }
+  }
+</section>
+
+<!-- Reusable: a destination-country group -->
+<ng-template #countrySection let-country>
+  <section class="country-group" appReveal>
+    <header class="country-group__head">
+      <span class="country-group__flag" aria-hidden="true">{{ country.flag }}</span>
+      <h2 class="country-group__name">{{ country.country }}</h2>
+      <span class="country-group__count">{{ country.count }} {{ 'catalog.flights.routes' | transloco }}</span>
+      <span class="country-group__price">{{ 'catalog.flights.from' | transloco }} {{ country.fromPrice | currency:'EUR':'symbol':'1.0-0' }}</span>
+    </header>
+    @for (city of country.cities; track city.city) {
+      <div class="city-group">
+        <h3 class="city-group__name">
+          <span class="ms" style="font-size:16px">location_on</span>{{ city.city }}
+          <small>{{ city.fromPrice | currency:'EUR':'symbol':'1.0-0' }}+</small>
+        </h3>
+        <div class="card-grid">
+          @for (f of city.flights; track f.id) {
+            <ng-container *ngTemplateOutlet="fcard; context: { $implicit: f }"></ng-container>
+          }
+        </div>
+      </div>
+    }
+  </section>
+</ng-template>
+
+<!-- Reusable: a single flight card -->
+<ng-template #fcard let-f>
+  <article class="card" appReveal tabindex="0" (click)="open(f.id)" (keydown.enter)="open(f.id)" style="cursor:pointer">
+    <div class="card__body" style="padding-top:18px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <h3 class="card__title">{{ f.airline }}</h3>
+        <span class="tag-pill">{{ f.flightNumber }}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin:8px 0">
+        <div style="text-align:center">
+          <div style="font-size:1.4rem;font-weight:800;letter-spacing:-0.02em">{{ f.originIata }}</div>
+          <div style="font-size:0.74rem;color:var(--text-tertiary)">{{ f.departureAt | date:'HH:mm' }}</div>
+        </div>
+        <div style="flex:1;height:1px;background:var(--border);position:relative">
+          <span class="ms" style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);font-size:18px;color: var(--color-red-ink);background:var(--bg-primary);padding:0 4px">flight</span>
+          <span class="card__dur">{{ durationLabel(f) }}</span>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:1.4rem;font-weight:800;letter-spacing:-0.02em">{{ f.destIata }}</div>
+          <div style="font-size:0.74rem;color:var(--text-tertiary)">{{ f.arrivalAt | date:'HH:mm' }}</div>
+        </div>
+      </div>
+      <p class="card__sub"><span class="ms" style="font-size:14px">calendar_today</span>{{ f.departureAt | date:'EEE, dd MMM yyyy' }}</p>
+      <div class="card__tags">
+        <span class="tag-pill tag-pill--direct">{{ 'catalog.flights.direct' | transloco }}</span>
+        <span class="tag-pill">{{ f.baggageIncluded ? ('catalog.flights.baggageYes' | transloco) : ('catalog.flights.baggageNo' | transloco) }}</span>
+        <span class="tag-pill">{{ f.seatsAvailable }} {{ 'catalog.flights.seats' | transloco }}</span>
+      </div>
+      @if (tripFit(f); as place) {
+        <span class="tag-pill tag-pill--ai"><span class="ms" style="font-size:13px;vertical-align:middle">auto_awesome</span> {{ 'common.fitsTrip' | transloco:{ place: place } }}</span>
+      }
+      <div class="card__foot">
+        <span class="card__price">{{ f.price | currency:'EUR':'symbol':'1.0-0' }} <small>/ {{ 'catalog.perPerson' | transloco }}</small></span>
+        <span class="card__cta">{{ 'catalog.view' | transloco }} <span class="ms" style="font-size:16px">arrow_forward</span></span>
+      </div>
+    </div>
+  </article>
+</ng-template>

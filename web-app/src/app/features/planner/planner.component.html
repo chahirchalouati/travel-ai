@@ -1,0 +1,490 @@
+<div class="planner" [attr.data-stage]="stage()">
+
+  <!-- ── Full-bleed destination map ─────────────────────────────────────────── -->
+  <app-planner-map
+    class="map-canvas"
+    [pins]="stage() === 'empty' || stage() === 'generating' ? [] : mapPins()"
+    [selectedId]="selId()"
+    (select)="selectMapPin($event)"
+  ></app-planner-map>
+
+  <!-- ── Flat step tracker ──────────────────────────────────────────────────── -->
+  <nav class="steps">
+    @for (s of steps(); track s.label; let i = $index) {
+      <span class="step" [class.on]="s.on">
+        <span class="step-dot"><span class="ms">{{ s.icon }}</span></span>
+        <span class="step-label">{{ s.label }}</span>
+      </span>
+      @if (s.arrow) { <span class="step-sep" [class.on]="s.on"></span> }
+    }
+  </nav>
+
+  <!-- ── LEFT: trip control dock ────────────────────────────────────────────── -->
+  <section class="dock dock--left glass">
+    <header class="dock-title">
+      <h1>{{ t().i_title }}</h1>
+      <p>{{ t().i_sub }}</p>
+    </header>
+
+    <div class="dock-scroll">
+      <!-- Budget -->
+      <div class="field">
+        <div class="field-head">
+          <span class="field-label">{{ t().i_budget }}</span>
+          <span class="field-value">€{{ budgetStr() }}<small>{{ t().i_total }}</small></span>
+        </div>
+        <app-ui-range [min]="400" [max]="4000" [step]="50"
+                      [value]="budget()" (valueChange)="onBudget($event)"
+                      [ariaLabel]="t().i_budget" [valueText]="'€' + budgetStr()" />
+      </div>
+
+      <!-- Dates -->
+      <div class="field">
+        <span class="field-label">{{ t().i_dates }}</span>
+        <div class="segmented" role="group" [attr.aria-label]="t().i_dates">
+          <button [class.on]="dateMode() === 'fixed'" [attr.aria-pressed]="dateMode() === 'fixed'" (click)="dateMode.set('fixed')">{{ t().i_fixed }}</button>
+          <button [class.on]="dateMode() === 'flex'" [attr.aria-pressed]="dateMode() === 'flex'" (click)="dateMode.set('flex')">{{ t().i_flex }}</button>
+        </div>
+      </div>
+
+      <!-- Nights -->
+      <div class="field field--row">
+        <span class="field-label">{{ t().i_nights }}</span>
+        <div class="stepper">
+          <button (click)="nightsDown()" aria-label="-"><span class="ms">remove</span></button>
+          <span class="stepper-val">{{ nights() }}</span>
+          <button (click)="nightsUp()" aria-label="+"><span class="ms">add</span></button>
+        </div>
+      </div>
+
+      <!-- Travelers -->
+      <div class="field">
+        <span class="field-label">{{ t().i_people }}</span>
+        <div class="travelers">
+          <div class="trav-row">
+            <span class="trav-name">{{ t().i_adults }}</span>
+            <div class="stepper">
+              <button (click)="adultsDown()" aria-label="-"><span class="ms">remove</span></button>
+              <span class="stepper-val">{{ adults() }}</span>
+              <button (click)="adultsUp()" aria-label="+"><span class="ms">add</span></button>
+            </div>
+          </div>
+          <div class="trav-row">
+            <span class="trav-name">{{ t().i_children }} <small>{{ t().i_optional }}</small></span>
+            <div class="stepper">
+              <button (click)="childrenDown()" aria-label="-"><span class="ms">remove</span></button>
+              <span class="stepper-val">{{ children() }}</span>
+              <button (click)="childrenUp()" aria-label="+"><span class="ms">add</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Priority -->
+      <div class="field">
+        <span class="field-label">{{ t().i_priority }}</span>
+        <span class="field-hint">{{ t().i_priority_sub }}</span>
+        <div class="prio-grid">
+          @for (o of prioOptions(); track o.key) {
+            <button class="prio" [class.on]="o.on" [attr.aria-pressed]="o.on" (click)="setPriorityStr(o.key)">
+              <span class="ms">{{ o.icon }}</span>
+              <span>{{ o.label }}</span>
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Constraints -->
+      <div class="field">
+        <span class="field-label">{{ t().i_constraints }}</span>
+        <div class="chip-wrap">
+          @for (c of constraintChips(); track c.key) {
+            <button class="cchip" [class.on]="c.on" [attr.aria-pressed]="c.on" (click)="toggleConstraint(c.key)">
+              <span class="ms">{{ c.icon }}</span>{{ c.label }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Destination -->
+      <button class="dest" [class.set]="!destOpen()" (click)="toggleDest()">
+        <span class="ms">{{ destOpen() ? 'public' : 'beach_access' }}</span>
+        <span class="dest-body">
+          <span class="dest-t">{{ destOpen() ? t().dest_open_t : t().dest_set_t }}</span>
+          <span class="dest-s">{{ destOpen() ? t().dest_open_s : t().dest_set_s }}</span>
+        </span>
+        <span class="ms dest-toggle">{{ destOpen() ? 'lock_open' : 'tune' }}</span>
+      </button>
+    </div>
+
+    <button class="generate" (click)="generate()" [disabled]="stage() === 'generating'">
+      <span class="ms">auto_awesome</span>{{ generateLabel() }}
+    </button>
+  </section>
+
+  <!-- ── Empty hint ─────────────────────────────────────────────────────────── -->
+  @if (stage() === 'empty') {
+    <div class="hint hint--brief glass">
+      <h2>{{ t().e_title }}</h2>
+      <app-ui-sentence-brief
+        [placeOptions]="briefPlaces()"
+        [budgetMin]="400"
+        [budgetMax]="4000"
+        (briefChange)="applyBrief($event)"
+        (compose)="composeBrief($event)"
+      />
+    </div>
+  }
+
+  <!-- ── Generating overlay ─────────────────────────────────────────────────── -->
+  @if (stage() === 'generating') {
+    <div class="gen glass">
+      <div class="gen-head">
+        <div class="gen-spinner"><span class="ms">auto_awesome</span></div>
+        <div>
+          <h2>{{ t().g_title }}</h2>
+          <p>{{ t().g_sub }}</p>
+        </div>
+      </div>
+      <ul class="agents">
+        @for (a of agents(); track a.name) {
+          <li class="agent" [class.done]="a.done" [class.active]="a.active" [class.pending]="a.pending">
+            <span class="agent-icon" [style.background]="a.iconBg" [style.color]="a.iconFg"><span class="ms">{{ a.icon }}</span></span>
+            <span class="agent-body">
+              <span class="agent-name">{{ a.name }}</span>
+              <span class="agent-task">{{ a.task }}</span>
+            </span>
+            <span class="agent-state">
+              @if (a.done) { <span class="ms">check_circle</span> }
+              @else if (a.active) { <span class="agent-pulse"></span> }
+            </span>
+          </li>
+        }
+      </ul>
+      <p class="gen-foot"><span class="ms">verified_user</span>{{ t().g_foot }}</p>
+    </div>
+  }
+
+  <!-- ── RIGHT: proposals list ──────────────────────────────────────────────── -->
+  @if (stage() === 'results') {
+    <aside class="dock dock--right glass">
+      <header class="results-head">
+        <div>
+          <h2>{{ t().r_title }}</h2>
+          <span class="results-sum">{{ resultSummary() }}</span>
+        </div>
+        <button class="mini-btn" (click)="generate()"><span class="ms">refresh</span>{{ t().r_regen }}</button>
+      </header>
+
+      @if (plannerNotice()) {
+        <div class="results-notice" [class.results-notice--offline]="plannerNotice() === 'offline'"
+             role="status" aria-live="polite">
+          <span class="ms">{{ plannerNotice() === 'offline' ? 'cloud_off' : 'hourglass_top' }}</span>
+          <span class="results-notice-text">{{ noticeText() }}</span>
+          <button class="results-notice-x" (click)="dismissNotice()" [attr.aria-label]="t().notice_dismiss">
+            <span class="ms">close</span>
+          </button>
+        </div>
+      }
+
+      <div class="prop-list">
+        @if (!proposals().length) {
+          <div class="prop-empty">
+            <span class="ms">travel_explore</span>
+            <p>{{ t().r_empty }}</p>
+          </div>
+        }
+        @for (p of proposals(); track p.id) {
+          <article class="prop" [class.rec]="p.recommended" [class.sel]="p.id === selId()"
+                   (click)="selId.set(p.id)">
+            <div class="prop-img" [style.background]="p.img">
+              @if (p.recommended) { <span class="prop-badge"><span class="ms">star</span>{{ t().r_recommended }}</span> }
+              <span class="prop-fit" [style.color]="p.fitFg">{{ p.fitLabel }}</span>
+            </div>
+            <div class="prop-body">
+              <div class="prop-top">
+                <div>
+                  <h3>{{ p.title }}</h3>
+                  <span class="prop-cap">{{ p.caption }}</span>
+                </div>
+                <div class="prop-price">
+                  <span class="prop-total">€{{ p.totalStr }}</span>
+                  <span class="prop-per">{{ p.perPerson }}</span>
+                </div>
+              </div>
+              <div class="prop-delta" [style.color]="p.deltaFg" [style.background]="p.deltaBg">
+                <span class="ms">{{ p.deltaIcon }}</span>{{ p.delta }}
+              </div>
+              <button class="prop-view" (click)="openDetail(p.id); $event.stopPropagation()">
+                {{ t().r_view }}<span class="ms">arrow_forward</span>
+              </button>
+            </div>
+          </article>
+        }
+      </div>
+    </aside>
+  }
+
+  <!-- ── RIGHT: detail ──────────────────────────────────────────────────────── -->
+  @if (stage() === 'detail') {
+    <aside class="dock dock--right dock--detail glass">
+      <button class="back" (click)="backToResults()"><span class="ms">arrow_back</span>{{ t().d_back }}</button>
+
+      <div class="detail-hero" [style.background]="selectedProposal().img">
+        <div class="detail-hero-grad">
+          <h2>{{ selectedProposal().title }}</h2>
+          <span>{{ selectedProposal().caption }}</span>
+        </div>
+      </div>
+
+      <div class="detail-scroll">
+        <div class="detail-headline">
+          <div class="detail-total">
+            <span class="detail-total-num">€{{ selectedProposal().totalStr }}</span>
+            <span class="detail-total-sub">{{ selectedProposal().nights }} · {{ travelerCount() }}</span>
+          </div>
+          <span class="detail-delta" [style.color]="selectedProposal().deltaFg" [style.background]="selectedProposal().deltaBg">
+            <span class="ms">{{ selectedProposal().deltaIcon }}</span>{{ selectedProposal().delta }}
+          </span>
+        </div>
+
+        <p class="detail-why"><span class="ms">tips_and_updates</span>{{ selectedProposal().why }}</p>
+
+        <!-- Budget breakdown -->
+        <h4 class="detail-h">{{ t().d_breakdown }}</h4>
+        <div class="splits">
+          @for (s of selSplits(); track s.label) {
+            <div class="split">
+              <div class="split-head">
+                <span class="split-name"><span class="ms" [style.color]="s.color">{{ s.icon }}</span>{{ s.label }}</span>
+                <span class="split-amt">€{{ s.amount }} <small>{{ s.pct }}</small></span>
+              </div>
+              <div class="split-bar"><span [style.width]="s.pct" [style.background]="s.color"></span></div>
+            </div>
+          }
+        </div>
+
+        <!-- Components -->
+        <h4 class="detail-h">{{ t().d_elements }}</h4>
+        <div class="components">
+          <div class="comp">
+            <span class="comp-icon comp-icon--stay"><span class="ms">hotel</span></span>
+            <span class="comp-body">
+              <span class="comp-name">{{ selectedProposal().hotel }}</span>
+              <span class="comp-meta">{{ selectedProposal().hotelMeta }}</span>
+            </span>
+            <span class="comp-price">€{{ selectedProposal().hotelPrice }}</span>
+            <button class="comp-change" (click)="changeElement('hotel')">{{ t().d_change }}</button>
+          </div>
+          <div class="comp">
+            <span class="comp-icon comp-icon--food"><span class="ms">restaurant</span></span>
+            <span class="comp-body">
+              <span class="comp-name">{{ selectedProposal().rest }}</span>
+              <span class="comp-meta">{{ selectedProposal().restMeta }}</span>
+            </span>
+            <span class="comp-price">€{{ selectedProposal().restPrice }}</span>
+            <button class="comp-change" (click)="changeElement('restaurant')">{{ t().d_change }}</button>
+          </div>
+          <div class="comp">
+            <span class="comp-icon comp-icon--fly"><span class="ms">flight_takeoff</span></span>
+            <span class="comp-body">
+              <span class="comp-name">{{ selectedProposal().flight }}</span>
+              <span class="comp-meta">{{ selectedProposal().flightMeta }}</span>
+            </span>
+            <span class="comp-price">€{{ selectedProposal().flightPrice }}</span>
+            <button class="comp-change" (click)="changeElement('flight')">{{ t().d_change }}</button>
+          </div>
+        </div>
+
+        <p class="detail-cancel"><span class="ms">verified</span>{{ selectedProposal().cancel }}</p>
+      </div>
+
+      <button class="generate detail-book" (click)="goBooking()">
+        <span class="ms">shopping_cart_checkout</span>{{ t().d_book }} · €{{ selectedProposal().totalStr }}
+      </button>
+    </aside>
+  }
+
+  <!-- ── Overlays ───────────────────────────────────────────────────────────── -->
+  @if (overlay()) {
+    <div class="modal-scrim" (click)="closeOverlay()"></div>
+  }
+
+  <!-- Booking -->
+  @if (overlay() === 'booking') {
+    <div class="modal glass" role="dialog">
+      <header class="modal-head">
+        <h2>{{ t().b_title }}</h2>
+        <button class="icon-btn" (click)="closeOverlay()"><span class="ms">close</span></button>
+      </header>
+      <p class="modal-sub"><span class="live-dot"></span>{{ t().b_checking }}</p>
+
+      <ul class="checks">
+        @for (c of checks(); track c.label) {
+          <li class="check" [class.done]="c.done" [class.active]="c.active">
+            <span class="check-ic">
+              @if (c.done) { <span class="ms">check</span> }
+              @else if (c.active) { <span class="spin ms">progress_activity</span> }
+              @else { <span class="ms">schedule</span> }
+            </span>
+            <span class="check-label">{{ c.label }}</span>
+            <span class="check-status" [style.color]="c.fg">{{ c.status }}</span>
+          </li>
+        }
+      </ul>
+
+      <div class="modal-summary">
+        <div class="msum-row"><span>{{ t().b_traveler }}</span><strong>{{ travelerCount() }}</strong></div>
+        <div class="msum-row msum-total"><span>{{ t().b_total }}</span><strong>€{{ selectedProposal().totalStr }}</strong></div>
+      </div>
+
+      @if (bookingError()) {
+        <p class="modal-error" role="alert"><span class="ms">error</span>{{ t().b_error }}</p>
+      }
+
+      <button class="generate" (click)="goPayment()" [disabled]="!allChecked()">
+        @if (allChecked()) { {{ t().b_continue }} }
+        @else if (bookingError()) { {{ t().b_error }} }
+        @else { {{ t().b_wait }} }
+      </button>
+    </div>
+  }
+
+  <!-- Payment -->
+  @if (overlay() === 'payment') {
+    <div class="modal glass" role="dialog">
+      <header class="modal-head">
+        <button class="icon-btn" (click)="backToBooking()"><span class="ms">arrow_back</span></button>
+        <h2>{{ t().p_title }}</h2>
+        <button class="icon-btn" (click)="closeOverlay()"><span class="ms">close</span></button>
+      </header>
+
+      <div class="pay-amount">
+        <span>{{ t().p_paying }}</span>
+        <strong>€{{ selectedProposal().totalStr }}</strong>
+      </div>
+
+      <span class="field-label">{{ t().p_how }}</span>
+      <div class="pay-modes">
+        <button class="pay-mode" [class.on]="payMode() === 'full'" [attr.aria-pressed]="payMode() === 'full'" (click)="payMode.set('full')">
+          <span class="ms">payments</span>
+          <span class="pay-mode-t">{{ t().p_full }}</span>
+          <span class="pay-mode-s">{{ t().p_full_sub }}</span>
+        </button>
+        <button class="pay-mode" [class.on]="payMode() === 'install'" [attr.aria-pressed]="payMode() === 'install'" (click)="payMode.set('install')">
+          <span class="ms">event_repeat</span>
+          <span class="pay-mode-t">{{ t().p_install }}</span>
+          <span class="pay-mode-s">{{ installSub() }}</span>
+        </button>
+      </div>
+
+      @if (payMode() === 'install') {
+        <div class="install">
+          @for (l of installLabels(); track l; let i = $index) {
+            <div class="install-step">
+              <span class="install-amt">€{{ rateStr() }}</span>
+              <span class="install-when">{{ l }}</span>
+            </div>
+          }
+        </div>
+      }
+
+      <p class="pay-note"><span class="ms">shield</span>{{ t().p_platform }}</p>
+
+      <button class="generate" (click)="confirmPay()">
+        <span class="ms">lock</span>{{ payBtnLabel() }}
+      </button>
+    </div>
+  }
+
+  <!-- Confirmation -->
+  @if (overlay() === 'confirmation') {
+    <div class="modal glass modal--center" role="dialog">
+      <div class="conf-orb"><span class="ms">check</span></div>
+      <h2>{{ t().c_title }}</h2>
+      <p class="modal-sub modal-sub--center">{{ t().c_sub }}</p>
+
+      <ul class="conf-items">
+        @for (it of confirmItems(); track it.ref) {
+          <li><span class="ms">check_circle</span><span class="conf-label">{{ it.label }}</span><span class="conf-ref">{{ it.ref }}</span></li>
+        }
+      </ul>
+
+      <div class="conf-concierge">
+        <div class="conf-conc-head"><span class="ms">support_agent</span>
+          <div><strong>{{ t().c_concierge }}</strong><span>{{ t().c_concierge_sub }}</span></div>
+        </div>
+        <button class="generate generate--soft" (click)="openConcierge()"><span class="ms">smart_toy</span>{{ t().c_open }}</button>
+      </div>
+
+      <button class="text-btn" (click)="restart()"><span class="ms">restart_alt</span>{{ t().c_restart }}</button>
+    </div>
+  }
+
+  <!-- Concierge -->
+  @if (overlay() === 'concierge') {
+    <div class="modal glass modal--chat" role="dialog">
+      <header class="modal-head">
+        <div class="conc-id"><span class="conc-avatar"><span class="ms">smart_toy</span></span>
+          <div><strong>{{ t().cc_title }}</strong><span class="conc-on">online</span></div>
+        </div>
+        <button class="icon-btn" (click)="closeOverlay()"><span class="ms">close</span></button>
+      </header>
+
+      <p class="conc-context">{{ t().cc_context }}</p>
+
+      <div class="conc-thread">
+        @for (m of chatMessages(); track $index) {
+          <div class="conc-msg" [style.justify-content]="m.justify">
+            <span class="conc-bubble" [style.background]="m.bg" [style.color]="m.fg" [style.border-radius]="m.radius">{{ m.text }}</span>
+          </div>
+        }
+        @if (conciergeTyping()) {
+          <div class="conc-msg"><span class="conc-bubble conc-typing"><i></i><i></i><i></i></span></div>
+        }
+      </div>
+
+      @if (!suggestionUsed()) {
+        <button class="conc-suggest" (click)="sendSuggestion()" [disabled]="conciergeTyping()"><span class="ms">bolt</span>{{ t().cc_suggestion }}</button>
+      }
+      <div class="conc-input">
+        <input [(ngModel)]="conciergeInput" [placeholder]="t().cc_placeholder"
+               (keydown.enter)="sendConcierge()" [disabled]="conciergeTyping()" />
+        <button (click)="sendConcierge()" [disabled]="conciergeTyping() || !conciergeInput.trim()"><span class="ms">arrow_upward</span></button>
+      </div>
+    </div>
+  }
+
+  <!-- ── Auth modal ─────────────────────────────────────────────────────────── -->
+  @if (showAuthModal()) {
+    <div class="modal-scrim" (click)="closeAuthModal()"></div>
+    <div class="modal glass modal--auth" role="dialog">
+      <button class="icon-btn modal-x" (click)="closeAuthModal()"><span class="ms">close</span></button>
+      <div class="auth-logo"><span class="hud-mark"><span class="ms">explore</span></span><span>AI Planner</span></div>
+
+      <div class="auth-tabs">
+        <button [class.on]="authMode() === 'login'" (click)="authMode.set('login')">{{ t().auth_sign_in }}</button>
+        <button [class.on]="authMode() === 'register'" (click)="authMode.set('register')">{{ t().auth_register }}</button>
+      </div>
+
+      @if (authErrorMsg) { <div class="auth-error">{{ authErrorMsg }}</div> }
+
+      @if (authMode() === 'register') {
+        <div class="auth-names">
+          <app-ui-input [(ngModel)]="authFirstNameVal" name="firstName" autocomplete="given-name"
+                        [label]="t().auth_first_name" [placeholder]="t().auth_first_placeholder" />
+          <app-ui-input [(ngModel)]="authLastNameVal" name="lastName" autocomplete="family-name"
+                        [label]="t().auth_last_name" [placeholder]="t().auth_last_placeholder" />
+        </div>
+      }
+      <app-ui-input [(ngModel)]="authEmailVal" name="email" type="email" autocomplete="email"
+                    label="Email" placeholder="email@example.com" />
+      <app-ui-input [(ngModel)]="authPasswordVal" name="password" type="password"
+                    label="Password" [placeholder]="t().auth_password_placeholder" />
+
+      <button class="generate" (click)="authMode() === 'login' ? login() : register()" [disabled]="authLoadingState">
+        @if (authLoadingState) { {{ t().auth_loading }} } @else { {{ authMode() === 'login' ? t().auth_sign_in : t().auth_create }} }
+      </button>
+    </div>
+  }
+</div>

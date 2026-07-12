@@ -1,0 +1,338 @@
+// Country → city → flights grouping for the flights catalog.
+// Layered on top of catalog-shared.scss (cards, grid, pills).
+
+.results-breakdown {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 0;
+  font-size: 0.86rem;
+  color: var(--text-tertiary);
+
+  .ms { color: var(--color-red-ink); }
+  .dot { opacity: 0.5; }
+}
+
+.country-group {
+  margin-top: 36px;
+
+  &:first-of-type { margin-top: 20px; }
+}
+
+.country-group__head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 4px;
+  margin-bottom: 8px;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border);
+}
+
+.country-group__flag {
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.country-group__name {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.country-group__count {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+}
+
+.country-group__price {
+  margin-left: auto;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--color-red-ink);
+}
+
+.city-group {
+  margin: 16px 0 24px;
+}
+
+.city-group__name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 12px;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--text-primary);
+
+  .ms { color: var(--text-tertiary); }
+
+  small {
+    margin-left: 6px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--text-tertiary);
+  }
+}
+
+@media (max-width: 640px) {
+  .country-group__head { flex-wrap: wrap; gap: 8px; }
+  .country-group__price { margin-left: 0; flex-basis: 100%; }
+}
+
+/* ── Trip-type segmented toggle ───────────────────────────── */
+.trip-toggle {
+  display: inline-flex;
+  gap: 4px;
+  margin: 0 auto 16px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(6px);
+  border-radius: 2px;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    background: transparent;
+    color: #fff;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 150ms ease, color 150ms ease;
+  }
+  button.trip-toggle__on { background: #fff; color: var(--color-red-ink); }
+}
+
+/* ── Multi-city leg editor ────────────────────────────────── */
+.legs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(900px, 100%);
+  margin: 0 auto;
+}
+.leg-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 8px 12px;
+  border-radius: 3px;
+
+  .leg-row__airport {
+    flex: 1 1 170px;
+    min-width: 0;
+  }
+  .leg-row__date {
+    flex: 1 1 150px;
+    min-width: 130px;
+  }
+}
+.leg-row__num {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--color-red-ink);
+  font-size: 0.8rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.leg-row__remove {
+  margin-left: auto;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  cursor: pointer;
+}
+.legs__actions { display: flex; justify-content: space-between; gap: 12px; margin-top: 4px; }
+.leg-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px dashed rgba(255, 255, 255, 0.5);
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  padding: 9px 16px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+/* ── Fare-calendar strip ──────────────────────────────────── */
+.fare-cal {
+  max-width: var(--catalog-max, 1200px);
+  margin: 20px auto 0;
+  padding: 0 20px;
+}
+.fare-cal__label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  .ms { color: var(--color-red-ink); }
+}
+.fare-cal__strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
+.fare-cal__day {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 76px;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  cursor: pointer;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+
+  &:hover { border-color: var(--color-red-ink); box-shadow: var(--shadow-md); }
+}
+.fare-cal__date { font-size: 0.72rem; color: var(--text-tertiary); text-transform: capitalize; }
+.fare-cal__price { font-size: 0.95rem; font-weight: 800; }
+.fare-cal__day--cheap { border-color: var(--color-red); }
+.fare-cal__day--cheap .fare-cal__price { color: var(--color-red-ink); }
+.fare-cal__day--on { background: var(--brand); border-color: var(--color-red-ink); }
+.fare-cal__day--on .fare-cal__date,
+.fare-cal__day--on .fare-cal__price { color: #fff; }
+
+/* ── Inline filters ───────────────────────────────────────── */
+.flight-filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 0 6px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 10px;
+}
+.flight-filters__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  .ms { color: var(--color-red-ink); }
+}
+.flight-filters__airlines { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip-toggle {
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  border-radius: 2px;
+  padding: 5px 12px;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+
+  &:hover { border-color: var(--color-red-ink); }
+  &--on { background: var(--brand); border-color: var(--color-red-ink); color: #fff; }
+}
+.flight-filters__duration {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+
+  app-ui-select {
+    width: 150px;
+    flex: 0 0 auto;
+  }
+}
+.flight-filters__clear {
+  margin-left: auto;
+  border: none;
+  background: transparent;
+  color: var(--color-red-ink);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ── Round-trip / multi-city section headings ─────────────── */
+.leg-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 28px 0 4px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  .ms { color: var(--color-red-ink); }
+
+  &--return { margin-top: 40px; padding-top: 24px; border-top: 2px dashed var(--border); }
+}
+.leg-section { margin-top: 28px; }
+.leg-section__head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.leg-section__num {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #fff;
+  background: var(--brand);
+  border-radius: 2px;
+  padding: 3px 10px;
+}
+.leg-section__route { margin: 0; font-size: 1.25rem; font-weight: 800; }
+.leg-section__date { margin-left: auto; font-size: 0.85rem; color: var(--text-secondary); }
+.leg-section__empty { color: var(--text-tertiary); font-size: 0.9rem; padding: 8px 0; }
+
+/* duration label on the card route line */
+.card__dur {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+.tag-pill--direct { color: var(--teal); font-weight: 700; }
+.tag-pill--ai { background: var(--teal-light); color: var(--teal); font-weight: 700; margin-top: 6px; display: inline-flex; align-items: center; gap: 4px; }
+.tag-pill--ai .ms { color: var(--teal); }

@@ -1,0 +1,126 @@
+// Shared chrome for account-area pages (trips, bookings, messages, account).
+// Editorial dashboard look: generous header, layered cards, intentional rhythm.
+
+:host {
+  // Map legacy aliases → global design-system tokens so every page
+  // that imports this file gets the warm editorial palette automatically.
+  --accent:      var(--brand);
+  --accent-soft: var(--brand-light);
+  --ink:         var(--text-primary);
+  --muted:       var(--text-tertiary);
+  --line:        var(--border);
+  --surface:     var(--surface, #ffffff);
+  --bg:          var(--bg-primary);
+  display: block;
+  min-height: 70vh;
+  background: var(--bg-primary);
+  font-family: var(--font-body);
+  color: var(--text-primary);
+}
+
+.dash-container {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 5rem;
+}
+
+.dash-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.dash-title {
+  font-size: clamp(1.9rem, 1.4rem + 2vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.dash-sub {
+  color: var(--muted);
+  font-size: 1rem;
+  margin: 0.5rem 0 0;
+}
+
+.dash-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 1.3rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+  box-shadow: var(--shadow-sm);
+}
+.dash-cta:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.dash-cta--ghost {
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+.dash-cta--ghost:hover { border-color: var(--text-primary); box-shadow: none; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: box-shadow var(--duration-normal) ease, transform var(--duration-normal) ease, border-color var(--duration-normal) ease;
+}
+.card:hover { border-color: var(--color-ink); box-shadow: var(--shadow-lg); }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 2px;
+}
+.pill--confirmed { background: var(--teal-light); color: var(--teal); }
+.pill--pending   { background: var(--gold-light); color: var(--gold); }
+.pill--cancelled { background: #fdecec; color: #c0392b; }
+.pill--completed { background: var(--brand-light); color: var(--color-red-ink); }
+
+.empty {
+  text-align: center;
+  padding: 4rem 1.5rem;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+}
+.empty .ms { font-size: 46px; color: var(--color-red-ink); }
+.empty h3 { margin: 1rem 0 0.4rem; font-size: 1.3rem; }
+.empty p { color: var(--text-tertiary); margin: 0 0 1.5rem; }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 37%, var(--bg-secondary) 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: var(--radius-sm);
+}
+@keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+
+// Note: the global `.ms` rule in styles.scss provides the Material Symbols font.

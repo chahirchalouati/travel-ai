@@ -1,0 +1,122 @@
+<section class="rewards" *transloco="let t">
+  <header class="rewards__head">
+    <p class="rewards__kicker">{{ t('rewards.kicker') }}</p>
+    <h1 class="rewards__title">{{ t('rewards.title') }}</h1>
+    <p class="rewards__lede">{{ t('rewards.lede') }}</p>
+  </header>
+
+  @if (!isAuthenticated()) {
+    <div class="rewards__gate">
+      <p>{{ t('rewards.signInPrompt') }}</p>
+      <a class="rewards__btn rewards__btn--ink" routerLink="/" [queryParams]="{ auth: 'login', next: '/rewards' }">
+        {{ t('rewards.signIn') }}
+      </a>
+    </div>
+  } @else {
+    <div class="rewards__balance" role="status">
+      <div class="rewards__stat">
+        <span class="rewards__stat-num">{{ balance() | number }}</span>
+        <span class="rewards__stat-label">{{ t('rewards.pointsBalance') }}</span>
+      </div>
+      <div class="rewards__stat">
+        <span class="rewards__stat-num">{{ lifetime() | number }}</span>
+        <span class="rewards__stat-label">{{ t('rewards.lifetimePoints') }}</span>
+      </div>
+      <div class="rewards__stat">
+        <span class="rewards__stat-num">{{ activeRewards().length }}</span>
+        <span class="rewards__stat-label">{{ t('rewards.ownedActive') }}</span>
+      </div>
+    </div>
+
+    @if (error()) {
+      <p class="rewards__error" role="alert">{{ t(error()!) }}</p>
+    }
+
+    @if (loading()) {
+      <p class="rewards__loading">{{ t('rewards.loading') }}</p>
+    } @else {
+      <!-- Milestones ------------------------------------------------------ -->
+      <h2 class="rewards__section">{{ t('rewards.milestones.title') }}</h2>
+      <p class="rewards__section-note">{{ t('rewards.milestones.note') }}</p>
+      <div class="rewards__grid">
+        @for (r of milestones(); track r.code) {
+          <article class="reward" [class.reward--unlocked]="r.unlocked">
+            <div class="reward__top">
+              <span class="reward__type reward__type--{{ r.type | lowercase }}">{{ t('rewards.type.' + r.type) }}</span>
+              @if (r.unlocked) {
+                <span class="reward__badge">{{ t('rewards.unlocked') }}</span>
+              }
+            </div>
+            <h3 class="reward__name">{{ r.name }}</h3>
+            <p class="reward__desc">{{ r.description }}</p>
+            <div class="reward__meter" [attr.aria-valuenow]="progress(r)" aria-valuemin="0" aria-valuemax="100" role="progressbar">
+              <span class="reward__meter-fill" [style.width.%]="progress(r)"></span>
+            </div>
+            <p class="reward__foot">
+              @if (r.unlocked) {
+                {{ t('rewards.milestones.done') }}
+              } @else {
+                {{ t('rewards.milestones.remaining', { points: (remaining(r) | number), threshold: (r.thresholdPoints | number) }) }}
+              }
+            </p>
+          </article>
+        }
+      </div>
+
+      <!-- Redeemable catalogue ------------------------------------------- -->
+      <h2 class="rewards__section">{{ t('rewards.shop.title') }}</h2>
+      <p class="rewards__section-note">{{ t('rewards.shop.note') }}</p>
+      <div class="rewards__grid">
+        @for (r of shop(); track r.code) {
+          <article class="reward">
+            <div class="reward__top">
+              <span class="reward__type reward__type--{{ r.type | lowercase }}">{{ t('rewards.type.' + r.type) }}</span>
+              <span class="reward__cost">{{ r.costPoints | number }} {{ t('rewards.pts') }}</span>
+            </div>
+            <h3 class="reward__name">{{ r.name }}</h3>
+            <p class="reward__desc">{{ r.description }}</p>
+            <button
+              type="button"
+              class="rewards__btn rewards__btn--red reward__cta"
+              [disabled]="!r.redeemable || redeeming() === r.code"
+              (click)="redeem(r)">
+              @if (redeeming() === r.code) {
+                {{ t('rewards.shop.redeeming') }}
+              } @else if (r.redeemable) {
+                {{ t('rewards.shop.redeem') }}
+              } @else {
+                {{ t('rewards.shop.needMore', { points: ((r.costPoints ?? 0) - balance() | number) }) }}
+              }
+            </button>
+          </article>
+        }
+      </div>
+
+      <!-- My rewards ------------------------------------------------------ -->
+      <h2 class="rewards__section">{{ t('rewards.mine.title') }}</h2>
+      @if (mine().length === 0) {
+        <p class="rewards__empty">{{ t('rewards.mine.empty') }}</p>
+      } @else {
+        <ul class="rewards__owned">
+          @for (r of mine(); track r.id) {
+            <li class="owned owned--{{ r.status | lowercase }}">
+              <div class="owned__main">
+                <span class="reward__type reward__type--{{ r.type | lowercase }}">{{ t('rewards.type.' + r.type) }}</span>
+                <span class="owned__code">{{ r.rewardCode }}</span>
+                @if (r.discountAmount) {
+                  <span class="owned__value">−{{ r.discountAmount | currency:'EUR':'symbol':'1.0-0' }}</span>
+                }
+              </div>
+              <div class="owned__meta">
+                <span class="owned__status">{{ t('rewards.status.' + r.status) }}</span>
+                @if (r.expiresAt && r.status === 'UNLOCKED') {
+                  <span class="owned__exp">{{ t('rewards.expires') }} {{ r.expiresAt | date:'mediumDate' }}</span>
+                }
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    }
+  }
+</section>

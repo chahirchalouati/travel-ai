@@ -1,0 +1,2056 @@
+{
+  "rewards": {
+    "kicker": "Recompensas de fidelidad",
+    "title": "Gana puntos, desbloquea recompensas",
+    "lede": "Cada reserva suma puntos. Supera un umbral para desbloquear una recompensa para siempre, o gasta tu saldo en la tienda de recompensas.",
+    "signInPrompt": "Inicia sesión para ver tus puntos y recompensas.",
+    "signIn": "Iniciar sesión",
+    "pointsBalance": "Saldo de puntos",
+    "lifetimePoints": "Puntos acumulados",
+    "ownedActive": "Recompensas activas",
+    "loading": "Cargando tus recompensas…",
+    "pts": "pts",
+    "unlocked": "Desbloqueada",
+    "expires": "Caduca",
+    "error": {
+      "redeem": "No se pudo canjear esta recompensa. Inténtalo de nuevo."
+    },
+    "type": {
+      "VOUCHER": "Vale",
+      "PERK": "Ventaja",
+      "GIFT": "Regalo"
+    },
+    "status": {
+      "UNLOCKED": "Disponible",
+      "USED": "Usada",
+      "EXPIRED": "Caducada"
+    },
+    "milestones": {
+      "title": "Hitos",
+      "note": "Se desbloquean automáticamente cuando tus puntos acumulados alcanzan el umbral. Tuyos para siempre.",
+      "done": "Desbloqueada",
+      "remaining": "Faltan {{points}} pts — se desbloquea en {{threshold}}"
+    },
+    "shop": {
+      "title": "Tienda de recompensas",
+      "note": "Gasta tu saldo de puntos para canjear estas recompensas.",
+      "redeem": "Canjear",
+      "redeeming": "Canjeando…",
+      "needMore": "Faltan {{points}} pts"
+    },
+    "mine": {
+      "title": "Mis recompensas",
+      "empty": "Aún no tienes recompensas. Sigue reservando para desbloquear la primera."
+    },
+    "checkout": {
+      "title": "Vale de fidelidad",
+      "none": "Ninguno",
+      "voucher": "vale",
+      "discountLine": "Vale de fidelidad"
+    }
+  },
+  "catalog": {
+    "compare": {
+      "add": "Comparar",
+      "title": "Comparar hoteles",
+      "subtitle": "Lado a lado, en los detalles que importan.",
+      "cta": "Comparar",
+      "empty": "Elige 2 o 3 hoteles para comparar.",
+      "back": "Volver a hoteles",
+      "yes": "Sí",
+      "no": "No",
+      "rows": {
+        "price": "Precio / noche",
+        "stars": "Estrellas",
+        "city": "Ciudad",
+        "sea": "Cercanía al mar",
+        "family": "Familiar",
+        "pet": "Admite mascotas",
+        "accessible": "Accesible"
+      }
+    },
+    "search": "Buscar",
+    "activeFilters": "Filtros",
+    "clearAll": "Borrar todo",
+    "loadingMore": "Cargando más…",
+    "view": "Ver",
+    "perNight": "noche",
+    "perPerson": "persona",
+    "soldOut": "Agotado",
+    "empty": {
+      "title": "No se encontraron resultados",
+      "subtitle": "Prueba a ajustar los filtros o busca otro destino."
+    },
+    "fields": {
+      "city": "Ciudad",
+      "cityPlaceholder": "ej. París",
+      "checkIn": "Entrada",
+      "checkOut": "Salida",
+      "guests": "Huéspedes",
+      "maxBudget": "Presupuesto máx.",
+      "from": "Origen",
+      "fromPlaceholder": "ej. Roma",
+      "to": "Destino",
+      "toPlaceholder": "ej. Milán",
+      "departure": "Salida",
+      "passengers": "Pasajeros",
+      "maxPrice": "Precio máx.",
+      "cuisine": "Cocina",
+      "cuisinePlaceholder": "ej. Italiana",
+      "date": "Fecha",
+      "covers": "Comensales",
+      "maxPerPerson": "Máx. / persona",
+      "departurePort": "Puerto de salida",
+      "portPlaceholder": "ej. Barcelona",
+      "cruiseType": "Tipo de crucero",
+      "cruiseTypePlaceholder": "ej. Mediterráneo",
+      "sort": "Ordenar por",
+      "minStars": "Estrellas mín.",
+      "anyStars": "Cualquiera",
+      "anyPrice": "Cualquier precio",
+      "return": "Vuelta"
+    },
+    "amenities": {
+      "sea": "Vista al mar",
+      "family": "Para familias",
+      "pet": "Admite mascotas",
+      "accessible": "Accesible"
+    },
+    "hotels": {
+      "eyebrow": "Alojamientos",
+      "title": "Encuentra tu hotel perfecto",
+      "subtitle": "Alojamientos seleccionados, desde joyas boutique hasta resorts frente al mar.",
+      "found": "hoteles encontrados"
+    },
+    "flights": {
+      "eyebrow": "Vuelos",
+      "title": "Buscar vuelos",
+      "subtitle": "Compara tarifas y reserva tu próximo viaje.",
+      "found": "vuelos encontrados",
+      "baggageYes": "Equipaje incluido",
+      "baggageNo": "Sin equipaje",
+      "seats": "asientos",
+      "countries": "países",
+      "destinations": "destinos",
+      "routes": "rutas",
+      "from": "desde",
+      "tripOneway": "Solo ida",
+      "tripRound": "Ida y vuelta",
+      "tripMulti": "Multidestino",
+      "outbound": "Ida",
+      "return": "Vuelta",
+      "fareCalendar": "Tarifas más baratas por día",
+      "filters": "Filtros",
+      "maxDuration": "Duración máx.",
+      "anyDuration": "Cualquiera",
+      "clearFilters": "Limpiar",
+      "addLeg": "Añadir vuelo",
+      "leg": "Vuelo",
+      "removeLeg": "Quitar vuelo",
+      "direct": "Directo"
+    },
+    "restaurants": {
+      "eyebrow": "Gastronomía",
+      "title": "Reserva una mesa",
+      "subtitle": "Descubre restaurantes que encantan a viajeros de todo el mundo.",
+      "found": "restaurantes encontrados",
+      "available": "Disponible",
+      "fullyBooked": "Completo"
+    },
+    "cruises": {
+      "eyebrow": "Travesías",
+      "title": "Zarpa",
+      "subtitle": "Cruceros inolvidables por las aguas más bellas del mundo.",
+      "found": "cruceros encontrados",
+      "nights": "noches",
+      "allInclusive": "Todo incluido",
+      "cabins": "camarotes"
+    },
+    "searchResults": {
+      "title": "Buscar todo",
+      "query": "Buscar",
+      "matches": "resultados para",
+      "noneTitle": "Nada coincide con tu búsqueda",
+      "noneSubtitle": "Prueba otra ciudad, hotel o destino.",
+      "destinations": "Destinos",
+      "destination": "Destino",
+      "hotel": "Hotel",
+      "restaurant": "Restaurante",
+      "cruise": "Crucero",
+      "allTypes": "Todos"
+    },
+    "sort": {
+      "relevance": "Relevancia",
+      "priceAsc": "Precio: menor a mayor",
+      "priceDesc": "Precio: mayor a menor",
+      "starsDesc": "Estrellas: mayor a menor",
+      "nameAsc": "Nombre: A–Z",
+      "departureAsc": "Salida: más temprano",
+      "departureDesc": "Salida: más tarde",
+      "popularity": "Más popular"
+    }
+  },
+  "hotel": {
+    "back": "Volver a hoteles",
+    "about": "Sobre este hotel",
+    "amenities": "Servicios",
+    "city": "Ciudad",
+    "availability": "Disponibilidad",
+    "availableNow": "Disponible ahora",
+    "notAvailable": "No disponible",
+    "book": "Planificar un viaje aquí",
+    "askAi": "Preguntar a la IA sobre este hotel",
+    "reviewsLabel": "reseñas",
+    "writeReview": "Escribir una reseña",
+    "overallRating": "Valoración general",
+    "cleanliness": "Limpieza",
+    "service": "Servicio",
+    "value": "Relación calidad-precio",
+    "location": "Ubicación",
+    "guestRating": "Valoración de huéspedes",
+    "ratingBreakdown": "Desglose de valoraciones"
+  },
+  "nav": {
+    "tabs": {
+      "discover": "Descubrir",
+      "hotels": "Hoteles",
+      "restaurants": "Restaurantes",
+      "cruises": "Cruceros",
+      "flights": "Vuelos",
+      "thingsToDo": "Actividades",
+      "aiPlanner": "Planificador IA",
+      "chat": "Chat",
+      "community": "Comunidad"
+    },
+    "signIn": "Iniciar sesión",
+    "startPlanning": "Comenzar a planificar",
+    "notifications": "Notificaciones",
+    "more": "Más"
+  },
+  "explore": {
+    "hero": {
+      "headline": "¿A dónde vamos?",
+      "subtitle": "Descubre destinos, lee reseñas y planifica con IA"
+    },
+    "search": {
+      "placeholder": "Busca destinos, hoteles, restaurantes...",
+      "askAi": "Preguntar a la IA",
+      "button": "Buscar"
+    },
+    "categories": {
+      "all": "Todo",
+      "destinations": "Destinos",
+      "hotels": "Hoteles",
+      "restaurants": "Restaurantes",
+      "thingsToDo": "Actividades"
+    },
+    "popular": "Popular:",
+    "trust": {
+      "travelers": "Viajeros felices",
+      "countries": "Países",
+      "rating": "Valoración media"
+    },
+    "stories": {
+      "eyebrow": "Viajes en movimiento",
+      "title": "Mira el mundo antes de partir",
+      "subtitle": "Momentos reales de viajeros reales: dale al play e inspírate.",
+      "watch": "Ver historia",
+      "duration": "min",
+      "cta": "Comparte tu historia"
+    },
+    "sections": {
+      "featured": "Destinos favoritos de los viajeros",
+      "trending": "Tendencias ahora",
+      "interests": "Explorar por interés",
+      "regions": "Explorar por región",
+      "seeAll": "Ver todo"
+    },
+    "interests": {
+      "beaches": "Playas e Islas",
+      "city": "Escapadas urbanas",
+      "food": "Gastronomía & Vinos",
+      "adventure": "Aventura"
+    },
+    "aiBanner": {
+      "label": "Nuevo: Planificador de viajes IA",
+      "description": "Obtén un itinerario personalizado en 2 minutos, adaptado a tu presupuesto.",
+      "cta": "Pruébalo gratis"
+    },
+    "card": {
+      "from": "Desde",
+      "perNight": "/noche",
+      "reviews": "reseñas"
+    },
+    "trending": {
+      "thisMonth": "% este mes"
+    },
+    "destinations": "destinos",
+    "filter": {
+      "all": "Todos"
+    }
+  },
+  "destination": {
+    "back": "Volver a destinos",
+    "perDay": "/día promedio",
+    "overview": "Descripción general",
+    "bestTime": "Mejor época para visitar",
+    "reviews": {
+      "title": "Reseñas de viajeros",
+      "noReviews": "Sin reseñas todavía. Sé el primero en compartir tu experiencia.",
+      "aiSummary": "Resumen IA",
+      "helpful": "Útil"
+    },
+    "guide": {
+      "title": "Guía de viaje IA",
+      "description": "Obtén una guía de viaje personalizada generada por IA con las mejores atracciones, recomendaciones gastronómicas y consejos de viaje.",
+      "generate": "Generar guía IA",
+      "retry": "Reintentar",
+      "error": "No se pudo generar la guía. Por favor intenta de nuevo.",
+      "attractions": "Principales atracciones",
+      "food": "Recomendaciones gastronómicas",
+      "tips": "Consejos de viaje"
+    },
+    "quickInfo": {
+      "title": "Información rápida",
+      "avgDailyCost": "Costo diario promedio",
+      "climate": "Clima",
+      "language": "Idioma",
+      "currency": "Moneda",
+      "bestMonths": "Mejores meses"
+    },
+    "cta": {
+      "title": "¿Listo para explorar?",
+      "description": "Deja que la IA cree el itinerario perfecto para",
+      "planTrip": "Planificar un viaje",
+      "chat": "Chatear sobre"
+    }
+  },
+  "flight": {
+    "back": "Volver",
+    "flightNo": "Vuelo",
+    "origin": "Origen",
+    "destination": "Destino",
+    "schedule": "Horario",
+    "inclusions": "Incluido",
+    "baggage": "Equipaje documentado incluido",
+    "carryOn": "Equipaje de mano",
+    "seatSelection": "Selección de asiento",
+    "booking": {
+      "pricePerPerson": "Precio por persona",
+      "nearbyDates": "Fechas cercanas",
+      "seatsLeft": "Asientos disponibles",
+      "route": "Ruta",
+      "baggage": "Equipaje",
+      "included": "Incluido",
+      "notIncluded": "No incluido",
+      "book": "Reservar este vuelo",
+      "urgency": "Solo quedan {{count}} {{unit}} a este precio",
+      "seat": "asiento",
+      "seats": "asientos"
+    }
+  },
+  "restaurant": {
+    "back": "Volver",
+    "about": "Acerca de",
+    "amenities": "Comodidades",
+    "petFriendly": "Admite mascotas",
+    "accessible": "Accesible para sillas de ruedas",
+    "reservations": "Reservas disponibles",
+    "quickInfo": "Información rápida",
+    "city": "Ciudad",
+    "cuisine": "Cocina",
+    "priceRange": "Rango de precios",
+    "availability": "Disponibilidad",
+    "availableNow": "Disponible ahora",
+    "notAvailable": "No disponible",
+    "book": "Reservar una mesa",
+    "askAi": "Preguntar a la IA sobre este restaurante",
+    "priceTiers": {
+      "1": "$ Económico",
+      "2": "$$ Moderado",
+      "3": "$$$ Exclusivo",
+      "4": "$$$$ Alta cocina"
+    },
+    "availableTables": "Mesas disponibles",
+    "noTables": "No hay mesas para esta fecha",
+    "pickDate": "Fecha",
+    "guests": "Comensales",
+    "reviewsLabel": "opiniones"
+  },
+  "cruise": {
+    "back": "Volver",
+    "about": "Sobre este crucero",
+    "schedule": "Calendario",
+    "departure": "Salida",
+    "return": "Regreso",
+    "nights": "noches",
+    "itinerary": "Itinerario",
+    "whatsIncluded": "Qué está incluido",
+    "allInclusive": "Comidas y bebidas todo incluido",
+    "cabin": "Alojamiento en camarote",
+    "entertainment": "Entretenimiento a bordo",
+    "portTransfers": "Traslados al puerto",
+    "booking": {
+      "fromPerPerson": "Desde por persona",
+      "nightCruise": " noches de crucero",
+      "nearbyDates": "Salidas cercanas",
+      "ship": "Barco",
+      "operator": "Operador",
+      "cabinsAvailable": "Camarotes disponibles",
+      "type": "Tipo",
+      "book": "Reservar este crucero",
+      "askAi": "Preguntar a la IA sobre este crucero",
+      "urgency": "Solo quedan {{count}} {{unit}}",
+      "cabin": "camarote",
+      "cabins": "camarotes"
+    },
+    "day": "Día",
+    "cabinCategories": "Categorías de camarote"
+  },
+  "userMenu": {
+    "myTrips": "Mis viajes",
+    "profile": "Perfil",
+    "bookings": "Reservas",
+    "membership": "Travel AI Prime",
+    "messages": "Mensajes",
+    "accountInfo": "Información de cuenta",
+    "signOut": "Cerrar sesión",
+    "adminPanel": "Panel de administración",
+    "rewards": "Recompensas",
+    "tripPlanner": "Planificador"
+  },
+  "common": {
+    "back": "Volver",
+    "loading": "Cargando...",
+    "error": "Algo salió mal. Por favor intenta de nuevo.",
+    "planTrip": "Planificar un viaje",
+    "askAi": "Preguntar a la IA",
+    "climate": "clima",
+    "reviews": "opiniones",
+    "fitsTrip": "Encaja con tu viaje a {{place}}"
+  },
+  "footer": {
+    "tagline": "Descubre destinos, lee reseñas reales y planifica viajes más inteligentes con recomendaciones de IA.",
+    "cols": {
+      "product": "Producto",
+      "company": "Empresa",
+      "support": "Soporte"
+    },
+    "links": {
+      "aiPlanner": "Planificador IA",
+      "destinations": "Destinos",
+      "chatWithAi": "Chatear con IA",
+      "tripDashboard": "Panel de viajes",
+      "bookingIntegration": "Integración de reservas",
+      "about": "Acerca de",
+      "blog": "Blog",
+      "careers": "Empleo",
+      "press": "Prensa",
+      "contact": "Contacto",
+      "help": "Centro de ayuda",
+      "safety": "Seguridad",
+      "community": "Comunidad",
+      "partners": "Socios",
+      "api": "API"
+    },
+    "rights": "Todos los derechos reservados.",
+    "privacy": "Privacidad",
+    "terms": "Términos",
+    "cookies": "Cookies",
+    "accessibility": "Accesibilidad"
+  },
+  "auth": {
+    "welcomeBack": "Bienvenido de nuevo",
+    "createAccount": "Crea tu cuenta",
+    "subLogin": "Inicia sesión para planificar viajes, guardar lugares y escribir reseñas.",
+    "subRegister": "Únete a miles de viajeros que planifican de forma más inteligente.",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "signIn": "Iniciar sesión",
+    "create": "Crear cuenta",
+    "noAccount": "¿No tienes una cuenta?",
+    "haveAccount": "¿Ya tienes una cuenta?",
+    "signUp": "Registrarse",
+    "errRequired": "Por favor completa todos los campos obligatorios.",
+    "errName": "Por favor ingresa tu nombre y apellido.",
+    "errLogin": "Correo o contraseña incorrectos.",
+    "errRegister": "No se pudo crear tu cuenta. Revisa tus datos e inténtalo de nuevo.",
+    "errExists": "Ya existe una cuenta con este correo.",
+    "errGeneric": "Algo salió mal. Por favor inténtalo de nuevo.",
+    "register": "Registrarse",
+    "loading": "Cargando…"
+  },
+  "chat": {
+    "new": "Nuevo",
+    "history": "Historial",
+    "conversations": "Conversaciones",
+    "startNew": "Iniciar una nueva conversación",
+    "empty": "Aún no hay conversaciones. Pregúntame lo que quieras para empezar.",
+    "lockedMsg": "Inicia sesión para guardar y volver a tus conversaciones.",
+    "newConversation": "Nueva conversación",
+    "thinking": "pensando",
+    "welcomeTitle": "¿A dónde vamos?",
+    "welcomeSub": "Conozco cada destino, hotel y restaurante de nuestra base de datos: pregúntame lo que sea y te responderé con opciones concretas y respaldadas por datos.",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "retry": "Reintentar",
+    "searching": "Buscando en la base de datos de viajes…",
+    "placeholder": "Pregunta sobre destinos, hoteles, restaurantes, itinerarios…",
+    "hint": "Las respuestas provienen de hoteles, restaurantes y destinos reales de nuestra base de datos",
+    "authCta": "Inicia sesión para chatear con tu conserje de viajes IA",
+    "signIn": "Iniciar sesión",
+    "caps": {
+      "destinations": "Destinos",
+      "hotels": "Hoteles",
+      "restaurants": "Restaurantes",
+      "itineraries": "Itinerarios",
+      "compare": "Comparar",
+      "budget": "Presupuesto"
+    },
+    "suggest": {
+      "planLabel": "Planificar un viaje",
+      "planText": "Planificar una semana en Bali por menos de 2000 $",
+      "diningLabel": "Buscar restaurante",
+      "diningText": "Mejores restaurantes en Roma para comida italiana auténtica",
+      "discoverLabel": "Descubrir",
+      "discoverText": "Destinos de playa para familias en Europa",
+      "compareLabel": "Comparar",
+      "compareText": "Comparar Tokio y Seúl para una primera visita",
+      "hotelsLabel": "Hoteles",
+      "hotelsText": "Hoteles que admiten mascotas en la Costa de Amalfi por menos de 200 €/noche",
+      "budgetLabel": "Presupuesto",
+      "budgetText": "Destinos más baratos en el Sudeste Asiático este verano"
+    },
+    "plan": {
+      "intro": "Aquí tienes un viaje que preparé para ti:"
+    }
+  },
+  "cta": {
+    "title": "Planifica tu viaje perfecto con IA",
+    "subtitle": "Dinos a dónde quieres ir y obtén un itinerario completo y personalizado en menos de dos minutos. Gratis para empezar.",
+    "primary": "Planificar mi primer viaje",
+    "secondary": "Preguntar primero a la IA",
+    "trust": "Sin tarjeta de crédito · Itinerario completo en 2 minutos"
+  },
+  "destDetail": {
+    "back": "Volver a destinos",
+    "overview": "Resumen",
+    "bestTime": "Mejor época para visitar",
+    "reviews": "Opiniones de viajeros",
+    "reviewsCount": "opiniones",
+    "aiSummary": "Resumen IA",
+    "noReviews": "Aún no hay opiniones. Sé el primero en compartir tu experiencia.",
+    "helpful": "Útil",
+    "rankOf": "de",
+    "verifiedStay": "Estancia verificada",
+    "aspectService": "Servicio",
+    "aspectValue": "Relación calidad-precio",
+    "aspectCleanliness": "Limpieza",
+    "aspectLocation": "Ubicación",
+    "aiGuide": "Guía de viaje IA",
+    "guideIntro": "Obtén una guía de viaje personalizada generada por IA con las mejores atracciones, recomendaciones de comida y consejos de expertos.",
+    "retry": "Reintentar",
+    "generateGuide": "Generar guía IA",
+    "topAttractions": "Atracciones principales",
+    "foodRec": "Recomendaciones gastronómicas",
+    "travelTips": "Consejos de viaje",
+    "quickInfo": "Información rápida",
+    "avgDailyCost": "Coste diario medio",
+    "climate": "Clima",
+    "language": "Idioma",
+    "currency": "Moneda",
+    "bestMonths": "Mejores meses",
+    "readyToExplore": "¿Listo para explorar?",
+    "craftItinerary": "Deja que la IA cree el itinerario perfecto para {{name}}.",
+    "chatAbout": "Chatear sobre {{name}}",
+    "guideError": "No se pudo generar la guía. Por favor inténtalo de nuevo.",
+    "months": [
+      "Ene",
+      "Feb",
+      "Mar",
+      "Abr",
+      "May",
+      "Jun",
+      "Jul",
+      "Ago",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dic"
+    ],
+    "thingsToDo": "Qué hacer",
+    "seeAllThings": "Ver todo"
+  },
+  "trips": {
+    "title": "Mis viajes",
+    "subtitle": "Cada viaje que has reservado, próximos y pasados.",
+    "emptyTitle": "Aún no hay viajes",
+    "emptyBody": "Planifica tu primera aventura y aparecerá aquí.",
+    "emptyCta": "Empezar con el Planificador IA",
+    "tripFallback": "Viaje",
+    "datesTbc": "Fechas por confirmar",
+    "planNew": "Planificar un nuevo viaje",
+    "upcoming": "Próximos",
+    "past": "Pasados"
+  },
+  "bookings": {
+    "title": "Reservas",
+    "subtitle": "Reservas, referencias y detalles de pago.",
+    "emptyTitle": "Aún no hay reservas",
+    "emptyBody": "Cuando reserves un hotel, vuelo o restaurante aparecerá aquí.",
+    "emptyCta": "Explorar TravelAI",
+    "findStay": "Buscar alojamiento",
+    "reservationFallback": "Reserva",
+    "cancel": "Cancelar",
+    "cancelling": "Cancelando…",
+    "cancelled": "Reserva cancelada",
+    "cancelError": "No se pudo cancelar — inténtalo de nuevo",
+    "writeReview": "Escribir reseña",
+    "reviewThanks": "Reseñado",
+    "yourRating": "Tu valoración",
+    "reviewTitle": "Título",
+    "reviewBody": "Comparte tu experiencia…",
+    "submitReview": "Enviar reseña",
+    "reviewSaved": "¡Gracias por tu reseña!",
+    "reviewError": "No se pudo guardar la reseña.",
+    "invoice": "Factura",
+    "tripInvoice": "Factura del viaje",
+    "addToCalendar": "Añadir al calendario",
+    "calendarError": "No se pudo descargar el archivo de calendario",
+    "ticket": "Billete"
+  },
+  "messages": {
+    "title": "Mensajes",
+    "subtitle": "Habla con el soporte de TravelAI y tus especialistas de viaje.",
+    "newMessage": "Nuevo mensaje",
+    "subjectPlaceholder": "Asunto",
+    "bodyPlaceholder": "¿Cómo podemos ayudarte?",
+    "cancel": "Cancelar",
+    "send": "Enviar",
+    "sending": "Enviando…",
+    "emptyTitle": "Sin conversaciones",
+    "emptyBody": "Inicia un mensaje y te responderemos rápido.",
+    "selectThread": "Selecciona una conversación para leer el hilo.",
+    "replyPlaceholder": "Escribe una respuesta…"
+  },
+  "account": {
+    "title": "Información de la cuenta",
+    "subtitle": "Gestiona tu identidad, datos de contacto y acceso.",
+    "phone": "Teléfono",
+    "phonePlaceholder": "Añadir un número de teléfono",
+    "readonly": "(solo lectura)",
+    "reset": "Restablecer",
+    "save": "Guardar cambios",
+    "saving": "Guardando…",
+    "quickLinks": "Enlaces rápidos",
+    "publicProfile": "Perfil público",
+    "status": "Estado",
+    "emailVerified": "Correo verificado",
+    "emailUnverified": "Correo sin verificar",
+    "passwordProtected": "Protegido con contraseña",
+    "profileUpdated": "Perfil actualizado",
+    "saveError": "No se pudo guardar — inténtalo de nuevo",
+    "travelerFallback": "Viajero"
+  },
+  "profile": {
+    "editProfile": "Editar perfil",
+    "settings": "Ajustes",
+    "place": "lugar",
+    "places": "lugares",
+    "since": "Desde",
+    "unlockedOf": "{{count}} de {{total}} desbloqueados · ¡sigue así!",
+    "complete": "completado",
+    "review": "opinión",
+    "reviews": "opiniones",
+    "across": "en",
+    "planNextTrip": "Planificar tu próximo viaje",
+    "startExploring": "Empezar a explorar",
+    "newTrip": "Nuevo viaje",
+    "helpful": "Útil",
+    "verifiedLabel": "Verificado",
+    "findToReview": "Buscar lugares para opinar",
+    "explored": "explorados",
+    "statReviews": "Opiniones",
+    "statTrips": "Viajes",
+    "statPhotos": "Fotos",
+    "achievements": "Tus logros",
+    "profileStrength": "Fortaleza del perfil",
+    "journey": "Tu recorrido hasta ahora",
+    "journeySub": "Cada opinión ayuda a otro viajero. ¿A dónde vas ahora?",
+    "ovReviews": "Opiniones",
+    "ovPhotos": "Fotos",
+    "ovHelpful": "Votos útiles",
+    "recentActivity": "Actividad reciente",
+    "noActivity": "Aún no hay actividad",
+    "noActivitySub": "Evalúa los lugares que has visitado y tu actividad aparecerá aquí.",
+    "yourTrips": "Tus viajes",
+    "datesTbd": "Fechas por confirmar",
+    "noTrips": "Aún no hay viajes",
+    "noTripsSub": "Planifica tu primer viaje con Travel AI y aparecerá aquí.",
+    "photoGallery": "Galería de fotos",
+    "uploading": "Subiendo…",
+    "addPhotoBtn": "Añadir foto",
+    "upload": "Subir",
+    "noPhotos": "Aún no hay fotos",
+    "noPhotosSub": "Sube tus fotos de viaje — aparecerán en tu galería.",
+    "noReviews": "Aún no hay opiniones",
+    "noReviewsSub": "Evalúa los lugares que has visitado para ayudar a otros viajeros.",
+    "travelPassport": "Pasaporte de viaje",
+    "travelPassportSub": "Marca los lugares donde has estado y crea tu mapa de viaje.",
+    "placesVisited": "Lugares visitados",
+    "addPlace": "Añadir lugar",
+    "add": "Añadir",
+    "cancel": "Cancelar",
+    "placePlaceholder": "Lugar (p. ej. Lisboa)",
+    "countryPlaceholder": "País",
+    "notePlaceholder": "Una nota (opcional)",
+    "noPlaces": "Aún no hay lugares",
+    "noPlacesSub": "Añade los lugares donde has estado para empezar tu mapa de viaje.",
+    "helpfulVotesTitle": "Votos útiles",
+    "votesReceived": "votos recibidos",
+    "votesSub": "Votos que otros viajeros dieron a tus opiniones.",
+    "snapshot": "Resumen",
+    "bio": "Biografía",
+    "bioPlaceholder": "Cuéntanos sobre ti",
+    "homeCity": "Ciudad de origen",
+    "homeCityPlaceholder": "¿Dónde resides?",
+    "saveChanges": "Guardar cambios",
+    "notifications": "Notificaciones",
+    "emailNotif": "Notificaciones por correo",
+    "emailNotifSub": "Recibe novedades y ofertas de viaje",
+    "pushNotif": "Notificaciones push",
+    "pushNotifSub": "Recordatorios y alertas en tiempo real",
+    "account": "Cuenta",
+    "deleteAccount": "Eliminar cuenta",
+    "tabActivity": "Actividad",
+    "tabTrips": "Viajes",
+    "tabPhotos": "Fotos",
+    "tabReviews": "Opiniones",
+    "tabMap": "Mapa de viaje",
+    "travelerFallback": "Viajero",
+    "achAddName": "Añade tu nombre",
+    "achVerifyEmail": "Verifica el correo",
+    "achAddPhoto": "Añade una foto de perfil",
+    "achWriteReview": "Escribe una opinión",
+    "achSharePhoto": "Comparte una foto",
+    "uploadFailed": "Error al subir — inténtalo de nuevo",
+    "coverUpdated": "Foto de portada actualizada",
+    "avatarUpdated": "Avatar actualizado",
+    "photoAdded": "Foto añadida",
+    "photoRemoved": "Foto eliminada",
+    "placeAdded": "Lugar añadido a tu mapa",
+    "placeAddError": "No se pudo añadir el lugar",
+    "placeRemoved": "Lugar eliminado",
+    "profileUpdated": "Perfil actualizado",
+    "deleteConfirm": "¿Eliminar tu cuenta? Esto no se puede deshacer."
+  },
+  "admin": {
+    "navPrime": "Prime",
+    "subPlan": "Plan",
+    "subPrice": "Precio pagado",
+    "subStarted": "Iniciado",
+    "subRenews": "Renueva",
+    "subCancelled": "Cancelado",
+    "subMember": "Miembro",
+    "payLinkedTo": "Vinculado a",
+    "payType": "Tipo",
+    "payReference": "Referencia pasarela",
+    "payFailure": "Motivo del fallo",
+    "payPaidAt": "Pagado el",
+    "logRequestId": "ID de solicitud",
+    "auditPath": "Ruta",
+    "grpOverview": "Resumen",
+    "grpPeople": "Personas",
+    "grpCatalog": "Catálogo",
+    "grpOps": "Operaciones",
+    "grpSystem": "Sistema",
+    "navRevenue": "Ingresos",
+    "cmdOpen": "Buscar…",
+    "cmdPlaceholder": "Buscar secciones, usuarios, reservas…",
+    "cmdSections": "Secciones",
+    "retry": "Reintentar",
+    "stateEmpty": "Aún no hay nada aquí.",
+    "stateError": "No se pudieron cargar los datos.",
+    "filterAllRoles": "Todos los roles",
+    "banConfirm": "¿Bloquear a {{email}}? Perderá el acceso de inmediato.",
+    "stopImpersonating": "Dejar de suplantar",
+    "statRevenue": "Ingresos de la plataforma",
+    "statGross": "Valor bruto de reservas",
+    "statConfirmed": "confirmadas",
+    "ovPlatform": "Plataforma",
+    "ovActiveSubs": "suscripciones activas",
+    "ovCatalogSpread": "Distribución del catálogo",
+    "ovRecentActivity": "Actividad reciente",
+    "ovRevenueMix": "Composición de ingresos",
+    "ovRevenueMixNote": "Ingresos de la plataforma por flujo",
+    "rvPlatform": "Ingresos de la plataforma",
+    "rvStreams": "Flujos de ingresos",
+    "thRating": "Valoración",
+    "thReview": "Reseña",
+    "brand1": "Admin",
+    "brand2": "Console",
+    "backToApp": "Volver a la app",
+    "crumb": "Administración de la plataforma",
+    "badge": "ADMIN",
+    "navOverview": "Resumen",
+    "navUsers": "Usuarios",
+    "navPartners": "Socios",
+    "navBookings": "Reservas",
+    "navReviews": "Opiniones",
+    "navLogs": "Registros IA",
+    "navAudit": "Auditoría",
+    "auditFilterActor": "Filtrar por email del actor…",
+    "thActor": "Actor",
+    "thAction": "Acción",
+    "thMethod": "Método",
+    "thTarget": "Objetivo",
+    "thIp": "IP",
+    "noAudit": "Aún no hay registros de auditoría",
+    "navPromos": "Códigos promo",
+    "entPromo": "Código promo",
+    "cCode": "Código",
+    "cDiscountType": "Tipo",
+    "cValue": "Valor",
+    "cRedeemed": "Canjeado",
+    "fPromoCode": "Código",
+    "fDiscountType": "Tipo de descuento",
+    "fValue": "Valor",
+    "fExpiresAt": "Expira el",
+    "fMaxRedemptions": "Canjes máximos",
+    "navRag": "IA / RAG",
+    "ragDocuments": "Documentos indexados",
+    "ragReady": "Listo",
+    "ragEmpty": "Vacío",
+    "ragStatus": "Estado del almacén",
+    "ragByType": "Documentos por tipo",
+    "ragType": "Tipo",
+    "ragCount": "Cantidad",
+    "ragRebuild": "Reconstruir índice",
+    "ragRebuilding": "Reconstruyendo…",
+    "ragRebuilt": "Índice reconstruido · {{count}} documentos",
+    "ragRebuildConfirm": "¿Reconstruir el índice RAG desde cero? Esto borra y reindexa todos los documentos.",
+    "ragRebuildFailed": "Error al reconstruir",
+    "ragHint": "Reconstruye tras editar el catálogo para que el conserje IA refleje los datos más recientes.",
+    "navPayments": "Pagos",
+    "payAllStatuses": "Todos los estados",
+    "payGateway": "Pasarela",
+    "refund": "Reembolsar",
+    "refundConfirm": "¿Reembolsar este pago? Esto no se puede deshacer.",
+    "refundDone": "Pago reembolsado",
+    "refundFailed": "Error al reembolsar",
+    "refunded": "Reembolsado",
+    "noPayments": "No se encontraron pagos",
+    "navBroadcast": "Difusión",
+    "broadcastHint": "Envía una notificación in-app a tus usuarios. Aparece en su centro de notificaciones.",
+    "broadcastAudience": "Audiencia",
+    "broadcastEveryone": "Todos",
+    "broadcastSubject": "Asunto",
+    "broadcastMessage": "Mensaje",
+    "broadcastSend": "Enviar difusión",
+    "broadcastSending": "Enviando…",
+    "broadcastSent": "Enviado a {{count}} usuarios",
+    "broadcastFailed": "Error en la difusión",
+    "broadcastIncomplete": "El asunto y el mensaje son obligatorios",
+    "broadcastConfirm": "¿Enviar esta notificación a la audiencia seleccionada?",
+    "navFlags": "Feature flags",
+    "flagNew": "Nuevo flag",
+    "flagKeyPlaceholder": "p. ej. new_checkout",
+    "flagAdd": "Añadir",
+    "flagKey": "Clave",
+    "flagOn": "Activo",
+    "flagOff": "Inactivo",
+    "flagTurnOn": "Activar",
+    "flagTurnOff": "Desactivar",
+    "flagEnabled": "Flag {{key}} activado",
+    "flagDisabled": "Flag {{key}} desactivado",
+    "flagCreated": "Flag creado",
+    "flagUpdated": "Flag actualizado",
+    "flagGroup": "Grupo",
+    "flagRollout": "Despliegue",
+    "flagRoles": "Roles",
+    "flagAllRoles": "Todos los roles",
+    "flagConfigure": "Configurar flag",
+    "flagRolesHint": "Deja todos los roles sin marcar para incluir a todos.",
+    "flagDeleted": "Flag eliminado",
+    "flagKeyInvalid": "Clave inválida — usa minúsculas, números, . _ -",
+    "flagDeleteConfirm": "¿Eliminar el flag {{key}}?",
+    "noFlags": "Aún no hay feature flags",
+    "gdprExport": "Exportar",
+    "gdprExportHint": "Descargar los datos personales de este usuario (RGPD)",
+    "gdprExported": "Datos exportados",
+    "gdprExportFailed": "Error al exportar",
+    "gdprErase": "Borrar",
+    "gdprEraseHint": "Anonimizar y desactivar (derecho de supresión RGPD)",
+    "gdprErased": "Datos del usuario anonimizados",
+    "gdprEraseFailed": "Error al borrar",
+    "gdprEraseConfirm": "¿Anonimizar {{email}}? Esto borra sus datos personales y desactiva la cuenta. No se puede deshacer.",
+    "alert_failedPayments": "{{count}} pago(s) fallido(s) requieren atención",
+    "alert_pendingPartners": "{{count}} socio(s) esperando aprobación",
+    "alert_ragEmpty": "La base de conocimiento IA está vacía — reconstruye el índice",
+    "alert_inactiveUsers": "{{count}} cuenta(s) de usuario desactivada(s)",
+    "alertView": "Ver",
+    "impersonate": "Suplantar",
+    "impersonateHint": "Inicia sesión como este usuario para reproducir su vista (soporte)",
+    "impersonateConfirm": "¿Iniciar sesión como {{email}}? Navegarás como este usuario hasta que salgas.",
+    "impersonateFailed": "No se pudo iniciar la suplantación",
+    "impersonateExit": "Salir",
+    "impersonatingBanner": "Viendo como {{who}} — suplantación de soporte",
+    "loading": "Cargando panel…",
+    "statUsers": "Usuarios",
+    "statPartners": "Socios",
+    "statBookings": "Reservas",
+    "statPending": "Socios pendientes",
+    "statLive": "Socios activos",
+    "manageUsers": "Gestionar usuarios",
+    "reviewPartners": "Revisar socios",
+    "moderateReviews": "Moderar opiniones",
+    "thUser": "Usuario",
+    "thEmail": "Correo",
+    "thRole": "Rol",
+    "thStatus": "Estado",
+    "thActions": "Acciones",
+    "thPartner": "Socio",
+    "thType": "Tipo",
+    "thCity": "Ciudad",
+    "thBookingId": "ID de reserva",
+    "thAmount": "Importe",
+    "thCreated": "Creado",
+    "thAgent": "Agente",
+    "thModel": "Modelo",
+    "thDuration": "Duración",
+    "thTokens": "Tokens",
+    "thResult": "Resultado",
+    "thWhen": "Cuándo",
+    "active": "Activo",
+    "banned": "Bloqueado",
+    "inactive": "Inactivo",
+    "ban": "Bloquear",
+    "reinstate": "Restablecer",
+    "suspend": "Suspender",
+    "activate": "Activar",
+    "noUsers": "Sin usuarios",
+    "noPartners": "Sin socios",
+    "noBookings": "Sin reservas",
+    "noReviews": "Sin opiniones por moderar",
+    "noLogs": "Sin registros IA",
+    "prev": "Ant.",
+    "next": "Sig.",
+    "untitledReview": "Opinión sin título",
+    "error": "Error",
+    "roleChanged": "{{email}} ahora es {{role}}",
+    "userReinstated": "Usuario restablecido",
+    "userBanned": "Usuario bloqueado",
+    "partnerActivated": "Socio activado",
+    "partnerSuspended": "Socio suspendido",
+    "deleteReviewConfirm": "¿Eliminar esta opinión permanentemente?",
+    "reviewDeleted": "Opinión eliminada",
+    "page": "Página",
+    "by": "por",
+    "delete": "Eliminar",
+    "ok": "OK",
+    "navHotels": "Hoteles",
+    "navFlights": "Vuelos",
+    "navCruises": "Cruceros",
+    "navRestaurants": "Restaurantes",
+    "navDestinations": "Destinos",
+    "navStories": "Historias",
+    "entHotel": "Hotel",
+    "entFlight": "Vuelo",
+    "entCruise": "Crucero",
+    "entRestaurant": "Restaurante",
+    "entDestination": "Destino",
+    "entStory": "Historia",
+    "entPartner": "Socio",
+    "addNew": "Nuevo",
+    "totalItems": "elementos",
+    "searchPlaceholder": "Buscar…",
+    "clearFilters": "Limpiar filtros",
+    "exportCsv": "Exportar CSV",
+    "filterAll": "Todos",
+    "filterPlaceholder": "Filtrar…",
+    "exported": "{{count}} filas exportadas",
+    "exportFailed": "Error al exportar",
+    "selectedCount": "{{count}} seleccionados",
+    "deselect": "Deseleccionar",
+    "bulkDeleteConfirm": "¿Eliminar {{count}} elementos seleccionados? Esto no se puede deshacer.",
+    "bulkDone": "{{count}} elementos actualizados",
+    "bulkFailed": "La acción masiva falló",
+    "globalSearchPlaceholder": "Buscar usuarios, reservas, socios…",
+    "gsNoResults": "Sin resultados",
+    "loadFailed": "Error al cargar",
+    "bdCustomer": "Cliente",
+    "bdTrip": "Viaje",
+    "bdParty": "Viajeros",
+    "bdCheckIn": "Entrada",
+    "bdCheckOut": "Salida",
+    "bdAmounts": "Importes",
+    "bdServiceFee": "Tarifa de servicio",
+    "bdCommission": "Comisión",
+    "bdPayments": "Pagos",
+    "bdNoPayments": "Sin pagos registrados",
+    "bdReviews": "Reseñas del cliente",
+    "bdNoReviews": "Sin reseñas de este cliente",
+    "bdMemberSince": "Miembro desde",
+    "bdTotalBookings": "{{count}} reservas",
+    "yes": "Sí",
+    "no": "No",
+    "noItems": "Sin elementos",
+    "edit": "Editar",
+    "deleteConfirm": "¿Eliminar este elemento permanentemente?",
+    "editItem": "Editar",
+    "newItem": "Nuevo",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "saving": "Guardando…",
+    "fieldRequired": "{{field}} es obligatorio",
+    "saveFailed": "No se pudo guardar. Revisa los campos e inténtalo de nuevo.",
+    "itemUpdated": "Guardado",
+    "itemCreated": "Creado",
+    "itemDeleted": "Eliminado",
+    "cName": "Nombre",
+    "cCity": "Ciudad",
+    "cStars": "Estrellas",
+    "cPrice": "Precio",
+    "cActive": "Activo",
+    "cAirline": "Aerolínea",
+    "cFlightNo": "N.º vuelo",
+    "cFrom": "Desde",
+    "cTo": "Hasta",
+    "cOperator": "Operador",
+    "cPort": "Puerto",
+    "cCabins": "Camarotes",
+    "cCuisine": "Cocina",
+    "cTier": "Categoría",
+    "cCountry": "País",
+    "cContinent": "Continente",
+    "cPopularity": "Popularidad",
+    "cFeatured": "Destacado",
+    "cPlace": "Lugar",
+    "cTag": "Etiqueta",
+    "cMinutes": "Minutos",
+    "cType": "Tipo",
+    "cEmail": "Correo",
+    "fPartner": "Socio",
+    "fName": "Nombre",
+    "fStars": "Estrellas",
+    "fBasePrice": "Precio base / noche",
+    "fCity": "Ciudad",
+    "fImageUrl": "URL de imagen",
+    "fDescription": "Descripción",
+    "fLatitude": "Latitud",
+    "fLongitude": "Longitud",
+    "fPetFriendly": "Admite mascotas",
+    "fAccessible": "Accesible",
+    "fFamilyFriendly": "Familiar",
+    "fSeaProximity": "Cerca del mar",
+    "fActive": "Activo",
+    "fAirline": "Aerolínea",
+    "fFlightNo": "Número de vuelo",
+    "fFrom": "Origen (IATA)",
+    "fTo": "Destino (IATA)",
+    "fDeparture": "Salida",
+    "fArrival": "Llegada",
+    "fPrice": "Precio",
+    "fSeats": "Plazas disponibles",
+    "fBaggage": "Equipaje incluido",
+    "fOperator": "Operador",
+    "fShipName": "Nombre del barco",
+    "fDeparturePort": "Puerto de salida",
+    "fArrivalPort": "Puerto de llegada",
+    "fDepartureDate": "Fecha de salida",
+    "fReturnDate": "Fecha de regreso",
+    "fNights": "Noches",
+    "fPricePerPerson": "Precio por persona",
+    "fCabins": "Camarotes disponibles",
+    "fCruiseType": "Tipo de crucero",
+    "fItinerary": "Itinerario",
+    "fAllInclusive": "Todo incluido",
+    "fCuisine": "Tipo de cocina",
+    "fPriceTier": "Categoría de precio (1-4)",
+    "fCountry": "País",
+    "fContinent": "Continente",
+    "fGallery": "URLs de galería",
+    "fTags": "Etiquetas",
+    "fClimate": "Clima",
+    "fBestMonths": "Mejores meses",
+    "fAvgCost": "Coste medio diario",
+    "fCurrency": "Moneda",
+    "fLanguage": "Idioma",
+    "fTimezone": "Zona horaria",
+    "fPopularity": "Puntuación de popularidad",
+    "fFeatured": "Destacado",
+    "fPlace": "Lugar",
+    "fTag": "Etiqueta",
+    "fMinutes": "Minutos",
+    "fPosterUrl": "URL del póster",
+    "fVideoUrl": "URL del vídeo",
+    "fSortOrder": "Orden",
+    "fType": "Tipo",
+    "fEmail": "Correo de contacto",
+    "fPhone": "Teléfono de contacto",
+    "fVat": "NIF/IVA",
+    "fAddress": "Dirección",
+    "catalogContent": "Catálogo y contenido",
+    "manageCatalog": "Gestionar catálogo",
+    "thBookingRef": "Referencia",
+    "thDestination": "Destino",
+    "bookingUpdated": "Estado de la reserva actualizado",
+    "newUser": "Nuevo usuario",
+    "editUser": "Editar usuario",
+    "fPassword": "Contraseña",
+    "fPasswordKeep": "Contraseña (dejar en blanco para mantener)",
+    "fFirstName": "Nombre",
+    "fLastName": "Apellido",
+    "fEmailVerified": "Correo verificado",
+    "userFormIncomplete": "Rellena correo, nombre y contraseña.",
+    "fGuideText": "Guía (texto completo)",
+    "fTopAttractions": "Atracciones principales",
+    "fFoodReco": "Recomendaciones gastronómicas",
+    "fTravelTips": "Consejos de viaje",
+    "navAttractions": "Atracciones",
+    "entAttraction": "Atracción",
+    "cCategory": "Categoría",
+    "fCategory": "Categoría",
+    "fPriceLevel": "Nivel de precio",
+    "fDuration": "Duración (min)",
+    "fBookable": "Reservable"
+  },
+  "attractions": {
+    "eyebrow": "Qué hacer",
+    "title": "Cosas que hacer",
+    "subtitle": "Monumentos, museos, tours y experiencias inolvidables.",
+    "found": "atracciones encontradas",
+    "allCategories": "Todas",
+    "bookable": "Reservable",
+    "from": "desde",
+    "of": "de",
+    "about": "Acerca de",
+    "duration": "Duración",
+    "price": "Precio",
+    "booking": "Reserva",
+    "notFound": "Atracción no encontrada",
+    "backToList": "Volver a qué hacer",
+    "writeReview": "Escribir una reseña",
+    "signInToReview": "Inicia sesión para opinar",
+    "yourRating": "Tu valoración",
+    "reviewTitlePlaceholder": "Título (opcional)",
+    "reviewBodyPlaceholder": "Comparte tu experiencia...",
+    "reviewError": "No se pudo enviar tu reseña. Inténtalo de nuevo.",
+    "cancel": "Cancelar",
+    "submitting": "Enviando...",
+    "submitReview": "Enviar reseña",
+    "categories": {
+      "LANDMARK": "Monumento",
+      "MUSEUM": "Museo",
+      "PARK": "Parque",
+      "TOUR": "Tour",
+      "ACTIVITY": "Actividad",
+      "NATURE": "Naturaleza",
+      "NIGHTLIFE": "Vida nocturna",
+      "SHOPPING": "Compras",
+      "FOOD": "Gastronomía",
+      "BEACH": "Playa"
+    },
+    "priceLevel": {
+      "FREE": "Gratis",
+      "LOW": "Económico",
+      "MEDIUM": "Moderado",
+      "HIGH": "Premium"
+    },
+    "planTitle": "Planifícalo con IA",
+    "planSubtitle": "Añade esta experiencia a un itinerario inteligente a tu medida.",
+    "planCta": "Planificar con IA"
+  },
+  "itinerary": {
+    "notFound": "Itinerario en vivo no disponible",
+    "backToTrips": "Volver a viajes",
+    "liveBadge": "En vivo",
+    "title": "Itinerario vivo",
+    "subtitle": "Vigilamos tu viaje y replanificamos ante imprevistos.",
+    "alertPending": "replanificación(es) esperando tu aprobación",
+    "yourTrip": "Tu viaje",
+    "proposalsTitle": "Cambios propuestos",
+    "aiReplan": "Replanificación IA",
+    "expires": "Caduca",
+    "reject": "Descartar",
+    "approve": "Aprobar",
+    "reportIssue": "Reportar un problema",
+    "reportPlaceholder": "¿Qué pasó? (p. ej. vuelo cancelado)",
+    "reportSubmit": "Reportar y replanificar",
+    "cancel": "Cancelar",
+    "submitting": "Enviando...",
+    "segmentTypes": {
+      "FLIGHT": "Vuelo",
+      "HOTEL": "Hotel",
+      "RESTAURANT": "Restaurante"
+    },
+    "status": {
+      "ON_SCHEDULE": "En horario",
+      "DELAYED": "Afectado",
+      "CANCELLED": "Cancelado",
+      "CLOSED": "Cerrado",
+      "REBOOKED": "Reservado de nuevo"
+    },
+    "changeTypes": {
+      "REPLACE_FLIGHT": "Reemplazar vuelo",
+      "REPLACE_HOTEL": "Reemplazar hotel",
+      "REPLACE_RESTAURANT": "Reemplazar restaurante",
+      "ADJUST_TIME": "Ajustar horario",
+      "CANCEL_SEGMENT": "Cancelar"
+    }
+  },
+  "forum": {
+    "eyebrow": "Comunidad",
+    "title": "Preguntas de viajeros",
+    "subtitle": "Pregunta a la comunidad, comparte lo que sabes, viaja mejor.",
+    "searchPlaceholder": "Buscar preguntas...",
+    "askButton": "Hacer una pregunta",
+    "signInToAsk": "Inicia sesión para preguntar",
+    "askTitle": "Pregunta a la comunidad",
+    "titlePlaceholder": "Tu pregunta",
+    "bodyPlaceholder": "Añade detalles para mejores respuestas...",
+    "locationPlaceholder": "Lugar (opcional)",
+    "cancel": "Cancelar",
+    "posting": "Publicando...",
+    "post": "Publicar pregunta",
+    "emptyTitle": "Aún no hay preguntas",
+    "emptyBody": "Sé el primero en preguntar a la comunidad.",
+    "answer": "respuesta",
+    "answers": "respuestas",
+    "backToList": "Volver a las preguntas",
+    "noAnswers": "Aún no hay respuestas: sé el primero en ayudar.",
+    "accepted": "Aceptada",
+    "helpful": "Útil",
+    "yourAnswer": "Tu respuesta",
+    "answerPlaceholder": "Comparte tu experiencia o consejo...",
+    "postAnswer": "Publicar respuesta",
+    "signInToAnswer": "Inicia sesión para responder",
+    "notFound": "Pregunta no encontrada"
+  },
+  "hero": {
+    "eyebrow": "Diseñador de viajes con IA · no otra web de listados",
+    "titleLine1": "No busques entre mil reseñas.",
+    "titleEmphasis": "Recibe el viaje,",
+    "titleLine2": "ya planificado.",
+    "subtitle": "Describe el viaje que quieres en una frase. Mira cómo un plan día a día — alojamientos, comida y los pequeños detalles locales — se construye solo en segundos.",
+    "searchPlaceholder": "p. ej. 10 días tranquilos en Japón con buena comida…",
+    "searchAria": "Describe tu viaje",
+    "buildAria": "Crear mi itinerario",
+    "tryLabel": "Prueba:",
+    "tryAria": "Prueba un viaje",
+    "trust": {
+      "human": "Selecciones verificadas por personas",
+      "noRank": "Sin posiciones pagadas",
+      "replan": "Replanifica al instante"
+    },
+    "stageAria": "Vista previa del itinerario en vivo",
+    "status": {
+      "ready": "Listo",
+      "planning": "Planificando…"
+    },
+    "openPlan": "Abrir el itinerario completo",
+    "footNote": "Ajusta lo que quieras — se replanifica al instante.",
+    "chipBudget": "Por debajo del presupuesto",
+    "chipRating": "9.4 de media",
+    "dayLabel": "Día {{n}}",
+    "picks": {
+      "japan": "Japón",
+      "portugal": "Portugal",
+      "iceland": "Islandia"
+    },
+    "places": {
+      "kyoto": "Kyoto",
+      "hakone": "Hakone",
+      "lisbon": "Lisboa",
+      "sintra": "Sintra",
+      "algarve": "Algarve",
+      "reykjavik": "Reykjavík",
+      "southCoast": "Costa Sur",
+      "vik": "Vík"
+    },
+    "samples": {
+      "japan": {
+        "brief": "10 días en Japón — templos, comida y mañanas tranquilas",
+        "summary": "Kyoto · Hakone · Tokyo",
+        "items": {
+          "kansai": {
+            "title": "Aterrizaje en Kansai (KIX)",
+            "meta": "Haruka express → Kyoto"
+          },
+          "ryokan": {
+            "title": "Ryokan Genhouin",
+            "meta": "Suite con tatami · 9.4"
+          },
+          "fushimi": {
+            "title": "Fushimi Inari al atardecer",
+            "meta": "Evita las multitudes"
+          },
+          "arashiyama": {
+            "title": "Bosque de bambú de Arashiyama",
+            "meta": "Ve antes de las 9"
+          },
+          "omurice": {
+            "title": "Omurice en Kichi Kichi",
+            "meta": "Con reserva · favorito local"
+          },
+          "romancecar": {
+            "title": "Romancecar a Hakone",
+            "meta": "Vistas al Fuji a la derecha"
+          },
+          "onsen": {
+            "title": "Estancia en ryokan onsen",
+            "meta": "Rotenburo privado · 9.6"
+          }
+        }
+      },
+      "portugal": {
+        "brief": "Una semana por la costa de Portugal",
+        "summary": "Lisboa · Sintra · Algarve",
+        "items": {
+          "lisbon": {
+            "title": "Llegada a Lisboa (LIS)",
+            "meta": "Aerobus → Baixa"
+          },
+          "casa": {
+            "title": "Casa do Príncipe",
+            "meta": "Vistas a Alfama · 9.2"
+          },
+          "fado": {
+            "title": "Cena con fado en Alfama",
+            "meta": "Tasca do Chico"
+          },
+          "pena": {
+            "title": "Entrada temprana al Palacio de Pena",
+            "meta": "El primer turno evita las colas"
+          },
+          "travesseiros": {
+            "title": "Travesseiros en Piriquita",
+            "meta": "Vale la cola"
+          },
+          "benagil": {
+            "title": "Cuevas marinas de Benagil",
+            "meta": "Kayak en marea baja"
+          },
+          "marinha": {
+            "title": "Praia da Marinha",
+            "meta": "Acantilados a la hora dorada"
+          }
+        }
+      },
+      "iceland": {
+        "brief": "La carretera de circunvalación de Islandia en 6 días, tras la aurora",
+        "summary": "Reykjavík · Costa Sur · Vík",
+        "items": {
+          "keflavik": {
+            "title": "Aterrizaje en Keflavík",
+            "meta": "Blue Lagoon de camino"
+          },
+          "ioncity": {
+            "title": "Ion City boutique",
+            "meta": "Aviso de aurora · 9.1"
+          },
+          "waterfalls": {
+            "title": "Seljalandsfoss + Skógafoss",
+            "meta": "Camina detrás de las cascadas"
+          },
+          "aurora": {
+            "title": "Caza de auroras",
+            "meta": "Pronóstico KP 4 · despejado"
+          },
+          "reynisfjara": {
+            "title": "Arena negra de Reynisfjara",
+            "meta": "Cuidado con las olas traicioneras"
+          },
+          "soup": {
+            "title": "Sopa en Black Beach",
+            "meta": "Estofado de cordero · acogedor"
+          }
+        }
+      }
+    }
+  },
+  "booking": {
+    "flow": {
+      "step": {
+        "configure": "Configurar",
+        "travelers": "Viajeros",
+        "review": "Revisar"
+      },
+      "vertical": {
+        "flight": "Vuelo",
+        "restaurant": "Restaurante",
+        "cruise": "Crucero"
+      },
+      "choose": {
+        "flight": "Elige tu tarifa",
+        "restaurant": "Preferencia de mesa",
+        "cruise": "Elige tu camarote"
+      },
+      "party": {
+        "flight": "Pasajeros",
+        "restaurant": "Comensales",
+        "cruise": "Huéspedes"
+      },
+      "chooseTime": "Elige una hora",
+      "travelersTitle": "¿Quién viaja?",
+      "travelersHelp": "Los nombres deben coincidir con el documento usado al registrarse.",
+      "traveler": "Viajero",
+      "primary": "Titular",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "document": "Número de documento (opcional)",
+      "reviewTitle": "Revisa tu reserva",
+      "date": "Fecha",
+      "aiInsight": "Consejo IA: los precios de esta opción suelen subir cerca de la fecha; reservar ahora suele asegurar mejor tarifa.",
+      "confirmedTitle": "¡Todo listo!",
+      "confirmedBody": "Te enviaremos una confirmación. Puedes gestionar esta reserva cuando quieras.",
+      "reference": "Referencia",
+      "viewBookings": "Ver mis reservas",
+      "cancel": "Cancelar",
+      "back": "Atrás",
+      "continue": "Continuar",
+      "payConfirm": "Pagar y confirmar",
+      "summary": "Resumen de precio",
+      "serviceFee": "Tarifa de servicio",
+      "total": "Total",
+      "securedNote": "Pago seguro",
+      "error": "Algo salió mal. Inténtalo de nuevo.",
+      "errorAuth": "Inicia sesión para completar tu reserva.",
+      "emptyTitle": "Aún no hay nada que reservar",
+      "emptyBody": "Elige un vuelo, restaurante o crucero para empezar.",
+      "emptyCta": "Explorar TravelAI",
+      "payVia": "Pagar con",
+      "addToTrip": "Añadir al viaje",
+      "promoPlaceholder": "Código de descuento",
+      "promoApply": "Aplicar",
+      "promoApplied": "Código de descuento aplicado",
+      "promoInvalid": "Este código de descuento no se puede aplicar",
+      "discount": "Descuento",
+      "confirm": "Confirmar reserva",
+      "processing": "Procesando…",
+      "ancillaries": {
+        "title": "Añadir extras",
+        "help": "Servicios opcionales para un viaje más tranquilo.",
+        "summaryLine": "Extras",
+        "items": {
+          "INSURANCE": "Seguro de viaje",
+          "TRANSFER": "Traslado al aeropuerto",
+          "BAGGAGE": "Equipaje facturado",
+          "SEAT": "Selección de asiento",
+          "PRIORITY": "Embarque prioritario",
+          "EXCURSION": "Excursión en tierra",
+          "WINE": "Maridaje de vinos"
+        },
+        "desc": {
+          "INSURANCE": "Cobertura médica, de cancelación y de equipaje para todo el viaje.",
+          "TRANSFER": "Traslado privado puerta a puerta desde y hacia el aeropuerto.",
+          "BAGGAGE": "Añade una maleta facturada de 23 kg por viajero.",
+          "SEAT": "Elige tu asiento por adelantado.",
+          "PRIORITY": "Embarca primero y asegura espacio en la cabina.",
+          "EXCURSION": "Excursión guiada en uno de los puertos de escala.",
+          "WINE": "Maridaje de vinos elegido por el sumiller para la mesa."
+        }
+      }
+    }
+  },
+  "adminRevenue": {
+    "eyebrow": "Admin",
+    "title": "Ingresos",
+    "lede": "Cómo gana la plataforma: comisión (markup), costes de servicio, venta de extras y suscripciones. El valor bruto de las reservas es el gasto del cliente, mostrado como contexto.",
+    "error": "No se pudieron cargar los ingresos. Se requiere acceso de administrador.",
+    "totalPlatform": "Ingresos totales de la plataforma",
+    "gross": "Valor bruto de reservas",
+    "bookings": "reservas confirmadas",
+    "mix": "Composición de ingresos por fuente",
+    "activeSubs": "{count} membresías Prime activas",
+    "streams": {
+      "commission": "Comisión",
+      "serviceFee": "Costes de servicio",
+      "ancillary": "Extras",
+      "subscription": "Suscripciones"
+    }
+  },
+  "membership": {
+    "eyebrow": "Membresía",
+    "title": "Travel AI Prime",
+    "lede": "Cero costes de servicio en cada reserva y un descuento exclusivo para miembros. Pensado para quienes viajan a menudo.",
+    "interval": {
+      "ANNUAL": "año",
+      "MONTHLY": "mes"
+    },
+    "subscribe": "Suscríbete a Prime",
+    "subscribeSignedOut": "Inicia sesión para suscribirte",
+    "cancel": "Cancelar membresía",
+    "cancelNote": "Cancela cuando quieras; los beneficios siguen activos hasta la renovación.",
+    "priceNote": "Se renueva automáticamente. Cancela cuando quieras.",
+    "active": {
+      "title": "Prime activo",
+      "renews": "Se renueva el"
+    },
+    "benefits": {
+      "fee": {
+        "title": "Cero costes de servicio",
+        "body": "Elimina el coste de servicio del 6% en cada reserva."
+      },
+      "discount": {
+        "title": "Descuento de miembro",
+        "body": "Un descuento exclusivo aplicado automáticamente a tu total."
+      },
+      "priority": {
+        "title": "Soporte prioritario",
+        "body": "Atención preferente para soporte y cambios de viaje."
+      },
+      "watch": {
+        "title": "Alertas de precio ilimitadas",
+        "body": "Vigila todos los vuelos y cruceros que quieras."
+      },
+      "concierge": {
+        "title": "Conserje IA",
+        "body": "Sugerencias de viaje personalizadas de nuestro asistente."
+      }
+    },
+    "checkout": {
+      "feeWaived": "Incluido con Prime",
+      "memberDiscount": "Descuento Prime"
+    }
+  },
+  "favorites": {
+    "title": "Favoritos",
+    "subtitle": "Todo lo que has guardado para después.",
+    "emptyTitle": "Aún no hay nada guardado",
+    "emptyBody": "Toca el corazón en un vuelo, restaurante o crucero para guardarlo aquí.",
+    "emptyCta": "Explorar TravelAI",
+    "save": "Guardar",
+    "saved": "Guardado",
+    "remove": "Quitar",
+    "type": {
+      "flight": "Vuelo",
+      "restaurant": "Restaurante",
+      "cruise": "Crucero",
+      "hotel": "Hotel",
+      "attraction": "Actividad"
+    }
+  },
+  "priceWatch": {
+    "watch": "Vigilar precio",
+    "watching": "Vigilando precio"
+  },
+  "tripCart": {
+    "title": "Tu viaje",
+    "subtitle": "Reserva vuelo, hotel, restaurante y crucero juntos.",
+    "summary": "Resumen del viaje",
+    "items": "elementos",
+    "total": "Total",
+    "bookAll": "Reservar todo el viaje",
+    "remove": "Quitar",
+    "addMore": "Añadir otro",
+    "emptyTitle": "Tu viaje está vacío",
+    "emptyBody": "Añade vuelos, restaurantes o cruceros para armar un viaje y reservarlo de una vez.",
+    "emptyCta": "Explorar TravelAI",
+    "bookedTitle": "¡Viaje reservado!",
+    "bookedBody": "Las {{count}} reservas están confirmadas.",
+    "viewBookings": "Ver mis reservas"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "subtitle": "Avisos sobre tus reservas, viajes y cuenta.",
+    "empty": "Estás al día",
+    "emptyBody": "Las nuevas notificaciones sobre tus reservas y viajes aparecerán aquí.",
+    "untitled": "Notificación",
+    "viewBookings": "Ver reservas",
+    "markRead": "Marcar como leída",
+    "markAllRead": "Marcar todas como leídas",
+    "unread": "sin leer",
+    "read": "Leída"
+  },
+  "ticket": {
+    "title": "Billete digital",
+    "reference": "Referencia de reserva",
+    "dates": "Fechas",
+    "guests": "Viajeros",
+    "travellers": "Viajeros",
+    "status": "Estado",
+    "print": "Imprimir",
+    "back": "Volver a reservas",
+    "notFound": "Billete no encontrado",
+    "statusValue": {
+      "pending": "Pendiente",
+      "confirmed": "Confirmada",
+      "completed": "Completada",
+      "cancelled": "Cancelada"
+    }
+  },
+  "tripMap": {
+    "title": "Mapa del viaje",
+    "all": "Todos los días",
+    "day": "Día {{n}}",
+    "empty": "Aún no hay paradas que mostrar",
+    "emptyHint": "Tus paradas aparecerán aquí cuando tu itinerario tenga ubicaciones.",
+    "missing": "{{count}} parada(s) sin ubicación"
+  },
+  "tripCollab": {
+    "title": "Compañeros de viaje",
+    "subtitle": "Invita a personas a ver y votar este viaje",
+    "empty": "Aún no hay compañeros. Invita a alguien a planificar juntos.",
+    "emailPlaceholder": "companero@email.com",
+    "invite": "Invitar",
+    "inviteSent": "Invitación enviada.",
+    "inviteError": "No se pudo enviar la invitación.",
+    "remove": "Quitar compañero",
+    "role": {
+      "VIEWER": "Observador",
+      "EDITOR": "Editor"
+    },
+    "status": {
+      "PENDING": "Pendiente",
+      "ACCEPTED": "Aceptado",
+      "DECLINED": "Rechazado"
+    },
+    "vote": {
+      "aria": "Votar esta parada",
+      "up": "Votar a favor",
+      "down": "Votar en contra",
+      "voters": "votos"
+    },
+    "accept": {
+      "working": "Uniéndose al viaje...",
+      "loginTitle": "Inicia sesión para aceptar",
+      "loginBody": "Inicia sesión con el correo invitado y vuelve a abrir el enlace de invitación.",
+      "goHome": "Iniciar sesión",
+      "errorTitle": "Invitación no válida",
+      "errorBody": "Esta invitación no es válida o ya se ha usado.",
+      "goTrips": "Ir a mis viajes"
+    }
+  },
+  "tripBudget": {
+    "title": "Presupuesto del viaje",
+    "setPrompt": "Establecer un presupuesto para este viaje",
+    "amountPlaceholder": "Importe",
+    "descriptionPlaceholder": "Descripción (opcional)",
+    "save": "Establecer presupuesto",
+    "saving": "Guardando...",
+    "cancel": "Cancelar",
+    "edit": "Editar",
+    "spent": "Gastado",
+    "budget": "Presupuesto",
+    "remaining": "Restante",
+    "overBudget": "Sobrepasado",
+    "ofBudgetUsed": "del presupuesto usado",
+    "breakdown": "Distribución",
+    "noSpendYet": "Aún no hay gastos registrados.",
+    "addExpense": "Añadir un gasto",
+    "category": "Categoría",
+    "date": "Fecha",
+    "delete": "Eliminar",
+    "categories": {
+      "VOLI": "Vuelos",
+      "HOTEL": "Hoteles",
+      "RISTORANTI": "Restauración",
+      "CROCIERE": "Cruceros",
+      "ATTRAZIONI": "Atracciones",
+      "FOOD": "Comida y bebida",
+      "TRANSPORT": "Transporte",
+      "SHOPPING": "Compras",
+      "ACTIVITIES": "Actividades",
+      "OTHER": "Otros"
+    }
+  },
+  "loyalty": {
+    "tier": {
+      "EXPLORER": "Explorador",
+      "VOYAGER": "Viajero",
+      "ELITE": "Élite"
+    },
+    "type": {
+      "EARN": "Puntos ganados",
+      "REDEEM": "Puntos canjeados",
+      "ADJUST": "Ajuste"
+    },
+    "card": {
+      "subtitle": "Tus recompensas de viaje",
+      "points": "puntos",
+      "progressTo": "Progreso hacia {{tier}}",
+      "pointsToGo": "Faltan {{points}} pts",
+      "topTier": "Has alcanzado nuestro nivel más alto — disfruta las ventajas.",
+      "lifetime": "{{points}} puntos acumulados",
+      "earnRate": "Ganas {{rate}}× puntos",
+      "activity": "Actividad reciente",
+      "empty": "Aún no hay actividad de puntos. Reserva un viaje para empezar a ganar."
+    },
+    "checkout": {
+      "toggle": "Usa tus puntos",
+      "balance": "{{points}} puntos disponibles",
+      "applied": "{{points}} puntos aplicados — ahorras {{amount}}",
+      "discountLine": "Puntos ({{points}})"
+    }
+  },
+  "cancellation": {
+    "action": "Cancelar reserva",
+    "dialogTitle": "¿Cancelar esta reserva?",
+    "previewLoading": "Comprobando la política de reembolso…",
+    "refundLine": "Se te reembolsará el {{ percent }}% —",
+    "noRefund": "No corresponde reembolso en esta fase.",
+    "policyTitle": "Política de reembolso",
+    "tierFull": "7+ días antes de la entrada: reembolso del 100%",
+    "tierPartial": "De 2 a 6 días antes: reembolso del 50%",
+    "tierNone": "Menos de 2 días antes: sin reembolso",
+    "reasonPlaceholder": "Motivo (opcional)",
+    "keep": "Mantener reserva",
+    "confirm": "Confirmar cancelación",
+    "notCancellable": "Esta reserva ya no se puede cancelar.",
+    "error": "No se pudo cancelar — inténtalo de nuevo",
+    "cancelledWithRefund": "Reserva cancelada — €{{ amount }} reembolsados",
+    "cancelledNoRefund": "Reserva cancelada",
+    "refundedBadge": "Reembolsado"
+  },
+  "authRecovery": {
+    "forgotLink": "¿Olvidaste tu contraseña?",
+    "forgotTitle": "Restablece tu contraseña",
+    "forgotSub": "Introduce el email vinculado a tu cuenta y te enviaremos un enlace de restablecimiento.",
+    "emailLabel": "Email",
+    "sendLink": "Enviar enlace",
+    "sentTitle": "Revisa tu bandeja de entrada",
+    "sentBody": "Si existe una cuenta con este email, el enlace está en camino. Caduca en 1 hora.",
+    "backHome": "Volver al inicio",
+    "resetTitle": "Elige una nueva contraseña",
+    "resetSub": "Introduce una nueva contraseña para tu cuenta. El enlace solo funciona una vez.",
+    "newPassword": "Nueva contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "resetSubmit": "Restablecer contraseña",
+    "resetSuccessTitle": "Contraseña actualizada",
+    "resetSuccessBody": "Tu contraseña ha sido cambiada. Ya puedes iniciar sesión con la nueva.",
+    "errMissingToken": "A este enlace le falta el código. Solicita uno nuevo abajo.",
+    "errTooShort": "La contraseña debe tener al menos 8 caracteres.",
+    "errMismatch": "Las contraseñas no coinciden.",
+    "errReset": "Este enlace no es válido, ha caducado o ya se usó. Solicita uno nuevo.",
+    "errEmailRequired": "Introduce tu dirección de email.",
+    "errGeneric": "Algo salió mal. Inténtalo de nuevo.",
+    "verifyTitle": "Verificando tu email",
+    "verifying": "Un momento mientras confirmamos tu dirección…",
+    "verifySuccessTitle": "Email verificado",
+    "verifySuccessBody": "Tu dirección de email está confirmada. ¡Disfruta de Travel AI!",
+    "verifyErrTitle": "Verificación fallida",
+    "verifyErrBody": "Este enlace de verificación no es válido o ya se ha usado.",
+    "bannerTitle": "Verifica tu dirección de email",
+    "bannerBody": "Confirma tu email para proteger tu cuenta y recibir tus confirmaciones de reserva.",
+    "resend": "Reenviar email",
+    "resending": "Enviando…",
+    "resendDone": "Email de verificación enviado — revisa tu bandeja",
+    "resendErr": "No se pudo enviar el email — inténtalo de nuevo"
+  },
+  "socialAuth": {
+    "continueWithGoogle": "Continuar con Google",
+    "orDivider": "o",
+    "socialError": "Error al iniciar sesión con Google. Inténtalo de nuevo o usa tu email."
+  },
+  "twoFactor": {
+    "title": "Autenticación de dos factores",
+    "subtitle": "Añade un segundo paso a tu inicio de sesión con una app de autenticación.",
+    "statusOn": "Activada",
+    "statusOff": "Desactivada",
+    "enabledBody": "La autenticación de dos factores está activa. Se te pedirá un código de tu app de autenticación cada vez que inicies sesión.",
+    "disabledBody": "Protege tu cuenta con un código temporal de una app como Google Authenticator, 1Password o Authy.",
+    "enable": "Activar dos factores",
+    "disable": "Desactivar dos factores",
+    "confirmEnable": "Verificar y activar",
+    "working": "Procesando…",
+    "setupStep1": "Escanea este código QR con tu app de autenticación.",
+    "setupStep2": "Introduce el código de 6 dígitos de la app",
+    "manualEntry": "O introduce esta clave manualmente:",
+    "qrAlt": "Código QR de dos factores",
+    "codeLabel": "Código de verificación",
+    "codePlaceholder": "123456",
+    "disablePrompt": "Introduce un código de tu app (o un código de recuperación) para desactivar los dos factores.",
+    "enabledDone": "Autenticación de dos factores activada.",
+    "disabledDone": "Autenticación de dos factores desactivada.",
+    "recoveryIntro": "Guarda estos códigos de recuperación de un solo uso en un lugar seguro. Cada uno sirve una vez si pierdes acceso a tu app. No se volverán a mostrar.",
+    "recoverySaved": "He guardado mis códigos",
+    "challengeTitle": "Verificación en dos pasos",
+    "challengeSub": "Introduce el código de 6 dígitos de tu app para terminar de iniciar sesión.",
+    "verify": "Verificar",
+    "backToLogin": "Volver al inicio de sesión",
+    "errCodeRequired": "Introduce tu código de verificación.",
+    "errCodeInvalid": "Ese código no es válido. Inténtalo de nuevo.",
+    "errGeneric": "Algo salió mal. Inténtalo de nuevo."
+  },
+  "about": {
+    "eyebrow": "Nuestra historia",
+    "headline": "Descubre el mundo, de forma más inteligente",
+    "tagline": "TravelAI ayuda a millones de viajeros a descubrir destinos, planificar itinerarios y reservar viajes.",
+    "heroCta": "Empieza a explorar",
+    "mission": {
+      "eye": "Por qué existimos",
+      "title": "Nuestra misión es hacer el mundo más accesible",
+      "body": "Creemos que viajar transforma vidas. Por eso construimos una plataforma con IA que elimina la fricción de la planificación."
+    },
+    "values": {
+      "eye": "Lo que nos impulsa",
+      "title": "Construidos sobre valores que vivimos"
+    },
+    "cta": {
+      "headline": "¿Listo para explorar?",
+      "sub": "Únete a millones de viajeros que planifican mejor con TravelAI.",
+      "chat": "Hablar con la IA",
+      "planner": "Crear un viaje"
+    }
+  },
+  "blog": {
+    "eyebrow": "Diario TravelAI",
+    "headline": "Historias, consejos e inspiración",
+    "sub": "Despachos del equipo — destinos que amamos y consejos para todo tipo de viajes.",
+    "featured": "Historia destacada",
+    "latest": "Artículos recientes",
+    "readMore": "Leer más",
+    "minRead": "min de lectura",
+    "newsletter": {
+      "title": "Recibe el resumen semanal",
+      "sub": "Inspiración de viaje y nuevas funciones cada semana.",
+      "placeholder": "Tu dirección de correo",
+      "cta": "Suscribirse"
+    }
+  },
+  "careers": {
+    "eyebrow": "Estamos contratando",
+    "headline": "Construye el futuro del viaje",
+    "sub": "Únete a un pequeño equipo con una gran misión.",
+    "perks": {
+      "title": "Por qué unirse a TravelAI",
+      "mission": {
+        "title": "Misión significativa",
+        "body": "Tu trabajo ayuda a millones de personas a descubrir el mundo."
+      },
+      "growth": {
+        "title": "Crecimiento rápido",
+        "body": "Curvas de aprendizaje pronunciadas y propiedad real."
+      },
+      "remote": {
+        "title": "Remote-first",
+        "body": "Trabaja desde cualquier lugar. Tenemos compañeros en 15 países."
+      },
+      "benefits": {
+        "title": "Excelentes beneficios",
+        "body": "Salario competitivo, cobertura sanitaria y asignación de viaje."
+      },
+      "travel": {
+        "title": "Ventajas de viaje",
+        "body": "Retiros anuales en equipo y reservas con descuento."
+      },
+      "team": {
+        "title": "Equipo increíble",
+        "body": "Personas reflexivas que se preocupan profundamente por la calidad."
+      }
+    },
+    "positions": {
+      "title": "Puestos abiertos",
+      "none": "No hay puestos abiertos ahora mismo — vuelve pronto.",
+      "apply": "Solicitar"
+    },
+    "culture": {
+      "eye": "Nuestra cultura",
+      "title": "Un lugar donde ocurre el gran trabajo",
+      "body": "Nos movemos rápido, nos preocupamos por la calidad y confiamos los unos en los otros."
+    }
+  },
+  "press": {
+    "eyebrow": "Medios",
+    "headline": "Prensa y Medios",
+    "sub": "Cobertura, recursos de marca y todo lo que los periodistas necesitan.",
+    "coverage": {
+      "title": "En las noticias"
+    },
+    "kit": {
+      "title": "Kit de Medios",
+      "body": "Descarga nuestros activos de marca, logos y capturas de pantalla.",
+      "download": "Descargar kit de medios",
+      "logos": "Archivos de logo (SVG, PNG)",
+      "screenshots": "Capturas de pantalla del producto",
+      "brandGuide": "Directrices de marca (PDF)",
+      "boilerplate": "Presentación de la empresa"
+    },
+    "contact": {
+      "title": "Contacto de prensa",
+      "body": "Para solicitudes de entrevistas o verificación, contáctanos.",
+      "response": "Respuesta típica: 1 día hábil"
+    },
+    "brand": {
+      "title": "Activos de marca",
+      "light": "Fondo claro",
+      "dark": "Fondo oscuro",
+      "color": "Color de marca"
+    }
+  },
+  "contact": {
+    "eyebrow": "Contacto",
+    "headline": "Ponte en contacto",
+    "sub": "¿Una pregunta, una idea o solo quieres saludar?",
+    "form": {
+      "title": "Envíanos un mensaje",
+      "name": "Nombre completo",
+      "email": "Dirección de correo",
+      "subject": "Asunto",
+      "message": "Mensaje",
+      "send": "Enviar mensaje",
+      "sentTitle": "¡Mensaje recibido!",
+      "sentBody": "Gracias por ponerte en contacto. Te responderemos en un día hábil.",
+      "newMessage": "Enviar otro mensaje",
+      "error": "Algo salió mal al enviar tu mensaje. Inténtalo de nuevo.",
+      "sending": "Enviando…"
+    },
+    "subjects": {
+      "general": "Consulta general",
+      "booking": "Ayuda con reservas",
+      "technical": "Problema técnico",
+      "partnership": "Asociación",
+      "press": "Prensa y medios",
+      "other": "Otro"
+    },
+    "channels": {
+      "title": "Otras formas de contactarnos",
+      "email": "Correo electrónico",
+      "chat": "Chat IA en vivo",
+      "help": "Centro de ayuda"
+    },
+    "hours": {
+      "title": "Horario de soporte",
+      "body": "Lunes – Viernes, 9 am – 6 pm CET. Respondemos en un día hábil."
+    }
+  },
+  "help": {
+    "eyebrow": "Soporte",
+    "headline": "¿Cómo podemos ayudarte?",
+    "sub": "Explora los temas a continuación o busca lo que necesitas.",
+    "search": "Buscar artículos de ayuda…",
+    "topics": {
+      "title": "Explorar por tema",
+      "bookings": {
+        "title": "Reservas",
+        "body": "Gestiona, modifica o cancela tus reservas."
+      },
+      "account": {
+        "title": "Cuenta",
+        "body": "Configuración de perfil, contraseña y preferencias."
+      },
+      "payments": {
+        "title": "Pagos",
+        "body": "Facturación, facturas y consultas de reembolso."
+      },
+      "cancellations": {
+        "title": "Cancelaciones",
+        "body": "Políticas de cancelación y cómo solicitar un reembolso."
+      },
+      "ai": {
+        "title": "Planificador IA",
+        "body": "Consejos para sacar el máximo partido al asistente IA."
+      },
+      "security": {
+        "title": "Seguridad",
+        "body": "Autenticación de dos factores, seguridad de cuenta y privacidad."
+      }
+    },
+    "faqs": {
+      "title": "Preguntas frecuentes"
+    },
+    "contact": {
+      "title": "¿Sigues necesitando ayuda?",
+      "sub": "Nuestro equipo de soporte está disponible de lunes a viernes, de 9 am a 6 pm CET.",
+      "cta": "Contactar soporte",
+      "chat": "Hablar con la IA"
+    }
+  },
+  "safety": {
+    "eyebrow": "Confianza y seguridad",
+    "headline": "Viaja seguro con TravelAI",
+    "sub": "Tu seguridad es nuestra prioridad, en la plataforma y en el camino.",
+    "tips": {
+      "title": "Consejos de viaje seguro"
+    },
+    "platform": {
+      "eye": "En la plataforma",
+      "title": "Cómo te mantenemos seguro"
+    },
+    "emergency": {
+      "title": "En caso de emergencia",
+      "body": "Si estás en peligro inmediato, contacta siempre con los servicios de emergencia locales primero."
+    },
+    "report": {
+      "title": "Reportar un problema de seguridad",
+      "body": "¿Viste algo sospechoso en la plataforma? Cuéntanos.",
+      "cta": "Reportar un problema"
+    }
+  },
+  "partners": {
+    "eyebrow": "Asociación",
+    "headline": "Haz crecer tu negocio con TravelAI",
+    "sub": "Conecta tu inventario con millones de viajeros.",
+    "types": {
+      "eye": "Tipos de socios",
+      "title": "Trabajamos con todos los sectores del viaje"
+    },
+    "process": {
+      "eye": "Cómo funciona",
+      "title": "Tres pasos hacia la asociación"
+    },
+    "apply": {
+      "eye": "¿Listo para crecer?",
+      "title": "Construyamos algo grande juntos",
+      "sub": "Únete a más de 2.000 socios que confían en TravelAI.",
+      "cta": "Convertirse en socio"
+    }
+  },
+  "developers": {
+    "eyebrow": "Plataforma para desarrolladores",
+    "headline": "Construye sobre TravelAI",
+    "sub": "Accede a nuestros datos de viaje y capacidades de IA a través de una API REST limpia.",
+    "start": {
+      "cta": "Solicitar acceso API",
+      "explore": "Explorar funciones"
+    },
+    "features": {
+      "eye": "Lo que puedes construir",
+      "title": "Todo lo que necesitas"
+    },
+    "endpoints": {
+      "title": "Endpoints clave"
+    },
+    "sdks": {
+      "title": "SDKs oficiales"
+    },
+    "cta": {
+      "title": "¿Listo para integrar?",
+      "body": "Solicita acceso API y nuestro equipo te ayudará a empezar.",
+      "btn": "Solicitar acceso"
+    }
+  },
+  "legal": {
+    "eyebrow": "Legal",
+    "lastUpdated": "Última actualización",
+    "contactLine": "¿Preguntas sobre esta política? Escríbenos a"
+  },
+  "tripPlanner": {
+    "kicker": "Planificador con IA",
+    "title": "Planea un viaje entero en segundos",
+    "lede": "Dinos dónde y cuánto tiempo. Nuestra IA crea un itinerario día a día con hoteles, vuelos, restaurantes y atracciones reales — resérvalo todo con un toque.",
+    "generate": "Crear mi itinerario",
+    "generating": "Planificando…",
+    "error": "No se pudo crear el itinerario. Inténtalo de nuevo.",
+    "form": {
+      "destination": "Destino",
+      "destinationPlaceholder": "p. ej. Roma",
+      "days": "Días",
+      "adults": "Adultos",
+      "children": "Niños",
+      "budget": "Presupuesto (€)",
+      "optional": "opcional",
+      "interests": "Intereses",
+      "interestsPlaceholder": "arte, comida, vida nocturna"
+    },
+    "result": {
+      "estimatedTotal": "Total estimado",
+      "addAll": "Añadir viaje al carrito",
+      "addAllNote": "Añade el hotel, el vuelo y los restaurantes a tu carrito para un solo pago.",
+      "daysLabel": "días"
+    }
+  }
+}

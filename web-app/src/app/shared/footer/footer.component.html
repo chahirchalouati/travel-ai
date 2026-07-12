@@ -1,0 +1,48 @@
+<footer aria-label="Site footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a routerLink="/" class="footer-logo" aria-label="TravelAI home">
+          <span class="footer-logo-text">Travel<span class="footer-logo-accent">AI</span></span>
+          <span class="footer-logo-dot" aria-hidden="true"></span>
+        </a>
+        <p class="footer-tagline">{{ 'footer.tagline' | transloco }}</p>
+        <div class="footer-socials">
+          @for (s of socials; track s.label) {
+            <a href="#" class="social-icon" [attr.aria-label]="s.label" rel="noopener noreferrer">{{ s.icon }}</a>
+          }
+        </div>
+      </div>
+
+      @for (col of columns; track col.titleKey) {
+        <div class="footer-column">
+          <div class="footer-col-title">{{ col.titleKey | transloco }}</div>
+          <ul class="footer-links" role="list">
+            @for (link of col.links; track link.key) {
+              <li>
+                @if (link.route) {
+                  <a [routerLink]="link.route">{{ link.key | transloco }}</a>
+                } @else {
+                  <a [href]="link.href">{{ link.key | transloco }}</a>
+                }
+              </li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; {{ year }} TravelAI. {{ 'footer.rights' | transloco }}</p>
+      <div class="footer-bottom-links">
+        <a routerLink="/privacy">{{ 'footer.privacy' | transloco }}</a>
+        <span class="footer-dot" aria-hidden="true"></span>
+        <a routerLink="/terms">{{ 'footer.terms' | transloco }}</a>
+        <span class="footer-dot" aria-hidden="true"></span>
+        <a routerLink="/cookies">{{ 'footer.cookies' | transloco }}</a>
+        <span class="footer-dot" aria-hidden="true"></span>
+        <a routerLink="/accessibility">{{ 'footer.accessibility' | transloco }}</a>
+      </div>
+    </div>
+  </div>
+</footer>

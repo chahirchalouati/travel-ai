@@ -1,0 +1,368 @@
+/* ============================================================
+   TravelAI Design System v2.0  —  "Swiss Grid"
+   International Typographic Style: authoritative, precise,
+   paper-white surfaces, black rules, a single International Red.
+   Inter (tight tracking) for voice, IBM Plex Mono for technical
+   labels & coordinates. Flat — separation comes from hairline
+   rules and whitespace, never floaty shadows.
+   Legacy token names are aliased to the new palette so the whole
+   app adopts the redesign without per-component rewrites.
+   ============================================================ */
+:root {
+  /* ---- Canonical palette (Swiss) ---------------------------------- */
+  --color-red: #E5352B;          /* International Red — fills, marks, large text */
+  --color-red-hover: #C42A22;
+  --color-red-active: #A81F18;
+  --color-red-tint: #FDECEA;     /* soft wash                            */
+  --color-red-ink: #C42A22;      /* AA-safe red (≈5.7:1 on white) for small text/links */
+  --color-ink: #111111;          /* text, black rules, ink blocks        */
+  --color-ink-soft: #201F1C;
+
+  /* Legacy "ocean/violet/sky" names → remapped onto the Swiss palette   */
+  --color-ocean: var(--color-red);
+  --color-ocean-hover: var(--color-red-hover);
+  --color-ocean-active: var(--color-red-active);
+  --color-ocean-tint: var(--color-red-tint);
+  --color-deep-ocean: var(--color-ink);
+  --color-sky: var(--color-red);
+  --color-violet: var(--color-ink);
+
+  --color-success: #1F7A4D;      /* restrained green                     */
+  --color-success-strong: #145C39;
+  --color-success-tint: #E4F1EA;
+  --color-warning: #C25A17;      /* burnt amber, muted                   */
+  --color-warning-tint: #FBEBDD;
+  --color-rating: #111111;       /* ratings render as strong ink numerals*/
+  --color-rating-tint: #F1EFE9;
+
+  --color-bg: #F6F5F1;           /* warm paper page                      */
+  --color-surface: #FFFFFF;      /* cards                                */
+  --color-surface-hover: #F1EFE9;
+  --color-surface-sunken: #ECEAE3;
+  --color-border: #E4E1D9;       /* hairline                             */
+  --color-border-strong: #111111;/* deliberate black rule                */
+  --color-hairline: #E4E1D9;
+
+  --color-text: #111111;
+  --color-text-muted: #55534E;
+  --color-text-subtle: #8B887F;
+  --color-text-on-dark: #F6F5F1;
+
+  /* ---- Legacy aliases (consumed across ~57 features) --------------- */
+  --brand: var(--color-red);
+  --brand-hover: var(--color-red-hover);
+  --brand-active: var(--color-red-active);
+  --brand-light: var(--color-red-tint);
+  --accent: var(--color-red);
+  --primary: var(--color-red);
+
+  --teal: var(--color-success-strong);
+  --teal-light: var(--color-success-tint);
+  --gold: #B4791A;
+  --gold-light: var(--color-rating-tint);
+  --coral: var(--color-red);
+
+  --bg-primary: var(--color-bg);
+  --bg-secondary: var(--color-surface-hover);
+  --bg-tertiary: var(--color-surface-sunken);
+  --surface: var(--color-surface);
+  --surface-hover: var(--color-surface-hover);
+  --surface-ink: var(--color-ink);
+
+  --text-primary: var(--color-text);
+  --text-secondary: var(--color-text-muted);
+  --text-tertiary: var(--color-text-subtle);
+  --text-on-ink: var(--color-text-on-dark);
+
+  --border: var(--color-border);
+  --border-light: #EEEBE3;
+  --line: var(--color-border);
+  --muted: var(--color-text-subtle);
+
+  /* ---- "Gradients" — flattened to solids (Swiss has none) --------- */
+  --gradient-ai: var(--color-ink);        /* AI action = ink block       */
+  --gradient-ocean: var(--color-red);
+  --gradient-surface: var(--color-surface);
+
+  /* ---- Shadows: near-flat; separation is done with rules ---------- */
+  --shadow-xs: 0 0 0 1px rgba(17, 17, 17, 0.03);
+  --shadow-sm: 0 1px 1px rgba(17, 17, 17, 0.04);
+  --shadow-md: 0 1px 2px rgba(17, 17, 17, 0.05);
+  --shadow-lg: 0 4px 14px rgba(17, 17, 17, 0.08);
+  --shadow-xl: 0 10px 30px rgba(17, 17, 17, 0.10);
+  --shadow-ai: 0 2px 2px rgba(17, 17, 17, 0.06);
+  --ring-focus: 0 0 0 3px rgba(229, 53, 43, 0.28);
+
+  /* ---- Typography: Inter (tight) + IBM Plex Mono (technical) ------- */
+  --font-display: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  --text-display: clamp(2.75rem, 1.3rem + 6vw, 4.5rem);  /* big Swiss hed */
+  --text-h1: clamp(2rem, 1.3rem + 2.8vw, 3rem);
+  --text-h2: clamp(1.6rem, 1.2rem + 1.7vw, 2.125rem);
+  --text-h3: 1.5rem;
+  --text-body-lg: 1.125rem;
+  --text-body: 1rem;
+  --text-sm: 0.875rem;
+  --text-caption: 0.75rem;
+  --text-micro: 0.6875rem;                               /* mono labels   */
+
+  /* ---- Spacing: base-4 scale -------------------------------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
+  --space-section: clamp(4rem, 3rem + 5vw, 8rem);
+
+  /* ---- Radii: sharp, precise -------------------------------------- */
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
+  --radius-pill: 999px;
+  --r-sm: var(--radius-sm);
+  --r-md: var(--radius-md);
+  --r-lg: var(--radius-lg);
+  --r-pill: var(--radius-pill);
+
+  /* ---- Motion: snappy, restrained --------------------------------- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 120ms;
+  --duration-normal: 200ms;
+  --duration-smooth: 320ms;
+  --fast: 120ms;
+}
+
+/* Display utility — tight Swiss headline. */
+.display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+/* Technical mono label (coordinates, index codes, meta). */
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* Deliberate black rule divider. */
+.rule { border: 0; border-top: 1px solid var(--color-ink); }
+.hairline { border: 0; border-top: 1px solid var(--color-border); }
+
+/* Big index numeral in International Red. */
+.index-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--color-red-ink);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* Faint blueprint grid — optional atmospheric backdrop. */
+.grid-lines {
+  background-image:
+    linear-gradient(var(--color-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg-primary); }
+
+body {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  font-size: var(--text-body);
+  line-height: 1.55;
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ms {
+  font-family: 'Material Symbols Rounded';
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  display: inline-block;
+  user-select: none;
+}
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Selection */
+::selection { background: var(--color-red); color: #fff; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb {
+  background: var(--color-text-subtle);
+  border-radius: 0;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-ink); }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* Range slider */
+input[type=range] { -webkit-appearance: none; appearance: none; background: transparent; width: 100%; }
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--color-red);
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 1px var(--color-ink);
+  cursor: pointer;
+  margin-top: -7px;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 0;
+  background: linear-gradient(to right, var(--color-red) var(--pct, 20%), var(--color-border) var(--pct, 20%));
+}
+
+/* ============================================================
+   Buttons  —  squared, flat, precise. Invert on hover.
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition:
+    background var(--duration-normal) var(--ease),
+    color var(--duration-normal) var(--ease),
+    border-color var(--duration-normal) var(--ease),
+    box-shadow var(--duration-normal) var(--ease),
+    transform var(--duration-fast) var(--ease);
+}
+.btn:focus-visible { outline: none; box-shadow: var(--ring-focus); }
+.btn:active { transform: scale(0.985); }
+
+.btn-primary {
+  padding: 0.75rem 1.5rem;
+  background: var(--color-red);
+  color: #fff;
+
+  &:hover { background: var(--color-red-hover); }
+  &:active { background: var(--color-red-active); }
+}
+
+.btn-outline {
+  padding: 0.7rem 1.45rem;
+  background: var(--surface);
+  color: var(--color-ink);
+  border: 1px solid var(--color-ink);
+
+  &:hover { background: var(--color-ink); color: #fff; }
+}
+
+.btn-ghost {
+  padding: 0.55rem 1rem;
+  background: transparent;
+  color: var(--text-primary);
+
+  &:hover { color: var(--color-red-ink); background: var(--color-red-tint); }
+}
+
+/* Signature AI action — solid ink block, red focus. */
+.btn-ai {
+  padding: 0.8rem 1.6rem;
+  color: #fff;
+  background: var(--color-ink);
+
+  &:hover { background: var(--color-red); }
+}
+
+/* ============================================================
+   Card primitive  —  hairline border, flat, black-rule hover.
+   ============================================================ */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+  transition:
+    box-shadow var(--duration-normal) var(--ease),
+    border-color var(--duration-normal) var(--ease),
+    transform var(--duration-fast) var(--ease);
+}
+.card--interactive { cursor: pointer; }
+.card--interactive:hover {
+  border-color: var(--color-ink);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Rating star colour helper. */
+.rating-star { color: var(--gold); }
+
+/* ============================================================
+   Scroll reveal (see RevealDirective)
+   ============================================================ */
+.reveal { opacity: 0; }
+.reveal.reveal--visible {
+  opacity: 1;
+  animation: reveal-rise var(--duration-smooth) var(--ease-out-expo) backwards;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+@keyframes reveal-rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.reveal--visible {
+    opacity: 1;
+    animation: none;
+  }
+}
+
+/* Keyframe animations */
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--bg-secondary) 25%,
+    var(--bg-tertiary) 50%,
+    var(--bg-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}

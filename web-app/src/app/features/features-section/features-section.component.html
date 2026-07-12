@@ -1,0 +1,86 @@
+<section id="features" aria-labelledby="features-heading">
+  <div class="container">
+    <header class="section-header">
+      <h2 class="section-title" id="features-heading">
+        How TravelAI helps you travel smarter
+      </h2>
+      <p class="section-subtitle">
+        From first inspiration to final booking, TravelAI handles the complexity
+        so you can focus on the experience.
+      </p>
+    </header>
+
+    <div class="features-row">
+      @for (feat of features; track feat.title; let i = $index) {
+        <div
+          class="feature-card"
+          [class.active]="activeFeature() === i"
+          (click)="selectFeature(i)"
+          (keydown.enter)="selectFeature(i)"
+          role="button"
+          tabindex="0"
+        >
+          <div class="feature-icon-circle" [class.alt]="i % 2 === 1">
+            <span class="ms feature-icon">
+              @switch (i) {
+                @case (0) { travel_explore }
+                @case (1) { tune }
+                @case (2) { bolt }
+                @case (3) { credit_card }
+              }
+            </span>
+          </div>
+          <h3 class="feature-title">{{ feat.title }}</h3>
+          <p class="feature-desc">{{ feat.desc }}</p>
+        </div>
+      }
+    </div>
+
+    <div class="chat-mockup-card">
+      <div class="mockup-header">
+        <div class="mockup-dots">
+          <span class="mockup-dot mockup-dot--red"></span>
+          <span class="mockup-dot mockup-dot--yellow"></span>
+          <span class="mockup-dot mockup-dot--green"></span>
+        </div>
+        <span class="mockup-title">TravelAI Chat</span>
+      </div>
+      <div class="mockup-body">
+        <div class="chat-messages">
+          @for (msg of messages; track $index) {
+            <div class="chat-msg" [class.user]="msg.role === 'user'" [class.ai-msg]="msg.role === 'ai'">
+              <div class="chat-avatar" [class.ai-av]="msg.role === 'ai'" [class.user-av]="msg.role === 'user'" aria-hidden="true">
+                @if (msg.role === 'ai') {
+                  <span class="ms" style="font-size:.85rem">auto_awesome</span>
+                } @else {
+                  Y
+                }
+              </div>
+              <div class="chat-bubble">{{ msg.text }}</div>
+            </div>
+          }
+          @if (isTyping()) {
+            <div class="chat-msg ai-msg">
+              <div class="chat-avatar ai-av" aria-hidden="true">
+                <span class="ms" style="font-size:.85rem">auto_awesome</span>
+              </div>
+              <div class="chat-bubble">
+                <div class="chat-typing" aria-label="AI is typing">
+                  <div class="typing-dot"></div>
+                  <div class="typing-dot"></div>
+                  <div class="typing-dot"></div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+        <div class="chat-input-row">
+          <input type="text" placeholder="Ask about your trip..." aria-label="Type your message">
+          <button class="chat-send" aria-label="Send">
+            <span class="ms">send</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
