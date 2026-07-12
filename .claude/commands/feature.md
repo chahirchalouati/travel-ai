@@ -6,7 +6,7 @@ allowed-tools: Read, Write, Edit, Bash, Grep, Glob, Task
 
 Implement a full-stack feature for Travel AI: **$ARGUMENTS**
 
-Read `.claude/rules/project-workflow.md`, `.claude/rules/backend-conventions.md`, and `.claude/rules/frontend-conventions.md` first. Consult Claude memory (`memory/MEMORY.md`) for related existing architecture before building anything new.
+Read `.claude/rules/project-workflow.md`, `.claude/rules/backend-conventions.md`, and `.claude/rules/frontend-conventions.md` first. Consult Claude memory (`memory/MEMORY.md`) for the full project structure tree (overview, backend modules, frontend features, core/shared, feedback rules) before building anything new.
 
 Work the cross-cutting checklist — do not stop at the backend:
 

@@ -285,49 +285,42 @@ docker compose down
 
 ## Notes for Claude Code (technical, ignore if you're not coding)
 
-- Stack: Spring Boot (Java 21, Maven wrapper `./mvnw`) + Angular 19, Spring profile
-  `dev` is the default via `SPRING_PROFILES_ACTIVE:dev` in `application.yml`.
-- Infra is `travel-ai-backend/docker-compose.yml` (postgres+pgvector, redis, mailpit,
-  ollama, minio). Flyway runs migrations on boot; `spring-boot-devtools` hot-restarts
-  on `./mvnw -o compile`.
-- Frontend `proxy.conf.json` proxies `/api` → `http://localhost:8080`. Default UI
-  language is French; i18n bundles in `web-app/src/assets/i18n/` (en/es/fr/it) — a new
-  string needs a key in all four files.
-- New public endpoints must be allow-listed in `shared/config/SecurityConfig.java` as
-  `/api/<path>/**`. The `/profile` page needs a real JWT (register via
-  `POST /api/auth/register`, set `accessToken` as `localStorage.ai_access_token`).
+- Stack: Spring Boot 3.5 (Java 21, Maven wrapper `./mvnw`, Spring Modulith 1.3.5, Spring AI 1.0) + Angular 19 standalone (TypeScript 5.6, SCSS, Signals + RxJS). Spring profile `dev` is the default via `SPRING_PROFILES_ACTIVE:dev` in `application.yml`.
+- **40 backend modules** under `com.travelai.*` (flat layout, event-driven cross-module). **56 frontend features** under `web-app/src/app/features/`. **29 shared/ui primitives** (app-ui-input, select, textarea, range, datepicker, etc.).
+- Design: Swiss International Typographic (paper-white #F6F5F1, ink #111, red #E5352B, Inter + IBM Plex Mono). Admin uses same light theme.
+- Infra is `travel-ai-backend/docker-compose.yml` (postgres+pgvector, redis, mailpit, ollama, minio). Flyway runs 63 migrations on boot (next: V64); `spring-boot-devtools` hot-restarts on `./mvnw -o compile`.
+- AI: Ollama (qwen2.5:7b chat + nomic-embed-text embeddings), pgvector RAG store (~367 docs, threshold ~0.45), multi-agent planning (Orchestrator → Flight/Hotel/Restaurant/Ranking agents).
+- Frontend `proxy.conf.json` proxies `/api` → `http://localhost:8080`. Default UI language is French; i18n bundles in `web-app/src/assets/i18n/` (en/es/fr/it) — a new string needs a key in all four files.
+- New public endpoints must be allow-listed in `shared/config/SecurityConfig.java`. Admin endpoints use `@PreAuthorize("hasRole('ADMIN')")` instead. Auth: JWT (24h) + TOTP 2FA + Google OAuth. Token: `localStorage.ai_access_token`.
+- `/planner` is the only trip planner (no `/trip-planner`). Everything backend-driven.
+- No hardcoded geo/reference data (coords, city lists) — use DB or open APIs.
+- No `Co-Authored-By` trailers in commits.
 
 ---
 
 ## Project Claude Code config (`.claude/`)
 
-This repo ships a project-scoped Claude Code setup. Read the relevant rule/skill
-before doing work in that area — they encode the conventions the codebase actually
-follows.
+This repo ships a project-scoped Claude Code setup. Read the relevant rule/skill before doing work in that area.
 
 **Rules** (`.claude/rules/` — read on demand):
-- `backend-conventions.md` — Spring Modulith modules (`com.travelai.*`), layering,
-  Flyway numbering, `SecurityConfig` allowlist, server-authoritative pricing.
-- `frontend-conventions.md` — Angular 19 standalone, `shared/ui` primitives,
-  4-language i18n (en/es/fr/it, French default).
-- `project-workflow.md` — full-stack feature checklist, run & verify.
+- `backend-conventions.md` — 40 Spring Modulith modules, event-driven cross-module, Flyway V1-V63 (next V64), SecurityConfig allowlist vs @PreAuthorize, server-authoritative pricing, AI subsystem config.
+- `frontend-conventions.md` — 56 features, 29 shared/ui primitives, Swiss design tokens, i18n 4-way sync, admin shell+child-routes, intentionally-native elements list.
+- `project-workflow.md` — full-stack feature checklist, run & verify, memory index.
 
 **Skills** (`.claude/skills/`):
-- `travelai-conventions` — canonical backend + frontend conventions reference.
-- `travelai-rag-concierge` — AI concierge RAG pipeline (Ollama `qwen2.5:7b` +
-  `nomic-embed-text`, ~0.45 similarity threshold, idempotent ingestion).
+- `travelai-conventions` — canonical backend + frontend conventions reference (single-file summary).
+- `travelai-rag-concierge` — AI concierge RAG pipeline (Ollama qwen2.5:7b + nomic-embed-text, ~0.45 similarity threshold, idempotent ingestion, debugging checklist).
 
-**Agents** (`.claude/agents/`): `travelai-module-builder` (backend module scaffolder),
-`travelai-feature-builder` (Angular feature scaffolder).
+**Agents** (`.claude/agents/`):
+- `travelai-module-builder` — backend module scaffolder (Sonnet, follows Modulith conventions).
+- `travelai-feature-builder` — Angular feature scaffolder (Sonnet, reuses shared/ui, syncs i18n).
 
-**Commands** (`.claude/commands/`): `/feature` (full-stack feature end-to-end),
-`/verify` (build + test both sides), `/new-migration` (next Flyway `V<n>`),
-`/i18n-sync` (reconcile the four i18n bundles), `/reingest` (rebuild the RAG store),
-`/dev-up` (bring up the whole stack).
+**Commands** (`.claude/commands/`): `/feature` (full-stack feature end-to-end), `/verify` (build + test both sides), `/new-migration` (next Flyway V-number), `/i18n-sync` (reconcile the four i18n bundles), `/reingest` (rebuild the RAG store), `/dev-up` (bring up the whole stack).
 
 **Hooks** (`.claude/hooks/`, wired in `.claude/settings.json`):
 - `guard-file-size.mjs` — blocks source writes over 800 lines.
 - `i18n-validate.mjs` — blocks invalid i18n JSON and warns on en/es/fr/it key drift.
 
-Node-only; no external formatter/linter is configured in this repo. Personal
-permissions stay in `.claude/settings.local.json` (untracked).
+**Memory** (`memory/MEMORY.md`): full project structure tree — overview, 40 backend modules, 56 frontend features, 42 core services + 29 UI primitives, behavioral rules.
+
+Node-only; no external formatter/linter is configured in this repo. Personal permissions stay in `.claude/settings.local.json` (untracked).
