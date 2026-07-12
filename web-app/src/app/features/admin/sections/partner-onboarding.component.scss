@@ -1,0 +1,30 @@
+.po { display: flex; flex-direction: column; gap: var(--ad-sp-5); }
+.po-loading { color: var(--ad-text-faint); padding: var(--ad-sp-8); text-align: center; }
+
+.po-status { display: flex; align-items: center; justify-content: space-between; gap: var(--ad-sp-3); }
+.po-score { color: var(--ad-text-dim); font-size: var(--ad-fx-sm); }
+
+/* Lifecycle timeline: REGISTERED -> CONFIGURED -> VALIDATED -> LIVE, with a SUSPENDED branch. */
+.po-timeline { list-style: none; margin: 0; padding: 0; display: flex; gap: 0; }
+.po-tl__step { flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; position: relative; padding-right: var(--ad-sp-3); }
+.po-tl__step::after {
+  content: ''; position: absolute; left: 6px; top: 5px; right: -6px; height: 2px; background: var(--ad-line-strong);
+}
+.po-tl__step:last-child::after { display: none; }
+.po-tl__dot { width: 12px; height: 12px; border-radius: 50%; background: var(--ad-surface-4); border: 2px solid var(--ad-line-strong); z-index: 1; }
+.po-tl__lbl { font-size: 10px; color: var(--ad-text-faint); letter-spacing: 0.08em; }
+.po-tl__step--done .po-tl__dot { background: var(--ad-ok); border-color: var(--ad-ok); }
+.po-tl__step--done::after { background: var(--ad-ok); }
+.po-tl__step--current .po-tl__lbl { color: var(--ad-text); font-weight: 600; }
+.po-timeline[data-suspended="true"] .po-tl__dot { background: var(--ad-danger); border-color: var(--ad-danger); }
+.po-timeline[data-suspended="true"] .po-tl__step::after { background: var(--ad-danger); }
+.po-tl__step--suspended .po-tl__dot { background: var(--ad-danger); border-color: var(--ad-danger); }
+.po-tl__step--suspended .po-tl__lbl { color: var(--ad-danger); }
+
+/* Cards */
+.po-card { background: var(--ad-surface-2); border: 1px solid var(--ad-line); border-radius: var(--ad-r-sm); padding: var(--ad-sp-4); }
+.po-h { display: flex; align-items: center; gap: var(--ad-sp-2); font-size: var(--ad-fx-sm); font-weight: 700; margin: 0 0 var(--ad-sp-3); text-transform: uppercase; letter-spacing: 0.04em; color: var(--ad-text-dim); }
+.po-h .ad-ms { font-size: 17px; color: var(--ad-text-faint); }
+.po-card__actions { display: flex; justify-content: flex-end; margin-top: var(--ad-sp-4); }
+
+.po-lifecycle-actions { display: flex; gap: var(--ad-sp-3); flex-wrap: wrap; }

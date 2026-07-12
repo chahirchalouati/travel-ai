@@ -28,6 +28,7 @@ export const ADMIN_NAV: readonly AdminNavGroup[] = [
     items: [
       { path: 'users', labelKey: 'admin.navUsers', icon: 'group' },
       { path: 'partners', labelKey: 'admin.navPartners', icon: 'store' },
+      { path: 'partner-onboarding', labelKey: 'admin.navPartnerOnboarding', icon: 'rocket_launch' },
     ],
   },
   {

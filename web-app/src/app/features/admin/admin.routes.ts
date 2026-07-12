@@ -23,6 +23,7 @@ export const ADMIN_ROUTES: Routes = [
       { path: 'overview', loadComponent: () => import('./sections/overview.component').then(m => m.AdminOverviewComponent) },
       { path: 'revenue', loadComponent: () => import('./sections/revenue.component').then(m => m.AdminRevenueComponent) },
       { path: 'users', loadComponent: () => import('./sections/users.component').then(m => m.AdminUsersComponent) },
+      { path: 'partner-onboarding', loadComponent: () => import('./sections/partner-onboarding.component').then(m => m.AdminPartnerOnboardingComponent) },
       ...catalogRoute('partners'), ...catalogRoute('promos'),
       ...catalogRoute('hotels'), ...catalogRoute('flights'), ...catalogRoute('cruises'),
       ...catalogRoute('restaurants'), ...catalogRoute('destinations'), ...catalogRoute('attractions'),

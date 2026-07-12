@@ -7,9 +7,12 @@ export function statusTone(status: string | null | undefined): BadgeTone {
     case 'CONFIRMED':
     case 'ACTIVE':
     case 'PAID':
+    case 'LIVE':
       return 'ok';
     case 'PENDING':
     case 'PROCESSING':
+    case 'REGISTERED':
+    case 'CONFIGURED':
       return 'pending';
     case 'FAILED':
     case 'CANCELLED':
@@ -18,6 +21,8 @@ export function statusTone(status: string | null | undefined): BadgeTone {
     case 'REFUNDED':
     case 'PARTIALLY_REFUNDED':
       return 'warn';
+    case 'VALIDATED':
+      return 'info';
     default:
       return 'neutral';
   }
