@@ -1,6 +1,7 @@
 package com.travelai.admin;
 
 import com.travelai.admin.dto.*;
+import com.travelai.shared.domain.AdminListQuery;
 import com.travelai.shared.domain.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -31,15 +33,17 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<ApiResponse<Page<AdminUserResponse>>> listUsers(Pageable pageable) {
-        Page<AdminUserResponse> page = adminService.listUsers(pageable);
+    public ResponseEntity<ApiResponse<Page<AdminUserResponse>>> listUsers(
+            Pageable pageable, @RequestParam Map<String, String> params) {
+        Page<AdminUserResponse> page = adminService.listUsers(AdminListQuery.of(pageable, params));
         ApiResponse.Meta meta = new ApiResponse.Meta(page.getTotalElements(), page.getNumber(), page.getSize());
         return ResponseEntity.ok(ApiResponse.ok(page, meta));
     }
 
     @GetMapping("/partners")
-    public ResponseEntity<ApiResponse<Page<AdminPartnerResponse>>> listPartners(Pageable pageable) {
-        Page<AdminPartnerResponse> page = adminService.listPartners(pageable);
+    public ResponseEntity<ApiResponse<Page<AdminPartnerResponse>>> listPartners(
+            Pageable pageable, @RequestParam Map<String, String> params) {
+        Page<AdminPartnerResponse> page = adminService.listPartners(AdminListQuery.of(pageable, params));
         ApiResponse.Meta meta = new ApiResponse.Meta(page.getTotalElements(), page.getNumber(), page.getSize());
         return ResponseEntity.ok(ApiResponse.ok(page, meta));
     }
@@ -75,10 +79,20 @@ public class AdminController {
         return ResponseEntity.ok(ApiResponse.ok(page, meta));
     }
 
+    @GetMapping("/bookings/{id}/detail")
+    public ResponseEntity<ApiResponse<AdminBookingDetailResponse>> bookingDetail(@PathVariable UUID id) {
+        return ResponseEntity.ok(ApiResponse.ok(adminService.getBookingDetail(id)));
+    }
+
     @PatchMapping("/bookings/{id}/status")
     public ResponseEntity<ApiResponse<AdminBookingResponse>> updateBookingStatus(
             @PathVariable UUID id, @Valid @RequestBody UpdateBookingStatusRequest request) {
         return ResponseEntity.ok(ApiResponse.ok(adminService.updateBookingStatus(id, request.status())));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<AdminSearchResponse>> search(@RequestParam(name = "q", required = false) String q) {
+        return ResponseEntity.ok(ApiResponse.ok(adminService.search(q)));
     }
 
     @GetMapping("/ai-logs")

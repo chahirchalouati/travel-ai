@@ -31,6 +31,19 @@ public class FeatureFlag {
     @Column(columnDefinition = "text")
     private String description;
 
+    /** Percentage of users the flag applies to (0–100). 100 = everyone. */
+    @Column(name = "rollout_percentage", nullable = false)
+    @Builder.Default
+    private int rolloutPercentage = 100;
+
+    /** Comma-separated roles the flag is restricted to (e.g. "TRAVELER,PARTNER"). Blank = all roles. */
+    @Column(name = "target_roles", columnDefinition = "text")
+    private String targetRoles;
+
+    /** Optional grouping label for the admin console. */
+    @Column(name = "group_name", length = 80)
+    private String groupName;
+
     @Column(name = "updated_at", nullable = false)
     @Builder.Default
     private Instant updatedAt = Instant.now();

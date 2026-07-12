@@ -10,9 +10,14 @@ public record FeatureFlagResponse(
         String key,
         boolean enabled,
         String description,
+        int rolloutPercentage,
+        String targetRoles,
+        String groupName,
         Instant updatedAt) {
 
     public static FeatureFlagResponse from(FeatureFlag f) {
-        return new FeatureFlagResponse(f.getId(), f.getKey(), f.isEnabled(), f.getDescription(), f.getUpdatedAt());
+        return new FeatureFlagResponse(
+                f.getId(), f.getKey(), f.isEnabled(), f.getDescription(),
+                f.getRolloutPercentage(), f.getTargetRoles(), f.getGroupName(), f.getUpdatedAt());
     }
 }

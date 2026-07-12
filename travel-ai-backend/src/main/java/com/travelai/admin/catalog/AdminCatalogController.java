@@ -1,6 +1,7 @@
 package com.travelai.admin.catalog;
 
 import com.travelai.admin.catalog.dto.*;
+import com.travelai.shared.domain.AdminListQuery;
 import com.travelai.shared.domain.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.UUID;
 
 /** Admin catalog management: create/update/delete + full listing of catalog content. */
@@ -29,8 +31,9 @@ public class AdminCatalogController {
     // ── Hotels ────────────────────────────────────────────────────────────
 
     @GetMapping("/hotels")
-    public ResponseEntity<ApiResponse<Page<AdminHotelDto.View>>> listHotels(Pageable pageable) {
-        return ResponseEntity.ok(paged(service.listHotels(pageable)));
+    public ResponseEntity<ApiResponse<Page<AdminHotelDto.View>>> listHotels(
+            Pageable pageable, @RequestParam Map<String, String> params) {
+        return ResponseEntity.ok(paged(service.listHotels(AdminListQuery.of(pageable, params))));
     }
 
     @PostMapping("/hotels")
@@ -53,8 +56,9 @@ public class AdminCatalogController {
     // ── Flights ───────────────────────────────────────────────────────────
 
     @GetMapping("/flights")
-    public ResponseEntity<ApiResponse<Page<AdminFlightDto.View>>> listFlights(Pageable pageable) {
-        return ResponseEntity.ok(paged(service.listFlights(pageable)));
+    public ResponseEntity<ApiResponse<Page<AdminFlightDto.View>>> listFlights(
+            Pageable pageable, @RequestParam Map<String, String> params) {
+        return ResponseEntity.ok(paged(service.listFlights(AdminListQuery.of(pageable, params))));
     }
 
     @PostMapping("/flights")
@@ -77,8 +81,9 @@ public class AdminCatalogController {
     // ── Cruises ───────────────────────────────────────────────────────────
 
     @GetMapping("/cruises")
-    public ResponseEntity<ApiResponse<Page<AdminCruiseDto.View>>> listCruises(Pageable pageable) {
-        return ResponseEntity.ok(paged(service.listCruises(pageable)));
+    public ResponseEntity<ApiResponse<Page<AdminCruiseDto.View>>> listCruises(
+            Pageable pageable, @RequestParam Map<String, String> params) {
+        return ResponseEntity.ok(paged(service.listCruises(AdminListQuery.of(pageable, params))));
     }
 
     @PostMapping("/cruises")
@@ -101,8 +106,9 @@ public class AdminCatalogController {
     // ── Restaurants ───────────────────────────────────────────────────────
 
     @GetMapping("/restaurants")
-    public ResponseEntity<ApiResponse<Page<AdminRestaurantDto.View>>> listRestaurants(Pageable pageable) {
-        return ResponseEntity.ok(paged(service.listRestaurants(pageable)));
+    public ResponseEntity<ApiResponse<Page<AdminRestaurantDto.View>>> listRestaurants(
+            Pageable pageable, @RequestParam Map<String, String> params) {
+        return ResponseEntity.ok(paged(service.listRestaurants(AdminListQuery.of(pageable, params))));
     }
 
     @PostMapping("/restaurants")
@@ -126,8 +132,9 @@ public class AdminCatalogController {
     // ── Destinations ──────────────────────────────────────────────────────
 
     @GetMapping("/destinations")
-    public ResponseEntity<ApiResponse<Page<AdminDestinationDto.View>>> listDestinations(Pageable pageable) {
-        return ResponseEntity.ok(paged(service.listDestinations(pageable)));
+    public ResponseEntity<ApiResponse<Page<AdminDestinationDto.View>>> listDestinations(
+            Pageable pageable, @RequestParam Map<String, String> params) {
+        return ResponseEntity.ok(paged(service.listDestinations(AdminListQuery.of(pageable, params))));
     }
 
     @PostMapping("/destinations")
@@ -151,8 +158,9 @@ public class AdminCatalogController {
     // ── Attractions ────────────────────────────────────────────────────────
 
     @GetMapping("/attractions")
-    public ResponseEntity<ApiResponse<Page<AdminAttractionDto.View>>> listAttractions(Pageable pageable) {
-        return ResponseEntity.ok(paged(service.listAttractions(pageable)));
+    public ResponseEntity<ApiResponse<Page<AdminAttractionDto.View>>> listAttractions(
+            Pageable pageable, @RequestParam Map<String, String> params) {
+        return ResponseEntity.ok(paged(service.listAttractions(AdminListQuery.of(pageable, params))));
     }
 
     @PostMapping("/attractions")
@@ -176,8 +184,9 @@ public class AdminCatalogController {
     // ── Travel stories ────────────────────────────────────────────────────
 
     @GetMapping("/stories")
-    public ResponseEntity<ApiResponse<Page<AdminStoryDto.View>>> listStories(Pageable pageable) {
-        return ResponseEntity.ok(paged(service.listStories(pageable)));
+    public ResponseEntity<ApiResponse<Page<AdminStoryDto.View>>> listStories(
+            Pageable pageable, @RequestParam Map<String, String> params) {
+        return ResponseEntity.ok(paged(service.listStories(AdminListQuery.of(pageable, params))));
     }
 
     @PostMapping("/stories")

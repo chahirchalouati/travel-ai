@@ -13,6 +13,8 @@ import com.travelai.partner.PartnerStatus;
 import com.travelai.review.Review;
 import com.travelai.review.ReviewRepository;
 import com.travelai.shared.config.JwtService;
+import com.travelai.shared.domain.AdminListQuery;
+import com.travelai.shared.domain.EntitySpecifications;
 import com.travelai.shared.exception.ErrorCode;
 import com.travelai.shared.exception.TravelAiException;
 import jakarta.persistence.EntityManager;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -39,6 +43,7 @@ public class AdminService {
     private final PartnerRepository partnerRepository;
     private final ReviewRepository reviewRepository;
     private final BookingRepository bookingRepository;
+    private final com.travelai.payment.PaymentRepository paymentRepository;
     private final PasswordEncoder passwordEncoder;
     private final EntityManager entityManager;
     private final JwtService jwtService;
@@ -60,26 +65,102 @@ public class AdminService {
     }
 
     /** Returns paginated list of all users. */
-    public Page<AdminUserResponse> listUsers(Pageable pageable) {
-        Page<User> page = userRepository.findAll(pageable);
+    private static final List<String> USER_SEARCH = List.of("email", "firstName", "lastName", "phone");
+
+    public Page<AdminUserResponse> listUsers(AdminListQuery q) {
+        Page<User> page = userRepository.findAll(
+                EntitySpecifications.filter(User.class, q.search(), USER_SEARCH, q.filters()),
+                q.pageable());
         List<AdminUserResponse> content = page.getContent().stream()
             .map(this::toAdminUser)
             .toList();
-        return new PageImpl<>(content, pageable, page.getTotalElements());
+        return new PageImpl<>(content, q.pageable(), page.getTotalElements());
     }
 
-    /** Returns paginated list of all partners. */
-    public Page<AdminPartnerResponse> listPartners(Pageable pageable) {
-        Page<Partner> page = partnerRepository.findAll(pageable);
+    private static final List<String> PARTNER_SEARCH = List.of("name", "contactEmail", "city", "vatNumber");
+
+    /** Returns a filtered/sorted/paginated list of partners. */
+    public Page<AdminPartnerResponse> listPartners(AdminListQuery q) {
+        Page<Partner> page = partnerRepository.findAll(
+                EntitySpecifications.filter(Partner.class, q.search(), PARTNER_SEARCH, q.filters()),
+                q.pageable());
         List<AdminPartnerResponse> content = page.getContent().stream()
             .map(this::toAdminPartner)
             .toList();
-        return new PageImpl<>(content, pageable, page.getTotalElements());
+        return new PageImpl<>(content, q.pageable(), page.getTotalElements());
     }
 
     /** Returns paginated bookings. */
     public Page<AdminBookingResponse> listBookings(Pageable pageable) {
         return bookingRepository.findAllWithUser(pageable).map(AdminBookingResponse::from);
+    }
+
+    /** Full 360° detail for one booking: core data + customer + payments + the customer's reviews. */
+    public AdminBookingDetailResponse getBookingDetail(UUID bookingId) {
+        Booking b = bookingRepository.findById(bookingId)
+            .orElseThrow(() -> TravelAiException.notFound(ErrorCode.BOOKING_NOT_FOUND));
+        User u = b.getUser();
+
+        List<AdminBookingDetailResponse.PaymentLine> payments = paymentRepository.findByBookingId(bookingId).stream()
+            .map(p -> new AdminBookingDetailResponse.PaymentLine(
+                p.getId(),
+                p.getStatus() != null ? p.getStatus().name() : null,
+                p.getType() != null ? p.getType().name() : null,
+                p.getGateway() != null ? p.getGateway().name() : null,
+                p.getAmount(), p.getCurrency(), p.getPaidAt(), p.getRefundedAt(),
+                p.getFailureReason(), p.getCreatedAt()))
+            .toList();
+
+        List<AdminBookingDetailResponse.ReviewLine> reviews = u == null ? List.of()
+            : reviewRepository.findByUserIdOrderByCreatedAtDesc(u.getId(), PageRequest.of(0, 10)).getContent().stream()
+                .map(r -> new AdminBookingDetailResponse.ReviewLine(
+                    r.getId(), r.getTargetType(), r.getRating(), r.getTitle(), r.getCreatedAt()))
+                .toList();
+
+        AdminBookingDetailResponse.UserSummary user = u == null ? null
+            : new AdminBookingDetailResponse.UserSummary(
+                u.getId(), u.getEmail(), u.getFirstName(), u.getLastName(),
+                u.getRole() != null ? u.getRole().name() : null, u.isActive(), u.getCreatedAt());
+
+        long userTotalBookings = u == null ? 0 : bookingRepository.findByUserId(u.getId()).size();
+
+        return new AdminBookingDetailResponse(
+            b.getId(), b.getBookingReference(),
+            b.getStatus() != null ? b.getStatus().name() : null,
+            b.getDestination(), b.getCheckIn(), b.getCheckOut(), b.getPartySize(),
+            b.getTotalAmount(), b.getHotelAmount(), b.getFlightAmount(), b.getRestaurantAmount(),
+            b.getCruiseAmount(), b.getServiceFeeAmount(), b.getCommissionAmount(), b.getCreatedAt(),
+            user, payments, reviews, userTotalBookings);
+    }
+
+    private static final List<String> BOOKING_SEARCH = List.of("bookingReference", "destination");
+
+    /** Cross-entity admin search: top matches among users, bookings and partners. */
+    public AdminSearchResponse search(String query) {
+        if (query == null || query.isBlank()) {
+            return new AdminSearchResponse(List.of(), List.of(), List.of());
+        }
+        Pageable top = PageRequest.of(0, 6);
+
+        List<AdminSearchResponse.Hit> users = userRepository.findAll(
+                EntitySpecifications.filter(User.class, query, USER_SEARCH, Map.of()), top)
+            .map(u -> new AdminSearchResponse.Hit(u.getId(),
+                (u.getFirstName() + " " + u.getLastName()).trim(), u.getEmail()))
+            .getContent();
+
+        List<AdminSearchResponse.Hit> bookings = bookingRepository.findAll(
+                EntitySpecifications.filter(Booking.class, query, BOOKING_SEARCH, Map.of()), top)
+            .map(b -> new AdminSearchResponse.Hit(b.getId(),
+                b.getBookingReference() != null ? b.getBookingReference() : b.getId().toString().substring(0, 8),
+                b.getDestination()))
+            .getContent();
+
+        List<AdminSearchResponse.Hit> partners = partnerRepository.findAll(
+                EntitySpecifications.filter(Partner.class, query, PARTNER_SEARCH, Map.of()), top)
+            .map(p -> new AdminSearchResponse.Hit(p.getId(), p.getName(), p.getCity()))
+            .getContent();
+
+        return new AdminSearchResponse(users, bookings, partners);
     }
 
     /** Changes a booking's status (confirm / cancel / complete). */

@@ -13,6 +13,8 @@ import com.travelai.destination.Destination;
 import com.travelai.destination.DestinationRepository;
 import com.travelai.partner.Partner;
 import com.travelai.partner.PartnerRepository;
+import com.travelai.shared.domain.AdminListQuery;
+import com.travelai.shared.domain.EntitySpecifications;
 import com.travelai.shared.exception.ErrorCode;
 import com.travelai.shared.exception.TravelAiException;
 import com.travelai.stories.TravelStory;
@@ -20,11 +22,13 @@ import com.travelai.stories.TravelStoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 /** Admin-only create/update/delete + full listing for catalog content. */
 @Service
@@ -42,10 +46,27 @@ public class AdminCatalogService {
     private final TravelStoryRepository storyRepository;
     private final PartnerRepository partnerRepository;
 
+    // Free-text search columns per entity (string attributes only).
+    private static final List<String> HOTEL_SEARCH = List.of("name", "city");
+    private static final List<String> FLIGHT_SEARCH = List.of("airline", "flightNumber", "originIata", "destIata");
+    private static final List<String> CRUISE_SEARCH = List.of("name", "operator", "shipName", "departurePort", "arrivalPort");
+    private static final List<String> RESTAURANT_SEARCH = List.of("name", "cuisineType", "city");
+    private static final List<String> DESTINATION_SEARCH = List.of("name", "country", "continent");
+    private static final List<String> ATTRACTION_SEARCH = List.of("name", "city", "country");
+    private static final List<String> STORY_SEARCH = List.of("place", "country", "tag");
+
+    /** Runs a filtered/sorted/paged query and maps to the admin DTO. */
+    private <E, V> Page<V> find(JpaSpecificationExecutor<E> repo, Class<E> type,
+                                List<String> searchFields, AdminListQuery q, Function<E, V> toDto) {
+        return repo.findAll(
+                EntitySpecifications.filter(type, q.search(), searchFields, q.filters()),
+                q.pageable()).map(toDto);
+    }
+
     // ── Hotels ────────────────────────────────────────────────────────────
 
-    public Page<AdminHotelDto.View> listHotels(Pageable pageable) {
-        return hotelRepository.findAll(pageable).map(AdminHotelDto.View::from);
+    public Page<AdminHotelDto.View> listHotels(AdminListQuery q) {
+        return find(hotelRepository, Hotel.class, HOTEL_SEARCH, q, AdminHotelDto.View::from);
     }
 
     @Transactional
@@ -93,8 +114,8 @@ public class AdminCatalogService {
 
     // ── Flights ───────────────────────────────────────────────────────────
 
-    public Page<AdminFlightDto.View> listFlights(Pageable pageable) {
-        return flightRepository.findAll(pageable).map(AdminFlightDto.View::from);
+    public Page<AdminFlightDto.View> listFlights(AdminListQuery q) {
+        return find(flightRepository, Flight.class, FLIGHT_SEARCH, q, AdminFlightDto.View::from);
     }
 
     @Transactional
@@ -138,8 +159,8 @@ public class AdminCatalogService {
 
     // ── Cruises ───────────────────────────────────────────────────────────
 
-    public Page<AdminCruiseDto.View> listCruises(Pageable pageable) {
-        return cruiseRepository.findAll(pageable).map(AdminCruiseDto.View::from);
+    public Page<AdminCruiseDto.View> listCruises(AdminListQuery q) {
+        return find(cruiseRepository, Cruise.class, CRUISE_SEARCH, q, AdminCruiseDto.View::from);
     }
 
     @Transactional
@@ -189,8 +210,8 @@ public class AdminCatalogService {
 
     // ── Restaurants ───────────────────────────────────────────────────────
 
-    public Page<AdminRestaurantDto.View> listRestaurants(Pageable pageable) {
-        return restaurantRepository.findAll(pageable).map(AdminRestaurantDto.View::from);
+    public Page<AdminRestaurantDto.View> listRestaurants(AdminListQuery q) {
+        return find(restaurantRepository, Restaurant.class, RESTAURANT_SEARCH, q, AdminRestaurantDto.View::from);
     }
 
     @Transactional
@@ -236,8 +257,8 @@ public class AdminCatalogService {
 
     // ── Destinations ──────────────────────────────────────────────────────
 
-    public Page<AdminDestinationDto.View> listDestinations(Pageable pageable) {
-        return destinationRepository.findAll(pageable).map(AdminDestinationDto.View::from);
+    public Page<AdminDestinationDto.View> listDestinations(AdminListQuery q) {
+        return find(destinationRepository, Destination.class, DESTINATION_SEARCH, q, AdminDestinationDto.View::from);
     }
 
     @Transactional
@@ -293,8 +314,9 @@ public class AdminCatalogService {
 
     // ── Attractions ────────────────────────────────────────────────────────
 
-    public Page<AdminAttractionDto.View> listAttractions(Pageable pageable) {
-        return attractionRepository.findAll(pageable).map(AdminAttractionDto.View::from);
+    public Page<AdminAttractionDto.View> listAttractions(AdminListQuery q) {
+        return find(attractionRepository, com.travelai.attraction.Attraction.class, ATTRACTION_SEARCH, q,
+                AdminAttractionDto.View::from);
     }
 
     @Transactional
@@ -344,8 +366,8 @@ public class AdminCatalogService {
 
     // ── Travel stories ────────────────────────────────────────────────────
 
-    public Page<AdminStoryDto.View> listStories(Pageable pageable) {
-        return storyRepository.findAll(pageable).map(AdminStoryDto.View::from);
+    public Page<AdminStoryDto.View> listStories(AdminListQuery q) {
+        return find(storyRepository, TravelStory.class, STORY_SEARCH, q, AdminStoryDto.View::from);
     }
 
     @Transactional

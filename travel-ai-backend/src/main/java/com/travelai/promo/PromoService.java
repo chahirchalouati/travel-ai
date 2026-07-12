@@ -3,6 +3,8 @@ package com.travelai.promo;
 import com.travelai.promo.dto.AdminPromoResponse;
 import com.travelai.promo.dto.AdminPromoUpsertRequest;
 import com.travelai.promo.dto.PromoValidationResponse;
+import com.travelai.shared.domain.AdminListQuery;
+import com.travelai.shared.domain.EntitySpecifications;
 import com.travelai.shared.exception.ErrorCode;
 import com.travelai.shared.exception.TravelAiException;
 import lombok.RequiredArgsConstructor;
@@ -64,9 +66,13 @@ public class PromoService {
 
     // ── Admin CRUD ─────────────────────────────────────────────────────────
 
+    private static final java.util.List<String> PROMO_SEARCH = java.util.List.of("code");
+
     @Transactional(readOnly = true)
-    public Page<AdminPromoResponse> list(Pageable pageable) {
-        return promoCodeRepository.findAll(pageable).map(AdminPromoResponse::from);
+    public Page<AdminPromoResponse> list(AdminListQuery q) {
+        return promoCodeRepository.findAll(
+                EntitySpecifications.filter(PromoCode.class, q.search(), PROMO_SEARCH, q.filters()),
+                q.pageable()).map(AdminPromoResponse::from);
     }
 
     @Transactional

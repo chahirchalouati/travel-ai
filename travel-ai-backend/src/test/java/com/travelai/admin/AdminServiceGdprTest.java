@@ -1,11 +1,14 @@
 package com.travelai.admin;
 
+import com.travelai.admin.dto.AdminSearchResponse;
 import com.travelai.auth.User;
 import com.travelai.auth.UserRepository;
 import com.travelai.auth.UserRole;
 import com.travelai.booking.BookingRepository;
 import com.travelai.partner.PartnerRepository;
+import com.travelai.payment.PaymentRepository;
 import com.travelai.review.ReviewRepository;
+import com.travelai.shared.config.JwtService;
 import com.travelai.shared.exception.TravelAiException;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
@@ -34,8 +37,10 @@ class AdminServiceGdprTest {
     @Mock private PartnerRepository partnerRepository;
     @Mock private ReviewRepository reviewRepository;
     @Mock private BookingRepository bookingRepository;
+    @Mock private PaymentRepository paymentRepository;
     @Mock private PasswordEncoder passwordEncoder;
     @Mock private EntityManager entityManager;
+    @Mock private JwtService jwtService;
 
     @InjectMocks
     private AdminService service;
@@ -88,5 +93,25 @@ class AdminServiceGdprTest {
 
         assertThatThrownBy(() -> service.anonymizeUser(id)).isInstanceOf(TravelAiException.class);
         verify(userRepository, org.mockito.Mockito.never()).save(any());
+    }
+
+    @Test
+    @DisplayName("search returns empty groups for a blank query without hitting repositories")
+    void searchBlankQuery() {
+        AdminSearchResponse result = service.search("   ");
+
+        assertThat(result.users()).isEmpty();
+        assertThat(result.bookings()).isEmpty();
+        assertThat(result.partners()).isEmpty();
+        verify(userRepository, org.mockito.Mockito.never()).findAll(any(org.springframework.data.jpa.domain.Specification.class), any(org.springframework.data.domain.Pageable.class));
+    }
+
+    @Test
+    @DisplayName("getBookingDetail throws when the booking is missing")
+    void bookingDetailMissing() {
+        UUID id = UUID.randomUUID();
+        when(bookingRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.getBookingDetail(id)).isInstanceOf(TravelAiException.class);
     }
 }

@@ -46,7 +46,7 @@ class FeatureFlagServiceTest {
     @Test
     @DisplayName("upsert creates a new flag when the key is unseen")
     void upsertCreates() {
-        var req = new FeatureFlagUpsertRequest("beta_maps", true, "Beta map view");
+        var req = new FeatureFlagUpsertRequest("beta_maps", true, "Beta map view", 50, "partner, admin", "Growth");
         when(repository.findByKey("beta_maps")).thenReturn(Optional.empty());
         when(repository.save(any(FeatureFlag.class))).thenAnswer(i -> i.getArgument(0));
 
@@ -54,6 +54,49 @@ class FeatureFlagServiceTest {
 
         assertThat(res.key()).isEqualTo("beta_maps");
         assertThat(res.enabled()).isTrue();
+        assertThat(res.rolloutPercentage()).isEqualTo(50);
+        assertThat(res.targetRoles()).isEqualTo("PARTNER,ADMIN");   // normalized
+        assertThat(res.groupName()).isEqualTo("Growth");
+    }
+
+    // ── Evaluation (role targeting + percentage rollout) ────────────────────
+
+    private FeatureFlag flag(boolean enabled, int rollout, String roles) {
+        return FeatureFlag.builder().key("beta.feature").enabled(enabled)
+                .rolloutPercentage(rollout).targetRoles(roles).build();
+    }
+
+    @Test
+    @DisplayName("evaluate: disabled flag never applies")
+    void evaluateDisabled() {
+        assertThat(service.evaluate(flag(false, 100, null), "jane@x.com", "TRAVELER")).isFalse();
+    }
+
+    @Test
+    @DisplayName("evaluate: full rollout, no targeting applies to everyone incl. anonymous")
+    void evaluateFullRollout() {
+        assertThat(service.evaluate(flag(true, 100, null), null, null)).isTrue();
+        assertThat(service.evaluate(flag(true, 100, null), "jane@x.com", "TRAVELER")).isTrue();
+    }
+
+    @Test
+    @DisplayName("evaluate: role targeting only lets matching roles through")
+    void evaluateRoleTargeting() {
+        FeatureFlag f = flag(true, 100, "PARTNER,ADMIN");
+        assertThat(service.evaluate(f, "p@x.com", "PARTNER")).isTrue();
+        assertThat(service.evaluate(f, "a@x.com", "admin")).isTrue();     // case-insensitive
+        assertThat(service.evaluate(f, "t@x.com", "TRAVELER")).isFalse();
+        assertThat(service.evaluate(f, null, null)).isFalse();           // anonymous blocked
+    }
+
+    @Test
+    @DisplayName("evaluate: rollout 0 is off; partial rollout is off for anonymous and deterministic per user")
+    void evaluateRollout() {
+        assertThat(service.evaluate(flag(true, 0, null), "jane@x.com", "TRAVELER")).isFalse();
+        FeatureFlag partial = flag(true, 50, null);
+        assertThat(service.evaluate(partial, null, null)).isFalse();
+        assertThat(service.evaluate(partial, "stable@x.com", "TRAVELER"))
+                .isEqualTo(service.evaluate(partial, "stable@x.com", "TRAVELER"));
     }
 
     @Test

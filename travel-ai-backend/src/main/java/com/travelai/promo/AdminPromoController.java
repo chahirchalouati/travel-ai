@@ -2,6 +2,7 @@ package com.travelai.promo;
 
 import com.travelai.promo.dto.AdminPromoResponse;
 import com.travelai.promo.dto.AdminPromoUpsertRequest;
+import com.travelai.shared.domain.AdminListQuery;
 import com.travelai.shared.domain.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -22,8 +24,9 @@ public class AdminPromoController {
     private final PromoService promoService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<AdminPromoResponse>>> list(Pageable pageable) {
-        Page<AdminPromoResponse> page = promoService.list(pageable);
+    public ResponseEntity<ApiResponse<Page<AdminPromoResponse>>> list(
+            Pageable pageable, @RequestParam Map<String, String> params) {
+        Page<AdminPromoResponse> page = promoService.list(AdminListQuery.of(pageable, params));
         ApiResponse.Meta meta = new ApiResponse.Meta(page.getTotalElements(), page.getNumber(), page.getSize());
         return ResponseEntity.ok(ApiResponse.ok(page, meta));
     }
